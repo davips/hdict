@@ -2,20 +2,21 @@ import dis
 import re
 from collections import OrderedDict
 from inspect import signature
+from pickle import dumps
 
 from hosh import Hosh, ø
-from lazydf.compression import pack
 
 
 def v2hosh(value: object) -> Hosh:
     """
     Convert any value to a hosh object.
 
-    `value` should be serializable (by json or pickle).
+    `value` should be serializable (by pickle).
+    Adopt pickle for hoshfication because it is faster.
 
     >>> obj = {"x": 3, "l": [1, 2, "5"]}
     >>> print(v2hosh(obj))
-    f1mPuinEzcp7qvmsmpahVnTYo1cg6VtHi4GnKF4j
+    z0cJsCBPY7cHt.oJnrpyk23FOlPdCcYvcX8x7jg6
     >>> # We encapsulate 'obj' as built-in types cannot be easily patched.
     >>> obj = OrderedDict(obj)
     >>> obj.hosh = ø * "My-custom-identifier-arbitrarily-defined"
@@ -26,7 +27,7 @@ def v2hosh(value: object) -> Hosh:
         return value.hosh
     else:
         try:
-            return Hosh(pack(value, ensure_determinism=True, unsafe_fallback=False, compressed=False))
+            return Hosh(dumps(value, protocol=5))
         except TypeError as e:  # pragma: no cover
             raise Exception(f"Cannot pickle. Pickling is needed to hosh idict values ({value}): {e}")
 
@@ -35,9 +36,11 @@ def f2hosh(function: callable):
     """
     Convert a function to a hosh object.
 
+    Adopt pickle for hoshfication because it is faster.
+
     >>> fun = lambda x, y: x + y
     >>> print(f2hosh(fun))
-    RMsMxUaW5VqKBN0-V1Q6obDEvZTkeR3oKjhoR.U1
+    vD8.I-NU3x5hzmj-m1EJgeAIE-.H.HGnWxqvZng0
     >>> fun.hosh = ø * "My-custom-identifier-arbitrarily-defined"
     >>> print(f2hosh(fun))
     My-custom-identifier-arbitrarily-defined
@@ -57,4 +60,4 @@ def f2hosh(function: callable):
         lines = [re.sub(r"^[\d ]+", "", segment) for segment in re.split(" +", group)][1:]
         clean_lines.append(lines)
     code = [fields_and_params, clean_lines]
-    return Hosh(pack(code, ensure_determinism=True, unsafe_fallback=False, compressed=False))
+    return Hosh(dumps(code, protocol=5))
