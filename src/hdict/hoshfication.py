@@ -27,6 +27,7 @@ def v2hosh(value: object) -> Hosh:
         return value.hosh
     else:
         try:
+            # REMINDER: pickle is the fastest serialization
             return Hosh(dumps(value, protocol=5))
         except TypeError as e:  # pragma: no cover
             raise Exception(f"Cannot pickle. Pickling is needed to hosh idict values ({value}): {e}")
@@ -60,4 +61,27 @@ def f2hosh(function: callable):
         lines = [re.sub(r"^[\d ]+", "", segment) for segment in re.split(" +", group)][1:]
         clean_lines.append(lines)
     code = [fields_and_params, clean_lines]
+    # REMINDER: pickle chosen because it is the fastest serialization (see bottom of the file)
     return Hosh(dumps(code, protocol=5))
+
+# Timing:
+"""
+l = [{"x": 3}, 530934590.435903475, "4p9fj24gifh2430g8h230g82h34g0p2843hg02h"] * 100
+
+
+def f():
+    pack(l, ensure_determinism=True, unsafe_fallback=False, compressed=False)
+
+
+def g():
+    dumps(l)
+
+
+def h():
+    pack(l, ensure_determinism=True, unsafe_fallback=False, compressed=True)
+
+
+print(timeit(f, number=1000))
+print(timeit(g, number=1000))
+print(timeit(h, number=1000))
+"""
