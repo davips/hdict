@@ -19,7 +19,16 @@ class StrictVal(AbsVal):
     """
 
     def __init__(self, value: object, hosh: Hosh = None, hdict=None):
+        """
+
+        Args:
+            value:
+            hosh:
+            hdict:  optional reference to the object if it has a hdict counterpart (e.g.: pandas DF)
+        """
         self.value = value
+        if isinstance(hosh, str):
+            hosh = Hosh.fromid(hosh)
         self.hosh = v2hosh(value) if hosh is None else hosh
         self.hdict = hdict
         self.isevaluated = True
