@@ -7,6 +7,7 @@ from typing import Dict, TypeVar, Union
 from hdict.customjson import CustomJSONEncoder
 from hdict.lazyval import LazyVal
 from hdict.pandas import explode_df
+from hdict.param import field, sample
 from hdict.strictval import StrictVal
 from hdict.absval import AbsVal
 from hosh import ø
@@ -31,7 +32,8 @@ class frozenhdict(UserDict, Dict[str, VT]):
 
     # noinspection PyMissingConstructor
     def __init__(self, /, _dictionary=None, **kwargs):
-        from hdict.apply import default, val, apply
+        from hdict.param import default, val
+        from hdict.apply import apply
         from hdict.hdict_ import hdict
         from hdict.lazyval import LazyVal
         data: Dict[str, AbsVal] = _dictionary or {}
@@ -42,15 +44,15 @@ class frozenhdict(UserDict, Dict[str, VT]):
         self.hosh = ø
         self.ids = {}
         # self.mids = {}
-        list_of_deps = []
+        dict_of_deps = {}
         for k, v in data.items():
             if isinstance(v, AbsVal):
                 self.data[k] = v
             elif isinstance(v, apply):
                 # REMINDER: Will just pass a reference for now. May not have all values.
                 deps = v.deps__stub()
-                list_of_deps.append(deps)
-                self.data[k] = LazyVal(v, *deps)
+                dict_of_deps[k] = deps
+                self.data[k] = LazyVal(v, deps)
             elif isinstance(v, hdict):
                 self.data[k] = StrictVal(v.frozen, v.hosh)
             elif str(type(v)) == "<class 'pandas.core.frame.DataFrame'>":
@@ -58,25 +60,21 @@ class frozenhdict(UserDict, Dict[str, VT]):
             else:
                 self.data[k] = StrictVal(v)
 
-        def handle_content(item, value):
-            if isinstance(value, str):
-                return self.data[value]
-            elif isinstance(value, default):
-                return self.data[item] if item in data else StrictVal(value.obj)
-            elif isinstance(value, val):
-                return StrictVal(value.obj)
-            else:
-                print(item)
-                print(value)
-                raise Exception(f"Unknown type for dep_stub entry: '{type(value)}")
+        for key,deps in dict_of_deps.items():
+            for k, v in deps.items():
+                match v:
+                    case field(_, _) | default(_, _) if k in data:
+                        v.obj = self.data[k]
+                    case val(_, _) | default(_, _):
+                        v.obj = StrictVal(v.obj)
+                    case sample(_, _):
+                        v.add_dependent(data[key])
+                        v.obj = StrictVal(v.obj)
+                    case _:
+                        print(deps.items(), k, v)
+                        raise Exception(f"Unknown type for dep_stub entry: '{type(v)}")
 
-        for posit_deps, named_deps in list_of_deps:
-            for k, v in posit_deps.items():
-                posit_deps[k] = handle_content(k, v)
-            for k, v in named_deps.items():
-                named_deps[k] = handle_content(k, v)
-
-        # REMINDER: lazyval.hosh is only available after handle_content() is used (see 'for' above).
+        # REMINDER: "lazy hoshes" are only available after handling values ('for' loop above).
         for k, v in self.data.items():
             # Handle meta. mirror, and field ids differently.
             if k.startswith("_"):
@@ -158,7 +156,7 @@ class frozenhdict(UserDict, Dict[str, VT]):
 
     @cached_property
     def asdict(self):
-        dic = {k: v for k, v in self.entries()}
+        dic = {k: v for k, v in self.items()}
         dic["_id"] = self.id
         dic["_ids"] = self.ids.copy()
         return dic

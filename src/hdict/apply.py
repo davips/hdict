@@ -1,9 +1,10 @@
-from dataclasses import dataclass
 from functools import cached_property
 from inspect import signature, isfunction
+from typing import Union
 
 from hdict.hoshfication import f2hosh
 from hdict.indexeddict import IndexedDict
+from hdict.param import field, val, default
 from hosh import Hosh
 
 
@@ -14,54 +15,43 @@ class Undefined:
 Undefined = Undefined()
 
 
-@dataclass
-class val:
-    obj: object
-
-    def __hash__(self):
-        return hash(self.obj)
-
-
-@dataclass
-class default:
-    obj: object
-
 
 class apply:  # TODO: allow_partial
     """
     >>> f = lambda a,b, c=1,d=2,e=13: 0
     >>> apply(f).args, apply(f).kwargs
-    ({'a': 'a', 'b': 'b'}, {'c': default(obj=1), 'd': default(obj=2), 'e': default(obj=13)})
+    ({'a': field(obj='a', ispositional=True), 'b': field(obj='b', ispositional=True)}, {'c': default(obj=1, ispositional=False), 'd': default(obj=2, ispositional=False), 'e': default(obj=13, ispositional=False)})
     >>> apply(f,3).input
-    {'a': val(obj=3), 'b': 'b', 'c': default(obj=1), 'd': default(obj=2), 'e': default(obj=13)}
+    {'a': val(obj=3, ispositional=True), 'b': field(obj='b', ispositional=True), 'c': default(obj=1, ispositional=False), 'd': default(obj=2, ispositional=False), 'e': default(obj=13, ispositional=False)}
     >>> apply(f,3,4).input
-    {'a': val(obj=3), 'b': val(obj=4), 'c': default(obj=1), 'd': default(obj=2), 'e': default(obj=13)}
+    {'a': val(obj=3, ispositional=True), 'b': val(obj=4, ispositional=True), 'c': default(obj=1, ispositional=False), 'd': default(obj=2, ispositional=False), 'e': default(obj=13, ispositional=False)}
     >>> apply(f,3,4,5).input
-    {'a': val(obj=3), 'b': val(obj=4), 'c': val(obj=5), 'd': default(obj=2), 'e': default(obj=13)}
+    {'a': val(obj=3, ispositional=True), 'b': val(obj=4, ispositional=True), 'c': val(obj=5, ispositional=True), 'd': default(obj=2, ispositional=False), 'e': default(obj=13, ispositional=False)}
     >>> apply(f,3,4,5,6).input
-    {'a': val(obj=3), 'b': val(obj=4), 'c': val(obj=5), 'd': val(obj=6), 'e': default(obj=13)}
+    {'a': val(obj=3, ispositional=True), 'b': val(obj=4, ispositional=True), 'c': val(obj=5, ispositional=True), 'd': val(obj=6, ispositional=True), 'e': default(obj=13, ispositional=False)}
     >>> apply(f,3,4,5,6,7).input
-    {'a': val(obj=3), 'b': val(obj=4), 'c': val(obj=5), 'd': val(obj=6), 'e': val(obj=7)}
+    {'a': val(obj=3, ispositional=True), 'b': val(obj=4, ispositional=True), 'c': val(obj=5, ispositional=True), 'd': val(obj=6, ispositional=True), 'e': val(obj=7, ispositional=True)}
     >>> apply(f,d=5).input
-    {'a': 'a', 'b': 'b', 'c': default(obj=1), 'd': val(obj=5), 'e': default(obj=13)}
+    {'a': field(obj='a', ispositional=True), 'b': field(obj='b', ispositional=True), 'c': default(obj=1, ispositional=False), 'd': val(obj=5, ispositional=False), 'e': default(obj=13, ispositional=False)}
     >>> f = lambda a,b, *args, c=1,d=2,e=13, **kwargs: 0
     >>> apply(f,3,4,5,6,7,8).input
-    {'a': val(obj=3), 'b': val(obj=4), 'c': val(obj=5), 'd': val(obj=6), 'e': val(obj=7), 5: val(obj=8)}
+    {'a': val(obj=3, ispositional=True), 'b': val(obj=4, ispositional=True), 'c': val(obj=5, ispositional=True), 'd': val(obj=6, ispositional=True), 'e': val(obj=7, ispositional=True), 5: val(obj=8, ispositional=True)}
     >>> apply(f,x=3,e=4,d=5,c=6,b=7,a=8).input
-    {'a': val(obj=8), 'b': val(obj=7), 'c': val(obj=6), 'd': val(obj=5), 'e': val(obj=4), 'x': val(obj=3)}
+    {'a': val(obj=8, ispositional=True), 'b': val(obj=7, ispositional=True), 'c': val(obj=6, ispositional=False), 'd': val(obj=5, ispositional=False), 'e': val(obj=4, ispositional=False), 'x': val(obj=3, ispositional=False)}
     >>> apply(f,3,c=77,x=5).input
-    {'a': val(obj=3), 'b': 'b', 'c': val(obj=77), 'd': default(obj=2), 'e': default(obj=13), 'x': val(obj=5)}
+    {'a': val(obj=3, ispositional=True), 'b': field(obj='b', ispositional=True), 'c': val(obj=77, ispositional=False), 'd': default(obj=2, ispositional=False), 'e': default(obj=13, ispositional=False), 'x': val(obj=5, ispositional=False)}
     >>> apply(f,b=77,x=5).input
-    {'a': 'a', 'b': val(obj=77), 'c': default(obj=1), 'd': default(obj=2), 'e': default(obj=13), 'x': val(obj=5)}
+    {'a': field(obj='a', ispositional=True), 'b': val(obj=77, ispositional=True), 'c': default(obj=1, ispositional=False), 'd': default(obj=2, ispositional=False), 'e': default(obj=13, ispositional=False), 'x': val(obj=5, ispositional=False)}
 
     """
 
-    def __init__(self, f: callable, *applied_args, allow_partial=False, hosh: Hosh = None, **applied_kwargs):
+    def __init__(self, f: Union[callable, str], *applied_args, allow_partial=False, hosh: Hosh = None, **applied_kwargs):
         self.f, self.allow_partial = f, allow_partial
+        #     TODO multifield
         if isinstance(f, str):
             fargs = applied_args
             fkwargs = applied_kwargs
-        #     TODO multifield
+            fkwargs[f] = f
         else:
             if not isfunction(f):
                 if not hasattr(f, "hosh"):
@@ -70,7 +60,15 @@ class apply:  # TODO: allow_partial
             else:
                 self.hosh = (f2hosh(self.f) if hosh is None else hosh).rev
                 sig = signature(self.f)
-            wrap = lambda x: x if isinstance(x, (str, val)) else val(x)
+
+            def wrap(x, ispositional):
+                match x:
+                    case val(_, _):
+                        return val(x.obj, ispositional)
+                    case str():
+                        return field(x, ispositional)
+                    case object():
+                        return val(x, ispositional)
 
             # Separate positional from named parameters of 'f'.
             fargs, fkwargs = IndexedDict(), {}
@@ -86,9 +84,9 @@ class apply:  # TODO: allow_partial
 
                 name = par.name
                 if par.default is par.empty:
-                    fargs[name] = name
+                    fargs[name] = wrap(name, ispositional=True)
                 else:
-                    fkwargs[name] = default(par.default)
+                    fkwargs[name] = default(par.default, ispositional=False)
                 params.append(name)
 
             # apply's args override f's args
@@ -96,7 +94,7 @@ class apply:  # TODO: allow_partial
             for i, applied_arg in enumerate(applied_args):
                 if i < len(fargs):
                     used.add(key := fargs.keys()[i])
-                    fargs[key] = wrap(applied_arg)
+                    fargs[key] = wrap(applied_arg, ispositional=True)
                 else:
                     if i >= len(params):
                         if not hasargs:
@@ -106,15 +104,15 @@ class apply:  # TODO: allow_partial
                         name = params[i]
                         if name in fkwargs:
                             del fkwargs[name]
-                    fargs[name] = wrap(applied_arg)
+                    fargs[name] = wrap(applied_arg, ispositional=True)
 
             for applied_kwarg, v in applied_kwargs.items():
                 if applied_kwarg in used:
                     raise Exception(f"Parameter '{applied_kwarg}' cannot appear in both 'args' and 'kwargs' of 'apply()'.")
                 if applied_kwarg in fargs:
-                    fargs[applied_kwarg] = wrap(v)
+                    fargs[applied_kwarg] = wrap(v, ispositional=True)
                 elif applied_kwarg in fkwargs or haskwargs:
-                    fkwargs[applied_kwarg] = wrap(v)
+                    fkwargs[applied_kwarg] = wrap(v, ispositional=False)
                 else:
                     raise Exception(f"Parameter '{applied_kwarg}' is not present in 'f' signature nor '**kwargs' was detected for 'f'.")
 
@@ -126,7 +124,7 @@ class apply:  # TODO: allow_partial
         return self.args | self.kwargs
 
     def deps__stub(self):
-        return self.args.copy(), self.kwargs.copy()
+        return self.input.copy()
 
     def multifield(k: tuple, v: [list, IndexedDict, "apply"]):
         pass

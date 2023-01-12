@@ -9,7 +9,6 @@ VT = TypeVar("VT")
 
 
 class hdict(Dict[str, VT]):
-    # class hdict:
     """
     Function id is reversed before application.
     This is needed to enable handling a function as a value, under the original id.
@@ -57,6 +56,13 @@ class hdict(Dict[str, VT]):
     >>> d["f"] = custom  # Custom callable handled as a value.
     >>> d["zzz1", "www1"] = apply(custom, "r1", y="r2")  # Custom callable being applied.
     >>> d["zzz2", "www2"] = apply("f", "r1", y="r2")  # Callable field being applied.
+    >>> from hdict.sample import sample
+    >>> d >>= {"r": apply(f, y=sample(0.1, 0.2, 0.3, ..., 1))}
+    >>> d.r
+    >>> d.resample()
+    >>> d.r
+    >>> d >>= {"r": apply(f, y=sample([0.1, 0.2, 0.3, ..., 1]))}
+
     >>> d.show(colored=False)
     {
         x: 3,
@@ -138,7 +144,7 @@ class hdict(Dict[str, VT]):
         """
         >>> from hdict import apply
         >>> from hdict.lazyval import LazyVal
-        >>> d = hdict(x=LazyVal(apply(lambda: 2), {}, {}))
+        >>> d = hdict(x=LazyVal(apply(lambda: 2), {}))
         >>> d.show(colored=False)
         {
             x: λ(),
@@ -175,7 +181,7 @@ class hdict(Dict[str, VT]):
     def id(self):
         """
         >>> from hdict import hdict
-        >>> hdict(x=3, y=5, _z=5).id == hdict(x=3, y=5).id
+        >>> hdict(x=3, y=5).id == hdict(dict(x=3, y=5)).id
         True
         """
         return self.hosh.id
@@ -184,8 +190,8 @@ class hdict(Dict[str, VT]):
     def ids(self):
         """
         >>> from hdict import hdict
-        >>> hdict(x=3, y=5, _z=5).ids
-        {'x': 'KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr', 'y': 'ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2', '_z': 'ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2'}
+        >>> hdict(x=3, y=5).ids
+        {'x': 'KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr', 'y': 'ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2'}
         """
         return self.frozen.ids
 

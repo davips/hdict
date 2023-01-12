@@ -2,7 +2,8 @@ from functools import reduce, cached_property
 from itertools import chain
 from operator import mul
 
-from hdict import apply
+from hdict.apply import apply
+from hdict.param import val
 from hdict.absval import AbsVal
 from hdict.indexeddict import IndexedDict
 from hosh.misc import hoshes
@@ -20,10 +21,10 @@ class LazyVal(AbsVal):
     >>> x, y = 5, 7
     >>> f = lambda a, b: a**b
     >>> from hdict.strictval import StrictVal
-    >>> v = LazyVal(apply(f), {}, {"a": StrictVal(x), "b": StrictVal(y)})
+    >>> v = LazyVal(apply(f), {"a": val(StrictVal(x)), "b": val(StrictVal(y))})
     >>> v
     λ(a b)
-    >>> v2 = LazyVal(apply(f), {"a": v}, {"b": StrictVal(y)})
+    >>> v2 = LazyVal(apply(f), {"a": v, "b": val(StrictVal(y))})
     >>> v2
     λ(a=λ(a b) b)
     >>> v.value
@@ -33,18 +34,26 @@ class LazyVal(AbsVal):
     """
     _value = unevaluated
 
-    def __init__(self, appl: apply, value_deps: IndexedDict[str, AbsVal], field_deps: dict[str, AbsVal]):
-        self.args, self.kwargs =  value_deps, field_deps
+    def __init__(self, appl: apply, dependencies: IndexedDict[str, AbsVal]):
+        self._dependencies = dependencies
         self.fhosh = appl.hosh
-        if isinstance(appl.f,str)
+        self._f = appl.f
 
     @cached_property
-    def dependencies(self):
-        return self.args | self.kwargs
+    def dependencies(self):  # REMINDER: returned value differs from provided 'dependencies': 'f' as 'str' is removed here.
+        if self._f in self._dependencies:
+            self._f = self.dependencies.pop(self._f)
+            if isinstance(self._f, str):
+                raise Exception(f"'LazyVal.dependencies' called before filling 'deps_stub'.")
+        return self._dependencies
 
     @cached_property
     def hosh(self):  # REMINDER: id of 'f(x,y,z)' is 'xyzf'
         return reduce(mul, chain(hoshes(self.dependencies.values()), [self.fhosh]))
+
+    # @property
+    # def f(self):
+    #     return self._f.value
 
     @property
     def isevaluated(self):
@@ -57,9 +66,13 @@ class LazyVal(AbsVal):
         return self._value
 
     def evaluate(self):
-        args = (x.value for x in self.args.values())
-        kwargs = {k: v.value for k, v in self.kwargs.items()}
-        self._value = self.f(*args, **kwargs)
+        args, kwargs = [], {}
+        for k, v in self.dependencies.items():
+            if v.ispositional:
+                 args.append(v.obj)
+            else:
+                 kwargs[k] = v.obj
+        self._value = self._f(*args, **kwargs)
 
     def __repr__(self):
         if not self.isevaluated:
