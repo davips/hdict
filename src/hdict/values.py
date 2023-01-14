@@ -4,7 +4,7 @@ from hdict import apply, hdict
 from hdict.absval import AbsVal
 from hdict.lazyval import LazyVal
 from hdict.pandas import explode_df
-from hdict.param import field, sample, default, val
+from hdict.param import field, default, val
 from hdict.strictval import StrictVal
 
 
@@ -33,9 +33,6 @@ def handle_values(data:Dict[str, AbsVal | dict]): # REMINDER: 'dict' entries are
                 case field(_, _) | default(_, _) if k in data:
                     v.obj = newdata[k]
                 case val(_, _) | default(_, _):
-                    v.obj = StrictVal(v.obj)
-                case sample(_, _):
-                    v.add_dependent(data[key])
                     v.obj = StrictVal(v.obj)
                 case _:
                     print(deps.items(), k, v)

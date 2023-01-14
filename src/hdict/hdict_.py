@@ -56,13 +56,6 @@ class hdict(Dict[str, VT]):
     >>> d["f"] = custom  # Custom callable handled as a value.
     >>> d["zzz1", "www1"] = apply(custom, "r1", y="r2")  # Custom callable being applied.
     >>> d["zzz2", "www2"] = apply("f", "r1", y="r2")  # Callable field being applied.
-    >>> from hdict.sample import sample
-    >>> d >>= {"r": apply(f, y=sample(0.1, 0.2, 0.3, ..., 1))}
-    >>> d.r
-    >>> d.resample()
-    >>> d.r
-    >>> d >>= {"r": apply(f, y=sample([0.1, 0.2, 0.3, ..., 1]))}
-
     >>> d.show(colored=False)
     {
         x: 3,
@@ -89,6 +82,15 @@ class hdict(Dict[str, VT]):
             f: "Some.arbitrary.identifier.with.length.40"
         }
     }
+    """
+
+    """
+    >>> from hdict.sample import sample
+    >>> d >>= {"r": apply(f, y=sample(0.1, 0.2, 0.3, ..., 1))}
+    >>> d.r
+    >>> d.resample()
+    >>> d.r
+    >>> d >>= {"r": apply(f, y=sample([0.1, 0.2, 0.3, ..., 1]))}
     """
 
     # noinspection PyMissingConstructor
