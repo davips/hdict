@@ -2,14 +2,13 @@ import json
 import re
 from collections import UserDict
 from functools import cached_property
-from typing import Dict, TypeVar, Union
+from typing import Dict, TypeVar
 
+from hdict.absval import AbsVal
 from hdict.customjson import CustomJSONEncoder
 from hdict.lazyval import LazyVal
-from hdict.pandas import explode_df
-from hdict.param import field, sample
 from hdict.strictval import StrictVal
-from hdict.absval import AbsVal
+from hdict.values import handle_values
 from hosh import ø
 
 VT = TypeVar("VT")
@@ -32,49 +31,15 @@ class frozenhdict(UserDict, Dict[str, VT]):
 
     # noinspection PyMissingConstructor
     def __init__(self, /, _dictionary=None, **kwargs):
-        from hdict.param import default, val
-        from hdict.apply import apply
-        from hdict.hdict_ import hdict
-        from hdict.lazyval import LazyVal
         data: Dict[str, AbsVal] = _dictionary or {}
         data.update(kwargs)
         if "_id" in data.keys() or "_ids" in data.keys():  # pragma: no cover
             raise Exception(f"Hosh-indexed dict cannot have a field named '_id'/'_ids': {data.keys()}")
-        self.data: Dict[str, AbsVal | dict] = {}  # REMINDER: 'dict' entries are only "_id" and "_ids".
-        self.hosh = ø
-        self.ids = {}
-        # self.mids = {}
-        dict_of_deps = {}
-        for k, v in data.items():
-            if isinstance(v, AbsVal):
-                self.data[k] = v
-            elif isinstance(v, apply):
-                # REMINDER: Will just pass a reference for now. May not have all values.
-                deps = v.deps__stub()
-                dict_of_deps[k] = deps
-                self.data[k] = LazyVal(v, deps)
-            elif isinstance(v, hdict):
-                self.data[k] = StrictVal(v.frozen, v.hosh)
-            elif str(type(v)) == "<class 'pandas.core.frame.DataFrame'>":
-                self.data[k] = explode_df(v)
-            else:
-                self.data[k] = StrictVal(v)
-
-        for key,deps in dict_of_deps.items():
-            for k, v in deps.items():
-                match v:
-                    case field(_, _) | default(_, _) if k in data:
-                        v.obj = self.data[k]
-                    case val(_, _) | default(_, _):
-                        v.obj = StrictVal(v.obj)
-                    case sample(_, _):
-                        v.add_dependent(data[key])
-                        v.obj = StrictVal(v.obj)
-                    case _:
-                        print(deps.items(), k, v)
-                        raise Exception(f"Unknown type for dep_stub entry: '{type(v)}")
+        self.data = handle_values(data)  # REMINDER: 'dict' entries are only "_id" and "_ids".
 
         # REMINDER: "lazy hoshes" are only available after handling values ('for' loop above).
+        self.hosh = ø
+        self.ids = {}
         for k, v in self.data.items():
             # Handle meta. mirror, and field ids differently.
             if k.startswith("_"):
@@ -86,13 +51,13 @@ class frozenhdict(UserDict, Dict[str, VT]):
                 raise NotImplementedError()
             else:
                 self.hosh += self.data[k].hosh * k.encode()
-                # PAPER: remember to state in the paper that hash(identifier) must be different from hash(value), for any identifier and value. E.g.: hash(X) != hash("X")    #   Here the difference always happen because values are pickled, while identifiers are just encoded().
+                # PAPER REMINDER: state in the paper that hash(identifier) must be different from hash(value), for any identifier and value. E.g.: hash(X) != hash("X")    #   Here the difference always happen because values are pickled, while identifiers are just encoded().
                 self.ids[k] = self.data[k].hosh.id
 
         self.data["_id"] = self.id = self.hosh.id
         self.data["_ids"] = self.ids
 
-        # TODO: if there are duplicate ids in hdict, use the same Val reference for all
+        # minor range(TODO: if there are duplicate ids in hdict, use the same Val reference for all
 
     def __rshift__(self, other):
         from hdict import hdict
