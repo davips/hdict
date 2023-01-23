@@ -21,7 +21,7 @@
 #  time spent here.
 from json import JSONEncoder
 
-from hdict.absval import AbsVal
+from hdict.entry.absarg import AbsArg
 
 
 class CustomJSONEncoder(JSONEncoder):
@@ -141,7 +141,7 @@ class CustomJSONEncoder(JSONEncoder):
             #     return obj.asdicts
             if obj is Ellipsis:
                 return "..."
-            if isinstance(obj, AbsVal) and obj.isevaluated:
+            if isinstance(obj, AbsArg) and obj.isevaluated:
                 # from hoshmap import FrozenIdict, Idict
                 # if isinstance(obj.value, Idict):
                 #     return obj.value.frozen.asdicts

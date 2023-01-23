@@ -1,4 +1,3 @@
-from hdict.strictval import StrictVal
 
 
 def explode_df(df):
@@ -33,9 +32,10 @@ def explode_df(df):
     c  3  7
     """
     from hdict.frozenhdict import frozenhdict
+    from hdict import value
 
     dic = {"index": df.index.to_series()}
     for col in df:
         dic[str(col)] = df[col]
     d = frozenhdict(dic)
-    return StrictVal(df, d.hosh, hdict=d)
+    return value(df, d.hosh, hdict=d)

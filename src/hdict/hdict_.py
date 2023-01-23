@@ -13,7 +13,7 @@ class hdict(Dict[str, VT]):
     Function id is reversed before application.
     This is needed to enable handling a function as a value, under the original id.
 
-    >>> from hdict import hdict, apply, val
+    >>> from hdict import hdict, apply, value
     >>> d = hdict({"x": 3}, y=5)
     >>> d["alpha"] = 11
     >>> d.show(colored=False)
@@ -358,5 +358,5 @@ class hdict(Dict[str, VT]):
     #     return self.frozen.metavalues(evaluate)
     #
     # def metaitems(self, evaluate=True):
-    #     """Generator over field-value pairs"""
+    #     """Generator over field-entry pairs"""
     #     return self.frozen.metaitems(evaluate)

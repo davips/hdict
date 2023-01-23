@@ -1,10 +1,11 @@
 from hosh import Hosh
 
 
-class AbsVal:
+class AbsArg:
     value: object
     hosh: Hosh
     isevaluated: bool
+    ispositional:bool
 
     @property
     def id(self):  # pragma: no cover

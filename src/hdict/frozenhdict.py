@@ -4,11 +4,7 @@ from collections import UserDict
 from functools import cached_property
 from typing import Dict, TypeVar
 
-from hdict.absval import AbsVal
 from hdict.customjson import CustomJSONEncoder
-from hdict.lazyval import LazyVal
-from hdict.strictval import StrictVal
-from hdict.values import handle_values
 from hosh import ø
 
 VT = TypeVar("VT")
@@ -31,13 +27,15 @@ class frozenhdict(UserDict, Dict[str, VT]):
 
     # noinspection PyMissingConstructor
     def __init__(self, /, _dictionary=None, **kwargs):
-        data: Dict[str, AbsVal] = _dictionary or {}
+        from hdict.entry.absarg import AbsArg
+        data: Dict[str, AbsArg] = _dictionary or {}
         data.update(kwargs)
         if "_id" in data.keys() or "_ids" in data.keys():  # pragma: no cover
             raise Exception(f"Hosh-indexed dict cannot have a field named '_id'/'_ids': {data.keys()}")
+        from hdict.entry.handling import handle_values
         self.data = handle_values(data)  # REMINDER: 'dict' entries are only "_id" and "_ids".
 
-        # REMINDER: "lazy hoshes" are only available after handling values ('for' loop above).
+        # REMINDER: "lazy hoshes" are only available after handling values (call above).
         self.hosh = ø
         self.ids = {}
         for k, v in self.data.items():
@@ -57,7 +55,7 @@ class frozenhdict(UserDict, Dict[str, VT]):
         self.data["_id"] = self.id = self.hosh.id
         self.data["_ids"] = self.ids
 
-        # minor range(TODO: if there are duplicate ids in hdict, use the same Val reference for all
+        # minor TODO: if there are duplicate ids in hdict, use the same AbsVal.value reference for all (cannot use the AbsVal obj directly due to the flag 'ispositional')
 
     def __rshift__(self, other):
         from hdict import hdict
@@ -97,14 +95,16 @@ class frozenhdict(UserDict, Dict[str, VT]):
     @staticmethod
     def fromdict(dictionary, ids):
         """Build a frozenidict from values and pre-defined ids"""
+        from hdict.entry.absarg import AbsArg
+        from hdict import value
         data = {}
         for k, v in dictionary.items():
-            if isinstance(v, AbsVal):
+            if isinstance(v, AbsArg):
                 if k in ids and ids[k] != v.id:  # pragma: no cover
                     raise Exception(f"Conflicting ids provided for key '{k}': ival.id={v.id}; ids[{k}]={ids[k]}")
                 data[k] = v
             else:
-                data[k] = StrictVal(v, ids[k])
+                data[k] = value(v, ids[k])
         return frozenhdict(data)
 
     @property
@@ -114,8 +114,9 @@ class frozenhdict(UserDict, Dict[str, VT]):
         return self
 
     def evaluate(self):
+        from hdict import apply
         for k, val in self.data.items():
-            if isinstance(val, LazyVal):
+            if isinstance(val, apply):
                 val.evaluate()
         return self
 
@@ -137,15 +138,16 @@ class frozenhdict(UserDict, Dict[str, VT]):
 
     @cached_property
     def asdicts_hoshes_noneval(self):
+        from hdict import apply
         hoshes = set()
         dic = {}
-        for k, ival in self.data.items():
+        for k, val in self.data.items():
             if k not in ["_id", "_ids"]:
-                hoshes.add(ival.hosh)
-                if isinstance(ival, LazyVal):
-                    dic[k] = ival
+                hoshes.add(val.hosh)
+                if isinstance(val, apply):
+                    dic[k] = val
                 else:
-                    v = ival.value
+                    v = val.value
                     if isinstance(v, frozenhdict):
                         dic[k], subhoshes = v.asdicts_hoshes_noneval
                         hoshes.update(subhoshes)
