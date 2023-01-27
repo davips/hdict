@@ -1,7 +1,7 @@
+from hdict.entry.default import default
 from hdict.entry.field import field
 from hdict.entry.apply import apply
 from hdict.entry.sample import sample
-from hdict.entry.value import value
 from hdict.hdict_ import hdict
 
 

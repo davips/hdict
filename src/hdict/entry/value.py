@@ -1,9 +1,9 @@
-from hdict.entry.absarg import AbsArg
+from hdict.entry.abscontent import AbsContent
 from hdict.hoshfication import v2hosh
 from hosh import Hosh
 
 
-class value(AbsArg):
+class value(AbsContent):
     """
     >>> x = 5
     >>> from hdict import value
@@ -15,7 +15,7 @@ class value(AbsArg):
 
     """
 
-    def __init__(self, value: object, hosh: Hosh = None, hdict=None, ispositional: bool = None):
+    def __init__(self, value: object, hosh: Hosh = None, hdict=None):
         """
 
         Args:
@@ -23,12 +23,16 @@ class value(AbsArg):
             hosh:
             hdict:  optional reference to the object if it has a hdict counterpart (e.g.: pandas DF)
         """
-        self.value, self.ispositional = value, ispositional
-        if isinstance(hosh, str):
-            hosh = Hosh.fromid(hosh)
-        self.hosh = v2hosh(value) if hosh is None else hosh
+        if isinstance(value, AbsContent):
+            raise Exception(f"Cannot nest AbsContent object inside a 'value' object: '{type(value)}")
+        self.value = value
+        self._hosh = Hosh.fromid(hosh) if isinstance(hosh, str) else hosh
         self.hdict = hdict
         self.isevaluated = True
+
+    @property
+    def hosh(self):
+        return v2hosh(value) if self._hosh is None else self._hosh
 
     def __repr__(self):
         return repr(self.value)

@@ -3,11 +3,11 @@ from random import Random
 
 from lange.tricks import list2progression
 
-from hdict.entry.absarg import AbsArg
+from hdict.entry.abscontent import AbsContent
 
 
 @dataclass
-class sample(AbsArg):
+class sample(AbsContent):
     """
     >>> (s := sample(1, 2, 3, ..., 9).values)
     [1, 2, 3, 4, 5, 6, 7, 8, 9]
@@ -21,8 +21,8 @@ class sample(AbsArg):
     """
     obj: object
 
-    def __init__(self, *values: list[int | float], rnd: Random = Random(0), maxdigits=28, ispositional: bool = None):
-        self.rnd, self.ispositional = rnd, ispositional
+    def __init__(self, *values: list[int | float], rnd: Random = Random(0), maxdigits=28):
+        self.rnd = rnd
         # minor TODO reject infinite values
         # minor TODO optimize by using new lazy item access of future 'lange'
         self.values = list2progression(values, maxdigits=maxdigits).l

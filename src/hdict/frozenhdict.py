@@ -27,8 +27,8 @@ class frozenhdict(UserDict, Dict[str, VT]):
 
     # noinspection PyMissingConstructor
     def __init__(self, /, _dictionary=None, **kwargs):
-        from hdict.entry.absarg import AbsArg
-        data: Dict[str, AbsArg] = _dictionary or {}
+        from hdict.entry.abscontent import AbsContent
+        data: Dict[str, AbsContent] = _dictionary or {}
         data.update(kwargs)
         if "_id" in data.keys() or "_ids" in data.keys():  # pragma: no cover
             raise Exception(f"Hosh-indexed dict cannot have a field named '_id'/'_ids': {data.keys()}")
@@ -55,7 +55,7 @@ class frozenhdict(UserDict, Dict[str, VT]):
         self.data["_id"] = self.id = self.hosh.id
         self.data["_ids"] = self.ids
 
-        # minor TODO: if there are duplicate ids in hdict, use the same AbsVal.value reference for all (cannot use the AbsVal obj directly due to the flag 'ispositional')
+        # minor TODO: if there are duplicate ids in hdict, use the same AbsVal reference for all
 
     def __rshift__(self, other):
         from hdict import hdict
@@ -95,11 +95,11 @@ class frozenhdict(UserDict, Dict[str, VT]):
     @staticmethod
     def fromdict(dictionary, ids):
         """Build a frozenidict from values and pre-defined ids"""
-        from hdict.entry.absarg import AbsArg
-        from hdict import value
+        from hdict.entry.abscontent import AbsContent
+        from hdict.entry.value import value
         data = {}
         for k, v in dictionary.items():
-            if isinstance(v, AbsArg):
+            if isinstance(v, AbsContent):
                 if k in ids and ids[k] != v.id:  # pragma: no cover
                     raise Exception(f"Conflicting ids provided for key '{k}': ival.id={v.id}; ids[{k}]={ids[k]}")
                 data[k] = v
