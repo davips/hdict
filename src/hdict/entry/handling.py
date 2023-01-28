@@ -1,4 +1,3 @@
-from dataclasses import dataclass
 from typing import Dict
 
 from hdict import default
@@ -48,8 +47,6 @@ def handle_args(signature, applied_args, applied_kwargs):
         if (v := par.default) is par.empty:
             fargs[name] = field(name)
         else:
-            # minor TODO: v cannot be an abscontent by now (default would need a recursive handling like 'field' and 'apply')
-            #   would be mildly useful for functions that'd like to define a field as a default source as an alternative to the field given by the param name itself.
             fkwargs[name] = default(name, v)
         params.append(name)
 
@@ -58,6 +55,7 @@ def handle_args(signature, applied_args, applied_kwargs):
     used = set()
     for i, applied_arg in enumerate(applied_args):
         if i < len(fargs):
+            # noinspection PyUnresolvedReferences
             used.add(key := fargs.keys()[i])
             fargs[key] = wrap(applied_arg)
         else:
@@ -84,59 +82,47 @@ def handle_args(signature, applied_args, applied_kwargs):
     return fargs, fkwargs
 
 
-def handle_values(data: Dict[str, AbsContent | dict]):  # REMINDER: 'dict' entries are only "_id" and "_ids".
-    from hdict import apply, field
+def handle_default(content, data):
     from hdict.entry.value import value
-    newdata, late_assignment = {}, []
-    for k, v in data.items():
-        if isinstance(v, value):
-            newdata[k] = v
-        elif isinstance(v, (apply, field)):
-            new = v.clone()
-            late_assignment.append(new)
-            newdata[k] = new  # REMINDER: here we make a copy to avoid mutation in original 'v' while finishing it below
-        elif isinstance(v, hdict):
-            newdata[k] = value(v.frozen, v.hosh)
-        elif str(type(v)) == "<class 'pandas.core.frame.DataFrame'>":
-            newdata[k] = explode_df(v)
-        elif isinstance(v, AbsContent):
-            raise Exception(f"Cannot handle instance of type '{type(v)}'.")
+    from hdict.entry.field import field
+    if content.name in data:
+        return field(content.name, content.hosh)
+    return content.value if isinstance(content.value, field) else value(content.value, content.hosh)
+
+
+def handle_values(data: Dict[str, AbsContent | dict]):  # REMINDER: 'dict' entries are only "_id" and "_ids".
+    from hdict.entry.value import value
+    from hdict.entry.apply import apply
+    from hdict.entry.field import field
+    unfinished = []
+    for k, content in data.items():
+        if isinstance(content, value):
+            pass
+        elif isinstance(content, default):
+            data[k] = handle_default(content, data)
+        # REMINDER: clone() makes a deep copy to avoid mutation in original 'content' when finishing it below
+        elif isinstance(content, field):
+            content = content.clone()
+            unfinished.append(content)
+            data[k] = content
+        elif isinstance(content, apply):
+            content = content.clone()
+            reqs = content.requirements
+            for kreq, req in reqs.items():
+                if isinstance(req, default):
+                    reqs[kreq] = handle_default(req, data)
+            unfinished.append(content)
+            data[k] = content
+        elif isinstance(content, hdict):
+            data[k] = value(content.frozen, content.hosh)
+        elif str(type(content)) == "<class 'pandas.core.frame.DataFrame'>":
+            data[k] = explode_df(content)
+        elif isinstance(content, AbsContent):
+            raise Exception(f"Cannot handle instance of type '{type(content)}'.")
         else:
-            newdata[k] = value(v)
+            data[k] = value(content)
 
     # Finish state of field-dependent objects created above.
-    for item in late_assignment:
-        handle_item(item, newdata)
-
-    return newdata
-
-
-def handle_item(item: AbsContent, data):
-    from hdict import apply, field, default
-    from hdict.entry.value import value
-    if isinstance(item, value):
-        pass
-    elif isinstance(item, field):
-        if item.name not in data:
-            raise Exception(f"Missing field '{item.name}'")
-        if not item.iscloned:
-            item = item.clone()
-        item.fill(data[item.name])
-    elif isinstance(item, default):
-        item = data[item.name] if item.name in data else value(item, item.hosh)
-    elif isinstance(item, apply):
-        if not item.iscloned:
-            item = item.clone()
-        deps = item.requirements
-        for k, dep in deps.items():
-            if isinstance(dep, (field, apply, default)):
-                newdep = handle_item(dep, data)
-            else:
-                print(k, dep, item.requirements.items())
-                raise Exception(f"Unknown dep type '{type(dep)}'")
-            deps[k] = newdep
-        item.fill(deps)
-    else:
-        print(item)
-        raise Exception(f"Unknown type for dep_stub entry: '{type(item)}")
-    return item
+    for item in unfinished:
+        if not item.finished:
+            item.finish(data)

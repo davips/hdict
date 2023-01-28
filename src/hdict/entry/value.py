@@ -26,13 +26,11 @@ class value(AbsContent):
         if isinstance(value, AbsContent):
             raise Exception(f"Cannot nest AbsContent object inside a 'value' object: '{type(value)}")
         self.value = value
-        self._hosh = Hosh.fromid(hosh) if isinstance(hosh, str) else hosh
+        if isinstance(hosh, str):
+            hosh = Hosh.fromid(hosh)
+        self.hosh = v2hosh(self.value) if hosh is None else hosh
         self.hdict = hdict
         self.isevaluated = True
-
-    @property
-    def hosh(self):
-        return v2hosh(value) if self._hosh is None else self._hosh
 
     def __repr__(self):
         return repr(self.value)

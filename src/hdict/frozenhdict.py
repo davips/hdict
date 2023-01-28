@@ -27,13 +27,13 @@ class frozenhdict(UserDict, Dict[str, VT]):
 
     # noinspection PyMissingConstructor
     def __init__(self, /, _dictionary=None, **kwargs):
-        from hdict.entry.abscontent import AbsContent
-        data: Dict[str, AbsContent] = _dictionary or {}
-        data.update(kwargs)
-        if "_id" in data.keys() or "_ids" in data.keys():  # pragma: no cover
-            raise Exception(f"Hosh-indexed dict cannot have a field named '_id'/'_ids': {data.keys()}")
         from hdict.entry.handling import handle_values
-        self.data = handle_values(data)  # REMINDER: 'dict' entries are only "_id" and "_ids".
+        from hdict.entry.abscontent import AbsContent
+        self.data: Dict[str, AbsContent] = _dictionary or {}
+        self.data.update(kwargs)
+        if "_id" in self.data.keys() or "_ids" in self.data.keys():  # pragma: no cover
+            raise Exception(f"Hosh-indexed dict cannot have a field named '_id'/'_ids': {self.data.keys()}")
+        handle_values(self.data)  # REMINDER: 'dict' entries are only "_id" and "_ids".
 
         # REMINDER: "lazy hoshes" are only available after handling values (call above).
         self.hosh = ø
