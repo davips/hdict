@@ -21,7 +21,7 @@ class default(AbsContent):
 
     def clone(self):
         from hdict.entry.field import field
-        value = self.value.clone() if isinstance(self.value, field) else self.value
+        value = self.value.clone if isinstance(self.value, field) else self.value
         return default(self.name, value, self._hosh)
 
     def __repr__(self):

@@ -86,38 +86,35 @@ class apply(AbsContent):
         self.f = f
         if isinstance(f, apply):  # "clone" mode
             fun = f.fun
-            fhosh = f.fhosh
-            fargs = f.args
-            fkwargs = f.kwargs
+            self.fhosh = f.fhosh
+            self.args = f.args
+            self.kwargs = f.kwargs
             from hdict.entry.default import default
             self.requirements = {k: req.clone() if isinstance(req, (field, apply, default)) else req for k, req in f.requirements.items()}
-        elif isinstance(f, field):  # "function will be provided by hdict" mode
+        elif isinstance(f, field):  # "function will be provided by hdict"-mode constrains 'applied_args'
+            self.fhosh = fhosh
             fun = lambda *args, **kwargs: f.value(*args, **kwargs)
-            fargs = applied_args
-            fkwargs = applied_kwargs
-            self.requirements = {k: v for k, v in sorted((fargs | fkwargs).items())}
+            self.args, self.kwargs = handle_args(None, applied_args, applied_kwargs)
+            self.requirements = {k: v for k, v in sorted((self.args | self.kwargs).items())}
         elif callable(fun := f):
-            if not isfunction(fun):  # "not function" means "method of a custom callable"
+            if not isfunction(fun):  # "not function" means "custom callable"
                 if not hasattr(fun, "__call__"):
                     raise Exception(f"Cannot infer method to apply non custom callable type '{type(fun)}'.")
                 if not hasattr(fun, "hosh"):
                     raise Exception(f"Missing 'hosh' attribute while applying custom callable class '{type(fun)}'")
                 # noinspection PyUnresolvedReferences
                 sig = signature(fun.__call__)
+                self.fhosh = fhosh
             else:
-                if fhosh is None:
-                    fhosh = f2hosh(fun)
+                self.fhosh = f2hosh(fun) if fhosh is None else fhosh
                 sig = signature(fun)
 
             # Separate positional parameters from named parameters looking at 'f' signature.
-            fargs, fkwargs = handle_args(sig, applied_args, applied_kwargs)
-            self.requirements = {k: v for k, v in sorted((fargs | fkwargs).items())}
+            self.args, self.kwargs = handle_args(sig, applied_args, applied_kwargs)
+            self.requirements = {k: v for k, v in sorted((self.args | self.kwargs).items())}
         else:
             raise Exception(f"Cannot apply type '{type(f)}'.")
         self._fun = fun
-        self.fhosh = fhosh  # 'f' identified as a value
-        self.args = fargs
-        self.kwargs = fkwargs
         # Requirements (dependencies stub) are alphabetically sorted to ensure we keep the same resulting hosh no matter in which order the parameters are defined in the function.
 
     @property
@@ -138,7 +135,7 @@ class apply(AbsContent):
         if isinstance(self.f, field) and not self.f.finished:
             self.f.finish(data)
         if self.fhosh is None:
-            self.fhosh = self.f.hosh(data)
+            self.fhosh = self.f.hosh
         reqs = self.requirements
         for kreq, req in reqs.items():
             if isinstance(req, (apply, field)) and not req.finished:

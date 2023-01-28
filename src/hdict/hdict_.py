@@ -13,7 +13,7 @@ class hdict(Dict[str, VT]):
     Function id is reversed before application.
     This is needed to enable handling a function as a value, under the original id.
 
-    >>> from hdict import hdict, apply, value
+    >>> from hdict import hdict, apply, field
     >>> d = hdict({"x": 3}, y=5)
     >>> d["alpha"] = 11
     >>> d.show(colored=False)
@@ -42,7 +42,7 @@ class hdict(Dict[str, VT]):
     ... }
     >>> d["zz1", "ww1"] = apply(f, "r1", y="r2")
     >>> d >>= {("zz2", "ww2"): apply(f, y="r2", x=9)}  # Define external value.
-    >>> d >>= {"zzzz": apply(f, y=val("some str"), x=9)}  # Define external 'str' value.
+    >>> d >>= {"zzzz": apply(f, y="some str", x=9)}  # Define external 'str' value.
     >>> # Non-pickable custom classes need a custom 'hosh' attribute to be applied and also to be used as a value.
     >>> from hosh import Hosh
     >>> # Example of class that could be used as a value or as a function.
@@ -55,7 +55,7 @@ class hdict(Dict[str, VT]):
     >>> custom = CustomClass()
     >>> d["f"] = custom  # Custom callable handled as a value.
     >>> d["zzz1", "www1"] = apply(custom, "r1", y="r2")  # Custom callable being applied.
-    >>> d["zzz2", "www2"] = apply("f", "r1", y="r2")  # Callable field being applied.
+    >>> d["zzz2", "www2"] = apply(field("f"), field("r1"), y="r2")  # Callable field being applied.
     >>> d.show(colored=False)
     {
         x: 3,
@@ -63,9 +63,9 @@ class hdict(Dict[str, VT]):
         alpha: 11,
         beta: 12,
         gamma: 17,
-        r1: λ(x),
-        r2: λ(x),
-        r3: λ(x),
+        r1: λ(x=x),
+        r2: λ(x=x),
+        r3: λ(x=x),
         zzzz: λ(x y),
         f: "CustomClass()",
         _id: "pEflFVmhSZS-9Y.RLl.ovCGIHdibHr4UX-EUl9n3",
@@ -145,8 +145,7 @@ class hdict(Dict[str, VT]):
     def evaluate(self):
         """
         >>> from hdict import apply
-        >>> from hdict.lazyval import LazyVal
-        >>> d = hdict(x=LazyVal(apply(lambda: 2), {}))
+        >>> d = hdict(x=apply(apply(lambda: 2), {}))
         >>> d.show(colored=False)
         {
             x: λ(),
@@ -202,8 +201,7 @@ class hdict(Dict[str, VT]):
         """Build an idict from values and pre-defined ids
 
         >>> from hosh import Hosh
-        >>> from hdict.strictval import StrictVal
-        >>> print(hdict.fromdict({"x": 3, "y": 5, "z": StrictVal(7)}, ids={"x": Hosh(b"x"), "y": Hosh(b"y").id}))
+        >>> print(hdict.fromdict({"x": 3, "y": 5, "z": 7}, ids={"x": Hosh(b"x"), "y": Hosh(b"y").id}))
         {x: 3, y: 5, z: 7, _id: "uf--zyyiojm5Tl.vFKALuyGhZRO0e0eH9irosr0i", _ids: {x: "ue7X2I7fd9j0mLl1GjgJ2btdX1QFnb1UAQNUbFGh", y: "5yg5fDxFPxhEqzhoHgXpKyl5f078iBhd.pR0G2X0", z: "eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf"}}
         """
         from hdict.frozenhdict import frozenhdict

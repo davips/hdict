@@ -34,21 +34,32 @@ def handle_args(signature, applied_args, applied_kwargs):
 
     # Separate positional from named parameters of 'f'.
     fargs, fkwargs = IndexedDict(), {}
-    hasargs, haskwargs = False, False
     params = []
-    for par in signature.parameters.values():
-        if str(par).startswith("**"):
-            haskwargs = True
-            continue
-        elif str(par).startswith("*"):
-            hasargs = True
-            continue
-        name = par.name
-        if (v := par.default) is par.empty:
-            fargs[name] = field(name)
-        else:
-            fkwargs[name] = default(name, v)
-        params.append(name)
+    hasargs, haskwargs = False, False
+    if signature is None:
+        for v in applied_args:
+            if not isinstance(v, field):
+                print(applied_args)
+                raise Exception(f"Cannot apply a field ('{v}') with non field positional arguments.")
+            fargs[v.name] = v
+            params.append(v.name)
+        for k, v in applied_kwargs.items():
+            fkwargs[k] = v
+            params.append(k)
+    else:
+        for par in signature.parameters.values():
+            if str(par).startswith("**"):
+                haskwargs = True
+                continue
+            elif str(par).startswith("*"):
+                hasargs = True
+                continue
+            name = par.name
+            if (v := par.default) is par.empty:
+                fargs[name] = field(name)
+            else:
+                fkwargs[name] = default(name, v)
+            params.append(name)
 
     # apply's entry override f's entry
     wrap = lambda x: x if isinstance(x, AbsContent) else value(x)

@@ -104,7 +104,7 @@ class frozenhdict(UserDict, Dict[str, VT]):
                     raise Exception(f"Conflicting ids provided for key '{k}': ival.id={v.id}; ids[{k}]={ids[k]}")
                 data[k] = v
             else:
-                data[k] = value(v, ids[k])
+                data[k] = value(v, ids[k] if k in ids else None)
         return frozenhdict(data)
 
     @property
