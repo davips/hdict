@@ -4,7 +4,7 @@ from hosh import Hosh
 
 
 class default(AbsContent):
-    def __init__(self, name: str, value: object, hosh: Hosh = None, hdict=None):
+    def __init__(self, name: str, value: object, hosh: Hosh | str = None, hdict=None):
         from hdict.entry.field import field
         if isinstance(value, AbsContent) and not isinstance(value, field):
             raise Exception(f"Can only nest 'field' or ordinary values inside a 'default' object: '{type(value)}")

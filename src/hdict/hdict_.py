@@ -286,7 +286,7 @@ class hdict(Dict[str, VT]):
         return self.frozen.__reduce__()
 
     def keys(self):
-        """Generator of keys which don't start with '_'"""
+        """Generator of field names, i.e., keys which don't start with '_'"""
         return self.frozen.keys()
 
     def values(self, evaluate=True):

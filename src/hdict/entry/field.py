@@ -9,8 +9,9 @@ class field(AbsContent):
 
     content = None
 
-    def __init__(self, name: str, hosh: Hosh = None):
-        self.name, self._hosh = name, hosh
+    def __init__(self, name: str, hosh: Hosh | str = None):
+        self.name = name
+        self._hosh = Hosh.fromid(hosh) if isinstance(hosh, str) else hosh
 
     @property
     def finished(self):

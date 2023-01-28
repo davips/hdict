@@ -11,8 +11,8 @@ packages = [
 
 [tool.poetry.dependencies]
 python = "^3.10"
-hosh = "^1.211228.2"
-lazydf = "^0.220726.1"
+hosh = "^1.211228.3"
+lazydf = "^0.220726.3"
 indexed = "^1.3.0"
 lange = "^0.220727.5"
 

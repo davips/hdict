@@ -84,6 +84,8 @@ class apply(AbsContent):
     #     TODO multifield
     def __init__(self, f: Union[callable, "apply", field], *applied_args, fhosh: Hosh = None, **applied_kwargs):
         self.f = f
+        if isinstance(fhosh, str):
+            fhosh = Hosh.fromid(fhosh)
         if isinstance(f, apply):  # "clone" mode
             fun = f.fun
             self.fhosh = f.fhosh

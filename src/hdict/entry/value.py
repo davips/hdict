@@ -6,16 +6,16 @@ from hosh import Hosh
 class value(AbsContent):
     """
     >>> x = 5
-    >>> from hdict import value
-    >>> v = value(x)
-    >>> v.value
-    5
+    >>> from hdict.entry.value import value
+    >>> v = value(x, "1234567890123456789012345678901234567890")
     >>> v
     5
+    >>> v.hosh.id
+    '1234567890123456789012345678901234567890'
 
     """
 
-    def __init__(self, value: object, hosh: Hosh = None, hdict=None):
+    def __init__(self, value: object, hosh: Hosh | str = None, hdict=None):
         """
 
         Args:
