@@ -22,7 +22,7 @@
 #
 
 from shelve import Shelf
-from typing import Dict, TypeVar
+from typing import TypeVar
 
 from hdict.cache import cache
 from hdict.frozenhdict import frozenhdict
@@ -31,7 +31,7 @@ from hosh import Hosh
 VT = TypeVar("VT")
 
 
-class hdict(Dict[str, VT]):
+class hdict(dict[str, VT]):
     """
     Function id is reversed before application.
     This is needed to enable handling a function as a value, under the original id.

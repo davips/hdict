@@ -25,16 +25,15 @@ import json
 import re
 from collections import UserDict
 from functools import cached_property
-from typing import Dict, TypeVar
+from typing import TypeVar
 
 from hdict.customjson import CustomJSONEncoder
-from hdict.entry.applyout import applyOut
 from hosh import ø
 
 VT = TypeVar("VT")
 
 
-class frozenhdict(UserDict, Dict[str, VT]):
+class frozenhdict(UserDict, dict[str, VT]):
     """
     Immutable hdict.
 
@@ -53,11 +52,13 @@ class frozenhdict(UserDict, Dict[str, VT]):
     def __init__(self, /, _dictionary=None, **kwargs):
         from hdict.entry.handling import handle_values
         from hdict.entry.abscontent import AbsContent
-        self.data: Dict[str, AbsContent] = _dictionary or {}
-        self.data.update(kwargs)
-        if "_id" in self.data.keys() or "_ids" in self.data.keys():  # pragma: no cover
-            raise Exception(f"Hosh-indexed dict cannot have a field named '_id'/'_ids': {self.data.keys()}")
-        handle_values(self.data)  # REMINDER: 'dict' entries are only "_id" and "_ids".
+        data: dict[str, object] = _dictionary or {}
+        data.update(kwargs)
+        if "_id" in data.keys() or "_ids" in data.keys():  # pragma: no cover
+            raise Exception(f"Hosh-indexed dict cannot have a field named '_id'/'_ids': {data.keys()}")
+        handle_values(data)  # REMINDER: 'dict' entries are only "_id" and "_ids".
+        # noinspection PyTypeChecker
+        self.data: dict[str, AbsContent] = data
 
         # REMINDER: "lazy hoshes" are only available after handling values (call above).
         self.hosh = ø
@@ -83,7 +84,8 @@ class frozenhdict(UserDict, Dict[str, VT]):
 
     def __rshift__(self, other):
         from hdict import hdict
-        data = self.data.copy()
+        from hdict.entry.applyout import applyOut
+        data: dict[str, object] = self.data.copy()
         del data["_id"]
         del data["_ids"]
         if isinstance(other, hdict):  # merge keeping ids
@@ -93,10 +95,11 @@ class frozenhdict(UserDict, Dict[str, VT]):
         if isinstance(other, dict):  # merge keeping ids of AbsContent objects if any is present
             for k, v in other.items():
                 if isinstance(v, applyOut):
-                    raise Exception(f"Cannot assign output through both apply()() and dict key.")
-                if isinstance(k, tuple):  # TODO
-                    pass
-                #     data.update(multifield(k, v))
+                    raise Exception("Cannot assign output through both apply and dict-key: '>> {out: apply(...)(out)}'.")
+                if isinstance(k, tuple):
+                    from hdict.entry.handling import handle_multioutput
+                    handle_multioutput(data, k, v)
+                    return frozenhdict()
                 elif isinstance(k, str):
                     data[k] = v
                 else:

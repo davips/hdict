@@ -28,17 +28,16 @@ from itertools import chain
 from operator import mul
 from typing import Union
 
-from hdict.entry.abscontent import AbsContent
+from hdict.entry.abscloneable import AbsCloneable
 from hdict.entry.field import field
 from hdict.entry.handling import Unevaluated, handle_args
 from hdict.entry.value import value
 from hdict.hoshfication import f2hosh
-from hdict.indexeddict import IndexedDict
 from hosh import Hosh
 from hosh.misc import hoshes
 
 
-class apply(AbsContent):
+class apply(AbsCloneable):
     """
     >>> from hdict import apply
     >>> f = lambda a, b: a**b
@@ -115,7 +114,7 @@ class apply(AbsContent):
             self.args = f.args
             self.kwargs = f.kwargs
             from hdict.entry.default import default
-            self.requirements = {k: req.clone() if isinstance(req, (field, apply, default)) else req for k, req in f.requirements.items()}
+            self.requirements = {k: req.clone() if isinstance(req, AbsCloneable) else req for k, req in f.requirements.items()}
         elif isinstance(f, field):  # "function will be provided by hdict"-mode constrains 'applied_args'
             self.fhosh = fhosh
             fun = lambda *args, **kwargs: f.value(*args, **kwargs)
@@ -206,8 +205,3 @@ class apply(AbsContent):
             return f"λ({' '.join(lst)})"
         return repr(self._value)
 
-    def multifield(self: tuple, v: [list, IndexedDict, "apply"]):
-        pass
-        # SubVal(self, item)
-        # sorted(keys())    # Hoshes are assigned to each output according to the alphabetical order of the keys.
-        # hosh[:n]

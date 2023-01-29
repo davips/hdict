@@ -21,8 +21,6 @@
 #  time spent here.
 #
 
-from abc import ABC
-
 from hosh import Hosh
 
 
@@ -33,7 +31,7 @@ class Undefined:
 Undefined = Undefined()
 
 
-class AbsContent(ABC):
+class AbsContent:
     value: object
     hosh: Hosh
     isevaluated: bool

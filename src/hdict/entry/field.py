@@ -23,9 +23,10 @@
 
 from hdict.entry.abscontent import AbsContent
 from hosh import Hosh
+from hdict.entry.abscloneable import AbsCloneable
 
 
-class field(AbsContent):
+class field(AbsCloneable):
     """
     Pointer to a field
     """

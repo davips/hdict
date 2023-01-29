@@ -51,6 +51,33 @@ class Arg:
         return f"_{self.position}"
 
 
+def handle_multioutput(data, field_names: tuple, content: list | dict | AbsContent):
+    """Fields and hoshes are assigned to each output according to the alphabetical order of the original keys."""
+    if isinstance(content, list):
+        if len(field_names) != len(content):
+            raise Exception(f"Number of output fields ('{len(field_names)}') should match number of list elements ('{len(content)}').")
+        for field_name, val in zip(field_names, content):
+            data[field_name] = val
+    elif isinstance(content, dict):
+        if len(field_names) != len(content):
+            raise Exception(f"Number of output fields ('{len(field_names)}') should match number of dict entries ('{len(content)}').")
+        for field_name, (_, val) in zip(field_names, sorted(content.items())):
+            data[field_name] = val
+    elif isinstance(content, AbsContent):
+        from hdict.subcontent import subcontent
+        n = len(field_names)
+        if all(isinstance(x, tuple) for x in field_names):
+            source_target = sorted((sour, targ) for targ, sour in field_names)
+            for i, (source, target) in enumerate(source_target):
+                data[target] = subcontent(content, i, n, source)
+        if any(isinstance(x, tuple) for x in field_names):
+            raise Exception(f"Cannot mix translated and non translated outputs.")
+        for i, field_name in enumerate(field_names):
+            data[field_name] = subcontent(content, i, n)
+    else:
+        raise Exception(f"Cannot handle multioutput for key '{field_names}' and type '{content}'.")
+
+
 def handle_args(signature, applied_args, applied_kwargs):
     from hdict import field
     from hdict.entry.value import value
@@ -124,10 +151,11 @@ def handle_default(name, content, data):
     return content.value if isinstance(content.value, field) else value(content.value, content.hosh)
 
 
-def handle_values(data: Dict[str, AbsContent | dict]):  # REMINDER: 'dict' entries are only "_id" and "_ids".
+def handle_values(data: Dict[str, object]):  # REMINDER: 'dict' entries are only "_id" and "_ids".
     from hdict.entry.value import value
     from hdict.entry.apply import apply
     from hdict.entry.field import field
+    from hdict.subcontent import subcontent
     unfinished = []
     for k, content in data.items():
         if isinstance(content, value):
@@ -135,7 +163,7 @@ def handle_values(data: Dict[str, AbsContent | dict]):  # REMINDER: 'dict' entri
         elif isinstance(content, default):
             data[k] = handle_default(k, content, data)
         # REMINDER: clone() makes a deep copy to avoid mutation in original 'content' when finishing it below
-        elif isinstance(content, field):
+        elif isinstance(content, (field, subcontent)):
             content = content.clone()
             unfinished.append(content)
             data[k] = content
