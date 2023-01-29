@@ -81,7 +81,7 @@ def handle_args(signature, applied_args, applied_kwargs):
             if (v := par.default) is par.empty:
                 fargs[name] = field(name)
             else:
-                fkwargs[name] = default(name, v)
+                fkwargs[name] = default(v)
             params.append(name)
 
     # apply's entry override f's entry
@@ -116,11 +116,11 @@ def handle_args(signature, applied_args, applied_kwargs):
     return fargs, fkwargs
 
 
-def handle_default(content, data):
+def handle_default(name, content, data):
     from hdict.entry.value import value
     from hdict.entry.field import field
-    if content.name in data:
-        return field(content.name, content.hosh)
+    if name in data:
+        return field(name, content.hosh)
     return content.value if isinstance(content.value, field) else value(content.value, content.hosh)
 
 
@@ -133,7 +133,7 @@ def handle_values(data: Dict[str, AbsContent | dict]):  # REMINDER: 'dict' entri
         if isinstance(content, value):
             pass
         elif isinstance(content, default):
-            data[k] = handle_default(content, data)
+            data[k] = handle_default(k, content, data)
         # REMINDER: clone() makes a deep copy to avoid mutation in original 'content' when finishing it below
         elif isinstance(content, field):
             content = content.clone()
@@ -144,7 +144,7 @@ def handle_values(data: Dict[str, AbsContent | dict]):  # REMINDER: 'dict' entri
             reqs = content.requirements
             for kreq, req in reqs.items():
                 if isinstance(req, default):
-                    reqs[kreq] = handle_default(req, data)
+                    reqs[kreq] = handle_default(kreq, req, data)
             unfinished.append(content)
             data[k] = content
         elif isinstance(content, hdict):

@@ -27,11 +27,11 @@ from hosh import Hosh
 
 
 class default(AbsContent):
-    def __init__(self, name: str, value: object, hosh: Hosh | str = None, hdict=None):
+    def __init__(self, value: object, hosh: Hosh | str = None, hdict=None):
         from hdict.entry.field import field
         if isinstance(value, AbsContent) and not isinstance(value, field):
             raise Exception(f"Can only nest 'field' or ordinary values inside a 'default' object: '{type(value)}")
-        self.name, self.value = name, value
+        self.value = value
         self._hosh = Hosh.fromid(hosh) if isinstance(hosh, str) else hosh
         self.hdict = hdict
         self.isevaluated = True
@@ -45,7 +45,7 @@ class default(AbsContent):
     def clone(self):
         from hdict.entry.field import field
         value = self.value.clone if isinstance(self.value, field) else self.value
-        return default(self.name, value, self._hosh)
+        return default(value, self._hosh)
 
     def __repr__(self):
         return f"default({repr(self.value)})"

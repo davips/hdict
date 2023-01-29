@@ -41,8 +41,17 @@ class applyOut(AbsContent):
         self.kwargs = self.apply.kwargs
         self.requirements = self.apply.requirements
         # noinspection PyTypeChecker
-        self.hosh = self.apply.hosh
         self.fun = self.apply.fun
-        self.isevaluated = self.apply.isevaluated
-        self.value = self.apply.evaluate
         self.__repr__ = self.apply.__repr__
+
+    @property
+    def hosh(self):
+        return self.apply.hosh
+
+    @property
+    def value(self):
+        return self.apply.value
+
+    @property
+    def isevaluated(self):
+        return self.apply.isevaluated

@@ -28,6 +28,7 @@ from functools import cached_property
 from typing import Dict, TypeVar
 
 from hdict.customjson import CustomJSONEncoder
+from hdict.entry.applyout import applyOut
 from hosh import ø
 
 VT = TypeVar("VT")
@@ -89,8 +90,10 @@ class frozenhdict(UserDict, Dict[str, VT]):
             other = other.frozen
         if isinstance(other, frozenhdict):  # merge keeping ids
             other = other.data
-        if isinstance(other, dict):  # merge keeping ids of Val objects if any is present
+        if isinstance(other, dict):  # merge keeping ids of AbsContent objects if any is present
             for k, v in other.items():
+                if isinstance(v, applyOut):
+                    raise Exception(f"Cannot assign output through both apply()() and dict key.")
                 if isinstance(k, tuple):  # TODO
                     pass
                 #     data.update(multifield(k, v))
