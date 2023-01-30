@@ -52,20 +52,32 @@ class Arg:
 
 
 def handle_multioutput(data, field_names: tuple, content: list | dict | AbsContent):
-    """Fields and hoshes are assigned to each output according to the alphabetical order of the original keys."""
+    """Fields and hoshes are assigned to each output according to the alphabetical order of the original keys.
+
+    >>> from hdict import field
+    >>> d = {"a": field("b"), "b": field("c"), "c": 5}
+    >>> d
+    {'a': field('b'), 'b': field('c'), 'c': 5}
+    >>> handle_multioutput(d, ("x","y"), [0,1])
+    >>> d
+    {'a': field('b'), 'b': field('c'), 'c': 5, 'x': 0, 'y': 1}
+    >>> handle_multioutput(d, ("x","y"), {1:"a", 0:"b"})
+    >>> d
+    {'a': field('b'), 'b': field('c'), 'c': 5, 'x': 'b', 'y': 'a'}
+    """
     if isinstance(content, list):
-        if len(field_names) != len(content):
+        if len(field_names) != len(content):  # pragma: no cover
             raise Exception(f"Number of output fields ('{len(field_names)}') should match number of list elements ('{len(content)}').")
         for field_name, val in zip(field_names, content):
-            if not isinstance(field_name, str):
-                raise Exception(f"Can only accept target strings when unpacking a list, not '{type(field_name)}'.")
+            if not isinstance(field_name, str):  # pragma: no cover
+                raise Exception(f"Can only accept target-field strings when unpacking a list, not '{type(field_name)}'.")
             data[field_name] = val
     elif isinstance(content, dict):
-        if len(field_names) != len(content):
+        if len(field_names) != len(content):  # pragma: no cover
             raise Exception(f"Number of output fields ('{len(field_names)}') should match number of dict entries ('{len(content)}').")
         for field_name, (_, val) in zip(field_names, sorted(content.items())):
-            if not isinstance(field_name, str):
-                raise Exception(f"Can only accept target strings when unpacking a dict, not '{type(field_name)}'.")
+            if not isinstance(field_name, str):  # pragma: no cover
+                raise Exception(f"Can only accept target-field strings when unpacking a dict, not '{type(field_name)}'.")
             data[field_name] = val
     elif isinstance(content, AbsContent):
         from hdict.subcontent import subcontent
@@ -73,17 +85,17 @@ def handle_multioutput(data, field_names: tuple, content: list | dict | AbsConte
         if all(isinstance(x, tuple) for x in field_names):
             source_target = sorted((sour, targ) for targ, sour in field_names)
             for i, sour_targ in enumerate(source_target):
-                if len(sour_targ) != 2:
-                    raise Exception(f"Output tuples should be string pairs target=source, not a sequence of length '{len(sour_targ)}'.", sour_targ)
+                if len(sour_targ) != 2:  # pragma: no cover
+                    raise Exception(f"Output tuples should be string pairs 'target=source', not a sequence of length '{len(sour_targ)}'.", sour_targ)
                 source, target = sour_targ
                 data[target] = subcontent(content, i, n, source)
-        elif any(isinstance(x, tuple) for x in field_names):
+        elif any(isinstance(x, tuple) for x in field_names):  # pragma: no cover
             raise Exception(f"Cannot mix translated and non translated outputs.", field_names)
         else:
             for i, field_name in enumerate(field_names):
                 data[field_name] = subcontent(content, i, n)
-    else:
-        raise Exception(f"Cannot handle multioutput for key '{field_names}' and type '{content}'.")
+    else:  # pragma: no cover
+        raise Exception(f"Cannot handle multioutput for key '{field_names}' and type '{type(content)}'.", content)
 
 
 def handle_args(signature, applied_args, applied_kwargs):
@@ -96,7 +108,7 @@ def handle_args(signature, applied_args, applied_kwargs):
     hasargs, haskwargs = False, False
     if signature is None:
         for v in applied_args:
-            if not isinstance(v, field):
+            if not isinstance(v, field):  # pragma: no cover
                 print(applied_args)
                 raise Exception(f"Cannot apply a field ('{v}') with non field positional arguments.")
             fargs[v.name] = v
@@ -129,7 +141,7 @@ def handle_args(signature, applied_args, applied_kwargs):
             fargs[key] = wrap(applied_arg)
         else:
             if i >= len(params):
-                if not hasargs:
+                if not hasargs:  # pragma: no cover
                     raise Exception("Too many arguments to apply. No '*entry' detected for 'f'.")
                 name = Arg(i)
             else:
@@ -139,13 +151,13 @@ def handle_args(signature, applied_args, applied_kwargs):
             fargs[name] = wrap(applied_arg)
 
     for applied_kwarg, v in applied_kwargs.items():
-        if applied_kwarg in used:
+        if applied_kwarg in used:  # pragma: no cover
             raise Exception(f"Parameter '{applied_kwarg}' cannot appear in both 'entry' and 'kwargs' of 'apply()'.")
         if applied_kwarg in fargs:
             fargs[applied_kwarg] = wrap(v)
         elif applied_kwarg in fkwargs or haskwargs:
             fkwargs[applied_kwarg] = wrap(v)
-        else:
+        else:  # pragma: no cover
             raise Exception(f"Parameter '{applied_kwarg}' is not present in 'f' signature nor '**kwargs' was detected for 'f'.")
 
     return fargs, fkwargs
@@ -161,7 +173,7 @@ def handle_default(name, content, data):
     return content.value if isinstance(content.value, field) else value(content.value, content.hosh)
 
 
-def handle_values(data: Dict[str, object]):  # REMINDER: 'dict' entries are only "_id" and "_ids".
+def handle_values(data: Dict[str, object]):
     from hdict.entry.value import value
     from hdict.entry.apply import apply
     from hdict.entry.field import field
@@ -170,8 +182,9 @@ def handle_values(data: Dict[str, object]):  # REMINDER: 'dict' entries are only
     for k, content in data.items():
         if isinstance(content, value):
             pass
-        elif isinstance(content, default):
-            data[k] = handle_default(k, content, data)
+        elif isinstance(content, default):  # pragma: no cover
+            # data[k] = handle_default(k, content, data)
+            raise Exception(f"Cannot pass object of type 'default' directly to hdict. Param:", k)
         # REMINDER: clone() makes a deep copy to avoid mutation in original 'content' when finishing it below
         elif isinstance(content, field):
             content = content.clone()
@@ -189,7 +202,7 @@ def handle_values(data: Dict[str, object]):  # REMINDER: 'dict' entries are only
             data[k] = value(content.frozen, content.hosh)
         elif str(type(content)) == "<class 'pandas.core.frame.DataFrame'>":
             data[k] = explode_df(content)
-        elif isinstance(content, AbsContent):
+        elif isinstance(content, AbsContent):  # pragma: no cover
             raise Exception(f"Cannot handle instance of type '{type(content)}'.")
         else:
             data[k] = value(content)

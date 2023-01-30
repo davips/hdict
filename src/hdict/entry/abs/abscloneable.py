@@ -46,8 +46,8 @@ from hdict.entry.abs.abscontent import AbsContent
 class AbsCloneable(AbsContent):
     clone: "AbsCloneable" = None
     _finished = False
+    finish = None
 
     @property
     def finished(self):
         return self._finished
-

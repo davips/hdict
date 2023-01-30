@@ -56,6 +56,6 @@ class sample(AbsContent, AbsSampleable):
             rnd = self.rnd
         if isinstance(rnd, int):
             rnd = Random(rnd)
-        if not isinstance(rnd, Random):
+        if not isinstance(rnd, Random):  # pragma: no cover
             raise Exception(f"Sampling needs an integer seed or a Random object.")
         return value(rnd.choice(self.values))

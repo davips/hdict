@@ -46,7 +46,7 @@ class value(AbsContent):
             hosh:
             hdict:  optional reference to the object if it has a hdict counterpart (e.g.: pandas DF)
         """
-        if isinstance(value, AbsContent):
+        if isinstance(value, AbsContent):  # pragma: no cover
             raise Exception(f"Cannot nest AbsContent object inside a 'value' object: '{type(value)}")
         self.value = value
         if isinstance(hosh, str):

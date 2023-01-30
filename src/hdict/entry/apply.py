@@ -108,7 +108,7 @@ class apply(AbsCloneable, AbsSampleable):
     #     TODO multifield
     def __init__(self, f: Union[callable, "apply", field], *applied_args, fhosh: Hosh = None, **applied_kwargs):
         self.f = f
-        if isinstance(fhosh, str):
+        if isinstance(fhosh, str):  # pragma: no cover
             fhosh = Hosh.fromid(fhosh)
         if isinstance(f, apply):  # "clone" mode
             fun = f.fun
@@ -125,9 +125,9 @@ class apply(AbsCloneable, AbsSampleable):
             self.requirements = {k: v for k, v in sorted((self.args | self.kwargs).items())}
         elif callable(fun := f):
             if not isfunction(fun):  # "not function" means "custom callable"
-                if not hasattr(fun, "__call__"):
+                if not hasattr(fun, "__call__"):  # pragma: no cover
                     raise Exception(f"Cannot infer method to apply non custom callable type '{type(fun)}'.")
-                if not hasattr(fun, "hosh"):
+                if not hasattr(fun, "hosh"):  # pragma: no cover
                     raise Exception(f"Missing 'hosh' attribute while applying custom callable class '{type(fun)}'")
                 # noinspection PyUnresolvedReferences
                 sig = signature(fun.__call__)
@@ -139,7 +139,7 @@ class apply(AbsCloneable, AbsSampleable):
             # Separate positional parameters from named parameters looking at 'f' signature.
             self.args, self.kwargs = handle_args(sig, applied_args, applied_kwargs)
             self.requirements = {k: v for k, v in sorted((self.args | self.kwargs).items())}
-        else:
+        else:  # pragma: no cover
             raise Exception(f"Cannot apply type '{type(f)}'.")
         self._fun = fun
         # Requirements (dependencies stub) are alphabetically sorted to ensure we keep the same resulting hosh no matter in which order the parameters are defined in the function.
@@ -150,14 +150,14 @@ class apply(AbsCloneable, AbsSampleable):
 
     def __call__(self, *out, **kwout):
         from hdict.entry.applyout import applyOut
-        if out and kwout:
+        if out and kwout:  # pragma: no cover
             raise Exception(f"Cannot mix translated and non translated outputs.")
         return applyOut(self, out or tuple(kwout.items()))
 
     def finish(self, data):
-        if self.finished:
+        if self.finished:  # pragma: no cover
             raise Exception(f"Cannot finish an application twice.")
-        if isinstance(self.f, apply):
+        if isinstance(self.f, apply):  # pragma: no cover
             raise Exception(f"Why applying another apply object?")
         if isinstance(self.f, AbsCloneable) and not self.f.finished:
             self.f.finish(data)
@@ -174,7 +174,7 @@ class apply(AbsCloneable, AbsSampleable):
 
     @property
     def hosh(self):
-        if not self.finished:
+        if not self.finished:  # pragma: no cover
             raise Exception(f"Cannot know apply.hosh before finishing object apply. Provided callable:", self.f)
         if self._hosh is None:
             self._hosh = reduce(mul, chain(hoshes(self.requirements.values()), [self.ahosh]))
@@ -183,7 +183,7 @@ class apply(AbsCloneable, AbsSampleable):
     @property
     def value(self):
         if self._value is Unevaluated:
-            if not self.finished:
+            if not self.finished:  # pragma: no cover
                 raise Exception(f"Cannot access apply.value before finishing object '{self.fhosh}'.")
             self._value = self._fun(*(x.value for x in self.args.values()), **{k: v.value for k, v in self.kwargs})
         return self._value

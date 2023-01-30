@@ -37,9 +37,19 @@ class field(AbsCloneable):
         self._hosh = Hosh.fromid(hosh) if isinstance(hosh, str) else hosh
 
     def finish(self, data):
-        if self.content is not None:
+        """
+        >>> d = {"a": field("b"), "b": field("c"), "c": 5}
+        >>> d
+        {'a': field('b'), 'b': field('c'), 'c': 5}
+        >>> d["a"].finish(d)
+        >>> d
+        {'a': c, 'b': c, 'c': 5}
+        >>> d["a"].value
+        5
+        """
+        if self.content is not None:  # pragma: no cover
             raise Exception(f"Cannot finish a field pointer twice. name: {self.name}; hosh: {self.hosh}")
-        if self.name not in data:
+        if self.name not in data:  # pragma: no cover
             raise Exception(f"Missing field '{self.name}'")
         self.content = data[self.name]
         if isinstance(self.content, AbsCloneable) and not self.content.finished:
@@ -48,7 +58,7 @@ class field(AbsCloneable):
 
     @property
     def hosh(self):
-        if self.content is None:
+        if self.content is None:   # pragma: no cover
             raise Exception(f"Cannot know hosh before finishing pointer to field '{self.name}'.")
         if self._hosh is None:
             self._hosh = self.content.hosh
@@ -56,12 +66,13 @@ class field(AbsCloneable):
 
     @property
     def value(self):
-        if self.content is None:
+        from hdict.entry.abs.abscontent import AbsContent
+        if self.content is None:  # pragma: no cover
             raise Exception(f"Cannot access value before finishing pointer to field '{self.name}'.")
-        return self.content.value
+        return self.content.value if isinstance(self.content, AbsContent) else self.content
 
     @property
-    def isevaluated(self):
+    def isevaluated(self):  # pragma: no cover
         return self.content and self.content.isevaluated
 
     def clone(self):

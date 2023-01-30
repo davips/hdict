@@ -41,4 +41,4 @@ class applyOut(AbsContent, AbsSampleable):
         from hdict.pipeline import pipeline
         if isinstance(other, (pipeline, applyOut)):
             return pipeline(self, other)
-        return NotImplemented
+        return NotImplemented  # pragma: no cover

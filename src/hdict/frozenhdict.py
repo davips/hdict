@@ -57,9 +57,11 @@ class frozenhdict(UserDict, dict[str, VT]):
         data.update(kwargs)
         if "_id" in data.keys() or "_ids" in data.keys():  # pragma: no cover
             raise Exception(f"Hosh-indexed dict cannot have a field named '_id'/'_ids': {data.keys()}")
-        handle_values(data)  # REMINDER: 'dict' entries are only "_id" and "_ids".
+        handle_values(data)
+
+        # REMINDER: Inside data, the only 'dict' entries are "_id" and "_ids", the rest is AbsContent.
         # noinspection PyTypeChecker
-        self.data: dict[str, AbsContent] = data
+        self.data: dict[str, AbsContent | str | dict[str, str]] = data
 
         # REMINDER: "lazy hoshes" are only available after handling values (call above).
         self.hosh = ø
@@ -306,7 +308,6 @@ class frozenhdict(UserDict, dict[str, VT]):
 
     def __str__(self):
         return stringfy(self.data)
-
 
     # def metakeys(self):
     #     """Generator of keys which start with '_'"""
