@@ -27,13 +27,12 @@ from hosh import Hosh
 
 
 class default:
-    def __init__(self, value: object, hosh: Hosh | str = None, hdict=None):
+    def __init__(self, value: object, hosh: Hosh | str = None):
         from hdict.entry.field import field
-        if isinstance(value, AbsContent) and not isinstance(value, field):
+        if isinstance(value, AbsContent) and not isinstance(value, field):  # pragma: no cover
             raise Exception(f"Can only nest 'field' or ordinary values inside a 'default' object: '{type(value)}")
         self.value = value
         self._hosh = Hosh.fromid(hosh) if isinstance(hosh, str) else hosh
-        self.hdict = hdict
         self.isevaluated = True
 
     @property
