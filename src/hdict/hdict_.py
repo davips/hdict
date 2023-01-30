@@ -162,7 +162,9 @@ class hdict(dict[str, VT]):
     >>> d >>= apply(f, field("x"), y=3)("z9") >> apply(g, y=7)("w9", "v9")
     >>> d >>= apply(f, field("x"), y=3)("z") >> apply(g, y=7)("w", "v")
     >>> from hdict import _
-    >>> p = apply(f, y=_[1, 2, 4, ..., 128])("z") >> apply(f, y=_[0, 3, 6, ..., 9])(w="a", v="b")
+    >>> a1 = apply(f, y=_[1, 2, 4, ..., 128])
+    >>> a2 = apply(f, y=_[0, 3, 6, ..., 9])
+    >>> p = a1("z") >> a2(w="a", v="b")
     >>> from random import Random
     >>> rnd = Random(0)
     >>> p1 = p.sample(rnd)
