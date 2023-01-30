@@ -214,7 +214,7 @@ class apply(AbsCloneable, AbsSampleable):
                 elif isinstance(content, (apply, default)):
                     txt = f"{param}={repr(content)}"
                 else:
-                    txt = f"{truncate(repr(content), width=7)}"
+                    txt = truncate(repr(content), width=7)
                 lst.append(txt)
             return f"λ({' '.join(lst)})"
         return repr(self._value)

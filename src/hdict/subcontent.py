@@ -78,6 +78,6 @@ class subcontent(AbsCloneable):
         self._finished = True
 
     def __repr__(self):
-        if self.parent.isevaluated:
-            return repr(self.parent)
-        return f"{repr(self.parent)}→" + str(self.index if self.source is None else self.source)
+        if self.isevaluated:
+            return repr(self.value)
+        return f"{self.parent}→{str(self.index if self.source is None else self.source)}"

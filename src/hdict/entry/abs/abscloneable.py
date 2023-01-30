@@ -44,7 +44,7 @@ from hdict.entry.abs.abscontent import AbsContent
 
 
 class AbsCloneable(AbsContent):
-    clone: "AbsCloneable" = None
+    clone: callable = None
     _finished = False
     finish = None
 

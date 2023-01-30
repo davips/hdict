@@ -65,8 +65,8 @@ class hdict(dict[str, VT]):
     ...     ("ra1", "rb1"): apply(f),
     ...     (("ra2", "a"), ("rb2", "b")): apply(f),
     ... }
-    >>> d["zz1", "ww1"] = apply(f, "r1", y="r2")
-    >>> d >>= {("zz2", "ww2"): apply(f, y="r2", x=9)}  # Define external value.
+    >>> d["zz1", "ww1"] = apply(f, field("r1"), y=field("r2"))
+    >>> d >>= {("zz2", "ww2"): apply(f, y=field("r2"), x=9)}  # Define external value.
     >>> d >>= {"zzzz": apply(f, y="some str", x=9)}  # Define external 'str' value.
     >>> # Non-pickable custom classes need a custom 'hosh' attribute to be applied and also to be used as a value.
     >>> from hosh import Hosh
@@ -79,8 +79,8 @@ class hdict(dict[str, VT]):
     ...         return x + y, x / y
     >>> custom = CustomClass()
     >>> d["f"] = custom  # Custom callable handled as a value.
-    >>> d["zzz1", "www1"] = apply(custom, "r1", y="r2")  # Custom callable being applied.
-    >>> d["zzz2", "www2"] = apply(field("f"), field("r1"), y="r2")  # Callable field being applied.
+    >>> d["zzz1", "www1"] = apply(custom, "str 1", y="str 2")  # Custom callable being applied.
+    >>> d["zzz2", "www2"] = apply(field("f"), field("r1"), y="str 2")  # Callable field being applied.
     >>> d.show(colored=False)
     {
         x: 3,
@@ -104,17 +104,17 @@ class hdict(dict[str, VT]):
         rb1: λ(x y)→1,
         ra2: λ(x y)→a,
         rb2: λ(x y)→b,
-        zz1: λ('r1' 'r2')→0,
-        ww1: λ('r1' 'r2')→1,
-        zz2: λ(9 'r2')→0,
-        ww2: λ(9 'r2')→1,
+        zz1: λ(r1 r2)→0,
+        ww1: λ(r1 r2)→1,
+        zz2: λ(9 r2)→0,
+        ww2: λ(9 r2)→1,
         zzzz: λ(9 'some s···),
         f: "CustomClass()",
-        zzz1: λ('r1' 'r2')→0,
-        www1: λ('r1' 'r2')→1,
-        zzz2: λ(r1 'r2')→0,
-        www2: λ(r1 'r2')→1,
-        _id: "WZDkri22i9DuSEXYi8qxbi-h35Or3tL6.2HpFBH2",
+        zzz1: λ('str 1' 'str 2')→0,
+        www1: λ('str 1' 'str 2')→1,
+        zzz2: λ(r1 'str 2')→0,
+        www2: λ(r1 'str 2')→1,
+        _id: "4yxiENUUYMLRZWxh.7gN1U2aZcvVM0gkh-rjw4mX",
         _ids: {
             x: "KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr",
             y: "ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2",
@@ -137,19 +137,18 @@ class hdict(dict[str, VT]):
             rb1: "JbWdguqn24m9-XathFYdhhMRBDvWFQVktmxj7gWL",
             ra2: "8dPQ2blIctM6p7mByuoL0EnTlg5no0TxEJtoACbt",
             rb2: "JbWdguqn24m9-XathFYdhhMRBDvWFQVktmxj7gWL",
-            zz1: "hVEiUYEvPDlurgjsPAfYrFyaeu9AjabxnFhkV0Qs",
-            ww1: "Z86naiBsnnQpYwubUFWIvwsIorjVbKwC2NNRQZ1I",
-            zz2: "c-39In.AL7Tgx6f.dKfTCSKJpi6iasbI6lWBKcUh",
-            ww2: "ZJeocRjrJq7M351F00Jisr0XutP5OvUhIlJVVonZ",
+            zz1: "mQUu0IxSblJEAplB0yVRVN-rY6bv06spvVH8krlt",
+            ww1: "7J8PIEG1QPZMBDimMibqHaJPFg6pHG8mQGvDM9Pf",
+            zz2: "sHib6xdxGc8tQ6CzacEANreEUZH.sjkZhIa6ZJRc",
+            ww2: "FO-4MA-2R.Hp40Fa1cOnY70x.vFfraTBMvYDCTa7",
             zzzz: "eLmNQshNbsczb3UPNUgdswSwjy43T.LaheEWAd9u",
             f: "Some.arbitrary.identifier.with.length.40",
-            zzz1: "fo-N1q78DPVmbwMeJlPYHI0BUyIJTzGEuTivY8ep",
-            www1: "s1t0EeRSRGjUBR2TREtp6SYf6p8hYwRwXqzzyNKS",
-            zzz2: "by4necDondiNm9xjXbUjtJJyNsSsogcjM-ulWCLn",
-            www2: "AoNILfidmedte9OvLGsX.OwIwALiO35Vjww50WKn"
+            zzz1: "8psQH6IYL-875mdf0ONueb.GPElYQSs9EVmhUqgk",
+            www1: "x.NpepViaL0yjKMHzZbVXeloQksMuGoUQvLZRM2c",
+            zzz2: "Hhw3UoRceatED9jYFRkGeUteWupRdQUZab0Vlgud",
+            www2: "Ie3whxRJ8TeJurdTfwg7G9zK9CyUfUym.kqsWTgx"
         }
     }
-
     >>> from hdict import default
     >>> d = hdict(x=2)
     >>> g = lambda x, y: x + y
