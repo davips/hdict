@@ -26,9 +26,12 @@ from inspect import isfunction
 from inspect import signature
 from itertools import chain
 from operator import mul
+from random import Random
 from typing import Union
 
-from hdict.entry.abscloneable import AbsCloneable
+from hdict.customjson import stringfy, truncate
+from hdict.entry.abs.abscloneable import AbsCloneable
+from hdict.entry.abs.abssampleable import AbsSampleable
 from hdict.entry.field import field
 from hdict.entry.handling import Unevaluated, handle_args
 from hdict.entry.value import value
@@ -37,25 +40,25 @@ from hosh import Hosh
 from hosh.misc import hoshes
 
 
-class apply(AbsCloneable):
+class apply(AbsCloneable, AbsSampleable):
     """
     >>> from hdict import apply
     >>> f = lambda a, b: a**b
     >>> v = apply(f, 5, b=7)
     >>> v
-    λ(a b)
+    λ(5 7)
     >>> g = lambda x, y: x**y
     >>> v.isevaluated
     False
-    >>> apply(g, y=value(7), x=v)
-    λ(x=λ(a b) y)
+    >>> apply(g, y=value(7777), x=v)
+    λ(x=λ(5 7) 7777)
 
     >>> v2 = apply(f, a=v, b=value(7))
     >>> v2
-    λ(a=λ(a b) b)
+    λ(a=λ(5 7) 7)
     >>> v.finish({})
     >>> v.value, v2
-    (78125, λ(a b))
+    (78125, λ(a=78125 7))
     >>> v2.finish({})
     >>> v2.value, v2
     (17763568394002504646778106689453125, 17763568394002504646778106689453125)
@@ -67,17 +70,17 @@ class apply(AbsCloneable):
     >>> ap.requirements
     {'a': 3, 'b': field('b'), 'c': default(1), 'd': default(2), 'e': default(13)}
     >>> ap
-    λ(a b=field('b') c=default(1) d=default(2) e=default(13))
+    λ(3 b c=default(1) d=default(2) e=default(13))
     >>> ap.finish({"b": value(77)})
     >>> ap
-    λ(a b=b c=default(1) d=default(2) e=default(13))
+    λ(3 b c=default(1) d=default(2) e=default(13))
     >>> from hdict.entry.handling import handle_values
     >>> d = {"f": ap, "b": 5, "d": 1, "e": field("b")}
     >>> d
-    {'f': λ(a b=b c=default(1) d=default(2) e=default(13)), 'b': 5, 'd': 1, 'e': field('b')}
+    {'f': λ(3 b c=default(1) d=default(2) e=default(13)), 'b': 5, 'd': 1, 'e': field('b')}
     >>> handle_values(d)
     >>> d
-    {'f': λ(a b=b c d=d e=b), 'b': 5, 'd': 1, 'e': b}
+    {'f': λ(3 b 1 d b), 'b': 5, 'd': 1, 'e': b}
     >>> apply(f,3,4).requirements
     {'a': 3, 'b': 4, 'c': default(1), 'd': default(2), 'e': default(13)}
     >>> apply(f,3,4,5).requirements
@@ -101,7 +104,6 @@ class apply(AbsCloneable):
     out = None
     _value = Unevaluated
     _hosh = None
-    _finished = False
 
     #     TODO multifield
     def __init__(self, f: Union[callable, "apply", field], *applied_args, fhosh: Hosh = None, **applied_kwargs):
@@ -110,6 +112,7 @@ class apply(AbsCloneable):
             fhosh = Hosh.fromid(fhosh)
         if isinstance(f, apply):  # "clone" mode
             fun = f.fun
+            self.f = f.f
             self.fhosh = f.fhosh
             self.args = f.args
             self.kwargs = f.kwargs
@@ -145,24 +148,24 @@ class apply(AbsCloneable):
     def ahosh(self):
         return self.fhosh.rev  # 'f' identified as an appliable function
 
-    def __call__(self, *out):
+    def __call__(self, *out, **kwout):
         from hdict.entry.applyout import applyOut
-        return applyOut(self, out)
-
-    @property
-    def finished(self):
-        return self._finished
+        if out and kwout:
+            raise Exception(f"Cannot mix translated and non translated outputs.")
+        return applyOut(self, out or tuple(kwout.items()))
 
     def finish(self, data):
         if self.finished:
             raise Exception(f"Cannot finish an application twice.")
-        if isinstance(self.f, field) and not self.f.finished:
+        if isinstance(self.f, apply):
+            raise Exception(f"Why applying another apply object?")
+        if isinstance(self.f, AbsCloneable) and not self.f.finished:
             self.f.finish(data)
         if self.fhosh is None:
             self.fhosh = self.f.hosh
         reqs = self.requirements
         for kreq, req in reqs.items():
-            if isinstance(req, (apply, field)) and not req.finished:
+            if isinstance(req, AbsCloneable) and not req.finished:
                 req.finish(data)
         self._finished = True
 
@@ -172,7 +175,7 @@ class apply(AbsCloneable):
     @property
     def hosh(self):
         if not self.finished:
-            raise Exception(f"Cannot know apply.hosh before finishing object '{self.fhosh}'.")
+            raise Exception(f"Cannot know apply.hosh before finishing object apply. Provided callable:", self.f)
         if self._hosh is None:
             self._hosh = reduce(mul, chain(hoshes(self.requirements.values()), [self.ahosh]))
         return self._hosh
@@ -193,15 +196,25 @@ class apply(AbsCloneable):
     def isevaluated(self):
         return self._value is not Unevaluated
 
+    def sample(self, rnd: int | Random = None):
+        clone = self.clone()
+        reqs = clone.requirements
+        for k, req in reqs.items():
+            if isinstance(req, AbsSampleable):
+                reqs[k] = req.sample(rnd)
+        return clone
+
     def __repr__(self):
         if not self.isevaluated:
             from hdict.entry.default import default
             lst = []
-            for depk, depv in self.requirements.items():
-                if isinstance(depv, (field, default)) or not depv.isevaluated:
-                    lst.append(f"{depk}={repr(depv)}")
+            for param, content in self.requirements.items():
+                if isinstance(content, field):
+                    txt = content.name
+                elif isinstance(content, (apply, default)):
+                    txt = f"{param}={repr(content)}"
                 else:
-                    lst.append(str(depk))
+                    txt = f"{truncate(repr(content), width=7)}"
+                lst.append(txt)
             return f"λ({' '.join(lst)})"
         return repr(self._value)
-

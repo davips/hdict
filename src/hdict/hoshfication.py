@@ -50,6 +50,8 @@ def v2hosh(value: object) -> Hosh:
         return value.hosh
     else:
         try:
+            if callable(value):
+                value = f2hosh(value)
             # REMINDER: pickle is the fastest serialization
             return Hosh(dumps(value, protocol=5))
         except TypeError as e:  # pragma: no cover
@@ -60,7 +62,7 @@ def f2hosh(function: callable):
     """
     Convert a function to a hosh object.
 
-    Adopt pickle for hoshfication because it is faster.
+    Adopt pickle(bytecode) for hoshfication because it is faster than other serializations of bytecode.
 
     >>> fun = lambda x, y: x + y
     >>> print(f2hosh(fun))
@@ -86,6 +88,7 @@ def f2hosh(function: callable):
     code = [fields_and_params, clean_lines]
     # REMINDER: pickle chosen because it is the fastest serialization (see bottom of the file)
     return Hosh(dumps(code, protocol=5))
+
 
 # Timing:
 """

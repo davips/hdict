@@ -21,13 +21,12 @@
 #  time spent here.
 #
 
-from hdict.entry.abscontent import AbsContent
+from hdict.entry.abs.abscontent import AbsContent
 from hdict.hoshfication import v2hosh
 from hosh import Hosh
-from hdict.entry.abscloneable import AbsCloneable
 
 
-class default(AbsCloneable):
+class default:
     def __init__(self, value: object, hosh: Hosh | str = None, hdict=None):
         from hdict.entry.field import field
         if isinstance(value, AbsContent) and not isinstance(value, field):
@@ -42,10 +41,6 @@ class default(AbsCloneable):
         if self._hosh is None:
             self._hosh = v2hosh(self.value)
         return self._hosh
-
-    def clone(self):
-        value = self.value.clone() if isinstance(self.value, AbsCloneable) else self.value
-        return default(value, self._hosh)
 
     def __repr__(self):
         return f"default({repr(self.value)})"

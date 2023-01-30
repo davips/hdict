@@ -21,7 +21,7 @@
 #  time spent here.
 #
 
-from hdict.entry.abscontent import AbsContent
+from hdict.entry.abs.abscontent import AbsContent
 from hdict.hoshfication import v2hosh
 from hosh import Hosh
 

@@ -21,9 +21,8 @@
 #  time spent here.
 #
 
-from hdict.entry.abscontent import AbsContent
+from hdict.entry.abs.abscloneable import AbsCloneable
 from hosh import Hosh
-from hdict.entry.abscloneable import AbsCloneable
 
 
 class field(AbsCloneable):
@@ -37,19 +36,15 @@ class field(AbsCloneable):
         self.name = name
         self._hosh = Hosh.fromid(hosh) if isinstance(hosh, str) else hosh
 
-    @property
-    def finished(self):
-        return self.content is not None
-
     def finish(self, data):
-        from hdict.entry.apply import apply
         if self.content is not None:
             raise Exception(f"Cannot finish a field pointer twice. name: {self.name}; hosh: {self.hosh}")
         if self.name not in data:
             raise Exception(f"Missing field '{self.name}'")
         self.content = data[self.name]
-        if isinstance(self.content, (apply, field)) and not self.content.finished:
+        if isinstance(self.content, AbsCloneable) and not self.content.finished:
             self.content.finish(data)
+        self._finished = True
 
     @property
     def hosh(self):

@@ -36,4 +36,7 @@ class _:
         return field(item)
 
     def __getitem__(self, item):
-        return sample(item)
+        return sample(*item)
+
+
+_ = _()

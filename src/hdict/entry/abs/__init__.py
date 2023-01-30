@@ -20,9 +20,3 @@
 #  part of this work is illegal and it is unethical regarding the effort and
 #  time spent here.
 #
-
-from hdict.entry.abscontent import AbsContent
-
-
-class AbsCloneable(AbsContent):
-    clone: None

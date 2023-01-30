@@ -20,10 +20,11 @@
 #  part of this work is illegal and it is unethical regarding the effort and
 #  time spent here.
 #
-
+import json
+import re
 from json import JSONEncoder
 
-from hdict.entry.abscontent import AbsContent
+from hdict.entry.abs.abscontent import AbsContent
 
 
 class CustomJSONEncoder(JSONEncoder):
@@ -176,5 +177,10 @@ class CustomJSONEncoder(JSONEncoder):
 
 def truncate(txt, width=200):
     if len(txt) > width:
-        txt = txt[:width] + (" ...»" if txt.endswith("»") else " ...")
+        txt = txt[:width] + ("···»" if txt.endswith("»") else ("···)" if txt.endswith(")") else "···"))
     return txt
+
+
+def stringfy(obj):
+    res = json.dumps(obj, ensure_ascii=False, cls=CustomJSONEncoder)
+    return re.sub(r'(?<!: )"(\S*?)"', "\\1", res)

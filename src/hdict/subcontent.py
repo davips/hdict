@@ -22,16 +22,22 @@
 #
 from functools import cached_property
 
-from hdict.entry.abscontent import AbsContent
+from hdict.entry.abs.abscloneable import AbsCloneable
+from hdict.entry.abs.abscontent import AbsContent
 from hosh import Hosh
 
 
-class subcontent(AbsContent):
+class subcontent(AbsCloneable):
     content = None
     _finished = False
 
     def __init__(self, parent: AbsContent, index: int, n: int, source: str = None, hosh: Hosh = None):
         self.parent, self.index, self.n, self.source, self._hosh = parent, index, n, source, hosh
+
+    @property
+    def requirements(self):
+        from hdict import apply
+        return self.parent.requirements if isinstance(self.parent, apply) else {}
 
     @property
     def hosh(self):
@@ -61,23 +67,17 @@ class subcontent(AbsContent):
             raise Exception(f"Cannot infer subvalue '{self.index}' of type '{type(value)}.")
 
     def clone(self):
-        from hdict import field, apply, default
-        parent = self.parent.clone() if isinstance(self.parent, (field, apply, default, subcontent)) else self.parent
-        return subcontent(parent,  self.index, self.n, self.source, self._hosh)
-
-    @property
-    def finished(self):
-        return self._finished
+        parent = self.parent.clone() if isinstance(self.parent, AbsCloneable) else self.parent
+        return subcontent(parent, self.index, self.n, self.source, self._hosh)
 
     def finish(self, data):
-        from hdict import apply, field
         if self.finished:
             raise Exception(f"Cannot finish a subcontent twice.")
-        if isinstance(self.parent, (field, apply)) and not self.parent.finished:
+        if isinstance(self.parent, AbsCloneable) and not self.parent.finished:
             self.parent.finish(data)
         self._finished = True
 
     def __repr__(self):
         if self.parent.isevaluated:
             return repr(self.parent)
-        return f"{repr(self.parent)}" + f"{self.index}]" if self.source is None else f"{self.source}]"
+        return f"{repr(self.parent)}→" + str(self.index if self.source is None else self.source)

@@ -27,7 +27,8 @@ from collections import UserDict
 from functools import cached_property
 from typing import TypeVar
 
-from hdict.customjson import CustomJSONEncoder
+from hdict.customjson import CustomJSONEncoder, stringfy
+from hdict.pipeline import pipeline
 from hosh import ø
 
 VT = TypeVar("VT")
@@ -51,7 +52,7 @@ class frozenhdict(UserDict, dict[str, VT]):
     # noinspection PyMissingConstructor
     def __init__(self, /, _dictionary=None, **kwargs):
         from hdict.entry.handling import handle_values
-        from hdict.entry.abscontent import AbsContent
+        from hdict.entry.abs.abscontent import AbsContent
         data: dict[str, object] = _dictionary or {}
         data.update(kwargs)
         if "_id" in data.keys() or "_ids" in data.keys():  # pragma: no cover
@@ -73,7 +74,12 @@ class frozenhdict(UserDict, dict[str, VT]):
                 # TODO: specify new type of field: mirrorfield, e.g.: 'df_' is a mirror/derived from 'df'
                 raise NotImplementedError()
             else:
-                self.hosh += self.data[k].hosh * k.encode()
+                try:
+                    self.hosh += self.data[k].hosh * k.encode()
+                except AttributeError as e:
+                    if "'sample' object has no attribute 'hosh'" in str(e):
+                        raise Exception(f"Cannot apply before sampling")
+                    raise e
                 # PAPER REMINDER: state in the paper that hash(identifier) must be different from hash(value), for any identifier and value. E.g.: hash(X) != hash("X")    #   Here the difference always happen because values are pickled, while identifiers are just encoded().
                 self.ids[k] = self.data[k].hosh.id
 
@@ -85,6 +91,11 @@ class frozenhdict(UserDict, dict[str, VT]):
     def __rshift__(self, other):
         from hdict import hdict
         from hdict.entry.applyout import applyOut
+        if isinstance(other, pipeline):
+            result = self
+            for step in other.steps:
+                result >>= step
+            return result
         data: dict[str, object] = self.data.copy()
         del data["_id"]
         del data["_ids"]
@@ -92,6 +103,8 @@ class frozenhdict(UserDict, dict[str, VT]):
             other = other.frozen
         if isinstance(other, frozenhdict):  # merge keeping ids
             other = other.data
+        if isinstance(other, applyOut):
+            other = {other.out: other.nested}
         if isinstance(other, dict):  # merge keeping ids of AbsContent objects if any is present
             for k, v in other.items():
                 if isinstance(v, applyOut):
@@ -99,12 +112,12 @@ class frozenhdict(UserDict, dict[str, VT]):
                 if isinstance(k, tuple):
                     from hdict.entry.handling import handle_multioutput
                     handle_multioutput(data, k, v)
-                    return frozenhdict()
                 elif isinstance(k, str):
                     data[k] = v
                 else:
                     raise Exception(f"Invalid type for input field specification: {type(k)}")
             return frozenhdict(data)
+        return NotImplemented
 
     def __getitem__(self, item):
         return self.data[item] if item in ["_id", "_ids"] else self.data[item].value
@@ -124,7 +137,7 @@ class frozenhdict(UserDict, dict[str, VT]):
     @staticmethod
     def fromdict(dictionary, ids):
         """Build a frozenidict from values and pre-defined ids"""
-        from hdict.entry.abscontent import AbsContent
+        from hdict.entry.abs.abscontent import AbsContent
         from hdict.entry.value import value
         data = {}
         for k, v in dictionary.items():
@@ -167,13 +180,13 @@ class frozenhdict(UserDict, dict[str, VT]):
 
     @cached_property
     def asdicts_hoshes_noneval(self):
-        from hdict import apply
+        from hdict.entry.abs.abscloneable import AbsCloneable
         hoshes = set()
         dic = {}
         for k, val in self.data.items():
             if k not in ["_id", "_ids"]:
                 hoshes.add(val.hosh)
-                if isinstance(val, apply):
+                if isinstance(val, AbsCloneable):
                     dic[k] = val
                 else:
                     v = val.value
@@ -292,8 +305,8 @@ class frozenhdict(UserDict, dict[str, VT]):
         return self.astext()
 
     def __str__(self):
-        js = json.dumps(self.data, ensure_ascii=False, cls=CustomJSONEncoder)
-        return re.sub(r'(?<!: )"(\S*?)"', "\\1", js)
+        return stringfy(self.data)
+
 
     # def metakeys(self):
     #     """Generator of keys which start with '_'"""

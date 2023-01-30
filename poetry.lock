@@ -354,14 +354,14 @@ requirements-deprecated-finder = ["pip-api", "pipreqs"]
 
 [[package]]
 name = "lange"
-version = "0.220727.5"
+version = "0.220727.6"
 description = "Haskell-like intervals for Python"
 category = "main"
 optional = false
 python-versions = ">=3.8,<4.0"
 files = [
-    {file = "lange-0.220727.5-py3-none-any.whl", hash = "sha256:744540d56d2a8601c7aebad656ae9339583cfb1e0dc7787dcbefbdc70b6e8e07"},
-    {file = "lange-0.220727.5.tar.gz", hash = "sha256:37e47651fe3ea6b0b0684481c71c8ee2e6faba2ea4b84d099dcff365ea194894"},
+    {file = "lange-0.220727.6-py3-none-any.whl", hash = "sha256:8f5c1ffb7cc3363e22acdde3e5ef5075eca8e8e9a52cd27ff6d21440545cdc03"},
+    {file = "lange-0.220727.6.tar.gz", hash = "sha256:204776e1b7000a3caaa49305e769113571a553210338e68d3bc1c0031e09c496"},
 ]
 
 [[package]]
@@ -1122,4 +1122,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "09180b423b9ae4cb0abdbfb2adb3dc6f6b9548e2e0b60741e7692f0f199d413b"
+content-hash = "f9518e9807f3ba8959a17e3170f8ca1971b6f221eb6a2d991462ce40cdaae348"

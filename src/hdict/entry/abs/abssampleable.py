@@ -20,25 +20,6 @@
 #  part of this work is illegal and it is unethical regarding the effort and
 #  time spent here.
 #
+class AbsSampleable:
+    sample: None
 
-from dataclasses import dataclass
-from random import Random
-
-from hdict.entry.abs.abscontent import AbsContent
-from hdict.entry.abs.abssampleable import AbsSampleable
-from hdict.entry.apply import apply
-
-
-@dataclass
-class applyOut(AbsContent, AbsSampleable):
-    nested: apply
-    out: [str | tuple[str, str]]
-
-    def sample(self, rnd: int | Random = None):
-        return applyOut(self.nested.sample(rnd), self.out)
-
-    def __rshift__(self, other):
-        from hdict.pipeline import pipeline
-        if isinstance(other, (pipeline, applyOut)):
-            return pipeline(self, other)
-        return NotImplemented

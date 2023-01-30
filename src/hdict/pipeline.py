@@ -20,42 +20,25 @@
 #  part of this work is illegal and it is unethical regarding the effort and
 #  time spent here.
 #
-
-from dataclasses import dataclass
 from random import Random
 
-from lange.tricks import list2progression
-
-from hdict.entry.abs.abscontent import AbsContent
 from hdict.entry.abs.abssampleable import AbsSampleable
 
 
-@dataclass
-class sample(AbsContent, AbsSampleable):
-    """
-    >>> (s := sample(1, 2, 3, ..., 9).values)
-    [1, 2, 3, 4, 5, 6, 7, 8, 9]
-    >>> (s := sample(2, 4, 8, ..., 1024).values)
-    [2, 4, 8, 16, 32, 64, 128, 256, 512, 1024]
-
-    Args:
-        *values:
-        rnd:
-        maxdigits:
-    """
-    obj: object
-
-    def __init__(self, *values: list[int | float], rnd: int | Random = 0, maxdigits=28):
-        self.rnd = rnd
-        # minor TODO: reject infinite values; optimize by using new lazy item access of future 'lange'
-        self.values = list2progression(values, maxdigits=maxdigits).l
+class pipeline(AbsSampleable):
+    def __init__(self, *args, _previous: list = None):
+        self.steps = _previous.copy() if _previous else []
+        self.steps.extend(args)
 
     def sample(self, rnd: int | Random = None):
-        from hdict.entry.value import value
-        if rnd is None:
-            rnd = self.rnd
-        if isinstance(rnd, int):
-            rnd = Random(rnd)
-        if not isinstance(rnd, Random):
-            raise Exception(f"Sampling needs an integer seed or a Random object.")
-        return value(rnd.choice(self.values))
+        newsteps = [(step.sample(rnd) if isinstance(step, AbsSampleable) else step) for step in self.steps]
+        return pipeline(_previous=newsteps)
+
+    def __rshift__(self, other):
+        from hdict import apply
+        from hdict.entry.applyout import applyOut
+        if isinstance(other, pipeline):
+            return pipeline(*other.steps, _previous=self.steps)
+        if isinstance(other, (apply, applyOut)):
+            return pipeline(other, _previous=self.steps)
+        return NotImplemented

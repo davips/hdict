@@ -52,10 +52,12 @@ class hdict(dict[str, VT]):
         }
     }
     >>> d >>= {"beta": 12, "gamma": 17}
-    >>> d["p1", "q1"] = apply(lambda x, y: [x**y, x/y])
+    >>> d["p1", "q1"] = apply(lambda x, y=3: [x**y, x/y])
+    >>> d["pq"] = apply(lambda x, y=3: [x**y, x/y])
     >>> d["p2", "q2"] = apply(lambda x=2, y=None: [x**y, x/y])
     >>> f = lambda x, y: {"a": x**y, "b": x/y}
-    >>> d["z1", "w1"] = d["z2":"a", "w2":"b"] = apply(f)
+    >>> d["z1", "w1"] = apply(f)
+    >>> d["z2":"a", "w2":"b"] = apply(f)
     >>> d >>= {
     ...     "r1": apply(lambda x: x**2),
     ...     "r2": apply(lambda x: x**3),
@@ -86,23 +88,65 @@ class hdict(dict[str, VT]):
         alpha: 11,
         beta: 12,
         gamma: 17,
-        r1: λ(x=x),
-        r2: λ(x=x),
-        r3: λ(x=x),
-        zzzz: λ(x y),
+        p1: λ(x y)→0,
+        q1: λ(x y)→1,
+        pq: λ(x y),
+        p2: λ(x y)→0,
+        q2: λ(x y)→1,
+        z1: λ(x y)→0,
+        w1: λ(x y)→1,
+        z2: λ(x y)→a,
+        w2: λ(x y)→b,
+        r1: λ(x),
+        r2: λ(x),
+        r3: λ(x),
+        ra1: λ(x y)→0,
+        rb1: λ(x y)→1,
+        ra2: λ(x y)→a,
+        rb2: λ(x y)→b,
+        zz1: λ('r1' 'r2')→0,
+        ww1: λ('r1' 'r2')→1,
+        zz2: λ(9 'r2')→0,
+        ww2: λ(9 'r2')→1,
+        zzzz: λ(9 'some s···),
         f: "CustomClass()",
-        _id: "pEflFVmhSZS-9Y.RLl.ovCGIHdibHr4UX-EUl9n3",
+        zzz1: λ('r1' 'r2')→0,
+        www1: λ('r1' 'r2')→1,
+        zzz2: λ(r1 'r2')→0,
+        www2: λ(r1 'r2')→1,
+        _id: "WZDkri22i9DuSEXYi8qxbi-h35Or3tL6.2HpFBH2",
         _ids: {
             x: "KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr",
             y: "ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2",
             alpha: "A1RyW.GoA3q9-iCbCvWyWClExm1J3wI.ok6UA3Nk",
             beta: "WM5TbiaJ1gLqKRSFiY3VkZEu1PwQcaAokBKBPrWg",
             gamma: "yb-HU.jSxd496XfId1J..MkX7xfUPJOL1-07hHdt",
+            p1: "hllpFtAFKUz3OXOJOr3RbpvL8RjwGvwypfgS8WEi",
+            q1: "9Fx79MuqFKeorCqJ1Gb-uaGPCwBwT8NliAzSQ2aL",
+            pq: "PdulOo9BsqAYMi0.1h15yKZjjq-dExhUHnkJZYO1",
+            p2: "LDtY9HmXuNn8uzQyA06-.sb2dMOMSA1H95HZgo2o",
+            q2: "VjJ9OEByD74oMAkCXa9QMwyz4HQRWBpGEqhR0l2F",
+            z1: "8dPQ2blIctM6p7mByuoL0EnTlg5no0TxEJtoACbt",
+            w1: "JbWdguqn24m9-XathFYdhhMRBDvWFQVktmxj7gWL",
+            z2: "8dPQ2blIctM6p7mByuoL0EnTlg5no0TxEJtoACbt",
+            w2: "JbWdguqn24m9-XathFYdhhMRBDvWFQVktmxj7gWL",
             r1: "Y3AxJytRz1Pnf8Q1bjC2jWUs3oTzAALXYkwlH1GI",
             r2: "JdDJ6LPyvJ2xnbPUwBFKDIt8k-udb4czb8PjX8dh",
             r3: "015TXOnn-Z6AfT1ajcNN4brMD6c8YsRn73kA7RPh",
+            ra1: "8dPQ2blIctM6p7mByuoL0EnTlg5no0TxEJtoACbt",
+            rb1: "JbWdguqn24m9-XathFYdhhMRBDvWFQVktmxj7gWL",
+            ra2: "8dPQ2blIctM6p7mByuoL0EnTlg5no0TxEJtoACbt",
+            rb2: "JbWdguqn24m9-XathFYdhhMRBDvWFQVktmxj7gWL",
+            zz1: "hVEiUYEvPDlurgjsPAfYrFyaeu9AjabxnFhkV0Qs",
+            ww1: "Z86naiBsnnQpYwubUFWIvwsIorjVbKwC2NNRQZ1I",
+            zz2: "c-39In.AL7Tgx6f.dKfTCSKJpi6iasbI6lWBKcUh",
+            ww2: "ZJeocRjrJq7M351F00Jisr0XutP5OvUhIlJVVonZ",
             zzzz: "eLmNQshNbsczb3UPNUgdswSwjy43T.LaheEWAd9u",
-            f: "Some.arbitrary.identifier.with.length.40"
+            f: "Some.arbitrary.identifier.with.length.40",
+            zzz1: "fo-N1q78DPVmbwMeJlPYHI0BUyIJTzGEuTivY8ep",
+            www1: "s1t0EeRSRGjUBR2TREtp6SYf6p8hYwRwXqzzyNKS",
+            zzz2: "by4necDondiNm9xjXbUjtJJyNsSsogcjM-ulWCLn",
+            www2: "AoNILfidmedte9OvLGsX.OwIwALiO35Vjww50WKn"
         }
     }
 
@@ -110,30 +154,42 @@ class hdict(dict[str, VT]):
     >>> d = hdict(x=2)
     >>> g = lambda x, y: x + y
     >>> d["z"] = apply(f, 2, y=3)
-    >>> d["w", "v"] = apply(f, field("x"), y=field("y"))
-    >>> d["w", "v"] = apply(field("f"), field("x"), y=default(3))
+    >>> d["w", "v"] = apply(f, field("x"), y=33)
+    >>> d["f"] = f
+    >>> d = d >> apply(field("f"), field("x"), y=default(3))("w3", "v3")
+    >>> d >>= apply(field("f"), field("x"), y=default(3))("w", "v")
+    >>> d["w2", "v2"] = apply(field("f"), field("x"), y=default(3))
     >>> d >>= {"z": apply(f, field("x"), y=3), ("w", "v"): apply(g, y=7)}
+    >>> d >>= apply(f, field("x"), y=3)("z9") >> apply(g, y=7)("w9", "v9")
     >>> d >>= apply(f, field("x"), y=3)("z") >> apply(g, y=7)("w", "v")
-    >>> p = apply(f, y=_[1, 2, 4, ..., 128])("z") * apply(f, y=_[0, 3, 6, ..., 9])(w="a", v="b")
-    >>> d = p.sample(rnd)
+    >>> from hdict import _
+    >>> p = apply(f, y=_[1, 2, 4, ..., 128])("z") >> apply(f, y=_[0, 3, 6, ..., 9])(w="a", v="b")
+    >>> from random import Random
+    >>> rnd = Random(0)
+    >>> p1 = p.sample(rnd)
+    >>> d >>= p1
 
     >>> d["z"] = _(f, 2, y=3)
-    >>> d["w", "v"] = _(f, _.x, y=_.y)
-    >>> d["w", "v"] = _(_.f, _.x), y=default(3))
-    >>> d = hdict() >> {"z": _(f, _.x, y=3), ("w", "v"): _(g, y=7)}
-    >>> d = hdict() >> _(f, _.x, y=3)("z") >> _(g, y=7)("w", "v")
-    >>> p = _(f, y=_[1, 2, 4, ..., 128])("z") * _(f, y=_[0, 3, 6, ..., 9])(w="a", v="b")
-    >>> d = p.sample(rnd)
-
-    """
-
-    """
-    >>> from hdict.sample import sample
-    >>> d >>= {"r": apply(f, y=sample(0.1, 0.2, 0.3, ..., 1))}
-    >>> d.r
-    >>> d.resample()
-    >>> d.r
-    >>> d >>= {"r": apply(f, y=sample([0.1, 0.2, 0.3, ..., 1]))}
+    >>> d["w", "v"] = _(f, _.x, y=_.x)
+    >>> d["w", "v"] = _(_.f, _.x, y=default(3))
+    >>> d = hdict() >> {"z": _(f, 7, y=3), ("w", "v"): _(g, default(6), y=7)}
+    >>> d = hdict(w=6) >> (_(f, _.w, y=3)("z") >> _(g, x=_[1,2,3,...,5], y=7)("w", "v")).sample()
+    >>> p = _(f, y=_[1, 2, 4, ..., 128])("z") >> _(f, y=_[0, 3, 6, ..., 9])(w="a", v="b")
+    >>> d = hdict(x=3) >> p.sample(rnd)
+    >>> d.show(colored=False)
+    {
+        x: 3,
+        z: λ(x 1)→0,
+        w: λ(x 6)→a,
+        v: λ(x 6)→b,
+        _id: "ViT5bvJGNX4Js4GLFZlCvLfmSP-vMIBCbbG4hMdu",
+        _ids: {
+            x: "KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr",
+            z: "I07Wp60rqEsBRrPZj7sLBGR2mCPxv4u9q4u-2aaw",
+            w: "xvV.gAGMoSo-.l1-jk94-GdTaA0qjbgxhxAO3tze",
+            v: "NM4FacrCDP3t2ChDaQCNw04xNm1QKwWw4CogLANh"
+        }
+    }
     """
 
     # noinspection PyMissingConstructor
@@ -177,7 +233,11 @@ class hdict(dict[str, VT]):
 
     def __rshift__(self, other):
         from hdict import apply
-        if isinstance(other, (dict, apply, cache)):
+        from hdict.entry.applyout import applyOut
+        from hdict.pipeline import pipeline
+        if isinstance(other, apply):
+            raise Exception(f"Cannot apply without specifying output.")
+        if isinstance(other, (dict, applyOut, pipeline)):
             return (self.frozen >> other).unfrozen
         return NotImplemented
 
