@@ -21,7 +21,7 @@
 #  time spent here.
 #
 
-from hdict.entry.abs.abscontent import AbsContent
+from hdict.content.abs.abscontent import AbsContent
 from hdict.hoshfication import v2hosh
 from hosh import Hosh
 
@@ -29,7 +29,7 @@ from hosh import Hosh
 class value(AbsContent):
     """
     >>> x = 5
-    >>> from hdict.entry.value import value
+    >>> from hdict.content.value import value
     >>> v = value(x, "1234567890123456789012345678901234567890")
     >>> v
     5
@@ -57,4 +57,3 @@ class value(AbsContent):
 
     def __repr__(self):
         return repr(self.value)
-

@@ -20,25 +20,7 @@
 #  part of this work is illegal and it is unethical regarding the effort and
 #  time spent here.
 #
-from random import Random
 
-from hdict.content.abs.abssampleable import AbsSampleable
+from hdict.appearance import ANSI, HTML, BW
 
-
-class pipeline(AbsSampleable):
-    def __init__(self, *args, _previous: list = None):
-        self.steps = _previous.copy() if _previous else []
-        self.steps.extend(args)
-
-    def sample(self, rnd: int | Random = None):
-        newsteps = [(step.sample(rnd) if isinstance(step, AbsSampleable) else step) for step in self.steps]
-        return pipeline(_previous=newsteps)
-
-    def __rshift__(self, other):
-        from hdict import apply
-        from hdict.content.applyout import applyOut
-        if isinstance(other, pipeline):
-            return pipeline(*other.steps, _previous=self.steps)
-        if isinstance(other, (apply, applyOut)):
-            return pipeline(other, _previous=self.steps)
-        return NotImplemented
+ANSI, HTML, BW = ANSI(), HTML(), BW()

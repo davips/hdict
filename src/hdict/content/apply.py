@@ -105,7 +105,6 @@ class apply(AbsCloneable, AbsSampleable):
     _value = Unevaluated
     _hosh = None
 
-    #     TODO multifield
     def __init__(self, f: Union[callable, "apply", field], *applied_args, fhosh: Hosh = None, **applied_kwargs):
         self.f = f
         if isinstance(fhosh, str):  # pragma: no cover

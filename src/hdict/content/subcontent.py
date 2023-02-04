@@ -22,8 +22,8 @@
 #
 from functools import cached_property
 
-from hdict.entry.abs.abscloneable import AbsCloneable
-from hdict.entry.abs.abscontent import AbsContent
+from hdict.content.abs.abscloneable import AbsCloneable
+from hdict.content.abs.abscontent import AbsContent
 from hosh import Hosh
 
 

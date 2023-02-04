@@ -225,8 +225,7 @@ def handle_identity(data):
     for k, v in data.items():
         # Handle meta. mirror, and field ids differently.
         if k.startswith("_"):  # pragma: no cover
-            # TODO: add mehosh (for metafields)? # TODO: add mihosh (for mirrorfields)?
-            raise NotImplementedError(k)
+            raise Exception("Custom metafields are not allowed:", k)
             # self.mhosh += self.data[k].hosh * k.encode()                # self.mids[k] = self.data[k].hosh.id
         elif k.endswith("_"):
             # mirrorfield, e.g.: 'df_' is a mirror/derived from 'df'

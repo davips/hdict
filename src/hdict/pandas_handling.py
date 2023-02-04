@@ -21,8 +21,10 @@
 #  time spent here.
 #
 
+from hdict.content.value import value
 
-def explode_df(df):
+
+def explode_df(df) -> value:
     """
     >>> from pandas import DataFrame
     >>> from hdict import hdict

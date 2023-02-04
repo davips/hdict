@@ -22,21 +22,24 @@
 #
 
 from dataclasses import dataclass
+from math import inf
 from random import Random
 
 from lange.tricks import list2progression
 
-from hdict.entry.abs.abscontent import AbsContent
-from hdict.entry.abs.abssampleable import AbsSampleable
+from hdict.content.abs.abscontent import AbsContent
+from hdict.content.abs.abssampleable import AbsSampleable
 
 
 @dataclass
 class sample(AbsContent, AbsSampleable):
     """
     >>> (s := sample(1, 2, 3, ..., 9).values)
-    [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    [1 2 .+. 9]
     >>> (s := sample(2, 4, 8, ..., 1024).values)
-    [2, 4, 8, 16, 32, 64, 128, 256, 512, 1024]
+    [2 4 .*. 1024]
+    >>> (s := sample(2, -4, 8, ..., 64).values.l)
+    [2, -4, 8, -16, 32, -64]
 
     Args:
         *values:
@@ -47,15 +50,18 @@ class sample(AbsContent, AbsSampleable):
 
     def __init__(self, *values: list[int | float], rnd: int | Random = 0, maxdigits=28):
         self.rnd = rnd
-        # minor TODO: reject infinite values; optimize by using new lazy item access of future 'lange'
-        self.values = list2progression(values, maxdigits=maxdigits).l
+        prog = list2progression(values, maxdigits=maxdigits)
+        # if prog.n.is_infinite():  # pragma: no cover
+        #     raise Exception("Cannot sample from an infinite list.")
+        self.values = prog
 
     def sample(self, rnd: int | Random = None):
-        from hdict.entry.value import value
+        from hdict.content.value import value
         if rnd is None:
             rnd = self.rnd
         if isinstance(rnd, int):
             rnd = Random(rnd)
         if not isinstance(rnd, Random):  # pragma: no cover
             raise Exception(f"Sampling needs an integer seed or a Random object.")
-        return value(rnd.choice(self.values))
+        idx = rnd.randint(0, self.values.n - 1)
+        return value(self.values[idx])
