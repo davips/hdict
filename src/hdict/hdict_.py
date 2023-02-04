@@ -149,6 +149,7 @@ class hdict(dict[str, VT]):
             www2: "Ie3whxRJ8TeJurdTfwg7G9zK9CyUfUym.kqsWTgx"
         }
     }
+    >>> d["p1"]
     >>> from hdict import default, value
     >>> d = hdict(x=2)
     >>> g = lambda x, y: x + y

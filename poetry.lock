@@ -461,14 +461,14 @@ testing = ["Django (<3.1)", "attrs", "colorama", "docopt", "pytest (<7.0.0)"]
 
 [[package]]
 name = "lange"
-version = "1.230203.1"
+version = "1.230203.2"
 description = "Haskell-like intervals for Python"
 category = "main"
 optional = false
 python-versions = ">=3.8,<4.0"
 files = [
-    {file = "lange-1.230203.1-py3-none-any.whl", hash = "sha256:182b1182e4931642ce3ede2af40c5c3df9b06b36986a61227ffc660d3822b053"},
-    {file = "lange-1.230203.1.tar.gz", hash = "sha256:7e4a346a83588722a15244785be9ce6ed0468767b1208605a0825547aaa0a92b"},
+    {file = "lange-1.230203.2-py3-none-any.whl", hash = "sha256:97521b797ed3cbfc81ef7df4c21f55db11e071985b3b7b88426e70b504b81fdb"},
+    {file = "lange-1.230203.2.tar.gz", hash = "sha256:d9c3f5ae28829f8ab7e6316d65852fce04c31d34d839422b1c978fcaa49dc682"},
 ]
 
 [[package]]
@@ -1199,4 +1199,4 @@ full = ["pandas"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "1f30d90d2d228935ea96137c3430842685693295c2b3d6b39e76d80eb45f3721"
+content-hash = "3ed884941b00c9ea3463aa2c5de2257bd3185a27c1e6863c0ad244d1d17b5047"

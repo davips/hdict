@@ -25,6 +25,6 @@ from hdict.appearance import ANSI, BW, HTML
 GLOBAL = {"theme": ANSI}
 
 
-def setup(theme: BW | ANSI | HTML):
+def setup(theme: BW | ANSI | HTML):  # pragma: no cover
     # noinspection PyTypedDict
     GLOBAL["theme"] = theme

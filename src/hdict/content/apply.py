@@ -113,15 +113,13 @@ class apply(AbsCloneable, AbsSampleable):
             fun = f.fun
             self.f = f.f
             self.fhosh = f.fhosh
-            self.args = f.args
-            self.kwargs = f.kwargs
+            self.args = {k: req.clone() if isinstance(req, AbsCloneable) else req for k, req in f.args.items()}
+            self.kwargs = {k: req.clone() if isinstance(req, AbsCloneable) else req for k, req in f.kwargs.items()}
             from hdict.content.default import default
-            self.requirements = {k: req.clone() if isinstance(req, AbsCloneable) else req for k, req in f.requirements.items()}
         elif isinstance(f, field):  # "function will be provided by hdict"-mode constrains 'applied_args'
             self.fhosh = fhosh
             fun = lambda *args, **kwargs: f.value(*args, **kwargs)
             self.args, self.kwargs = handle_args(None, applied_args, applied_kwargs)
-            self.requirements = {k: v for k, v in sorted((self.args | self.kwargs).items())}
         elif callable(fun := f):
             if not isfunction(fun):  # "not function" means "custom callable"
                 if not hasattr(fun, "__call__"):  # pragma: no cover
@@ -137,10 +135,10 @@ class apply(AbsCloneable, AbsSampleable):
 
             # Separate positional parameters from named parameters looking at 'f' signature.
             self.args, self.kwargs = handle_args(sig, applied_args, applied_kwargs)
-            self.requirements = {k: v for k, v in sorted((self.args | self.kwargs).items())}
         else:  # pragma: no cover
             raise Exception(f"Cannot apply type '{type(f)}'.")
         self._fun = fun
+        self.requirements = {k: v for k, v in sorted((self.args | self.kwargs).items())}
         # Requirements (dependencies stub) are alphabetically sorted to ensure we keep the same resulting hosh no matter in which order the parameters are defined in the function.
 
     @property
@@ -184,7 +182,9 @@ class apply(AbsCloneable, AbsSampleable):
         if self._value == Unevaluated:
             if not self.finished:  # pragma: no cover
                 raise Exception(f"Cannot access apply.value before finishing object '{self.fhosh}'.")
-            self._value = self._fun(*(x.value for x in self.args.values()), **{k: v.value for k, v in self.kwargs})
+            args = (x.value for x in self.args.values())
+            kwargs = {k: v.value for k, v in self.kwargs.items()}
+            self._value = self._fun(*args, **kwargs)
         return self._value
 
     @property

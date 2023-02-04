@@ -13,7 +13,7 @@ packages = [
 python = "^3.10"
 hosh = "^2.230203.1"
 indexed = "^1.3.0"  # indexed dict
-lange = "^1.230203.1"
+lange = "^1.230203.2"
 # Optional dependencies.
 pandas = { version = "^1.5.2", optional = true }
 
