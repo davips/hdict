@@ -38,21 +38,16 @@ class sample(AbsContent, AbsSampleable):
     [1 2 .+. 9]
     >>> (s := sample(2, 4, 8, ..., 1024).values)
     [2 4 .*. 1024]
-    >>> (s := sample(2, -4, 8, ..., 64).values.l)
-    [2, -4, 8, -16, 32, -64]
-
-    Args:
-        *values:
-        rnd:
-        maxdigits:
+    >>> (s := sample(2, -4, 8, ..., 12).values)
+    [2 -4 8]
     """
     obj: object
 
     def __init__(self, *values: list[int | float], rnd: int | Random = 0, maxdigits=28):
         self.rnd = rnd
         prog = list2progression(values, maxdigits=maxdigits)
-        # if prog.n.is_infinite():  # pragma: no cover
-        #     raise Exception("Cannot sample from an infinite list.")
+        if prog.n.is_infinite():  # pragma: no cover
+            raise Exception(f"Cannot sample from an infinite list: {prog}")
         self.values = prog
 
     def sample(self, rnd: int | Random = None):
