@@ -1,4 +1,4 @@
-#  Copyright (c) 2021. Davi Pereira dos Santos
+#  Copyright (c) 2023. Davi Pereira dos Santos
 #  This file is part of the hdict project.
 #  Please respect the license - more about this in the section (*) below.
 #
@@ -17,10 +17,11 @@
 #
 #  (*) Removing authorship by any means, e.g. by distribution of derived
 #  works or verbatim, obfuscated, compiled or rewritten versions of any
-#  part of this work is illegal and unethical regarding the effort and
+#  part of this work is illegal and it is unethical regarding the effort and
 #  time spent here.
-
+#
 import re
+from dataclasses import dataclass
 
 
 def decolorize(txt):
@@ -30,3 +31,18 @@ def decolorize(txt):
     """
     ansi_escape = re.compile(r"\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])")
     return ansi_escape.sub("", txt)
+
+
+@dataclass
+class BW:
+    i = 0
+
+
+@dataclass
+class ANSI:
+    i = 1
+
+
+@dataclass
+class HTML:
+    i = 2
