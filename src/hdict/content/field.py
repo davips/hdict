@@ -21,7 +21,7 @@
 #  time spent here.
 #
 
-from hdict.entry.abs.abscloneable import AbsCloneable
+from hdict.content.abs.abscloneable import AbsCloneable
 from hosh import Hosh
 
 
@@ -66,7 +66,7 @@ class field(AbsCloneable):
 
     @property
     def value(self):
-        from hdict.entry.abs.abscontent import AbsContent
+        from hdict.content.abs.abscontent import AbsContent
         if self.content is None:  # pragma: no cover
             raise Exception(f"Cannot access value before finishing pointer to field '{self.name}'.")
         return self.content.value if isinstance(self.content, AbsContent) else self.content

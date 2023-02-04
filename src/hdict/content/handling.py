@@ -20,18 +20,19 @@
 #  part of this work is illegal and it is unethical regarding the effort and
 #  time spent here.
 #
-
+from dataclasses import dataclass
 from typing import Dict
 
-from hdict import default
-from hdict.entry.abs.abscontent import AbsContent
+from hdict.content.abs.abscontent import AbsContent
 from hdict.hdict_ import hdict
 from hdict.indexeddict import IndexedDict
-from hdict.pandas import explode_df
+from hdict.pandas_handling import explode_df
+from hosh import ø
 
 
+@dataclass
 class Unevaluated:
-    pass
+    n = 0
 
 
 Unevaluated = Unevaluated()
@@ -80,7 +81,7 @@ def handle_multioutput(data, field_names: tuple, content: list | dict | AbsConte
                 raise Exception(f"Can only accept target-field strings when unpacking a dict, not '{type(field_name)}'.")
             data[field_name] = val
     elif isinstance(content, AbsContent):
-        from hdict.subcontent import subcontent
+        from hdict.content.subcontent import subcontent
         n = len(field_names)
         if all(isinstance(x, tuple) for x in field_names):
             source_target = sorted((sour, targ) for targ, sour in field_names)
@@ -100,7 +101,8 @@ def handle_multioutput(data, field_names: tuple, content: list | dict | AbsConte
 
 def handle_args(signature, applied_args, applied_kwargs):
     from hdict import field
-    from hdict.entry.value import value
+    from hdict.content.value import value
+    from hdict import default
 
     # Separate positional from named parameters of 'f'.
     fargs, fkwargs = IndexedDict(), {}
@@ -142,7 +144,7 @@ def handle_args(signature, applied_args, applied_kwargs):
         else:
             if i >= len(params):
                 if not hasargs:  # pragma: no cover
-                    raise Exception("Too many arguments to apply. No '*entry' detected for 'f'.")
+                    raise Exception("Too many arguments to apply. No '*contentarg' detected for 'f'.")
                 name = Arg(i)
             else:
                 name = params[i]
@@ -152,7 +154,7 @@ def handle_args(signature, applied_args, applied_kwargs):
 
     for applied_kwarg, v in applied_kwargs.items():
         if applied_kwarg in used:  # pragma: no cover
-            raise Exception(f"Parameter '{applied_kwarg}' cannot appear in both 'entry' and 'kwargs' of 'apply()'.")
+            raise Exception(f"Parameter '{applied_kwarg}' cannot appear in both 'contentarg' and 'kwargs' of 'apply()'.")
         if applied_kwarg in fargs:
             fargs[applied_kwarg] = wrap(v)
         elif applied_kwarg in fkwargs or haskwargs:
@@ -164,8 +166,8 @@ def handle_args(signature, applied_args, applied_kwargs):
 
 
 def handle_default(name, content, data):
-    from hdict.entry.value import value
-    from hdict.entry.field import field
+    from hdict.content.value import value
+    from hdict.content.field import field
     if name in data:
         while isinstance(data[name], field):
             name = data[name].name
@@ -174,19 +176,20 @@ def handle_default(name, content, data):
 
 
 def handle_values(data: Dict[str, object]):
-    from hdict.entry.value import value
-    from hdict.entry.apply import apply
-    from hdict.entry.field import field
-    from hdict.subcontent import subcontent
-    unfinished = []
+    from hdict.content.value import value
+    from hdict.content.apply import apply
+    from hdict.content.field import field
+    from hdict.content.subcontent import subcontent
+    from hdict import default
+    unfinished, mirror_fields = [], {}
     for k, content in data.items():
         if isinstance(content, value):
             pass
         elif isinstance(content, default):  # pragma: no cover
             # data[k] = handle_default(k, content, data)
             raise Exception(f"Cannot pass object of type 'default' directly to hdict. Param:", k)
-        # REMINDER: clone() makes a deep copy to avoid mutation in original 'content' when finishing it below
         elif isinstance(content, field):
+            # REMINDER: clone() makes a deep copy to avoid mutation in original 'content' when finishing it below
             content = content.clone()
             unfinished.append(content)
             data[k] = content
@@ -201,13 +204,40 @@ def handle_values(data: Dict[str, object]):
         elif isinstance(content, hdict):
             data[k] = value(content.frozen, content.hosh)
         elif str(type(content)) == "<class 'pandas.core.frame.DataFrame'>":
-            data[k] = explode_df(content)
+            val = explode_df(content)
+            data[k] = val
+            mirror_fields[f"{k}_"] = value(val.hdict, val.hosh)
         elif isinstance(content, AbsContent):  # pragma: no cover
             raise Exception(f"Cannot handle instance of type '{type(content)}'.")
         else:
             data[k] = value(content)
+    data.update(mirror_fields)
 
     # Finish state of field-dependent objects created above.
     for item in unfinished:
         if not item.finished:
             item.finish(data)
+
+
+def handle_identity(data):
+    hosh = ø
+    ids = {}
+    for k, v in data.items():
+        # Handle meta. mirror, and field ids differently.
+        if k.startswith("_"):  # pragma: no cover
+            # TODO: add mehosh (for metafields)? # TODO: add mihosh (for mirrorfields)?
+            raise NotImplementedError(k)
+            # self.mhosh += self.data[k].hosh * k.encode()                # self.mids[k] = self.data[k].hosh.id
+        elif k.endswith("_"):
+            # mirrorfield, e.g.: 'df_' is a mirror/derived from 'df'
+            pass
+        else:
+            try:
+                hosh += data[k].hosh * k.encode()
+            except AttributeError as e:  # pragma: no cover
+                if "'sample' object has no attribute 'hosh'" in str(e):
+                    raise Exception(f"Cannot apply before sampling.")
+                raise e
+            # PAPER REMINDER: state in the paper that hash(identifier) must be different from hash(value), for any identifier and value. E.g.: hash(X) != hash("X")    #   Here the difference always happen because values are pickled, while identifiers are just encoded().
+            ids[k] = data[k].hosh.id
+    return hosh, ids

@@ -24,9 +24,9 @@
 from dataclasses import dataclass
 from random import Random
 
-from hdict.entry.abs.abscontent import AbsContent
-from hdict.entry.abs.abssampleable import AbsSampleable
-from hdict.entry.apply import apply
+from hdict.content.abs.abscontent import AbsContent
+from hdict.content.abs.abssampleable import AbsSampleable
+from hdict.content.apply import apply
 
 
 @dataclass

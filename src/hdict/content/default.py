@@ -21,14 +21,14 @@
 #  time spent here.
 #
 
-from hdict.entry.abs.abscontent import AbsContent
 from hdict.hoshfication import v2hosh
 from hosh import Hosh
 
 
 class default:
     def __init__(self, value: object, hosh: Hosh | str = None):
-        from hdict.entry.field import field
+        from hdict.content.field import field
+        from hdict.content.abs.abscontent import AbsContent
         if isinstance(value, AbsContent) and not isinstance(value, field):  # pragma: no cover
             raise Exception(f"Can only nest 'field' or ordinary values inside a 'default' object: '{type(value)}")
         self.value = value

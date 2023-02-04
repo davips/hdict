@@ -29,12 +29,12 @@ from operator import mul
 from random import Random
 from typing import Union
 
-from hdict.customjson import stringfy, truncate
-from hdict.entry.abs.abscloneable import AbsCloneable
-from hdict.entry.abs.abssampleable import AbsSampleable
-from hdict.entry.field import field
-from hdict.entry.handling import Unevaluated, handle_args
-from hdict.entry.value import value
+from hdict.content.abs.abscloneable import AbsCloneable
+from hdict.content.abs.abssampleable import AbsSampleable
+from hdict.content.field import field
+from hdict.content.handling import Unevaluated, handle_args
+from hdict.content.value import value
+from hdict.customjson import truncate
 from hdict.hoshfication import f2hosh
 from hosh import Hosh
 from hosh.misc import hoshes
@@ -74,7 +74,7 @@ class apply(AbsCloneable, AbsSampleable):
     >>> ap.finish({"b": value(77)})
     >>> ap
     λ(3 b c=default(1) d=default(2) e=default(13))
-    >>> from hdict.entry.handling import handle_values
+    >>> from hdict.content.handling import handle_values
     >>> d = {"f": ap, "b": 5, "d": 1, "e": field("b")}
     >>> d
     {'f': λ(3 b c=default(1) d=default(2) e=default(13)), 'b': 5, 'd': 1, 'e': field('b')}
@@ -91,7 +91,7 @@ class apply(AbsCloneable, AbsSampleable):
     {'a': 3, 'b': 4, 'c': 5, 'd': 6, 'e': 7}
     >>> apply(f,d=5).requirements
     {'a': field('a'), 'b': field('b'), 'c': default(1), 'd': 5, 'e': default(13)}
-    >>> f = lambda a,b, *entry, c=1,d=2,e=13, **kwargs: 0
+    >>> f = lambda a,b, *contentarg, c=1,d=2,e=13, **kwargs: 0
     >>> apply(f,3,4,5,6,7,8).requirements
     {'a': 3, 'b': 4, 'c': 5, 'd': 6, 'e': 7, _5: 8}
     >>> apply(f,x=3,e=4,d=5,c=6,b=7,a=8).requirements
@@ -116,7 +116,7 @@ class apply(AbsCloneable, AbsSampleable):
             self.fhosh = f.fhosh
             self.args = f.args
             self.kwargs = f.kwargs
-            from hdict.entry.default import default
+            from hdict.content.default import default
             self.requirements = {k: req.clone() if isinstance(req, AbsCloneable) else req for k, req in f.requirements.items()}
         elif isinstance(f, field):  # "function will be provided by hdict"-mode constrains 'applied_args'
             self.fhosh = fhosh
@@ -149,7 +149,7 @@ class apply(AbsCloneable, AbsSampleable):
         return self.fhosh.rev  # 'f' identified as an appliable function
 
     def __call__(self, *out, **kwout):
-        from hdict.entry.applyout import applyOut
+        from hdict.content.applyout import applyOut
         if out and kwout:  # pragma: no cover
             raise Exception(f"Cannot mix translated and non translated outputs.")
         return applyOut(self, out or tuple(kwout.items()))
@@ -182,7 +182,7 @@ class apply(AbsCloneable, AbsSampleable):
 
     @property
     def value(self):
-        if self._value is Unevaluated:
+        if self._value == Unevaluated:
             if not self.finished:  # pragma: no cover
                 raise Exception(f"Cannot access apply.value before finishing object '{self.fhosh}'.")
             self._value = self._fun(*(x.value for x in self.args.values()), **{k: v.value for k, v in self.kwargs})
@@ -194,7 +194,7 @@ class apply(AbsCloneable, AbsSampleable):
 
     @property
     def isevaluated(self):
-        return self._value is not Unevaluated
+        return self._value != Unevaluated
 
     def sample(self, rnd: int | Random = None):
         clone = self.clone()
@@ -206,7 +206,7 @@ class apply(AbsCloneable, AbsSampleable):
 
     def __repr__(self):
         if not self.isevaluated:
-            from hdict.entry.default import default
+            from hdict.content.default import default
             lst = []
             for param, content in self.requirements.items():
                 if isinstance(content, field):

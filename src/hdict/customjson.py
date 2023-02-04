@@ -24,7 +24,7 @@ import json
 import re
 from json import JSONEncoder
 
-from hdict.entry.abs.abscontent import AbsContent
+from hdict.content.abs.abscontent import AbsContent
 
 
 class CustomJSONEncoder(JSONEncoder):
@@ -65,6 +65,7 @@ class CustomJSONEncoder(JSONEncoder):
         },
         y: 5,
         df: "«{0: {0: 1, 1: 3}, 1: {0: 2, 1: 4}}»",
+        ell: "...",
         df_: {
             index: "«{0: 0, 1: 1}»",
             0: "«{0: 1, 1: 3}»",
@@ -76,7 +77,6 @@ class CustomJSONEncoder(JSONEncoder):
                 1: "IIffH-qkWUFB.-VFd0z6BBrIpfvNuc8GPxlQYgg3"
             }
         },
-        ell: "...",
         _id: "VRlid5klewaC1bro7soJEr8Ynmt-N9YCNjW8iPN0",
         _ids: {
             d: "fBb9FHVYpHC7vyM-B8UrXuN4oCcQ4Y7pnQ6oSK3J",
@@ -98,6 +98,7 @@ class CustomJSONEncoder(JSONEncoder):
             },
             y: 5,
             df: "«{0: {0: 1, 1: 3}, 1: {0: 2, 1: 4}}»",
+            ell: "...",
             df_: {
                 index: "«{0: 0, 1: 1}»",
                 0: "«{0: 1, 1: 3}»",
@@ -109,7 +110,6 @@ class CustomJSONEncoder(JSONEncoder):
                     1: "IIffH-qkWUFB.-VFd0z6BBrIpfvNuc8GPxlQYgg3"
                 }
             },
-            ell: "...",
             _id: "VRlid5klewaC1bro7soJEr8Ynmt-N9YCNjW8iPN0",
             _ids: {
                 d: "fBb9FHVYpHC7vyM-B8UrXuN4oCcQ4Y7pnQ6oSK3J",

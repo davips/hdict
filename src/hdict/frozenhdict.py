@@ -29,7 +29,6 @@ from typing import TypeVar
 
 from hdict.customjson import CustomJSONEncoder, stringfy
 from hdict.pipeline import pipeline
-from hosh import ø
 
 VT = TypeVar("VT")
 
@@ -48,59 +47,36 @@ class frozenhdict(UserDict, dict[str, VT]):
     """
 
     _evaluated = None
+    _asdict, _asdicts = None, None
 
     # noinspection PyMissingConstructor
     def __init__(self, /, _dictionary=None, **kwargs):
-        from hdict.entry.handling import handle_values
-        from hdict.entry.abs.abscontent import AbsContent
-        data: dict[str, object] = _dictionary or {}
+        from hdict.content.handling import handle_values
+        from hdict.content.abs.abscontent import AbsContent
+        from hdict.content.handling import handle_identity
+        data = _dictionary or {}
         data.update(kwargs)
         if "_id" in data.keys() or "_ids" in data.keys():  # pragma: no cover
             raise Exception(f"Hosh-indexed dict cannot have a field named '_id'/'_ids': {data.keys()}")
         handle_values(data)
 
         # REMINDER: Inside data, the only 'dict' entries are "_id" and "_ids", the rest is AbsContent.
-        # noinspection PyTypeChecker
         self.data: dict[str, AbsContent | str | dict[str, str]] = data
 
         # REMINDER: "lazy hoshes" are only available after handling values (call above).
-        self.hosh = ø
-        self.ids = {}
-        for k, v in self.data.items():
-            # Handle meta. mirror, and field ids differently.
-            if k.startswith("_"):
-                # TODO: add mehosh (for metafields)? # TODO: add mihosh (for mirrorfields)?
-                raise NotImplementedError(k)
-                # self.mhosh += self.data[k].hosh * k.encode()                # self.mids[k] = self.data[k].hosh.id
-            elif k.endswith("_"):
-                # TODO: specify new type of field: mirrorfield, e.g.: 'df_' is a mirror/derived from 'df'
-                raise NotImplementedError()
-            else:
-                try:
-                    self.hosh += self.data[k].hosh * k.encode()
-                except AttributeError as e:
-                    if "'sample' object has no attribute 'hosh'" in str(e):
-                        raise Exception(f"Cannot apply before sampling")
-                    raise e
-                # PAPER REMINDER: state in the paper that hash(identifier) must be different from hash(value), for any identifier and value. E.g.: hash(X) != hash("X")    #   Here the difference always happen because values are pickled, while identifiers are just encoded().
-                self.ids[k] = self.data[k].hosh.id
-
+        self.hosh, self.ids = handle_identity(self.data)
         self.data["_id"] = self.id = self.hosh.id
         self.data["_ids"] = self.ids
 
-        # minor TODO: if there are duplicate ids in hdict, use the same AbsVal reference for all
-
     def __rshift__(self, other):
         from hdict import hdict
-        from hdict.entry.applyout import applyOut
+        from hdict.content.applyout import applyOut
         if isinstance(other, pipeline):
             result = self
             for step in other.steps:
                 result >>= step
             return result
         data: dict[str, object] = self.data.copy()
-        del data["_id"]
-        del data["_ids"]
         if isinstance(other, hdict):  # merge keeping ids
             other = other.frozen
         if isinstance(other, frozenhdict):  # merge keeping ids
@@ -109,19 +85,21 @@ class frozenhdict(UserDict, dict[str, VT]):
             other = {other.out: other.nested}
         if isinstance(other, dict):  # merge keeping ids of AbsContent objects if any is present
             for k, v in other.items():
-                if isinstance(v, applyOut):
+                if isinstance(v, applyOut):  # pragma: no cover
                     raise Exception("Cannot assign output through both apply and dict-key: '>> {out: apply(...)(out)}'.")
                 if isinstance(k, tuple):
-                    from hdict.entry.handling import handle_multioutput
+                    from hdict.content.handling import handle_multioutput
                     handle_multioutput(data, k, v)
                 elif isinstance(k, str):
                     data[k] = v
-                else:
+                else:  # pragma: no cover
                     raise Exception(f"Invalid type for input field specification: {type(k)}")
+            del data["_id"]
+            del data["_ids"]
             return frozenhdict(data)
-        return NotImplemented
+        return NotImplemented  # pragma: no cover
 
-    def __getitem__(self, item):
+    def __getitem__(self, item):  # pragma: no cover
         return self.data[item] if item in ["_id", "_ids"] else self.data[item].value
 
     def __getattr__(self, item):  # pragma: no cover
@@ -138,9 +116,20 @@ class frozenhdict(UserDict, dict[str, VT]):
 
     @staticmethod
     def fromdict(dictionary, ids):
-        """Build a frozenidict from values and pre-defined ids"""
-        from hdict.entry.abs.abscontent import AbsContent
-        from hdict.entry.value import value
+        """Build a frozenidict from values and pre-defined ids
+
+        >>> from hdict import hdict, value
+        >>> hdict.fromdict({"x": value(5, hosh="0123456789012345678901234567890123456789")}, {"x": "0123456789012345678901234567890123456789"}).show(colored=False)
+        {
+            x: 5,
+            _id: "bi5Qdbh-zgA1ZQdxGhxqjaKaQROtxk1VCPRZhMOq",
+            _ids: {
+                x: "0123456789012345678901234567890123456789"
+            }
+        }
+        """
+        from hdict.content.abs.abscontent import AbsContent
+        from hdict.content.value import value
         data = {}
         for k, v in dictionary.items():
             if isinstance(v, AbsContent):
@@ -164,25 +153,43 @@ class frozenhdict(UserDict, dict[str, VT]):
                 val.evaluate()
         return self
 
-    @cached_property
+    @property
     def asdict(self):
-        dic = {k: v for k, v in self.items()}
-        dic["_id"] = self.id
-        dic["_ids"] = self.ids.copy()
-        return dic
+        """
+        >>> from hdict import hdict, value
+        >>> d = hdict.fromdict({"x": value(5, hosh="0123456789012345678901234567890123456789")}, {"x": "0123456789012345678901234567890123456789"})
+        >>> d.asdict
+        {'x': 5, '_id': 'bi5Qdbh-zgA1ZQdxGhxqjaKaQROtxk1VCPRZhMOq', '_ids': {'x': '0123456789012345678901234567890123456789'}}
+        """
+        if self._asdict is None:
+            dic = {k: v for k, v in self.items()}
+            dic["_id"] = self.id
+            dic["_ids"] = self.ids.copy()
+            self._asdict = dic
+        return self._asdict
 
-    @cached_property
+    @property
     def asdicts(self):
-        dic = {}
-        for k, v in self.entries():
-            dic[k] = v.asdicts if isinstance(v, frozenhdict) else v
-        dic["_id"] = self.id
-        dic["_ids"] = self.ids.copy()
-        return dic
+        """
+        Recurse into nested frozenhdicts (REMINDER: hdict is never nested)
+
+        >>> from hdict import value, hdict
+        >>> d = hdict(x=value(5, hosh="0123456789012345678901234567890123456789"))
+        >>> d.asdicts
+        {'x': 5, '_id': 'bi5Qdbh-zgA1ZQdxGhxqjaKaQROtxk1VCPRZhMOq', '_ids': {'x': '0123456789012345678901234567890123456789'}}
+        """
+        if self._asdicts is None:
+            dic = {}
+            for k, v in self.items():
+                dic[k] = v.asdicts if isinstance(v, frozenhdict) else v
+            dic["_id"] = self.id
+            dic["_ids"] = self.ids.copy()
+            self._asdicts = dic
+        return self._asdicts
 
     @cached_property
     def asdicts_hoshes_noneval(self):
-        from hdict.entry.abs.abscloneable import AbsCloneable
+        from hdict.content.abs.abscloneable import AbsCloneable
         hoshes = set()
         dic = {}
         for k, val in self.data.items():
@@ -234,7 +241,13 @@ class frozenhdict(UserDict, dict[str, VT]):
     #     # yield from self.metaitems(evaluate)
 
     def keys(self):
-        """Generator of keys which don't start with '_'"""
+        """Generator of keys which don't start with '_'"
+        >>> from hdict import hdict
+        >>> list(hdict(x=3, y=5).keys())
+        ['x', 'y']
+        >>> list(hdict(x=3, y=5).values())
+        [3, 5]
+        """
         return (k for k in self.data if not k.startswith("_"))
 
     def values(self, evaluate=True):

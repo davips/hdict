@@ -149,13 +149,14 @@ class hdict(dict[str, VT]):
             www2: "Ie3whxRJ8TeJurdTfwg7G9zK9CyUfUym.kqsWTgx"
         }
     }
-    >>> from hdict import default
+    >>> from hdict import default, value
     >>> d = hdict(x=2)
     >>> g = lambda x, y: x + y
     >>> d["z"] = apply(f, 2, y=3)
     >>> d["w", "v"] = apply(f, field("x"), y=33)
     >>> d["f"] = f
-    >>> d = d >> apply(field("f"), field("x"), y=default(3))("w3", "v3")
+    >>> cache = {}
+    >>> d = d >> apply(field("f"), field("x"), y=default(3), _cache=cache)("w3", "v3")
     >>> d >>= apply(field("f"), field("x"), y=default(3))("w", "v")
     >>> d["w2", "v2"] = apply(field("f"), field("x"), y=default(3))
     >>> d >>= {"z": apply(f, field("x"), y=3), ("w", "v"): apply(g, y=7)}
@@ -176,6 +177,18 @@ class hdict(dict[str, VT]):
     >>> d = hdict() >> {"z": _(f, 7, y=3), ("w", "v"): _(g, default(6), y=7)}
     >>> d = hdict(w=6) >> (_(f, _.w, y=3)("z") >> _(g, x=_[1,2,3,...,5], y=7)("w", "v")).sample()
     >>> p = _(f, y=_[1, 2, 4, ..., 128])("z") >> _(f, y=_[0, 3, 6, ..., 9])(w="a", v="b")
+    >>> d.show(colored=False)
+    {
+        w: λ(4 7)→0,
+        z: λ(w 3)→0,
+        v: λ(4 7)→1,
+        _id: "KTU.m.W22.TsfkZzSBNj.QyDJFb58nX.m-nQMzt5",
+        _ids: {
+            w: "Ecb9K2KK0pe567PETJCoCGcUgKrPWygwDeOo5bWh",
+            z: "3eItvrVzHQPDEYbQRbksBHiCaQbe2Ia2m7Z2P1lw",
+            v: "VrW9titnSAPeJSiGIQJI8UKdKaBQ28HrlpwJjxzy"
+        }
+    }
     >>> d = hdict(x=3) >> p.sample(rnd)
     >>> d.show(colored=False)
     {
@@ -189,6 +202,47 @@ class hdict(dict[str, VT]):
             z: "I07Wp60rqEsBRrPZj7sLBGR2mCPxv4u9q4u-2aaw",
             w: "xvV.gAGMoSo-.l1-jk94-GdTaA0qjbgxhxAO3tze",
             v: "NM4FacrCDP3t2ChDaQCNw04xNm1QKwWw4CogLANh"
+        }
+    }
+    >>> d1 = hdict(x=52, y=13)
+    >>> d2 = hdict(x=value(52, hosh="1234567890123456789012345678901234567890"))
+    >>> d1.show(colored=False)
+    {
+        x: 52,
+        y: 13,
+        _id: "5pwGP0LxQRbQaDEk9ztQ4V4qz.A-IIhVNTrcyt8U",
+        _ids: {
+            x: "c.llz05T6ZXw5AlsU4xfmMxcvvHZhLl60LckZis9",
+            y: "zplslThZYha4haD2VmGxZqrFSw5RJcFJd2E-Ku6s"
+        }
+    }
+    >>> d2.show(colored=False)
+    {
+        x: 52,
+        _id: "kYzgpPdRgQSYSEpp1qt4EHQLQJXuyb2WDQS-iNPh",
+        _ids: {
+            x: "1234567890123456789012345678901234567890"
+        }
+    }
+    >>> d3 = d1 >> d2
+    >>> d3.show(colored=False)
+    {
+        x: 52,
+        y: 13,
+        _id: "-EFuy5NAeK.LIALpBiZKK-fYQmc9AZYQQck-HiRK",
+        _ids: {
+            x: "1234567890123456789012345678901234567890",
+            y: "zplslThZYha4haD2VmGxZqrFSw5RJcFJd2E-Ku6s"
+        }
+    }
+    >>> (d3 >> d1.frozen).show(colored=False)
+    {
+        x: 52,
+        y: 13,
+        _id: "5pwGP0LxQRbQaDEk9ztQ4V4qz.A-IIhVNTrcyt8U",
+        _ids: {
+            x: "c.llz05T6ZXw5AlsU4xfmMxcvvHZhLl60LckZis9",
+            y: "zplslThZYha4haD2VmGxZqrFSw5RJcFJd2E-Ku6s"
         }
     }
     """
@@ -234,7 +288,7 @@ class hdict(dict[str, VT]):
 
     def __rshift__(self, other):
         from hdict import apply
-        from hdict.entry.applyout import applyOut
+        from hdict.content.applyout import applyOut
         from hdict.pipeline import pipeline
         if isinstance(other, apply):
             raise Exception(f"Cannot apply without specifying output.")
