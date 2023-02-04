@@ -21,10 +21,12 @@
 #  time spent here.
 #
 
-from hdict.entry.default import default
-from hdict.entry.field import field
-from hdict.entry.apply import apply
-from hdict.entry.sample import sample
+from hdict.appearance import BW, ANSI, HTML
+from hdict.content.apply import apply
+from hdict.content.default import default
+from hdict.content.field import field
+from hdict.content.sample import sample
+from hdict.content.value import value
 from hdict.hdict_ import hdict
 
 

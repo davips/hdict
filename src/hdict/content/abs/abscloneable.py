@@ -40,7 +40,7 @@
 #  time spent here.
 #
 
-from hdict.entry.abs.abscontent import AbsContent
+from hdict.content.abs.abscontent import AbsContent
 
 
 class AbsCloneable(AbsContent):

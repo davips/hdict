@@ -24,13 +24,6 @@
 from hosh import Hosh
 
 
-class Undefined:
-    pass
-
-
-Undefined = Undefined()
-
-
 class AbsContent:
     value: object
     hosh: Hosh
