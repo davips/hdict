@@ -181,7 +181,7 @@ def handle_values(data: Dict[str, object]):
     from hdict.content.field import field
     from hdict.content.subcontent import subcontent
     from hdict import default
-    unfinished, mirror_fields = [], {}
+    unfinished, mirror_fields, subcontent_cloned_parent = [], {}, {}
     for k, content in data.items():
         if isinstance(content, value):
             pass
@@ -194,7 +194,12 @@ def handle_values(data: Dict[str, object]):
             unfinished.append(content)
             data[k] = content
         elif isinstance(content, (apply, subcontent)):
-            content = content.clone()
+            skip_key = id(content.parent)
+            if skip_key in subcontent_cloned_parent:
+                content = content.clone(subcontent_cloned_parent[skip_key])
+            else:
+                content = content.clone()
+                subcontent_cloned_parent[skip_key] = content.parent
             reqs = content.requirements
             for kreq, req in reqs.items():
                 if isinstance(req, default):

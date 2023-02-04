@@ -66,8 +66,8 @@ class subcontent(AbsCloneable):
         else:
             raise Exception(f"Cannot infer subvalue '{self.index}' of type '{type(value)}.")
 
-    def clone(self):
-        parent = self.parent.clone() if isinstance(self.parent, AbsCloneable) else self.parent
+    def clone(self, parent=None):
+        parent = parent or (self.parent.clone() if isinstance(self.parent, AbsCloneable) else self.parent)
         return subcontent(parent, self.index, self.n, self.source, self._hosh)
 
     def finish(self, data):
