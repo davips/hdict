@@ -20,20 +20,28 @@
 #  part of this work is illegal and it is unethical regarding the effort and
 #  time spent here.
 #
+from random import Random
 
+from hdict.content.abs.abssampleable import AbsSampleable
 from hdict.hoshfication import v2hosh
 from hosh import Hosh
 
 
-class default:
-    def __init__(self, value: object, hosh: Hosh | str = None):
+class default(AbsSampleable):
+    def __init__(self, val: object, hosh: Hosh | str = None):
         from hdict.content.field import field
         from hdict.content.abs.abscontent import AbsContent
-        if isinstance(value, AbsContent) and not isinstance(value, field):  # pragma: no cover
-            raise Exception(f"Can only nest 'field' or ordinary values inside a 'default' object: '{type(value)}")
-        self.value = value
+        from hdict import sample, value
+        if isinstance(val, AbsContent) and not isinstance(val, (value, field, sample)):  # pragma: no cover
+            raise Exception(f"Can only define a field or use ordinary values as a default function parameter, not: '{type(val)}")
+        self.value = val
         self._hosh = Hosh.fromid(hosh) if isinstance(hosh, str) else hosh
         self.isevaluated = True
+
+    def sample(self, rnd: int | Random = None):
+        if not isinstance(self.value, AbsSampleable):
+            return self
+        return default(self.value.sample(rnd), self.hosh)
 
     @property
     def hosh(self):

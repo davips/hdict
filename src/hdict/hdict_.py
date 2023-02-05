@@ -166,8 +166,35 @@ class hdict(dict[str, VT]):
     >>> d >>= apply(f, field("x"), y=3)("z") >> apply(g, y=7)("w", "v")
     >>> from hdict import _
     >>> a1 = apply(f, y=_[1, 2, 4, ..., 128])
-    >>> a2 = apply(f, y=_[0, 3, 6, ..., 9])
+    >>> a2 = apply(f, _[0, 3, 6, ..., 9], y=_[0, 3, 6, ..., 9])
+    >>> ppp = hdict() >> a2.sample()("k", "t")
+    >>> ppp.show(colored=False)
+    {
+        k: λ(9 9)→0,
+        t: λ(9 9)→1,
+        _id: "eeMrAInYUG2lzUrGqgY0vSZd4KpYpc5vu.bV9bbP",
+        _ids: {
+            k: "UgmJcTz6qQgNFiwe.S40EC69Ab6drWQ5JCw8ON3q",
+            t: "MCyEzFX.viNxTiRwTio0j7dA9LDf-TwFRNKA0JhY"
+        }
+    }
+    >>> ppp.k
+    387420489
     >>> p = a1("z") >> a2(w="a", v="b")
+    >>> h = lambda a=_[0, 3, 6, ..., 9], b=4: 5
+    >>> app = _(h)
+    >>> sampled = app.c.sample(0)
+    >>> sampled
+    applyOut(nested=λ(a=default(9) b=default(4)), out='c')
+    >>> r = hdict() >> sampled
+    >>> r.show(colored=False)
+    {
+        c: λ(9 4),
+        _id: "5jRrcCFkdhQJ0H0U7BrrXpcS4iyYdVRvowUJOCsG",
+        _ids: {
+            c: "TvlvyI83Z6Ze67xhPp3R5F9GawJ4ziXOfyGGUToj"
+        }
+    }
     >>> from random import Random
     >>> rnd = Random(0)
     >>> p1 = p.sample(rnd)
@@ -196,15 +223,15 @@ class hdict(dict[str, VT]):
     >>> d.show(colored=False)
     {
         x: 3,
-        z: λ(x 1)→0,
-        w: λ(x 6)→a,
-        v: λ(x 6)→b,
-        _id: "ViT5bvJGNX4Js4GLFZlCvLfmSP-vMIBCbbG4hMdu",
+        z: λ(x 16)→0,
+        w: λ(x 9)→a,
+        v: λ(x 9)→b,
+        _id: "OIVFm0IdYK3jtOApTVCwdLTVXXNGarxDkUCwB0Iv",
         _ids: {
             x: "KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr",
-            z: "I07Wp60rqEsBRrPZj7sLBGR2mCPxv4u9q4u-2aaw",
-            w: "xvV.gAGMoSo-.l1-jk94-GdTaA0qjbgxhxAO3tze",
-            v: "NM4FacrCDP3t2ChDaQCNw04xNm1QKwWw4CogLANh"
+            z: "-F83hM-wE8ykmcEM1XvuG.XBpo7rzkuHfNKzTVMz",
+            w: "G7CpHeVpUD5KfNpJmRaMC2Rt4rTeQjIuAeGuZXSa",
+            v: "glVBFsjtDi7RrpvqrV.5vh.dp.RgASp25V-qlClj"
         }
     }
     >>> d1 = hdict(x=52, y=13)

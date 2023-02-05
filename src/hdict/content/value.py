@@ -38,17 +38,17 @@ class value(AbsContent):
 
     """
 
-    def __init__(self, value: object, hosh: Hosh | str = None, hdict=None):
+    def __init__(self, val: object, hosh: Hosh | str = None, hdict=None):
         """
 
         Args:
-            value:
+            val:
             hosh:
             hdict:  optional reference to the object if it has a hdict counterpart (e.g.: pandas DF)
         """
-        if isinstance(value, AbsContent):  # pragma: no cover
-            raise Exception(f"Cannot nest AbsContent object inside a 'value' object: '{type(value)}")
-        self.value = value
+        if isinstance(val, AbsContent):  # pragma: no cover
+            raise Exception(f"Cannot nest AbsContent object inside a 'value' object: '{type(val)}")
+        self.value = val
         if isinstance(hosh, str):
             hosh = Hosh.fromid(hosh)
         self.hosh = v2hosh(self.value) if hosh is None else hosh

@@ -96,7 +96,7 @@ def handle_multioutput(data, field_names: tuple, content: list | dict | AbsConte
             for i, field_name in enumerate(field_names):
                 data[field_name] = subcontent(content, i, n)
     else:  # pragma: no cover
-        raise Exception(f"Cannot handle multioutput for key '{field_names}' and type '{type(content)}'.", content)
+        raise Exception(f"Cannot handle multioutput for key '{field_names}' and type '{type(content)}'.")
 
 
 def handle_args(signature, applied_args, applied_kwargs):
@@ -172,7 +172,10 @@ def handle_default(name, content, data):
         while isinstance(data[name], field):
             name = data[name].name
         return field(name, content.hosh)
-    return content.value if isinstance(content.value, field) else value(content.value, content.hosh)
+    from hdict import sample
+    if isinstance(content.value, sample):
+        return content.value
+    return content.value if isinstance(content.value, (field, value)) else value(content.value, content.hosh)
 
 
 def handle_values(data: Dict[str, object]):
