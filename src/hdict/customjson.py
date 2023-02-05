@@ -176,6 +176,10 @@ class CustomJSONEncoder(JSONEncoder):
 
 
 def truncate(txt, width=200):
+    """
+    >>> truncate("lkjsdflkjsdf", width=2)
+    'lk···'
+    """
     if len(txt) > width:
         txt = txt[:width] + ("···»" if txt.endswith("»") else ("···)" if txt.endswith(")") else "···"))
     return txt

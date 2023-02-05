@@ -82,6 +82,7 @@ def handle_multioutput(data, field_names: tuple, content: list | dict | AbsConte
             data[field_name] = val
     elif isinstance(content, AbsContent):
         from hdict.content.subcontent import subcontent
+
         n = len(field_names)
         if all(isinstance(x, tuple) for x in field_names):
             source_target = sorted((sour, targ) for targ, sour in field_names)
@@ -168,13 +169,11 @@ def handle_args(signature, applied_args, applied_kwargs):
 def handle_default(name, content, data):
     from hdict.content.value import value
     from hdict.content.field import field
+
     if name in data:
         while isinstance(data[name], field):
             name = data[name].name
         return field(name, content.hosh)
-    from hdict import sample
-    if isinstance(content.value, sample):
-        return content.value
     return content.value if isinstance(content.value, (field, value)) else value(content.value, content.hosh)
 
 
@@ -184,6 +183,7 @@ def handle_values(data: Dict[str, object]):
     from hdict.content.field import field
     from hdict.content.subcontent import subcontent
     from hdict import default
+
     unfinished, mirror_fields, subcontent_cloned_parent = [], {}, {}
     for k, content in data.items():
         if isinstance(content, value):

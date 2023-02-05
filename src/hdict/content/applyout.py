@@ -38,7 +38,7 @@ class applyOut(AbsContent, AbsSampleable):
         outs = [self.out] if isinstance(self.out, str) else self.out
         keys = self.nested.requirements.keys()
         for o in outs:
-            if o in keys:
+            if o in keys:  # pragma: no cover
                 raise Exception(f"Cannot handle circular references. Application at {o} depends on fields {keys}")
 
     def sample(self, rnd: int | Random = None):
@@ -46,6 +46,7 @@ class applyOut(AbsContent, AbsSampleable):
 
     def __rshift__(self, other):
         from hdict.pipeline import pipeline
+
         if isinstance(other, (pipeline, applyOut)):
             return pipeline(self, other)
         return NotImplemented  # pragma: no cover

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "hdict"
-version = "0.230203.0"
+version = "0.230205.0"
 description = "A data structure based on a novel identification paradigm useful for computing, experiments, distributed data, among others."
 authors = ["davips <dpsabc@gmail.com>"]
 license = "GPLv3"

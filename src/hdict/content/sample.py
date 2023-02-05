@@ -51,6 +51,7 @@ class sample(AbsContent, AbsSampleable):
 
     def sample(self, rnd: int | Random = None):
         from hdict.content.value import value
+
         if rnd is None:
             rnd = self.rnd
         if isinstance(rnd, int):

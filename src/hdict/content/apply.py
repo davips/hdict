@@ -101,6 +101,7 @@ class apply(AbsCloneable, AbsSampleable):
     >>> apply(f,b=77,x=5).requirements
     {'a': field('a'), 'b': 77, 'c': default(1), 'd': default(2), 'e': default(13), 'x': 5}
     """
+
     out = None
     _value = Unevaluated
     _hosh = None
@@ -167,6 +168,7 @@ class apply(AbsCloneable, AbsSampleable):
     def hosh(self):
         if not self.finished:  # pragma: no cover
             from hdict import sample
+
             if any(isinstance(x, sample) for x in self.requirements.values()):
                 raise Exception(f"Cannot know the identity of this hdict or apply object before sampling. Provided callable:", self.f)
             raise Exception(f"Cannot know apply.hosh before finishing object apply. Provided callable:", self.f)
@@ -207,6 +209,7 @@ class apply(AbsCloneable, AbsSampleable):
 
     def __call__(self, *out, **kwout):
         from hdict.content.applyout import applyOut
+
         if out and kwout:  # pragma: no cover
             raise Exception(f"Cannot mix translated and non translated outputs.")
         return applyOut(self, out or tuple(kwout.items()))
@@ -215,12 +218,14 @@ class apply(AbsCloneable, AbsSampleable):
         # REMINDER: Work around getattribute missing all properties.
         if item not in ["isevaluated", "fun", "value", "hosh", "ahosh"]:
             from hdict.content.applyout import applyOut
+
             return applyOut(self, item)
         return self.__getattribute__(item)  # pragma: no cover
 
     def __repr__(self):
         if not self.isevaluated:
             from hdict.content.default import default
+
             lst = []
             for param, content in self.requirements.items():
                 if isinstance(content, field):

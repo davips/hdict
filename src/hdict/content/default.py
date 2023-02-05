@@ -32,6 +32,7 @@ class default(AbsSampleable):
         from hdict.content.field import field
         from hdict.content.abs.abscontent import AbsContent
         from hdict import sample, value
+
         if isinstance(val, AbsContent) and not isinstance(val, (value, field, sample)):  # pragma: no cover
             raise Exception(f"Can only define a field or use ordinary values as a default function parameter, not: '{type(val)}")
         self.value = val

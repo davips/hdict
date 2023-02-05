@@ -54,6 +54,7 @@ class frozenhdict(UserDict, dict[str, VT]):
         from hdict.content.handling import handle_values
         from hdict.content.abs.abscontent import AbsContent
         from hdict.content.handling import handle_identity
+
         data = _dictionary or {}
         data.update(kwargs)
         if "_id" in data.keys() or "_ids" in data.keys():  # pragma: no cover
@@ -71,6 +72,7 @@ class frozenhdict(UserDict, dict[str, VT]):
     def __rshift__(self, other):
         from hdict import hdict
         from hdict.content.applyout import applyOut
+
         if isinstance(other, pipeline):
             result = self
             for step in other.steps:
@@ -89,6 +91,7 @@ class frozenhdict(UserDict, dict[str, VT]):
                     raise Exception("Cannot assign output through both apply and dict-key: '>> {out: apply(...)(out)}'.")
                 if isinstance(k, tuple):
                     from hdict.content.handling import handle_multioutput
+
                     handle_multioutput(data, k, v)
                 elif isinstance(k, str):
                     data[k] = v
@@ -130,6 +133,7 @@ class frozenhdict(UserDict, dict[str, VT]):
         """
         from hdict.content.abs.abscontent import AbsContent
         from hdict.content.value import value
+
         data = {}
         for k, v in dictionary.items():
             if isinstance(v, AbsContent):
@@ -148,6 +152,7 @@ class frozenhdict(UserDict, dict[str, VT]):
 
     def evaluate(self):
         from hdict import apply
+
         for k, val in self.data.items():
             if isinstance(val, apply):
                 val.evaluate()
@@ -190,6 +195,7 @@ class frozenhdict(UserDict, dict[str, VT]):
     @cached_property
     def asdicts_hoshes_noneval(self):
         from hdict.content.abs.abscloneable import AbsCloneable
+
         hoshes = set()
         dic = {}
         for k, val in self.data.items():
@@ -233,7 +239,8 @@ class frozenhdict(UserDict, dict[str, VT]):
     @property
     def unfrozen(self):
         from hdict import hdict
-        return hdict(_frozen__cache=self)
+
+        return hdict(_frozen=self)
 
     # def entries(self, evaluate=True):
     #     """Iterator over all items"""
@@ -309,18 +316,23 @@ class frozenhdict(UserDict, dict[str, VT]):
     def __ne__(self, other):
         return not (self == other)
 
-    def __reduce__(self):
-        # TODO: pickling idicts shouldn't be necessary after cache[id]=DFiVal is implemented
-        dic = self.data.copy()
-        ids = dic.pop("_ids").copy()
-        del dic["_id"]
-        return self.fromdict, (dic, ids)
+    # def __reduce__(self):
+    #     # TODO: pickling idicts shouldn't be necessary after cache[id]=DFiVal is implemented
+    #     dic = self.data.copy()
+    #     ids = dic.pop("_ids").copy()
+    #     del dic["_id"]
+    #     return self.fromdict, (dic, ids)
 
     def __repr__(self):
         return self.astext()
 
     def __str__(self):
         return stringfy(self.data)
+
+    def __iter__(self):
+        for k in self.data:
+            if not k.startswith("_"):
+                yield k
 
     # def metakeys(self):
     #     """Generator of keys which start with '_'"""

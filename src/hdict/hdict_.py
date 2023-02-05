@@ -21,12 +21,9 @@
 #  time spent here.
 #
 
-from shelve import Shelf
-from typing import TypeVar
+from typing import TypeVar, Union
 
-from hdict.cache import cache
 from hdict.frozenhdict import frozenhdict
-from hosh import Hosh
 
 VT = TypeVar("VT")
 
@@ -65,9 +62,11 @@ class hdict(dict[str, VT]):
     ...     ("ra1", "rb1"): apply(f),
     ...     (("ra2", "a"), ("rb2", "b")): apply(f),
     ... }
+    >>> d["z2"]
+    243
     >>> d["zz1", "ww1"] = apply(f, field("r1"), y=field("r2"))
     >>> d >>= {("zz2", "ww2"): apply(f, y=field("r2"), x=9)}  # Define external value.
-    >>> d >>= {"zzzz": apply(f, y="some str", x=9)}  # Define external 'str' value.
+    >>> d >>= {"zzzz": apply(f, y=13, x=9)}
     >>> # Non-pickable custom classes need a custom 'hosh' attribute to be applied and also to be used as a value.
     >>> from hosh import Hosh
     >>> # Example of class that could be used as a value or as a function.
@@ -108,13 +107,13 @@ class hdict(dict[str, VT]):
         ww1: λ(r1 r2)→1,
         zz2: λ(9 r2)→0,
         ww2: λ(9 r2)→1,
-        zzzz: λ(9 'some s···),
+        zzzz: λ(9 13),
         f: "CustomClass()",
         zzz1: λ('str 1' 'str 2')→0,
         www1: λ('str 1' 'str 2')→1,
         zzz2: λ(r1 'str 2')→0,
         www2: λ(r1 'str 2')→1,
-        _id: "4yxiENUUYMLRZWxh.7gN1U2aZcvVM0gkh-rjw4mX",
+        _id: "2.IiQkj2nns.VFlw.8sygoCZfbsqmD8T4OLNiO6Y",
         _ids: {
             x: "KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr",
             y: "ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2",
@@ -141,7 +140,7 @@ class hdict(dict[str, VT]):
             ww1: "7J8PIEG1QPZMBDimMibqHaJPFg6pHG8mQGvDM9Pf",
             zz2: "sHib6xdxGc8tQ6CzacEANreEUZH.sjkZhIa6ZJRc",
             ww2: "FO-4MA-2R.Hp40Fa1cOnY70x.vFfraTBMvYDCTa7",
-            zzzz: "eLmNQshNbsczb3UPNUgdswSwjy43T.LaheEWAd9u",
+            zzzz: "GCskxsxNUipp-aSntVX1tASXmXbTqCEJ46YonXVu",
             f: "Some.arbitrary.identifier.with.length.40",
             zzz1: "8psQH6IYL-875mdf0ONueb.GPElYQSs9EVmhUqgk",
             www1: "x.NpepViaL0yjKMHzZbVXeloQksMuGoUQvLZRM2c",
@@ -152,6 +151,7 @@ class hdict(dict[str, VT]):
     >>> d["p1"]
     27
     >>> from hdict import default, value
+    >>> d.evaluate()
     >>> d = hdict(x=2)
     >>> g = lambda x, y: [x + y, x / y]
     >>> d["z"] = apply(f, 2, y=3)
@@ -163,7 +163,10 @@ class hdict(dict[str, VT]):
     >>> d["w2", "v2"] = apply(field("f"), field("x"), y=default(3))
     >>> d >>= {"z": apply(f, field("x"), y=3), ("w", "v"): apply(g, y=7)}
     >>> d >>= apply(f, field("x"), y=3)("z9") >> apply(g, y=7)("w9", "v9")
-    >>> d >>= apply(f, field("x"), y=3)("z") >> apply(g, y=7)("w", "v")
+    >>> pp = apply(f, field("x"), y=3)("z") >> apply(g, y=7)("w", "v")
+    >>> type(pp)
+    <class 'hdict.pipeline.pipeline'>
+    >>> d >>= pp >> apply(g, y=7)("w", "v") >> pp
     >>> from hdict import _
     >>> a1 = apply(f, y=_[1, 2, 4, ..., 128])
     >>> a2 = apply(f, _[0, 3, 6, ..., 9], y=_[0, 3, 6, ..., 9])
@@ -205,12 +208,12 @@ class hdict(dict[str, VT]):
     >>> d["w", "v"] = _(f, _.x, y=_.x)
     >>> d["w", "v"] = _(_.f, _.x, y=default(3))
     >>> d = hdict() >> {"z": _(f, 7, y=3), ("w", "v"): _(g, default(6), y=7)}
-    >>> d = hdict(w=6) >> (_(f, _.w, y=3)("z") >> _(g, x=_[1,2,3,...,5], y=7)("w", "v")).sample()
+    >>> d = hdict(w=6) >> (_(f, _.w, y=3)(z="z") >> _(g, x=_[1,2,3,...,5], y=7)("w", "v")).sample()
     >>> p = _(f, y=_[1, 2, 4, ..., 128])("z") >> _(f, y=_[0, 3, 6, ..., 9])(w="a", v="b")
     >>> d.show(colored=False)
     {
         w: λ(4 7)→0,
-        z: λ(w 3)→0,
+        z: λ(w 3)→z,
         v: λ(4 7)→1,
         _id: "cexo8AfBKo4Ku.4IctlyPMSSZpDvjrl-ncyVUmmd",
         _ids: {
@@ -275,26 +278,39 @@ class hdict(dict[str, VT]):
             y: "zplslThZYha4haD2VmGxZqrFSw5RJcFJd2E-Ku6s"
         }
     }
+
+    >>> d = hdict(x=2, y=4)
+    >>> d == {"x": 2, "y": 4}
+    True
+    >>> hdict() >> {"x": 3} == {"x": 3}
+    True
+    >>> hdict(x=3) == {"x": 3, "_id": hdict(x=3).id}
+    True
+    >>> hdict(x=3) == hdict(x=3)
+    True
+    >>> hdict(x=3).frozen == hdict(x=3)
+    True
+    >>> hdict(x=3) != {"x": 4}
+    True
+    >>> hdict(x=3) != hdict(x=4)
+    True
+    >>> hdict(x=3).frozen != hdict(x=4)
+    True
+    >>> hdict(x=3) != {"y": 3}
+    True
+    >>> hdict(x=3) != {"x": 3, "_id": (~hdict(x=3).hosh).id}
+    True
+    >>> hdict(x=3) != hdict(y=3)
+    True
+    >>> del d["x"]
+    >>> list(d)
+    ['y']
     """
 
     # noinspection PyMissingConstructor
-    def __init__(self, /, _dictionary__id: dict | Hosh | str = None, _frozen__cache: frozenhdict | cache = None, **kwargs):
-        if isinstance(_dictionary__id, Hosh):
-            _dictionary__id = Hosh.id
-        if isinstance(_dictionary__id, str):
-            # Build hdict from id+cache.
-            if len(_dictionary__id) != 40:
-                raise Exception(f"id should have lenght of 40, not {len(_dictionary__id)}")
-            # TODO: checar for other types like Cache?
-            cache_lst = ["<class 'shelchemy.core.Cache'>"]
-            if not isinstance(_frozen__cache, (dict, Shelf, list)) and str(_frozen__cache.__class__) not in cache_lst:  # pragma: no cover
-                raise Exception("An id argument was provided, but a dict-like cache (or list of caches) is missing as the second argument.")
-            if kwargs:  # pragma: no cover
-                raise Exception("Cannot pass more arguments when loading from cache (i.e., first argument is an id and the second argument is a dict-like cache).")
-            self.frozen = frozenhdict.fromid(_dictionary__id, _frozen__cache)
-        else:
-            # Build hdict from frozen or fresh data.
-            self.frozen = _frozen__cache or frozenhdict(_dictionary__id, **kwargs)
+    def __init__(self, /, _dictionary: dict = None, _frozen: frozenhdict = None, **kwargs):
+        # Build hdict from frozen or fresh data. Never both.
+        self.frozen = _frozen or frozenhdict(_dictionary, **kwargs)
 
     def __setitem__(self, key: str | tuple, value):
         if isinstance(key, tuple):
@@ -314,17 +330,18 @@ class hdict(dict[str, VT]):
     def __getattr__(self, item):
         if item in self.frozen:
             return self.frozen[item]
-        return self.__getattribute__(item)
+        return self.__getattribute__(item)  # pragma: no cover
 
     def __rshift__(self, other):
         from hdict import apply
         from hdict.content.applyout import applyOut
         from hdict.pipeline import pipeline
-        if isinstance(other, apply):
+
+        if isinstance(other, apply):  # pragma: no cover
             raise Exception(f"Cannot apply without specifying output.")
         if isinstance(other, (dict, applyOut, pipeline)):
             return (self.frozen >> other).unfrozen
-        return NotImplemented
+        return NotImplemented  # pragma: no cover
 
     @property
     def evaluated(self):
@@ -470,8 +487,8 @@ class hdict(dict[str, VT]):
     def __ne__(self, other):
         return not (self == other)
 
-    def __reduce__(self):
-        return self.frozen.__reduce__()
+    # def __reduce__(self):
+    #     return self.frozen.__reduce__()
 
     def keys(self):
         """Generator of field names, i.e., keys which don't start with '_'"""
@@ -494,6 +511,21 @@ class hdict(dict[str, VT]):
         y 2
         """
         return self.frozen.items(evaluate)
+
+    def fromid(self, id, cache) -> Union["hdict", None]:
+        if len(id) != 40:  # pragma: no cover
+            raise Exception(f"id should have lenght of 40, not {len(id)}")
+        # if isinstance(id, Hosh):
+        #     id = Hosh.id
+
+        raise NotImplementedError
+        # TODO: checar for other types like Cache?
+        # cache_lst = ["<class 'shelchemy.core.Cache'>"]
+        # if not isinstance(_frozen__cache, (dict, Shelf, list)) and str(_frozen__cache.__class__) not in cache_lst:  # pragma: no cover
+        #     raise Exception("An id argument was provided, but a dict-like cache (or list of caches) is missing as the second argument.")
+        # if kwargs:  # pragma: no cover
+        #     raise Exception("Cannot pass more arguments when loading from cache (i.e., first argument is an id and the second argument is a dict-like cache).")
+        # self.frozen = frozenhdict.fromid(_dictionary__id, _frozen__cache)
 
     # @property
     # def aslist(self):

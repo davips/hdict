@@ -58,7 +58,7 @@ class field(AbsCloneable):
 
     @property
     def hosh(self):
-        if self.content is None:   # pragma: no cover
+        if self.content is None:  # pragma: no cover
             raise Exception(f"Cannot know hosh before finishing pointer to field '{self.name}'.")
         if self._hosh is None:
             self._hosh = self.content.hosh
@@ -67,6 +67,7 @@ class field(AbsCloneable):
     @property
     def value(self):
         from hdict.content.abs.abscontent import AbsContent
+
         if self.content is None:  # pragma: no cover
             raise Exception(f"Cannot access value before finishing pointer to field '{self.name}'.")
         return self.content.value if isinstance(self.content, AbsContent) else self.content

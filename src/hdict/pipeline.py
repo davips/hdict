@@ -37,8 +37,9 @@ class pipeline(AbsSampleable):
     def __rshift__(self, other):
         from hdict import apply
         from hdict.content.applyout import applyOut
+
         if isinstance(other, pipeline):
             return pipeline(*other.steps, _previous=self.steps)
         if isinstance(other, (apply, applyOut)):
             return pipeline(other, _previous=self.steps)
-        return NotImplemented
+        return NotImplemented  # pragma: no cover

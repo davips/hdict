@@ -37,13 +37,14 @@ class subcontent(AbsCloneable):
     @property
     def requirements(self):
         from hdict import apply
+
         return self.parent.requirements if isinstance(self.parent, apply) else {}
 
     @property
     def hosh(self):
         if self._hosh is None:
             h = self.parent.hosh
-            self._hosh = h[self.index:self.n]
+            self._hosh = h[self.index : self.n]
         return self._hosh
 
     @property
@@ -54,16 +55,16 @@ class subcontent(AbsCloneable):
     def value(self):
         value = self.parent.value
         if isinstance(value, list):
-            if len(value) < self.n:
+            if len(value) < self.n:  # pragma: no cover
                 raise Exception(f"Number of output fields ('{self.n}') should not exceed number of resulting list elements ('{len(value)}').")
             return value[self.index]
         if isinstance(value, dict):
-            if len(value) != self.n:
+            if len(value) != self.n:  # pragma: no cover
                 raise Exception(f"Number of output fields ('{self.n}') should match number of resulting dict entries ('{len(value)}').")
             if self.source:
                 return value[self.source]
             return list(sorted(value.items()))[self.index][1]
-        else:
+        else:  # pragma: no cover
             raise Exception(f"Cannot infer subvalue '{self.index}' of type '{type(value)} {value}.")
 
     def clone(self, parent=None):
@@ -71,7 +72,12 @@ class subcontent(AbsCloneable):
         return subcontent(parent, self.index, self.n, self.source, self._hosh)
 
     def finish(self, data):
-        if self.finished:
+        """
+        >>> from hdict import value
+        >>> subcontent(value([3]), 0,1)
+        3
+        """
+        if self.finished:  # pragma: no cover
             raise Exception(f"Cannot finish a subcontent twice.")
         if isinstance(self.parent, AbsCloneable) and not self.parent.finished:
             self.parent.finish(data)
