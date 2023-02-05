@@ -34,13 +34,13 @@ Please see the [website](https://hosh.page) for more detailed usage information.
 
 `hdict` is like an ordinary `dict` with `str` keys. 
 Each entry, called _field_, and the `hdict` itself, are identified by 40-digit hashes (see [hosh](https://pypi.org/project/hosh)).
+A `hdict` object (say `d`) provides two extra entries: `_id` (identifier) and `_ids` (value identifiers),
+accessible through square brackets or through the shortcuts `d.id` and `d.ids`.
 
 <<simple>>
 
 A field contains a value or a function application.
 A field pointing to an application is only evaluated on demand, i.e., lazily.
-A `hdict` object (say `d`) provides two extra entries: `_id` (identifier) and `_ids` (value identifiers),
-accessible through square brackets or through the shortcuts `d.id` and `d.ids`.
 
 <!-- ------------------------------------------------------------------------ 
 Value objects can have custom identifiers as well, if provided whithin the entry `ids`. 
@@ -64,6 +64,8 @@ it can be converted from/to a built-in `dict`.
 
 
 ------------------------------------------------------------------------  -->
+
+Please refer to our [website](https://hosh.page) for more examples.
 
 
 ## Installation
