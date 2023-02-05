@@ -194,12 +194,15 @@ def handle_values(data: Dict[str, object]):
             unfinished.append(content)
             data[k] = content
         elif isinstance(content, (apply, subcontent)):
-            skip_key = id(content.parent)
-            if skip_key in subcontent_cloned_parent:
-                content = content.clone(subcontent_cloned_parent[skip_key])
+            if isinstance(content, subcontent):
+                skip_key = id(content.parent)
+                if skip_key in subcontent_cloned_parent:
+                    content = content.clone(subcontent_cloned_parent[skip_key])
+                else:
+                    content = content.clone()
+                    subcontent_cloned_parent[skip_key] = content.parent
             else:
                 content = content.clone()
-                subcontent_cloned_parent[skip_key] = content.parent
             reqs = content.requirements
             for kreq, req in reqs.items():
                 if isinstance(req, default):

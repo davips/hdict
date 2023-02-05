@@ -150,9 +150,10 @@ class hdict(dict[str, VT]):
         }
     }
     >>> d["p1"]
+    27
     >>> from hdict import default, value
     >>> d = hdict(x=2)
-    >>> g = lambda x, y: x + y
+    >>> g = lambda x, y: [x + y, x / y]
     >>> d["z"] = apply(f, 2, y=3)
     >>> d["w", "v"] = apply(f, field("x"), y=33)
     >>> d["f"] = f
@@ -170,8 +171,9 @@ class hdict(dict[str, VT]):
     >>> from random import Random
     >>> rnd = Random(0)
     >>> p1 = p.sample(rnd)
+    >>> d["w"]
+    9
     >>> d >>= p1
-
     >>> d["z"] = _(f, 2, y=3)
     >>> d["w", "v"] = _(f, _.x, y=_.x)
     >>> d["w", "v"] = _(_.f, _.x, y=default(3))
@@ -183,11 +185,11 @@ class hdict(dict[str, VT]):
         w: λ(4 7)→0,
         z: λ(w 3)→0,
         v: λ(4 7)→1,
-        _id: "KTU.m.W22.TsfkZzSBNj.QyDJFb58nX.m-nQMzt5",
+        _id: "cexo8AfBKo4Ku.4IctlyPMSSZpDvjrl-ncyVUmmd",
         _ids: {
-            w: "Ecb9K2KK0pe567PETJCoCGcUgKrPWygwDeOo5bWh",
+            w: "VdHav0HHdJC6gfOF8Fqw7AFX9IYQyrIUOZc8G.Pp",
             z: "3eItvrVzHQPDEYbQRbksBHiCaQbe2Ia2m7Z2P1lw",
-            v: "VrW9titnSAPeJSiGIQJI8UKdKaBQ28HrlpwJjxzy"
+            v: "KtYqDG5UPyrYEv-5V5RaUQasieAwAjF1bYf3Tvyy"
         }
     }
     >>> d = hdict(x=3) >> p.sample(rnd)

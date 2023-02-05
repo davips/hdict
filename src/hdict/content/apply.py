@@ -172,6 +172,9 @@ class apply(AbsCloneable, AbsSampleable):
     @property
     def hosh(self):
         if not self.finished:  # pragma: no cover
+            from hdict import sample
+            if any(isinstance(x, sample) for x in self.requirements.values()):
+                raise Exception(f"Cannot know the identity of this hdict or apply object before sampling. Provided callable:", self.f)
             raise Exception(f"Cannot know apply.hosh before finishing object apply. Provided callable:", self.f)
         if self._hosh is None:
             self._hosh = reduce(mul, chain(hoshes(self.requirements.values()), [self.ahosh]))
@@ -197,10 +200,15 @@ class apply(AbsCloneable, AbsSampleable):
 
     def sample(self, rnd: int | Random = None):
         clone = self.clone()
+        args = clone.args
+        kwargs = clone.kwargs
         reqs = clone.requirements
-        for k, req in reqs.items():
-            if isinstance(req, AbsSampleable):
-                reqs[k] = req.sample(rnd)
+        for k, v in args.items():
+            if isinstance(v, AbsSampleable):
+                args[k] = reqs[k] = v.sample(rnd)
+        for k, v in kwargs.items():
+            if isinstance(v, AbsSampleable):
+                kwargs[k] = reqs[k] = v.sample(rnd)
         return clone
 
     def __repr__(self):
