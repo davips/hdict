@@ -145,12 +145,6 @@ class apply(AbsCloneable, AbsSampleable):
     def ahosh(self):
         return self.fhosh.rev  # 'f' identified as an appliable function
 
-    def __call__(self, *out, **kwout):
-        from hdict.content.applyout import applyOut
-        if out and kwout:  # pragma: no cover
-            raise Exception(f"Cannot mix translated and non translated outputs.")
-        return applyOut(self, out or tuple(kwout.items()))
-
     def finish(self, data):
         if self.finished:  # pragma: no cover
             raise Exception(f"Cannot finish an application twice.")
@@ -210,6 +204,19 @@ class apply(AbsCloneable, AbsSampleable):
             if isinstance(v, AbsSampleable):
                 kwargs[k] = reqs[k] = v.sample(rnd)
         return clone
+
+    def __call__(self, *out, **kwout):
+        from hdict.content.applyout import applyOut
+        if out and kwout:  # pragma: no cover
+            raise Exception(f"Cannot mix translated and non translated outputs.")
+        return applyOut(self, out or tuple(kwout.items()))
+
+    def __getattr__(self, item):
+        # REMINDER: Work around getattribute missing all properties.
+        if item not in ["isevaluated", "fun", "value", "hosh", "ahosh"]:
+            from hdict.content.applyout import applyOut
+            return applyOut(self, item)
+        return self.__getattribute__(item)  # pragma: no cover
 
     def __repr__(self):
         if not self.isevaluated:
