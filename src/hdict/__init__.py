@@ -21,7 +21,6 @@
 #  time spent here.
 #
 
-from hdict.appearance import BW, ANSI, HTML
 from hdict.content.apply import apply
 from hdict.content.default import default
 from hdict.content.field import field

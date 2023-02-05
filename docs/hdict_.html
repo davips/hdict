@@ -186,7 +186,7 @@ class hdict(dict[str, VT]):
     &gt;&gt;&gt; d[&#34;w&#34;, &#34;v&#34;] = apply(f, field(&#34;x&#34;), y=33)
     &gt;&gt;&gt; d[&#34;f&#34;] = f
     &gt;&gt;&gt; cache = {}
-    &gt;&gt;&gt; d = d &gt;&gt; apply(field(&#34;f&#34;), field(&#34;x&#34;), y=default(3), _cache=cache)(&#34;w3&#34;, &#34;v3&#34;)
+    &gt;&gt;&gt; d = d &gt;&gt; apply(field(&#34;f&#34;), field(&#34;x&#34;), y=default(3), _cache=cache)(&#34;w3&#34;, &#34;v3&#34;)  # TODO: inexistent parameter (_cache) should raise an exception
     &gt;&gt;&gt; d &gt;&gt;= apply(field(&#34;f&#34;), field(&#34;x&#34;), y=default(3))(&#34;w&#34;, &#34;v&#34;)
     &gt;&gt;&gt; d[&#34;w2&#34;, &#34;v2&#34;] = apply(field(&#34;f&#34;), field(&#34;x&#34;), y=default(3))
     &gt;&gt;&gt; d &gt;&gt;= {&#34;z&#34;: apply(f, field(&#34;x&#34;), y=3), (&#34;w&#34;, &#34;v&#34;): apply(g, y=7)}
@@ -482,7 +482,6 @@ class hdict(dict[str, VT]):
         Textual representation of an idict object
 
         &gt;&gt;&gt; from hdict import hdict
-        &gt;&gt;&gt; from hdict.appearance import decolorize
         &gt;&gt;&gt; d = hdict(x=1,y=2)
         &gt;&gt;&gt; d.show(colored=False)
         {
@@ -532,7 +531,6 @@ class hdict(dict[str, VT]):
         Exclude ids and other items starting with &#39;_&#39;.
 
         &gt;&gt;&gt; from hdict import hdict
-        &gt;&gt;&gt; from hdict.appearance import decolorize
         &gt;&gt;&gt; for k, v in hdict(x=1, y=2).items():
         ...     print(k, v)
         x 1
@@ -749,7 +747,7 @@ This is needed to enable handling a function as a value, under the original id.<
 &gt;&gt;&gt; d[&quot;w&quot;, &quot;v&quot;] = apply(f, field(&quot;x&quot;), y=33)
 &gt;&gt;&gt; d[&quot;f&quot;] = f
 &gt;&gt;&gt; cache = {}
-&gt;&gt;&gt; d = d &gt;&gt; apply(field(&quot;f&quot;), field(&quot;x&quot;), y=default(3), _cache=cache)(&quot;w3&quot;, &quot;v3&quot;)
+&gt;&gt;&gt; d = d &gt;&gt; apply(field(&quot;f&quot;), field(&quot;x&quot;), y=default(3), _cache=cache)(&quot;w3&quot;, &quot;v3&quot;)  # TODO: inexistent parameter (_cache) should raise an exception
 &gt;&gt;&gt; d &gt;&gt;= apply(field(&quot;f&quot;), field(&quot;x&quot;), y=default(3))(&quot;w&quot;, &quot;v&quot;)
 &gt;&gt;&gt; d[&quot;w2&quot;, &quot;v2&quot;] = apply(field(&quot;f&quot;), field(&quot;x&quot;), y=default(3))
 &gt;&gt;&gt; d &gt;&gt;= {&quot;z&quot;: apply(f, field(&quot;x&quot;), y=3), (&quot;w&quot;, &quot;v&quot;): apply(g, y=7)}
@@ -1031,7 +1029,7 @@ True
     &gt;&gt;&gt; d[&#34;w&#34;, &#34;v&#34;] = apply(f, field(&#34;x&#34;), y=33)
     &gt;&gt;&gt; d[&#34;f&#34;] = f
     &gt;&gt;&gt; cache = {}
-    &gt;&gt;&gt; d = d &gt;&gt; apply(field(&#34;f&#34;), field(&#34;x&#34;), y=default(3), _cache=cache)(&#34;w3&#34;, &#34;v3&#34;)
+    &gt;&gt;&gt; d = d &gt;&gt; apply(field(&#34;f&#34;), field(&#34;x&#34;), y=default(3), _cache=cache)(&#34;w3&#34;, &#34;v3&#34;)  # TODO: inexistent parameter (_cache) should raise an exception
     &gt;&gt;&gt; d &gt;&gt;= apply(field(&#34;f&#34;), field(&#34;x&#34;), y=default(3))(&#34;w&#34;, &#34;v&#34;)
     &gt;&gt;&gt; d[&#34;w2&#34;, &#34;v2&#34;] = apply(field(&#34;f&#34;), field(&#34;x&#34;), y=default(3))
     &gt;&gt;&gt; d &gt;&gt;= {&#34;z&#34;: apply(f, field(&#34;x&#34;), y=3), (&#34;w&#34;, &#34;v&#34;): apply(g, y=7)}
@@ -1327,7 +1325,6 @@ True
         Textual representation of an idict object
 
         &gt;&gt;&gt; from hdict import hdict
-        &gt;&gt;&gt; from hdict.appearance import decolorize
         &gt;&gt;&gt; d = hdict(x=1,y=2)
         &gt;&gt;&gt; d.show(colored=False)
         {
@@ -1377,7 +1374,6 @@ True
         Exclude ids and other items starting with &#39;_&#39;.
 
         &gt;&gt;&gt; from hdict import hdict
-        &gt;&gt;&gt; from hdict.appearance import decolorize
         &gt;&gt;&gt; for k, v in hdict(x=1, y=2).items():
         ...     print(k, v)
         x 1
@@ -1736,7 +1732,6 @@ True
 <div class="desc"><p>Generator over field-value pairs</p>
 <p>Exclude ids and other items starting with '_'.</p>
 <pre><code class="language-python-repl">&gt;&gt;&gt; from hdict import hdict
-&gt;&gt;&gt; from hdict.appearance import decolorize
 &gt;&gt;&gt; for k, v in hdict(x=1, y=2).items():
 ...     print(k, v)
 x 1
@@ -1752,7 +1747,6 @@ y 2
     Exclude ids and other items starting with &#39;_&#39;.
 
     &gt;&gt;&gt; from hdict import hdict
-    &gt;&gt;&gt; from hdict.appearance import decolorize
     &gt;&gt;&gt; for k, v in hdict(x=1, y=2).items():
     ...     print(k, v)
     x 1
@@ -1781,7 +1775,6 @@ y 2
 <dd>
 <div class="desc"><p>Textual representation of an idict object</p>
 <pre><code class="language-python-repl">&gt;&gt;&gt; from hdict import hdict
-&gt;&gt;&gt; from hdict.appearance import decolorize
 &gt;&gt;&gt; d = hdict(x=1,y=2)
 &gt;&gt;&gt; d.show(colored=False)
 {
@@ -1803,7 +1796,6 @@ y 2
     Textual representation of an idict object
 
     &gt;&gt;&gt; from hdict import hdict
-    &gt;&gt;&gt; from hdict.appearance import decolorize
     &gt;&gt;&gt; d = hdict(x=1,y=2)
     &gt;&gt;&gt; d.show(colored=False)
     {

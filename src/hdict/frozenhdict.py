@@ -220,10 +220,10 @@ class frozenhdict(UserDict, dict[str, VT]):
         dicts, hoshes = self.asdicts_hoshes_noneval
         txt = json.dumps(dicts, indent=4, ensure_ascii=False, cls=CustomJSONEncoder)
 
-        # Put colors after json, to avoid escaping ansi codes.
+        # Put colors after json, to avoid escaping ansi codes.  TODO: check how HTML behaves here
         if colored:
             for h in hoshes:
-                txt = txt.replace(f'"{h.id}"', h.idc)
+                txt = txt.replace(f'"{h.id}"', h.ansi)
         txt = re.sub(r'(": )"(λ.+?)"(?=,\n)', '": \\2', txt)
         if not key_quotes:
             txt = re.sub(r'(?<!: )"([a-zA-Z0-9_ ]+?)"(?=: )', "\\1", txt)

@@ -34,7 +34,7 @@ Please see the [website](https://hosh.page) for more detailed usage information.
 
 `hdict` is like an ordinary `dict` with `str` keys. 
 Each entry, called _field_, and the `hdict` itself, are identified by 40-digit hashes (see [hosh](https://pypi.org/project/hosh)).
-A `hdict` object (say `d`) provides two extra entries: `_id` (identifier) and `_ids` (value identifiers),
+A `hdict` object (say `d`) provides two extra entries: `_id` (hdict identifier) and `_ids` (field identifiers),
 accessible through square brackets or through the shortcuts `d.id` and `d.ids`.
 
 **`hdict` creation**

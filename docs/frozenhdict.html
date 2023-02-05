@@ -248,10 +248,10 @@ class frozenhdict(UserDict, dict[str, VT]):
         dicts, hoshes = self.asdicts_hoshes_noneval
         txt = json.dumps(dicts, indent=4, ensure_ascii=False, cls=CustomJSONEncoder)
 
-        # Put colors after json, to avoid escaping ansi codes.
+        # Put colors after json, to avoid escaping ansi codes.  TODO: check how HTML behaves here
         if colored:
             for h in hoshes:
-                txt = txt.replace(f&#39;&#34;{h.id}&#34;&#39;, h.idc)
+                txt = txt.replace(f&#39;&#34;{h.id}&#34;&#39;, h.ansi)
         txt = re.sub(r&#39;(&#34;: )&#34;(λ.+?)&#34;(?=,\n)&#39;, &#39;&#34;: \\2&#39;, txt)
         if not key_quotes:
             txt = re.sub(r&#39;(?&lt;!: )&#34;([a-zA-Z0-9_ ]+?)&#34;(?=: )&#39;, &#34;\\1&#34;, txt)
@@ -603,10 +603,10 @@ class frozenhdict(UserDict, dict[str, VT]):
         dicts, hoshes = self.asdicts_hoshes_noneval
         txt = json.dumps(dicts, indent=4, ensure_ascii=False, cls=CustomJSONEncoder)
 
-        # Put colors after json, to avoid escaping ansi codes.
+        # Put colors after json, to avoid escaping ansi codes.  TODO: check how HTML behaves here
         if colored:
             for h in hoshes:
-                txt = txt.replace(f&#39;&#34;{h.id}&#34;&#39;, h.idc)
+                txt = txt.replace(f&#39;&#34;{h.id}&#34;&#39;, h.ansi)
         txt = re.sub(r&#39;(&#34;: )&#34;(λ.+?)&#34;(?=,\n)&#39;, &#39;&#34;: \\2&#39;, txt)
         if not key_quotes:
             txt = re.sub(r&#39;(?&lt;!: )&#34;([a-zA-Z0-9_ ]+?)&#34;(?=: )&#39;, &#34;\\1&#34;, txt)
@@ -951,10 +951,10 @@ def unfrozen(self):
     dicts, hoshes = self.asdicts_hoshes_noneval
     txt = json.dumps(dicts, indent=4, ensure_ascii=False, cls=CustomJSONEncoder)
 
-    # Put colors after json, to avoid escaping ansi codes.
+    # Put colors after json, to avoid escaping ansi codes.  TODO: check how HTML behaves here
     if colored:
         for h in hoshes:
-            txt = txt.replace(f&#39;&#34;{h.id}&#34;&#39;, h.idc)
+            txt = txt.replace(f&#39;&#34;{h.id}&#34;&#39;, h.ansi)
     txt = re.sub(r&#39;(&#34;: )&#34;(λ.+?)&#34;(?=,\n)&#39;, &#39;&#34;: \\2&#39;, txt)
     if not key_quotes:
         txt = re.sub(r&#39;(?&lt;!: )&#34;([a-zA-Z0-9_ ]+?)&#34;(?=: )&#39;, &#34;\\1&#34;, txt)

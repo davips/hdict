@@ -158,7 +158,7 @@ class hdict(dict[str, VT]):
     >>> d["w", "v"] = apply(f, field("x"), y=33)
     >>> d["f"] = f
     >>> cache = {}
-    >>> d = d >> apply(field("f"), field("x"), y=default(3), _cache=cache)("w3", "v3")
+    >>> d = d >> apply(field("f"), field("x"), y=default(3), _cache=cache)("w3", "v3")  # TODO: inexistent parameter (_cache) should raise an exception
     >>> d >>= apply(field("f"), field("x"), y=default(3))("w", "v")
     >>> d["w2", "v2"] = apply(field("f"), field("x"), y=default(3))
     >>> d >>= {"z": apply(f, field("x"), y=3), ("w", "v"): apply(g, y=7)}
@@ -454,7 +454,6 @@ class hdict(dict[str, VT]):
         Textual representation of an idict object
 
         >>> from hdict import hdict
-        >>> from hdict.appearance import decolorize
         >>> d = hdict(x=1,y=2)
         >>> d.show(colored=False)
         {
@@ -504,7 +503,6 @@ class hdict(dict[str, VT]):
         Exclude ids and other items starting with '_'.
 
         >>> from hdict import hdict
-        >>> from hdict.appearance import decolorize
         >>> for k, v in hdict(x=1, y=2).items():
         ...     print(k, v)
         x 1
