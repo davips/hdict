@@ -251,7 +251,7 @@ class frozenhdict(UserDict, dict[str, VT]):
         # Put colors after json, to avoid escaping ansi codes.  TODO: check how HTML behaves here
         if colored:
             for h in hoshes:
-                txt = txt.replace(f&#39;&#34;{h.id}&#34;&#39;, h.ansi)
+                txt = txt.replace(f&#39;&#34;{h.id}&#34;&#39;, repr(h))
         txt = re.sub(r&#39;(&#34;: )&#34;(λ.+?)&#34;(?=,\n)&#39;, &#39;&#34;: \\2&#39;, txt)
         if not key_quotes:
             txt = re.sub(r&#39;(?&lt;!: )&#34;([a-zA-Z0-9_ ]+?)&#34;(?=: )&#39;, &#34;\\1&#34;, txt)
@@ -606,7 +606,7 @@ class frozenhdict(UserDict, dict[str, VT]):
         # Put colors after json, to avoid escaping ansi codes.  TODO: check how HTML behaves here
         if colored:
             for h in hoshes:
-                txt = txt.replace(f&#39;&#34;{h.id}&#34;&#39;, h.ansi)
+                txt = txt.replace(f&#39;&#34;{h.id}&#34;&#39;, repr(h))
         txt = re.sub(r&#39;(&#34;: )&#34;(λ.+?)&#34;(?=,\n)&#39;, &#39;&#34;: \\2&#39;, txt)
         if not key_quotes:
             txt = re.sub(r&#39;(?&lt;!: )&#34;([a-zA-Z0-9_ ]+?)&#34;(?=: )&#39;, &#34;\\1&#34;, txt)
@@ -954,7 +954,7 @@ def unfrozen(self):
     # Put colors after json, to avoid escaping ansi codes.  TODO: check how HTML behaves here
     if colored:
         for h in hoshes:
-            txt = txt.replace(f&#39;&#34;{h.id}&#34;&#39;, h.ansi)
+            txt = txt.replace(f&#39;&#34;{h.id}&#34;&#39;, repr(h))
     txt = re.sub(r&#39;(&#34;: )&#34;(λ.+?)&#34;(?=,\n)&#39;, &#39;&#34;: \\2&#39;, txt)
     if not key_quotes:
         txt = re.sub(r&#39;(?&lt;!: )&#34;([a-zA-Z0-9_ ]+?)&#34;(?=: )&#39;, &#34;\\1&#34;, txt)
