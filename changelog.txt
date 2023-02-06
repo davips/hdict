@@ -1,1 +1,1 @@
-Update hosh
+Reflect hosh theme on hdict.show()

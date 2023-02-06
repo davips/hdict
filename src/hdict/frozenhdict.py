@@ -223,7 +223,7 @@ class frozenhdict(UserDict, dict[str, VT]):
         # Put colors after json, to avoid escaping ansi codes.  TODO: check how HTML behaves here
         if colored:
             for h in hoshes:
-                txt = txt.replace(f'"{h.id}"', h.ansi)
+                txt = txt.replace(f'"{h.id}"', repr(h))
         txt = re.sub(r'(": )"(λ.+?)"(?=,\n)', '": \\2', txt)
         if not key_quotes:
             txt = re.sub(r'(?<!: )"([a-zA-Z0-9_ ]+?)"(?=: )', "\\1", txt)
