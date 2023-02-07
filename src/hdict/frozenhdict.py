@@ -32,7 +32,8 @@ from hdict.pipeline import pipeline
 
 VT = TypeVar("VT")
 
-
+#  TODO: make frozenhdict hasheable
+# TODO: fix "Object of type set is not JSON serializable" when show()
 class frozenhdict(UserDict, dict[str, VT]):
     """
     Immutable hdict.
