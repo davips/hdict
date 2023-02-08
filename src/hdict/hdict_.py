@@ -305,6 +305,8 @@ class hdict(dict[str, VT]):
     >>> del d["x"]
     >>> list(d)
     ['y']
+    >>> d >> _(lambda y: y*7)("y")
+
     """
 
     # noinspection PyMissingConstructor
@@ -509,6 +511,9 @@ class hdict(dict[str, VT]):
         y 2
         """
         return self.frozen.items(evaluate)
+
+    def __hash__(self):
+        raise Exception(f"hdict is not hashble. Please use hdict.frozen instead.")
 
     def fromid(self, id, cache) -> Union["hdict", None]:
         if len(id) != 40:  # pragma: no cover

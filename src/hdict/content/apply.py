@@ -39,7 +39,7 @@ from hdict.hoshfication import f2hosh
 from hosh import Hosh
 from hosh.misc import hoshes
 
-
+# TODO: discard dependencies after evaluation, to avoid wasted memory, e.g., even after the deps are deleted from hdict
 class apply(AbsCloneable, AbsSampleable):
     """
     >>> from hdict import apply

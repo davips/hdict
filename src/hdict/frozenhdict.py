@@ -32,8 +32,7 @@ from hdict.pipeline import pipeline
 
 VT = TypeVar("VT")
 
-#  TODO: make frozenhdict hasheable
-# TODO: fix "Object of type set is not JSON serializable" when show()
+
 class frozenhdict(UserDict, dict[str, VT]):
     """
     Immutable hdict.
@@ -334,6 +333,9 @@ class frozenhdict(UserDict, dict[str, VT]):
         for k in self.data:
             if not k.startswith("_"):
                 yield k
+
+    def __hash__(self):
+        return hash(self.hosh)
 
     # def metakeys(self):
     #     """Generator of keys which start with '_'"""

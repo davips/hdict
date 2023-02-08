@@ -30,6 +30,8 @@ from hdict.hdict_ import hdict
 
 
 class _:
+    Ø = hdict()
+
     def __call__(self, *args, **kwargs):
         return apply(*args, **kwargs)
 
@@ -41,3 +43,4 @@ class _:
 
 
 _ = _()
+Ø = hdict()
