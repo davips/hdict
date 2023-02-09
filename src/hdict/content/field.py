@@ -36,26 +36,6 @@ class field(AbsCloneable):
         self.name = name
         self._hosh = Hosh.fromid(hosh) if isinstance(hosh, str) else hosh
 
-    def finish(self, data):
-        """
-        >>> d = {"a": field("b"), "b": field("c"), "c": 5}
-        >>> d
-        {'a': field('b'), 'b': field('c'), 'c': 5}
-        >>> d["a"].finish(d)
-        >>> d
-        {'a': c, 'b': c, 'c': 5}
-        >>> d["a"].value
-        5
-        """
-        if self.content is not None:  # pragma: no cover
-            raise Exception(f"Cannot finish a field pointer twice. name: {self.name}; hosh: {self.hosh}")
-        if self.name not in data:  # pragma: no cover
-            raise Exception(f"Missing field '{self.name}'")
-        self.content = data[self.name]
-        if isinstance(self.content, AbsCloneable) and not self.content.finished:
-            self.content.finish(data)
-        self._finished = True
-
     @property
     def hosh(self):
         if self.content is None:  # pragma: no cover
@@ -76,8 +56,31 @@ class field(AbsCloneable):
     def isevaluated(self):  # pragma: no cover
         return self.content and self.content.isevaluated
 
-    def clone(self):
+    def start_clone(self):
+        if self.finished:  # pragma: no cover
+            raise Exception(f"Cannot clone a finished content.")
         return field(self.name, self._hosh)
+
+    def finish_clone(self, data, out, previous):
+        """
+        >>> d = {"a": field("b"), "b": field("c"), "c": 5}
+        >>> d
+        {'a': field('b'), 'b': field('c'), 'c': 5}
+        >>> d["a"].finish_clone(d, "", {})
+        >>> d
+        {'a': c, 'b': c, 'c': 5}
+        >>> d["a"].value
+        5
+        """
+        if self.content is not None:  # pragma: no cover
+            raise Exception(f"Cannot finish a field pointer twice. name: {self.name}.\n"
+                            f"Please check if there are indirect circular references.")
+        if self.name not in data:  # pragma: no cover
+            raise Exception(f"Missing field '{self.name}'")
+        self.content = data[self.name]
+        if isinstance(self.content, AbsCloneable) and not self.content.finished:
+            self.content.finish_clone(data, out, previous)
+        self._finished = True
 
     def __repr__(self):
         if self.content is None:

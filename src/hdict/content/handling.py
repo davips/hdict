@@ -192,25 +192,26 @@ def handle_values(data: Dict[str, object]):
             # data[k] = handle_default(k, content, data)
             raise Exception(f"Cannot pass object of type 'default' directly to hdict. Param:", k)
         elif isinstance(content, field):
-            # REMINDER: clone() makes a deep copy to avoid mutation in original 'content' when finishing it below
-            content = content.clone()
-            unfinished.append(content)
+            if not content.finished:
+                # REMINDER: start_clone() makes a deep copy to avoid mutation in original 'content' when finishing it below
+                content = content.start_clone()
+                unfinished[k] = content
             data[k] = content
         elif isinstance(content, (apply, subcontent)):
-            if isinstance(content, subcontent):
+            if isinstance(content, subcontent) and not content.finished:
                 skip_key = id(content.parent)
                 if skip_key in subcontent_cloned_parent:
-                    content = content.clone(subcontent_cloned_parent[skip_key])
+                    content = content.start_clone(subcontent_cloned_parent[skip_key])
                 else:
-                    content = content.clone()
+                    content = content.start_clone()
                     subcontent_cloned_parent[skip_key] = content.parent
-            else:
-                content = content.clone()
+            elif not content.finished:
+                content = content.start_clone()
             reqs = content.requirements
             for kreq, req in reqs.items():
                 if isinstance(req, default):
                     reqs[kreq] = handle_default(kreq, req, data)
-            unfinished.append(content)
+            unfinished[k] = content
             data[k] = content
         elif isinstance(content, hdict):
             data[k] = value(content.frozen, content.hosh)
@@ -225,9 +226,9 @@ def handle_values(data: Dict[str, object]):
     data.update(mirror_fields)
 
     # Finish state of field-dependent objects created above.
-    for item in unfinished:
+    for out, item in unfinished.items():
         if not item.finished:
-            item.finish(data)
+            item.finish_clone(data, out, previous)
 
 
 def handle_identity(data):

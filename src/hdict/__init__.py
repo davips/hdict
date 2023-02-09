@@ -20,6 +20,7 @@
 #  part of this work is illegal and it is unethical regarding the effort and
 #  time spent here.
 #
+from typing import Union
 
 from hdict.content.apply import apply
 from hdict.content.default import default
@@ -27,13 +28,14 @@ from hdict.content.field import field
 from hdict.content.sample import sample
 from hdict.content.value import value
 from hdict.hdict_ import hdict
+from hosh import Hosh
 
 
 class _:
     Ø = hdict()
 
-    def __call__(self, *args, **kwargs):
-        return apply(*args, **kwargs)
+    def __call__(self, f: Union[callable, "apply", field], *applied_args, fhosh: Hosh = None, **applied_kwargs):
+        return apply(f, *applied_args, fhosh=fhosh, **applied_kwargs)
 
     def __getattr__(self, item):
         return field(item)

@@ -131,18 +131,18 @@ class CustomJSONEncoder(JSONEncoder):
             dd: "fVj30baMeet4PcN9ZY-8uMpFin89FY8h8MI4RkDd"
         }
     }
-    >>> hdict(s={1,3,2}, t={3,1,2}, u={2,1,3}, v={2,1,3})
+    >>> hdict(s={1,3,2}, t={3,1,2}, u={2,1,3}, v={2,1,3}).show(colored=False)
     {
         s: "{1, 2, 3}",
         t: "{1, 2, 3}",
         u: "{1, 2, 3}",
         v: "{1, 2, 3}",
-        _id: 0WaiiSdaTRaHqFjzD-Y8Mm2v1Ym.Nj9UUxPIVMax,
+        _id: "0WaiiSdaTRaHqFjzD-Y8Mm2v1Ym.Nj9UUxPIVMax",
         _ids: {
-            s: kDsYXHYuZJ9o7GXZLx6lYu0GpEqyrCmBpt0xoy60,
-            t: kDsYXHYuZJ9o7GXZLx6lYu0GpEqyrCmBpt0xoy60,
-            u: kDsYXHYuZJ9o7GXZLx6lYu0GpEqyrCmBpt0xoy60,
-            v: kDsYXHYuZJ9o7GXZLx6lYu0GpEqyrCmBpt0xoy60
+            s: "kDsYXHYuZJ9o7GXZLx6lYu0GpEqyrCmBpt0xoy60",
+            t: "kDsYXHYuZJ9o7GXZLx6lYu0GpEqyrCmBpt0xoy60",
+            u: "kDsYXHYuZJ9o7GXZLx6lYu0GpEqyrCmBpt0xoy60",
+            v: "kDsYXHYuZJ9o7GXZLx6lYu0GpEqyrCmBpt0xoy60"
         }
     }
     """

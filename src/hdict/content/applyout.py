@@ -37,9 +37,6 @@ class applyOut(AbsContent, AbsSampleable):
     def __post_init__(self):
         outs = [self.out] if isinstance(self.out, str) else self.out
         keys = self.nested.requirements.keys()
-        for o in outs:
-            if o in keys:  # pragma: no cover
-                raise Exception(f"Cannot handle circular references. Application at {o} depends on fields {keys}")
 
     def sample(self, rnd: int | Random = None):
         return applyOut(self.nested.sample(rnd), self.out)

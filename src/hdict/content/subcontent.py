@@ -44,7 +44,7 @@ class subcontent(AbsCloneable):
     def hosh(self):
         if self._hosh is None:
             h = self.parent.hosh
-            self._hosh = h[self.index : self.n]
+            self._hosh = h[self.index: self.n]
         return self._hosh
 
     @property
@@ -67,11 +67,13 @@ class subcontent(AbsCloneable):
         else:  # pragma: no cover
             raise Exception(f"Cannot infer subvalue '{self.index}' of type '{type(value)} {value}.")
 
-    def clone(self, parent=None):
-        parent = parent or (self.parent.clone() if isinstance(self.parent, AbsCloneable) else self.parent)
+    def start_clone(self, parent=None):
+        if self.finished:  # pragma: no cover
+            raise Exception(f"Cannot clone a finished content.")
+        parent = parent or (self.parent.start_clone() if isinstance(self.parent, AbsCloneable) else self.parent)
         return subcontent(parent, self.index, self.n, self.source, self._hosh)
 
-    def finish(self, data):
+    def finish_clone(self, data, out, previous):
         """
         >>> from hdict import value
         >>> subcontent(value([3]), 0,1)
@@ -80,7 +82,7 @@ class subcontent(AbsCloneable):
         if self.finished:  # pragma: no cover
             raise Exception(f"Cannot finish a subcontent twice.")
         if isinstance(self.parent, AbsCloneable) and not self.parent.finished:
-            self.parent.finish(data)
+            self.parent.finish_clone(data, out, previous)
         self._finished = True
 
     def __repr__(self):

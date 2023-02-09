@@ -39,6 +39,7 @@ from hdict.hoshfication import f2hosh
 from hosh import Hosh
 from hosh.misc import hoshes
 
+
 # TODO: discard dependencies after evaluation, to avoid wasted memory, e.g., even after the deps are deleted from hdict
 class apply(AbsCloneable, AbsSampleable):
     """
@@ -56,10 +57,10 @@ class apply(AbsCloneable, AbsSampleable):
     >>> v2 = apply(f, a=v, b=value(7))
     >>> v2
     λ(a=λ(5 7) 7)
-    >>> v.finish({})
+    >>> v.finish_clone({}, "", {})
     >>> v.value, v2
     (78125, λ(a=78125 7))
-    >>> v2.finish({})
+    >>> v2.finish_clone({}, "", {})
     >>> v2.value, v2
     (17763568394002504646778106689453125, 17763568394002504646778106689453125)
 
@@ -71,14 +72,14 @@ class apply(AbsCloneable, AbsSampleable):
     {'a': 3, 'b': field('b'), 'c': default(1), 'd': default(2), 'e': default(13)}
     >>> ap
     λ(3 b c=default(1) d=default(2) e=default(13))
-    >>> ap.finish({"b": value(77)})
+    >>> ap.finish_clone({"b": value(77)}, "", {})
     >>> ap
     λ(3 b c=default(1) d=default(2) e=default(13))
     >>> from hdict.content.handling import handle_values
     >>> d = {"f": ap, "b": 5, "d": 1, "e": field("b")}
     >>> d
     {'f': λ(3 b c=default(1) d=default(2) e=default(13)), 'b': 5, 'd': 1, 'e': field('b')}
-    >>> handle_values(d)
+    >>> handle_values(d, {})
     >>> d
     {'f': λ(3 b 1 d b), 'b': 5, 'd': 1, 'e': b}
     >>> apply(f,3,4).requirements
@@ -114,8 +115,8 @@ class apply(AbsCloneable, AbsSampleable):
             fun = f.fun
             self.f = f.f
             self.fhosh = f.fhosh
-            self.args = {k: req.clone() if isinstance(req, AbsCloneable) else req for k, req in f.args.items()}
-            self.kwargs = {k: req.clone() if isinstance(req, AbsCloneable) else req for k, req in f.kwargs.items()}
+            self.args = {k: req.start_clone() if isinstance(req, AbsCloneable) else req for k, req in f.args.items()}
+            self.kwargs = {k: req.start_clone() if isinstance(req, AbsCloneable) else req for k, req in f.kwargs.items()}
             from hdict.content.default import default
         elif isinstance(f, field):  # "function will be provided by hdict"-mode constrains 'applied_args'
             self.fhosh = fhosh
@@ -146,23 +147,25 @@ class apply(AbsCloneable, AbsSampleable):
     def ahosh(self):
         return self.fhosh.rev  # 'f' identified as an appliable function
 
-    def finish(self, data):
+    def start_clone(self):
+        if self.finished:  # pragma: no cover
+            raise Exception(f"Cannot clone a finished content.")
+        return apply(self)
+
+    def finish_clone(self, data, out, previous):
         if self.finished:  # pragma: no cover
             raise Exception(f"Cannot finish an application twice.")
         if isinstance(self.f, apply):  # pragma: no cover
             raise Exception(f"Why applying another apply object?")
         if isinstance(self.f, AbsCloneable) and not self.f.finished:
-            self.f.finish(data)
+            self.f.finish_clone(data, out, previous)
         if self.fhosh is None:
             self.fhosh = self.f.hosh
         reqs = self.requirements
         for kreq, req in reqs.items():
             if isinstance(req, AbsCloneable) and not req.finished:
-                req.finish(data)
+                req.finish_clone(data, out, previous)
         self._finished = True
-
-    def clone(self):
-        return apply(self)
 
     @property
     def hosh(self):
@@ -195,7 +198,7 @@ class apply(AbsCloneable, AbsSampleable):
         return self._value != Unevaluated
 
     def sample(self, rnd: int | Random = None):
-        clone = self.clone()
+        clone = self.start_clone()
         args = clone.args
         kwargs = clone.kwargs
         reqs = clone.requirements
@@ -212,6 +215,8 @@ class apply(AbsCloneable, AbsSampleable):
 
         if out and kwout:  # pragma: no cover
             raise Exception(f"Cannot mix translated and non translated outputs.")
+        if len(out) == 1:
+            out = out[0]
         return applyOut(self, out or tuple(kwout.items()))
 
     def __getattr__(self, item):

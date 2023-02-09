@@ -94,8 +94,8 @@ class hdict(dict[str, VT]):
         q2: λ(x y)→1,
         z1: λ(x y)→0,
         w1: λ(x y)→1,
-        z2: λ(x y)→a,
-        w2: λ(x y)→b,
+        z2: 243,
+        w2: 0.6,
         r1: λ(x),
         r2: λ(x),
         r3: λ(x),
@@ -226,7 +226,7 @@ class hdict(dict[str, VT]):
     >>> d.show(colored=False)
     {
         x: 3,
-        z: λ(x 16)→0,
+        z: λ(x 16),
         w: λ(x 9)→a,
         v: λ(x 9)→b,
         _id: "OIVFm0IdYK3jtOApTVCwdLTVXXNGarxDkUCwB0Iv",
@@ -305,8 +305,23 @@ class hdict(dict[str, VT]):
     >>> del d["x"]
     >>> list(d)
     ['y']
-    >>> d >> _(lambda y: y*7)("y")
-
+    >>> e = d >> _(lambda y: y*7)("y")
+    >>> from hdict.hoshfication import f2hosh
+    >>> print(f2hosh(lambda y: y*7))
+    54YCMDJIlsIvMQ.KJtT-vFyjg83Zgfj2xSHOgCj8
+    >>> print(e)
+    {y: "λ(4)", _id: "EtPSkexkaJ1HvgUWYBA5iZ5HzIpBGTgqafKSs0jb", _ids: {y: "kFHvjNc17K0O5.7.V0xRNKmiBOmMmi.cbVUROZna"}}
+    >>> e.evaluate()
+    >>> print(e)
+    {y: 28, _id: "EtPSkexkaJ1HvgUWYBA5iZ5HzIpBGTgqafKSs0jb", _ids: {y: "kFHvjNc17K0O5.7.V0xRNKmiBOmMmi.cbVUROZna"}}
+    >>> d = d >> _(lambda y=1: y*7, fhosh="54YCMDJIlsIvMQ.KJtT-vFyjg83Zgfj2xSHOgCj8")("y")
+    >>> print(d)
+    {y: "λ(4)", _id: "EtPSkexkaJ1HvgUWYBA5iZ5HzIpBGTgqafKSs0jb", _ids: {y: "kFHvjNc17K0O5.7.V0xRNKmiBOmMmi.cbVUROZna"}}
+    >>> d.evaluate()
+    >>> print(d)
+    {y: 28, _id: "EtPSkexkaJ1HvgUWYBA5iZ5HzIpBGTgqafKSs0jb", _ids: {y: "kFHvjNc17K0O5.7.V0xRNKmiBOmMmi.cbVUROZna"}}
+    >>> hash(e.frozen) == hash(d.frozen)
+    True
     """
 
     # noinspection PyMissingConstructor
@@ -512,7 +527,7 @@ class hdict(dict[str, VT]):
         """
         return self.frozen.items(evaluate)
 
-    def __hash__(self):
+    def __hash__(self):  # pragma: no cover
         raise Exception(f"hdict is not hashble. Please use hdict.frozen instead.")
 
     def fromid(self, id, cache) -> Union["hdict", None]:
