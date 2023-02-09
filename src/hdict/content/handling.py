@@ -177,14 +177,14 @@ def handle_default(name, content, data):
     return content.value if isinstance(content.value, (field, value)) else value(content.value, content.hosh)
 
 
-def handle_values(data: Dict[str, object]):
+def handle_values(data: Dict[str, object], previous):
     from hdict.content.value import value
     from hdict.content.apply import apply
     from hdict.content.field import field
     from hdict.content.subcontent import subcontent
     from hdict import default
 
-    unfinished, mirror_fields, subcontent_cloned_parent = [], {}, {}
+    unfinished, mirror_fields, subcontent_cloned_parent = {}, {}, {}
     for k, content in data.items():
         if isinstance(content, value):
             pass

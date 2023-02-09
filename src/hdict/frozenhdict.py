@@ -50,16 +50,18 @@ class frozenhdict(UserDict, dict[str, VT]):
     _asdict, _asdicts = None, None
 
     # noinspection PyMissingConstructor
-    def __init__(self, /, _dictionary=None, **kwargs):
+    def __init__(self, /, _dictionary=None, _previous=None, **kwargs):
         from hdict.content.handling import handle_values
         from hdict.content.abs.abscontent import AbsContent
         from hdict.content.handling import handle_identity
+        if _previous is None:
+            _previous = {}
 
         data = _dictionary or {}
         data.update(kwargs)
         if "_id" in data.keys() or "_ids" in data.keys():  # pragma: no cover
             raise Exception(f"Hosh-indexed dict cannot have a field named '_id'/'_ids': {data.keys()}")
-        handle_values(data)
+        handle_values(data, _previous)
 
         # REMINDER: Inside data, the only 'dict' entries are "_id" and "_ids", the rest is AbsContent.
         self.data: dict[str, AbsContent | str | dict[str, str]] = data
@@ -99,7 +101,7 @@ class frozenhdict(UserDict, dict[str, VT]):
                     raise Exception(f"Invalid type for input field specification: {type(k)}")
             del data["_id"]
             del data["_ids"]
-            return frozenhdict(data)
+            return frozenhdict(data, _previous=self.data)
         return NotImplemented  # pragma: no cover
 
     def __getitem__(self, item):  # pragma: no cover

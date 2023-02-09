@@ -163,6 +163,14 @@ class apply(AbsCloneable, AbsSampleable):
             self.fhosh = self.f.hosh
         reqs = self.requirements
         for kreq, req in reqs.items():
+            if isinstance(req, field) and req.name == out:
+                if kreq not in previous:  # pragma: no cover
+                    raise Exception(f"Application at '{out}' depends on a previous '{out}' value, which does not exist.")
+                reqs[kreq] = previous[kreq]
+                if kreq in self.args:
+                    self.args[kreq] = previous[kreq]
+                elif kreq in self.kwargs:
+                    self.kwargs[kreq] = previous[kreq]
             if isinstance(req, AbsCloneable) and not req.finished:
                 req.finish_clone(data, out, previous)
         self._finished = True
