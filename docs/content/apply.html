@@ -68,6 +68,7 @@ from hosh import Hosh
 from hosh.misc import hoshes
 
 
+# TODO: discard dependencies after evaluation, to avoid wasted memory, e.g., even after the deps are deleted from hdict
 class apply(AbsCloneable, AbsSampleable):
     &#34;&#34;&#34;
     &gt;&gt;&gt; from hdict import apply
@@ -84,10 +85,10 @@ class apply(AbsCloneable, AbsSampleable):
     &gt;&gt;&gt; v2 = apply(f, a=v, b=value(7))
     &gt;&gt;&gt; v2
     λ(a=λ(5 7) 7)
-    &gt;&gt;&gt; v.finish({})
+    &gt;&gt;&gt; v.finish_clone({}, &#34;&#34;, {})
     &gt;&gt;&gt; v.value, v2
     (78125, λ(a=78125 7))
-    &gt;&gt;&gt; v2.finish({})
+    &gt;&gt;&gt; v2.finish_clone({}, &#34;&#34;, {})
     &gt;&gt;&gt; v2.value, v2
     (17763568394002504646778106689453125, 17763568394002504646778106689453125)
 
@@ -99,14 +100,14 @@ class apply(AbsCloneable, AbsSampleable):
     {&#39;a&#39;: 3, &#39;b&#39;: field(&#39;b&#39;), &#39;c&#39;: default(1), &#39;d&#39;: default(2), &#39;e&#39;: default(13)}
     &gt;&gt;&gt; ap
     λ(3 b c=default(1) d=default(2) e=default(13))
-    &gt;&gt;&gt; ap.finish({&#34;b&#34;: value(77)})
+    &gt;&gt;&gt; ap.finish_clone({&#34;b&#34;: value(77)}, &#34;&#34;, {})
     &gt;&gt;&gt; ap
     λ(3 b c=default(1) d=default(2) e=default(13))
     &gt;&gt;&gt; from hdict.content.handling import handle_values
     &gt;&gt;&gt; d = {&#34;f&#34;: ap, &#34;b&#34;: 5, &#34;d&#34;: 1, &#34;e&#34;: field(&#34;b&#34;)}
     &gt;&gt;&gt; d
     {&#39;f&#39;: λ(3 b c=default(1) d=default(2) e=default(13)), &#39;b&#39;: 5, &#39;d&#39;: 1, &#39;e&#39;: field(&#39;b&#39;)}
-    &gt;&gt;&gt; handle_values(d)
+    &gt;&gt;&gt; handle_values(d, {})
     &gt;&gt;&gt; d
     {&#39;f&#39;: λ(3 b 1 d b), &#39;b&#39;: 5, &#39;d&#39;: 1, &#39;e&#39;: b}
     &gt;&gt;&gt; apply(f,3,4).requirements
@@ -142,8 +143,8 @@ class apply(AbsCloneable, AbsSampleable):
             fun = f.fun
             self.f = f.f
             self.fhosh = f.fhosh
-            self.args = {k: req.clone() if isinstance(req, AbsCloneable) else req for k, req in f.args.items()}
-            self.kwargs = {k: req.clone() if isinstance(req, AbsCloneable) else req for k, req in f.kwargs.items()}
+            self.args = {k: req.start_clone() if isinstance(req, AbsCloneable) else req for k, req in f.args.items()}
+            self.kwargs = {k: req.start_clone() if isinstance(req, AbsCloneable) else req for k, req in f.kwargs.items()}
             from hdict.content.default import default
         elif isinstance(f, field):  # &#34;function will be provided by hdict&#34;-mode constrains &#39;applied_args&#39;
             self.fhosh = fhosh
@@ -174,23 +175,33 @@ class apply(AbsCloneable, AbsSampleable):
     def ahosh(self):
         return self.fhosh.rev  # &#39;f&#39; identified as an appliable function
 
-    def finish(self, data):
+    def start_clone(self):
+        if self.finished:  # pragma: no cover
+            raise Exception(f&#34;Cannot clone a finished content.&#34;)
+        return apply(self)
+
+    def finish_clone(self, data, out, previous):
         if self.finished:  # pragma: no cover
             raise Exception(f&#34;Cannot finish an application twice.&#34;)
         if isinstance(self.f, apply):  # pragma: no cover
             raise Exception(f&#34;Why applying another apply object?&#34;)
         if isinstance(self.f, AbsCloneable) and not self.f.finished:
-            self.f.finish(data)
+            self.f.finish_clone(data, out, previous)
         if self.fhosh is None:
             self.fhosh = self.f.hosh
         reqs = self.requirements
         for kreq, req in reqs.items():
+            if isinstance(req, field) and req.name == out:
+                if kreq not in previous:  # pragma: no cover
+                    raise Exception(f&#34;Application at &#39;{out}&#39; depends on a previous &#39;{out}&#39; value, which does not exist.&#34;)
+                reqs[kreq] = previous[kreq]
+                if kreq in self.args:
+                    self.args[kreq] = previous[kreq]
+                elif kreq in self.kwargs:
+                    self.kwargs[kreq] = previous[kreq]
             if isinstance(req, AbsCloneable) and not req.finished:
-                req.finish(data)
+                req.finish_clone(data, out, previous)
         self._finished = True
-
-    def clone(self):
-        return apply(self)
 
     @property
     def hosh(self):
@@ -223,7 +234,7 @@ class apply(AbsCloneable, AbsSampleable):
         return self._value != Unevaluated
 
     def sample(self, rnd: int | Random = None):
-        clone = self.clone()
+        clone = self.start_clone()
         args = clone.args
         kwargs = clone.kwargs
         reqs = clone.requirements
@@ -240,6 +251,8 @@ class apply(AbsCloneable, AbsSampleable):
 
         if out and kwout:  # pragma: no cover
             raise Exception(f&#34;Cannot mix translated and non translated outputs.&#34;)
+        if len(out) == 1:
+            out = out[0]
         return applyOut(self, out or tuple(kwout.items()))
 
     def __getattr__(self, item):
@@ -295,10 +308,10 @@ False
 <pre><code class="language-python-repl">&gt;&gt;&gt; v2 = apply(f, a=v, b=value(7))
 &gt;&gt;&gt; v2
 λ(a=λ(5 7) 7)
-&gt;&gt;&gt; v.finish({})
+&gt;&gt;&gt; v.finish_clone({}, &quot;&quot;, {})
 &gt;&gt;&gt; v.value, v2
 (78125, λ(a=78125 7))
-&gt;&gt;&gt; v2.finish({})
+&gt;&gt;&gt; v2.finish_clone({}, &quot;&quot;, {})
 &gt;&gt;&gt; v2.value, v2
 (17763568394002504646778106689453125, 17763568394002504646778106689453125)
 </code></pre>
@@ -310,14 +323,14 @@ False
 {'a': 3, 'b': field('b'), 'c': default(1), 'd': default(2), 'e': default(13)}
 &gt;&gt;&gt; ap
 λ(3 b c=default(1) d=default(2) e=default(13))
-&gt;&gt;&gt; ap.finish({&quot;b&quot;: value(77)})
+&gt;&gt;&gt; ap.finish_clone({&quot;b&quot;: value(77)}, &quot;&quot;, {})
 &gt;&gt;&gt; ap
 λ(3 b c=default(1) d=default(2) e=default(13))
 &gt;&gt;&gt; from hdict.content.handling import handle_values
 &gt;&gt;&gt; d = {&quot;f&quot;: ap, &quot;b&quot;: 5, &quot;d&quot;: 1, &quot;e&quot;: field(&quot;b&quot;)}
 &gt;&gt;&gt; d
 {'f': λ(3 b c=default(1) d=default(2) e=default(13)), 'b': 5, 'd': 1, 'e': field('b')}
-&gt;&gt;&gt; handle_values(d)
+&gt;&gt;&gt; handle_values(d, {})
 &gt;&gt;&gt; d
 {'f': λ(3 b 1 d b), 'b': 5, 'd': 1, 'e': b}
 &gt;&gt;&gt; apply(f,3,4).requirements
@@ -360,10 +373,10 @@ False
     &gt;&gt;&gt; v2 = apply(f, a=v, b=value(7))
     &gt;&gt;&gt; v2
     λ(a=λ(5 7) 7)
-    &gt;&gt;&gt; v.finish({})
+    &gt;&gt;&gt; v.finish_clone({}, &#34;&#34;, {})
     &gt;&gt;&gt; v.value, v2
     (78125, λ(a=78125 7))
-    &gt;&gt;&gt; v2.finish({})
+    &gt;&gt;&gt; v2.finish_clone({}, &#34;&#34;, {})
     &gt;&gt;&gt; v2.value, v2
     (17763568394002504646778106689453125, 17763568394002504646778106689453125)
 
@@ -375,14 +388,14 @@ False
     {&#39;a&#39;: 3, &#39;b&#39;: field(&#39;b&#39;), &#39;c&#39;: default(1), &#39;d&#39;: default(2), &#39;e&#39;: default(13)}
     &gt;&gt;&gt; ap
     λ(3 b c=default(1) d=default(2) e=default(13))
-    &gt;&gt;&gt; ap.finish({&#34;b&#34;: value(77)})
+    &gt;&gt;&gt; ap.finish_clone({&#34;b&#34;: value(77)}, &#34;&#34;, {})
     &gt;&gt;&gt; ap
     λ(3 b c=default(1) d=default(2) e=default(13))
     &gt;&gt;&gt; from hdict.content.handling import handle_values
     &gt;&gt;&gt; d = {&#34;f&#34;: ap, &#34;b&#34;: 5, &#34;d&#34;: 1, &#34;e&#34;: field(&#34;b&#34;)}
     &gt;&gt;&gt; d
     {&#39;f&#39;: λ(3 b c=default(1) d=default(2) e=default(13)), &#39;b&#39;: 5, &#39;d&#39;: 1, &#39;e&#39;: field(&#39;b&#39;)}
-    &gt;&gt;&gt; handle_values(d)
+    &gt;&gt;&gt; handle_values(d, {})
     &gt;&gt;&gt; d
     {&#39;f&#39;: λ(3 b 1 d b), &#39;b&#39;: 5, &#39;d&#39;: 1, &#39;e&#39;: b}
     &gt;&gt;&gt; apply(f,3,4).requirements
@@ -418,8 +431,8 @@ False
             fun = f.fun
             self.f = f.f
             self.fhosh = f.fhosh
-            self.args = {k: req.clone() if isinstance(req, AbsCloneable) else req for k, req in f.args.items()}
-            self.kwargs = {k: req.clone() if isinstance(req, AbsCloneable) else req for k, req in f.kwargs.items()}
+            self.args = {k: req.start_clone() if isinstance(req, AbsCloneable) else req for k, req in f.args.items()}
+            self.kwargs = {k: req.start_clone() if isinstance(req, AbsCloneable) else req for k, req in f.kwargs.items()}
             from hdict.content.default import default
         elif isinstance(f, field):  # &#34;function will be provided by hdict&#34;-mode constrains &#39;applied_args&#39;
             self.fhosh = fhosh
@@ -450,23 +463,33 @@ False
     def ahosh(self):
         return self.fhosh.rev  # &#39;f&#39; identified as an appliable function
 
-    def finish(self, data):
+    def start_clone(self):
+        if self.finished:  # pragma: no cover
+            raise Exception(f&#34;Cannot clone a finished content.&#34;)
+        return apply(self)
+
+    def finish_clone(self, data, out, previous):
         if self.finished:  # pragma: no cover
             raise Exception(f&#34;Cannot finish an application twice.&#34;)
         if isinstance(self.f, apply):  # pragma: no cover
             raise Exception(f&#34;Why applying another apply object?&#34;)
         if isinstance(self.f, AbsCloneable) and not self.f.finished:
-            self.f.finish(data)
+            self.f.finish_clone(data, out, previous)
         if self.fhosh is None:
             self.fhosh = self.f.hosh
         reqs = self.requirements
         for kreq, req in reqs.items():
+            if isinstance(req, field) and req.name == out:
+                if kreq not in previous:  # pragma: no cover
+                    raise Exception(f&#34;Application at &#39;{out}&#39; depends on a previous &#39;{out}&#39; value, which does not exist.&#34;)
+                reqs[kreq] = previous[kreq]
+                if kreq in self.args:
+                    self.args[kreq] = previous[kreq]
+                elif kreq in self.kwargs:
+                    self.kwargs[kreq] = previous[kreq]
             if isinstance(req, AbsCloneable) and not req.finished:
-                req.finish(data)
+                req.finish_clone(data, out, previous)
         self._finished = True
-
-    def clone(self):
-        return apply(self)
 
     @property
     def hosh(self):
@@ -499,7 +522,7 @@ False
         return self._value != Unevaluated
 
     def sample(self, rnd: int | Random = None):
-        clone = self.clone()
+        clone = self.start_clone()
         args = clone.args
         kwargs = clone.kwargs
         reqs = clone.requirements
@@ -516,6 +539,8 @@ False
 
         if out and kwout:  # pragma: no cover
             raise Exception(f&#34;Cannot mix translated and non translated outputs.&#34;)
+        if len(out) == 1:
+            out = out[0]
         return applyOut(self, out or tuple(kwout.items()))
 
     def __getattr__(self, item):
@@ -545,6 +570,7 @@ False
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li><a title="hdict.content.abs.abscloneable.AbsCloneable" href="abs/abscloneable.html#hdict.content.abs.abscloneable.AbsCloneable">AbsCloneable</a></li>
+<li>abc.ABC</li>
 <li><a title="hdict.content.abs.abscontent.AbsContent" href="abs/abscontent.html#hdict.content.abs.abscontent.AbsContent">AbsContent</a></li>
 <li><a title="hdict.content.abs.abssampleable.AbsSampleable" href="abs/abssampleable.html#hdict.content.abs.abssampleable.AbsSampleable">AbsSampleable</a></li>
 </ul>
@@ -634,44 +660,6 @@ def value(self):
 </dl>
 <h3>Methods</h3>
 <dl>
-<dt id="hdict.content.apply.apply.clone"><code class="name flex">
-<span>def <span class="ident">clone</span></span>(<span>self) ‑> <built-in function callable></span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def clone(self):
-    return apply(self)</code></pre>
-</details>
-</dd>
-<dt id="hdict.content.apply.apply.finish"><code class="name flex">
-<span>def <span class="ident">finish</span></span>(<span>self, data)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def finish(self, data):
-    if self.finished:  # pragma: no cover
-        raise Exception(f&#34;Cannot finish an application twice.&#34;)
-    if isinstance(self.f, apply):  # pragma: no cover
-        raise Exception(f&#34;Why applying another apply object?&#34;)
-    if isinstance(self.f, AbsCloneable) and not self.f.finished:
-        self.f.finish(data)
-    if self.fhosh is None:
-        self.fhosh = self.f.hosh
-    reqs = self.requirements
-    for kreq, req in reqs.items():
-        if isinstance(req, AbsCloneable) and not req.finished:
-            req.finish(data)
-    self._finished = True</code></pre>
-</details>
-</dd>
 <dt id="hdict.content.apply.apply.sample"><code class="name flex">
 <span>def <span class="ident">sample</span></span>(<span>self, rnd: int | random.Random = None) ‑> None</span>
 </code></dt>
@@ -682,7 +670,7 @@ def value(self):
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def sample(self, rnd: int | Random = None):
-    clone = self.clone()
+    clone = self.start_clone()
     args = clone.args
     kwargs = clone.kwargs
     reqs = clone.requirements
@@ -696,6 +684,15 @@ def value(self):
 </details>
 </dd>
 </dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="hdict.content.abs.abscloneable.AbsCloneable" href="abs/abscloneable.html#hdict.content.abs.abscloneable.AbsCloneable">AbsCloneable</a></b></code>:
+<ul class="hlist">
+<li><code><a title="hdict.content.abs.abscloneable.AbsCloneable.finish_clone" href="abs/abscloneable.html#hdict.content.abs.abscloneable.AbsCloneable.finish_clone">finish_clone</a></code></li>
+<li><code><a title="hdict.content.abs.abscloneable.AbsCloneable.start_clone" href="abs/abscloneable.html#hdict.content.abs.abscloneable.AbsCloneable.start_clone">start_clone</a></code></li>
+</ul>
+</li>
+</ul>
 </dd>
 </dl>
 </section>
@@ -717,8 +714,6 @@ def value(self):
 <h4><code><a title="hdict.content.apply.apply" href="#hdict.content.apply.apply">apply</a></code></h4>
 <ul class="two-column">
 <li><code><a title="hdict.content.apply.apply.ahosh" href="#hdict.content.apply.apply.ahosh">ahosh</a></code></li>
-<li><code><a title="hdict.content.apply.apply.clone" href="#hdict.content.apply.apply.clone">clone</a></code></li>
-<li><code><a title="hdict.content.apply.apply.finish" href="#hdict.content.apply.apply.finish">finish</a></code></li>
 <li><code><a title="hdict.content.apply.apply.fun" href="#hdict.content.apply.apply.fun">fun</a></code></li>
 <li><code><a title="hdict.content.apply.apply.hosh" href="#hdict.content.apply.apply.hosh">hosh</a></code></li>
 <li><code><a title="hdict.content.apply.apply.isevaluated" href="#hdict.content.apply.apply.isevaluated">isevaluated</a></code></li>

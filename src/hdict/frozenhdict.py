@@ -54,6 +54,7 @@ class frozenhdict(UserDict, dict[str, VT]):
         from hdict.content.handling import handle_values
         from hdict.content.abs.abscontent import AbsContent
         from hdict.content.handling import handle_identity
+
         if _previous is None:
             _previous = {}
 

@@ -73,8 +73,7 @@ class field(AbsCloneable):
         5
         """
         if self.content is not None:  # pragma: no cover
-            raise Exception(f"Cannot finish a field pointer twice. name: {self.name}.\n"
-                            f"Please check if there are indirect circular references.")
+            raise Exception(f"Cannot finish a field pointer twice. name: {self.name}.\n" f"Please check if there are indirect circular references.")
         if self.name not in data:  # pragma: no cover
             raise Exception(f"Missing field '{self.name}'")
         self.content = data[self.name]

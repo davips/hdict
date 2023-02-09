@@ -159,6 +159,20 @@ class CustomJSONEncoder(JSONEncoder):
             dd: &#34;fVj30baMeet4PcN9ZY-8uMpFin89FY8h8MI4RkDd&#34;
         }
     }
+    &gt;&gt;&gt; hdict(s={1,3,2}, t={3,1,2}, u={2,1,3}, v={2,1,3}).show(colored=False)
+    {
+        s: &#34;{1, 2, 3}&#34;,
+        t: &#34;{1, 2, 3}&#34;,
+        u: &#34;{1, 2, 3}&#34;,
+        v: &#34;{1, 2, 3}&#34;,
+        _id: &#34;0WaiiSdaTRaHqFjzD-Y8Mm2v1Ym.Nj9UUxPIVMax&#34;,
+        _ids: {
+            s: &#34;kDsYXHYuZJ9o7GXZLx6lYu0GpEqyrCmBpt0xoy60&#34;,
+            t: &#34;kDsYXHYuZJ9o7GXZLx6lYu0GpEqyrCmBpt0xoy60&#34;,
+            u: &#34;kDsYXHYuZJ9o7GXZLx6lYu0GpEqyrCmBpt0xoy60&#34;,
+            v: &#34;kDsYXHYuZJ9o7GXZLx6lYu0GpEqyrCmBpt0xoy60&#34;
+        }
+    }
     &#34;&#34;&#34;
 
     width = 200
@@ -181,7 +195,7 @@ class CustomJSONEncoder(JSONEncoder):
                 return obj.value
             # if isinstance(obj, FunctionType):
             #     return str(obj)
-            if not isinstance(obj, (dict, list, set, str, int, float, bytearray, bool)):
+            if not isinstance(obj, (dict, list, str, int, float, bytearray, bool)):
                 if obj.__class__.__name__ in [&#34;DataFrame&#34;, &#34;Series&#34;]:
                     # «str()» is to avoid nested identation
                     return f&#34;«{truncate(str(obj.to_dict()), self.width)}»&#34;
@@ -372,6 +386,20 @@ def stringfy(obj):
         dd: &quot;fVj30baMeet4PcN9ZY-8uMpFin89FY8h8MI4RkDd&quot;
     }
 }
+&gt;&gt;&gt; hdict(s={1,3,2}, t={3,1,2}, u={2,1,3}, v={2,1,3}).show(colored=False)
+{
+    s: &quot;{1, 2, 3}&quot;,
+    t: &quot;{1, 2, 3}&quot;,
+    u: &quot;{1, 2, 3}&quot;,
+    v: &quot;{1, 2, 3}&quot;,
+    _id: &quot;0WaiiSdaTRaHqFjzD-Y8Mm2v1Ym.Nj9UUxPIVMax&quot;,
+    _ids: {
+        s: &quot;kDsYXHYuZJ9o7GXZLx6lYu0GpEqyrCmBpt0xoy60&quot;,
+        t: &quot;kDsYXHYuZJ9o7GXZLx6lYu0GpEqyrCmBpt0xoy60&quot;,
+        u: &quot;kDsYXHYuZJ9o7GXZLx6lYu0GpEqyrCmBpt0xoy60&quot;,
+        v: &quot;kDsYXHYuZJ9o7GXZLx6lYu0GpEqyrCmBpt0xoy60&quot;
+    }
+}
 </code></pre>
 <p>Constructor for JSONEncoder, with sensible defaults.</p>
 <p>If skipkeys is false, then it is a TypeError to attempt
@@ -517,6 +545,20 @@ version of the object or raise a <code>TypeError</code>.</p></div>
             dd: &#34;fVj30baMeet4PcN9ZY-8uMpFin89FY8h8MI4RkDd&#34;
         }
     }
+    &gt;&gt;&gt; hdict(s={1,3,2}, t={3,1,2}, u={2,1,3}, v={2,1,3}).show(colored=False)
+    {
+        s: &#34;{1, 2, 3}&#34;,
+        t: &#34;{1, 2, 3}&#34;,
+        u: &#34;{1, 2, 3}&#34;,
+        v: &#34;{1, 2, 3}&#34;,
+        _id: &#34;0WaiiSdaTRaHqFjzD-Y8Mm2v1Ym.Nj9UUxPIVMax&#34;,
+        _ids: {
+            s: &#34;kDsYXHYuZJ9o7GXZLx6lYu0GpEqyrCmBpt0xoy60&#34;,
+            t: &#34;kDsYXHYuZJ9o7GXZLx6lYu0GpEqyrCmBpt0xoy60&#34;,
+            u: &#34;kDsYXHYuZJ9o7GXZLx6lYu0GpEqyrCmBpt0xoy60&#34;,
+            v: &#34;kDsYXHYuZJ9o7GXZLx6lYu0GpEqyrCmBpt0xoy60&#34;
+        }
+    }
     &#34;&#34;&#34;
 
     width = 200
@@ -539,7 +581,7 @@ version of the object or raise a <code>TypeError</code>.</p></div>
                 return obj.value
             # if isinstance(obj, FunctionType):
             #     return str(obj)
-            if not isinstance(obj, (dict, list, set, str, int, float, bytearray, bool)):
+            if not isinstance(obj, (dict, list, str, int, float, bytearray, bool)):
                 if obj.__class__.__name__ in [&#34;DataFrame&#34;, &#34;Series&#34;]:
                     # «str()» is to avoid nested identation
                     return f&#34;«{truncate(str(obj.to_dict()), self.width)}»&#34;
@@ -603,7 +645,7 @@ implement default like this::</p>
             return obj.value
         # if isinstance(obj, FunctionType):
         #     return str(obj)
-        if not isinstance(obj, (dict, list, set, str, int, float, bytearray, bool)):
+        if not isinstance(obj, (dict, list, str, int, float, bytearray, bool)):
             if obj.__class__.__name__ in [&#34;DataFrame&#34;, &#34;Series&#34;]:
                 # «str()» is to avoid nested identation
                 return f&#34;«{truncate(str(obj.to_dict()), self.width)}»&#34;

@@ -60,8 +60,7 @@ from hdict.pipeline import pipeline
 
 VT = TypeVar(&#34;VT&#34;)
 
-#  TODO: make frozenhdict hasheable
-# TODO: fix &#34;Object of type set is not JSON serializable&#34; when show()
+
 class frozenhdict(UserDict, dict[str, VT]):
     &#34;&#34;&#34;
     Immutable hdict.
@@ -79,16 +78,19 @@ class frozenhdict(UserDict, dict[str, VT]):
     _asdict, _asdicts = None, None
 
     # noinspection PyMissingConstructor
-    def __init__(self, /, _dictionary=None, **kwargs):
+    def __init__(self, /, _dictionary=None, _previous=None, **kwargs):
         from hdict.content.handling import handle_values
         from hdict.content.abs.abscontent import AbsContent
         from hdict.content.handling import handle_identity
+
+        if _previous is None:
+            _previous = {}
 
         data = _dictionary or {}
         data.update(kwargs)
         if &#34;_id&#34; in data.keys() or &#34;_ids&#34; in data.keys():  # pragma: no cover
             raise Exception(f&#34;Hosh-indexed dict cannot have a field named &#39;_id&#39;/&#39;_ids&#39;: {data.keys()}&#34;)
-        handle_values(data)
+        handle_values(data, _previous)
 
         # REMINDER: Inside data, the only &#39;dict&#39; entries are &#34;_id&#34; and &#34;_ids&#34;, the rest is AbsContent.
         self.data: dict[str, AbsContent | str | dict[str, str]] = data
@@ -128,7 +130,7 @@ class frozenhdict(UserDict, dict[str, VT]):
                     raise Exception(f&#34;Invalid type for input field specification: {type(k)}&#34;)
             del data[&#34;_id&#34;]
             del data[&#34;_ids&#34;]
-            return frozenhdict(data)
+            return frozenhdict(data, _previous=self.data)
         return NotImplemented  # pragma: no cover
 
     def __getitem__(self, item):  # pragma: no cover
@@ -362,6 +364,9 @@ class frozenhdict(UserDict, dict[str, VT]):
         for k in self.data:
             if not k.startswith(&#34;_&#34;):
                 yield k
+
+    def __hash__(self):
+        return hash(self.hosh)
 
     # def metakeys(self):
     #     &#34;&#34;&#34;Generator of keys which start with &#39;_&#39;&#34;&#34;&#34;
@@ -434,16 +439,19 @@ class frozenhdict(UserDict, dict[str, VT]):
     _asdict, _asdicts = None, None
 
     # noinspection PyMissingConstructor
-    def __init__(self, /, _dictionary=None, **kwargs):
+    def __init__(self, /, _dictionary=None, _previous=None, **kwargs):
         from hdict.content.handling import handle_values
         from hdict.content.abs.abscontent import AbsContent
         from hdict.content.handling import handle_identity
+
+        if _previous is None:
+            _previous = {}
 
         data = _dictionary or {}
         data.update(kwargs)
         if &#34;_id&#34; in data.keys() or &#34;_ids&#34; in data.keys():  # pragma: no cover
             raise Exception(f&#34;Hosh-indexed dict cannot have a field named &#39;_id&#39;/&#39;_ids&#39;: {data.keys()}&#34;)
-        handle_values(data)
+        handle_values(data, _previous)
 
         # REMINDER: Inside data, the only &#39;dict&#39; entries are &#34;_id&#34; and &#34;_ids&#34;, the rest is AbsContent.
         self.data: dict[str, AbsContent | str | dict[str, str]] = data
@@ -483,7 +491,7 @@ class frozenhdict(UserDict, dict[str, VT]):
                     raise Exception(f&#34;Invalid type for input field specification: {type(k)}&#34;)
             del data[&#34;_id&#34;]
             del data[&#34;_ids&#34;]
-            return frozenhdict(data)
+            return frozenhdict(data, _previous=self.data)
         return NotImplemented  # pragma: no cover
 
     def __getitem__(self, item):  # pragma: no cover
@@ -717,6 +725,9 @@ class frozenhdict(UserDict, dict[str, VT]):
         for k in self.data:
             if not k.startswith(&#34;_&#34;):
                 yield k
+
+    def __hash__(self):
+        return hash(self.hosh)
 
     # def metakeys(self):
     #     &#34;&#34;&#34;Generator of keys which start with &#39;_&#39;&#34;&#34;&#34;

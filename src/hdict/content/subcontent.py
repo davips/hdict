@@ -44,7 +44,7 @@ class subcontent(AbsCloneable):
     def hosh(self):
         if self._hosh is None:
             h = self.parent.hosh
-            self._hosh = h[self.index: self.n]
+            self._hosh = h[self.index : self.n]
         return self._hosh
 
     @property

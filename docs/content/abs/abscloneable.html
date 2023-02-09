@@ -48,37 +48,31 @@
 #  part of this work is illegal and it is unethical regarding the effort and
 #  time spent here.
 #
-#
-#  hdict is free software: you can redistribute it and/or modify
-#  it under the terms of the GNU General Public License as published by
-#  the Free Software Foundation, either version 3 of the License, or
-#  (at your option) any later version.
-#
-#  hdict is distributed in the hope that it will be useful,
-#  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#  GNU General Public License for more details.
-#
-#  You should have received a copy of the GNU General Public License
-#  along with hdict.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
-#
-#  (*) Removing authorship by any means, e.g. by distribution of derived
-#  works or verbatim, obfuscated, compiled or rewritten versions of any
-#  part of this work is illegal and it is unethical regarding the effort and
-#  time spent here.
-#
+
+from abc import abstractmethod, ABC
 
 from hdict.content.abs.abscontent import AbsContent
 
 
-class AbsCloneable(AbsContent):
-    clone: callable = None
+class AbsCloneable(ABC, AbsContent):
     _finished = False
-    finish = None
 
     @property
     def finished(self):
-        return self._finished</code></pre>
+        return self._finished
+
+    @abstractmethod
+    def start_clone(self):
+        &#34;&#34;&#34;
+        This enables frozendict construct to handle content dependencies without changing state of the original content objects.
+        Make a clone
+        &#34;&#34;&#34;
+
+    @abstractmethod
+    def finish_clone(self, data, out, previous):
+        &#34;&#34;&#34;
+        Update dependencies to point to already handled contents.
+        &#34;&#34;&#34;</code></pre>
 </details>
 </section>
 <section>
@@ -94,22 +88,35 @@ class AbsCloneable(AbsContent):
 <span>class <span class="ident">AbsCloneable</span></span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Helper class that provides a standard way to create an ABC using
+inheritance.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class AbsCloneable(AbsContent):
-    clone: callable = None
+<pre><code class="python">class AbsCloneable(ABC, AbsContent):
     _finished = False
-    finish = None
 
     @property
     def finished(self):
-        return self._finished</code></pre>
+        return self._finished
+
+    @abstractmethod
+    def start_clone(self):
+        &#34;&#34;&#34;
+        This enables frozendict construct to handle content dependencies without changing state of the original content objects.
+        Make a clone
+        &#34;&#34;&#34;
+
+    @abstractmethod
+    def finish_clone(self, data, out, previous):
+        &#34;&#34;&#34;
+        Update dependencies to point to already handled contents.
+        &#34;&#34;&#34;</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
+<li>abc.ABC</li>
 <li><a title="hdict.content.abs.abscontent.AbsContent" href="abscontent.html#hdict.content.abs.abscontent.AbsContent">AbsContent</a></li>
 </ul>
 <h3>Subclasses</h3>
@@ -118,17 +125,6 @@ class AbsCloneable(AbsContent):
 <li><a title="hdict.content.field.field" href="../field.html#hdict.content.field.field">field</a></li>
 <li><a title="hdict.content.subcontent.subcontent" href="../subcontent.html#hdict.content.subcontent.subcontent">subcontent</a></li>
 </ul>
-<h3>Class variables</h3>
-<dl>
-<dt id="hdict.content.abs.abscloneable.AbsCloneable.clone"><code class="name">var <span class="ident">clone</span> : <built-in function callable></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="hdict.content.abs.abscloneable.AbsCloneable.finish"><code class="name">var <span class="ident">finish</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-</dl>
 <h3>Instance variables</h3>
 <dl>
 <dt id="hdict.content.abs.abscloneable.AbsCloneable.finished"><code class="name">var <span class="ident">finished</span></code></dt>
@@ -141,6 +137,43 @@ class AbsCloneable(AbsContent):
 <pre><code class="python">@property
 def finished(self):
     return self._finished</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="hdict.content.abs.abscloneable.AbsCloneable.finish_clone"><code class="name flex">
+<span>def <span class="ident">finish_clone</span></span>(<span>self, data, out, previous)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Update dependencies to point to already handled contents.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@abstractmethod
+def finish_clone(self, data, out, previous):
+    &#34;&#34;&#34;
+    Update dependencies to point to already handled contents.
+    &#34;&#34;&#34;</code></pre>
+</details>
+</dd>
+<dt id="hdict.content.abs.abscloneable.AbsCloneable.start_clone"><code class="name flex">
+<span>def <span class="ident">start_clone</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>This enables frozendict construct to handle content dependencies without changing state of the original content objects.
+Make a clone</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@abstractmethod
+def start_clone(self):
+    &#34;&#34;&#34;
+    This enables frozendict construct to handle content dependencies without changing state of the original content objects.
+    Make a clone
+    &#34;&#34;&#34;</code></pre>
 </details>
 </dd>
 </dl>
@@ -164,9 +197,9 @@ def finished(self):
 <li>
 <h4><code><a title="hdict.content.abs.abscloneable.AbsCloneable" href="#hdict.content.abs.abscloneable.AbsCloneable">AbsCloneable</a></code></h4>
 <ul class="">
-<li><code><a title="hdict.content.abs.abscloneable.AbsCloneable.clone" href="#hdict.content.abs.abscloneable.AbsCloneable.clone">clone</a></code></li>
-<li><code><a title="hdict.content.abs.abscloneable.AbsCloneable.finish" href="#hdict.content.abs.abscloneable.AbsCloneable.finish">finish</a></code></li>
+<li><code><a title="hdict.content.abs.abscloneable.AbsCloneable.finish_clone" href="#hdict.content.abs.abscloneable.AbsCloneable.finish_clone">finish_clone</a></code></li>
 <li><code><a title="hdict.content.abs.abscloneable.AbsCloneable.finished" href="#hdict.content.abs.abscloneable.AbsCloneable.finished">finished</a></code></li>
+<li><code><a title="hdict.content.abs.abscloneable.AbsCloneable.start_clone" href="#hdict.content.abs.abscloneable.AbsCloneable.start_clone">start_clone</a></code></li>
 </ul>
 </li>
 </ul>

@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "hdict"
-version = "0.230205.4"
-description = "A data structure based on a novel identification paradigm useful for computing, experiments, distributed data, among others."
+version = "0.230209.1"
+description = "A versatile dictionary based on a novel paradigm useful for computing, caching, experiments, distributed data, among others."
 authors = ["davips <dpsabc@gmail.com>"]
 license = "GPLv3"
 readme = 'README.md'

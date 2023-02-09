@@ -205,14 +205,14 @@ def handle_default(name, content, data):
     return content.value if isinstance(content.value, (field, value)) else value(content.value, content.hosh)
 
 
-def handle_values(data: Dict[str, object]):
+def handle_values(data: Dict[str, object], previous):
     from hdict.content.value import value
     from hdict.content.apply import apply
     from hdict.content.field import field
     from hdict.content.subcontent import subcontent
     from hdict import default
 
-    unfinished, mirror_fields, subcontent_cloned_parent = [], {}, {}
+    unfinished, mirror_fields, subcontent_cloned_parent = {}, {}, {}
     for k, content in data.items():
         if isinstance(content, value):
             pass
@@ -220,25 +220,26 @@ def handle_values(data: Dict[str, object]):
             # data[k] = handle_default(k, content, data)
             raise Exception(f&#34;Cannot pass object of type &#39;default&#39; directly to hdict. Param:&#34;, k)
         elif isinstance(content, field):
-            # REMINDER: clone() makes a deep copy to avoid mutation in original &#39;content&#39; when finishing it below
-            content = content.clone()
-            unfinished.append(content)
+            if not content.finished:
+                # REMINDER: start_clone() makes a deep copy to avoid mutation in original &#39;content&#39; when finishing it below
+                content = content.start_clone()
+                unfinished[k] = content
             data[k] = content
         elif isinstance(content, (apply, subcontent)):
-            if isinstance(content, subcontent):
+            if isinstance(content, subcontent) and not content.finished:
                 skip_key = id(content.parent)
                 if skip_key in subcontent_cloned_parent:
-                    content = content.clone(subcontent_cloned_parent[skip_key])
+                    content = content.start_clone(subcontent_cloned_parent[skip_key])
                 else:
-                    content = content.clone()
+                    content = content.start_clone()
                     subcontent_cloned_parent[skip_key] = content.parent
-            else:
-                content = content.clone()
+            elif not content.finished:
+                content = content.start_clone()
             reqs = content.requirements
             for kreq, req in reqs.items():
                 if isinstance(req, default):
                     reqs[kreq] = handle_default(kreq, req, data)
-            unfinished.append(content)
+            unfinished[k] = content
             data[k] = content
         elif isinstance(content, hdict):
             data[k] = value(content.frozen, content.hosh)
@@ -253,9 +254,9 @@ def handle_values(data: Dict[str, object]):
     data.update(mirror_fields)
 
     # Finish state of field-dependent objects created above.
-    for item in unfinished:
+    for out, item in unfinished.items():
         if not item.finished:
-            item.finish(data)
+            item.finish_clone(data, out, previous)
 
 
 def handle_identity(data):
@@ -484,7 +485,7 @@ def handle_identity(data):
 </details>
 </dd>
 <dt id="hdict.content.handling.handle_values"><code class="name flex">
-<span>def <span class="ident">handle_values</span></span>(<span>data: Dict[str, object])</span>
+<span>def <span class="ident">handle_values</span></span>(<span>data: Dict[str, object], previous)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -492,14 +493,14 @@ def handle_identity(data):
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def handle_values(data: Dict[str, object]):
+<pre><code class="python">def handle_values(data: Dict[str, object], previous):
     from hdict.content.value import value
     from hdict.content.apply import apply
     from hdict.content.field import field
     from hdict.content.subcontent import subcontent
     from hdict import default
 
-    unfinished, mirror_fields, subcontent_cloned_parent = [], {}, {}
+    unfinished, mirror_fields, subcontent_cloned_parent = {}, {}, {}
     for k, content in data.items():
         if isinstance(content, value):
             pass
@@ -507,25 +508,26 @@ def handle_identity(data):
             # data[k] = handle_default(k, content, data)
             raise Exception(f&#34;Cannot pass object of type &#39;default&#39; directly to hdict. Param:&#34;, k)
         elif isinstance(content, field):
-            # REMINDER: clone() makes a deep copy to avoid mutation in original &#39;content&#39; when finishing it below
-            content = content.clone()
-            unfinished.append(content)
+            if not content.finished:
+                # REMINDER: start_clone() makes a deep copy to avoid mutation in original &#39;content&#39; when finishing it below
+                content = content.start_clone()
+                unfinished[k] = content
             data[k] = content
         elif isinstance(content, (apply, subcontent)):
-            if isinstance(content, subcontent):
+            if isinstance(content, subcontent) and not content.finished:
                 skip_key = id(content.parent)
                 if skip_key in subcontent_cloned_parent:
-                    content = content.clone(subcontent_cloned_parent[skip_key])
+                    content = content.start_clone(subcontent_cloned_parent[skip_key])
                 else:
-                    content = content.clone()
+                    content = content.start_clone()
                     subcontent_cloned_parent[skip_key] = content.parent
-            else:
-                content = content.clone()
+            elif not content.finished:
+                content = content.start_clone()
             reqs = content.requirements
             for kreq, req in reqs.items():
                 if isinstance(req, default):
                     reqs[kreq] = handle_default(kreq, req, data)
-            unfinished.append(content)
+            unfinished[k] = content
             data[k] = content
         elif isinstance(content, hdict):
             data[k] = value(content.frozen, content.hosh)
@@ -540,9 +542,9 @@ def handle_identity(data):
     data.update(mirror_fields)
 
     # Finish state of field-dependent objects created above.
-    for item in unfinished:
+    for out, item in unfinished.items():
         if not item.finished:
-            item.finish(data)</code></pre>
+            item.finish_clone(data, out, previous)</code></pre>
 </details>
 </dd>
 </dl>

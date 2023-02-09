@@ -122,8 +122,8 @@ class hdict(dict[str, VT]):
         q2: λ(x y)→1,
         z1: λ(x y)→0,
         w1: λ(x y)→1,
-        z2: λ(x y)→a,
-        w2: λ(x y)→b,
+        z2: 243,
+        w2: 0.6,
         r1: λ(x),
         r2: λ(x),
         r3: λ(x),
@@ -254,7 +254,7 @@ class hdict(dict[str, VT]):
     &gt;&gt;&gt; d.show(colored=False)
     {
         x: 3,
-        z: λ(x 16)→0,
+        z: λ(x 16),
         w: λ(x 9)→a,
         v: λ(x 9)→b,
         _id: &#34;OIVFm0IdYK3jtOApTVCwdLTVXXNGarxDkUCwB0Iv&#34;,
@@ -333,6 +333,23 @@ class hdict(dict[str, VT]):
     &gt;&gt;&gt; del d[&#34;x&#34;]
     &gt;&gt;&gt; list(d)
     [&#39;y&#39;]
+    &gt;&gt;&gt; e = d &gt;&gt; _(lambda y: y*7)(&#34;y&#34;)
+    &gt;&gt;&gt; from hdict.hoshfication import f2hosh
+    &gt;&gt;&gt; print(f2hosh(lambda y: y*7))
+    54YCMDJIlsIvMQ.KJtT-vFyjg83Zgfj2xSHOgCj8
+    &gt;&gt;&gt; print(e)
+    {y: &#34;λ(4)&#34;, _id: &#34;EtPSkexkaJ1HvgUWYBA5iZ5HzIpBGTgqafKSs0jb&#34;, _ids: {y: &#34;kFHvjNc17K0O5.7.V0xRNKmiBOmMmi.cbVUROZna&#34;}}
+    &gt;&gt;&gt; e.evaluate()
+    &gt;&gt;&gt; print(e)
+    {y: 28, _id: &#34;EtPSkexkaJ1HvgUWYBA5iZ5HzIpBGTgqafKSs0jb&#34;, _ids: {y: &#34;kFHvjNc17K0O5.7.V0xRNKmiBOmMmi.cbVUROZna&#34;}}
+    &gt;&gt;&gt; d = d &gt;&gt; _(lambda y=1: y*7, fhosh=&#34;54YCMDJIlsIvMQ.KJtT-vFyjg83Zgfj2xSHOgCj8&#34;)(&#34;y&#34;)
+    &gt;&gt;&gt; print(d)
+    {y: &#34;λ(4)&#34;, _id: &#34;EtPSkexkaJ1HvgUWYBA5iZ5HzIpBGTgqafKSs0jb&#34;, _ids: {y: &#34;kFHvjNc17K0O5.7.V0xRNKmiBOmMmi.cbVUROZna&#34;}}
+    &gt;&gt;&gt; d.evaluate()
+    &gt;&gt;&gt; print(d)
+    {y: 28, _id: &#34;EtPSkexkaJ1HvgUWYBA5iZ5HzIpBGTgqafKSs0jb&#34;, _ids: {y: &#34;kFHvjNc17K0O5.7.V0xRNKmiBOmMmi.cbVUROZna&#34;}}
+    &gt;&gt;&gt; hash(e.frozen) == hash(d.frozen)
+    True
     &#34;&#34;&#34;
 
     # noinspection PyMissingConstructor
@@ -537,6 +554,9 @@ class hdict(dict[str, VT]):
         y 2
         &#34;&#34;&#34;
         return self.frozen.items(evaluate)
+
+    def __hash__(self):  # pragma: no cover
+        raise Exception(f&#34;hdict is not hashble. Please use hdict.frozen instead.&#34;)
 
     def fromid(self, id, cache) -&gt; Union[&#34;hdict&#34;, None]:
         if len(id) != 40:  # pragma: no cover
@@ -683,8 +703,8 @@ This is needed to enable handling a function as a value, under the original id.<
     q2: λ(x y)→1,
     z1: λ(x y)→0,
     w1: λ(x y)→1,
-    z2: λ(x y)→a,
-    w2: λ(x y)→b,
+    z2: 243,
+    w2: 0.6,
     r1: λ(x),
     r2: λ(x),
     r3: λ(x),
@@ -815,7 +835,7 @@ applyOut(nested=λ(a=default(9) b=default(4)), out='c')
 &gt;&gt;&gt; d.show(colored=False)
 {
     x: 3,
-    z: λ(x 16)→0,
+    z: λ(x 16),
     w: λ(x 9)→a,
     v: λ(x 9)→b,
     _id: &quot;OIVFm0IdYK3jtOApTVCwdLTVXXNGarxDkUCwB0Iv&quot;,
@@ -894,6 +914,23 @@ True
 &gt;&gt;&gt; del d[&quot;x&quot;]
 &gt;&gt;&gt; list(d)
 ['y']
+&gt;&gt;&gt; e = d &gt;&gt; _(lambda y: y*7)(&quot;y&quot;)
+&gt;&gt;&gt; from hdict.hoshfication import f2hosh
+&gt;&gt;&gt; print(f2hosh(lambda y: y*7))
+54YCMDJIlsIvMQ.KJtT-vFyjg83Zgfj2xSHOgCj8
+&gt;&gt;&gt; print(e)
+{y: &quot;λ(4)&quot;, _id: &quot;EtPSkexkaJ1HvgUWYBA5iZ5HzIpBGTgqafKSs0jb&quot;, _ids: {y: &quot;kFHvjNc17K0O5.7.V0xRNKmiBOmMmi.cbVUROZna&quot;}}
+&gt;&gt;&gt; e.evaluate()
+&gt;&gt;&gt; print(e)
+{y: 28, _id: &quot;EtPSkexkaJ1HvgUWYBA5iZ5HzIpBGTgqafKSs0jb&quot;, _ids: {y: &quot;kFHvjNc17K0O5.7.V0xRNKmiBOmMmi.cbVUROZna&quot;}}
+&gt;&gt;&gt; d = d &gt;&gt; _(lambda y=1: y*7, fhosh=&quot;54YCMDJIlsIvMQ.KJtT-vFyjg83Zgfj2xSHOgCj8&quot;)(&quot;y&quot;)
+&gt;&gt;&gt; print(d)
+{y: &quot;λ(4)&quot;, _id: &quot;EtPSkexkaJ1HvgUWYBA5iZ5HzIpBGTgqafKSs0jb&quot;, _ids: {y: &quot;kFHvjNc17K0O5.7.V0xRNKmiBOmMmi.cbVUROZna&quot;}}
+&gt;&gt;&gt; d.evaluate()
+&gt;&gt;&gt; print(d)
+{y: 28, _id: &quot;EtPSkexkaJ1HvgUWYBA5iZ5HzIpBGTgqafKSs0jb&quot;, _ids: {y: &quot;kFHvjNc17K0O5.7.V0xRNKmiBOmMmi.cbVUROZna&quot;}}
+&gt;&gt;&gt; hash(e.frozen) == hash(d.frozen)
+True
 </code></pre></div>
 <details class="source">
 <summary>
@@ -965,8 +1002,8 @@ True
         q2: λ(x y)→1,
         z1: λ(x y)→0,
         w1: λ(x y)→1,
-        z2: λ(x y)→a,
-        w2: λ(x y)→b,
+        z2: 243,
+        w2: 0.6,
         r1: λ(x),
         r2: λ(x),
         r3: λ(x),
@@ -1097,7 +1134,7 @@ True
     &gt;&gt;&gt; d.show(colored=False)
     {
         x: 3,
-        z: λ(x 16)→0,
+        z: λ(x 16),
         w: λ(x 9)→a,
         v: λ(x 9)→b,
         _id: &#34;OIVFm0IdYK3jtOApTVCwdLTVXXNGarxDkUCwB0Iv&#34;,
@@ -1176,6 +1213,23 @@ True
     &gt;&gt;&gt; del d[&#34;x&#34;]
     &gt;&gt;&gt; list(d)
     [&#39;y&#39;]
+    &gt;&gt;&gt; e = d &gt;&gt; _(lambda y: y*7)(&#34;y&#34;)
+    &gt;&gt;&gt; from hdict.hoshfication import f2hosh
+    &gt;&gt;&gt; print(f2hosh(lambda y: y*7))
+    54YCMDJIlsIvMQ.KJtT-vFyjg83Zgfj2xSHOgCj8
+    &gt;&gt;&gt; print(e)
+    {y: &#34;λ(4)&#34;, _id: &#34;EtPSkexkaJ1HvgUWYBA5iZ5HzIpBGTgqafKSs0jb&#34;, _ids: {y: &#34;kFHvjNc17K0O5.7.V0xRNKmiBOmMmi.cbVUROZna&#34;}}
+    &gt;&gt;&gt; e.evaluate()
+    &gt;&gt;&gt; print(e)
+    {y: 28, _id: &#34;EtPSkexkaJ1HvgUWYBA5iZ5HzIpBGTgqafKSs0jb&#34;, _ids: {y: &#34;kFHvjNc17K0O5.7.V0xRNKmiBOmMmi.cbVUROZna&#34;}}
+    &gt;&gt;&gt; d = d &gt;&gt; _(lambda y=1: y*7, fhosh=&#34;54YCMDJIlsIvMQ.KJtT-vFyjg83Zgfj2xSHOgCj8&#34;)(&#34;y&#34;)
+    &gt;&gt;&gt; print(d)
+    {y: &#34;λ(4)&#34;, _id: &#34;EtPSkexkaJ1HvgUWYBA5iZ5HzIpBGTgqafKSs0jb&#34;, _ids: {y: &#34;kFHvjNc17K0O5.7.V0xRNKmiBOmMmi.cbVUROZna&#34;}}
+    &gt;&gt;&gt; d.evaluate()
+    &gt;&gt;&gt; print(d)
+    {y: 28, _id: &#34;EtPSkexkaJ1HvgUWYBA5iZ5HzIpBGTgqafKSs0jb&#34;, _ids: {y: &#34;kFHvjNc17K0O5.7.V0xRNKmiBOmMmi.cbVUROZna&#34;}}
+    &gt;&gt;&gt; hash(e.frozen) == hash(d.frozen)
+    True
     &#34;&#34;&#34;
 
     # noinspection PyMissingConstructor
@@ -1380,6 +1434,9 @@ True
         y 2
         &#34;&#34;&#34;
         return self.frozen.items(evaluate)
+
+    def __hash__(self):  # pragma: no cover
+        raise Exception(f&#34;hdict is not hashble. Please use hdict.frozen instead.&#34;)
 
     def fromid(self, id, cache) -&gt; Union[&#34;hdict&#34;, None]:
         if len(id) != 40:  # pragma: no cover

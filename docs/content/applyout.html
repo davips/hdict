@@ -65,9 +65,6 @@ class applyOut(AbsContent, AbsSampleable):
     def __post_init__(self):
         outs = [self.out] if isinstance(self.out, str) else self.out
         keys = self.nested.requirements.keys()
-        for o in outs:
-            if o in keys:  # pragma: no cover
-                raise Exception(f&#34;Cannot handle circular references. Application at {o} depends on fields {keys}&#34;)
 
     def sample(self, rnd: int | Random = None):
         return applyOut(self.nested.sample(rnd), self.out)
@@ -77,7 +74,15 @@ class applyOut(AbsContent, AbsSampleable):
 
         if isinstance(other, (pipeline, applyOut)):
             return pipeline(self, other)
-        return NotImplemented  # pragma: no cover</code></pre>
+        return NotImplemented  # pragma: no cover
+
+    #
+    #     Traceback (most recent call last):
+    #   File &#34;/home/davi/.config/JetBrains/PyCharmCE2022.3/scratches/scratch_14.py&#34;, line 44, in &lt;module&gt;
+    #     du = dumps(d, protocol=5)
+    # TypeError: &#39;applyOut&#39; object is not callable
+    # def __reduce__(self):
+    #     print(111111111111111111)</code></pre>
 </details>
 </section>
 <section>
@@ -107,9 +112,6 @@ class applyOut(AbsContent, AbsSampleable):
     def __post_init__(self):
         outs = [self.out] if isinstance(self.out, str) else self.out
         keys = self.nested.requirements.keys()
-        for o in outs:
-            if o in keys:  # pragma: no cover
-                raise Exception(f&#34;Cannot handle circular references. Application at {o} depends on fields {keys}&#34;)
 
     def sample(self, rnd: int | Random = None):
         return applyOut(self.nested.sample(rnd), self.out)
@@ -119,7 +121,15 @@ class applyOut(AbsContent, AbsSampleable):
 
         if isinstance(other, (pipeline, applyOut)):
             return pipeline(self, other)
-        return NotImplemented  # pragma: no cover</code></pre>
+        return NotImplemented  # pragma: no cover
+
+    #
+    #     Traceback (most recent call last):
+    #   File &#34;/home/davi/.config/JetBrains/PyCharmCE2022.3/scratches/scratch_14.py&#34;, line 44, in &lt;module&gt;
+    #     du = dumps(d, protocol=5)
+    # TypeError: &#39;applyOut&#39; object is not callable
+    # def __reduce__(self):
+    #     print(111111111111111111)</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">

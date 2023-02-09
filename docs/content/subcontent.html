@@ -95,11 +95,13 @@ class subcontent(AbsCloneable):
         else:  # pragma: no cover
             raise Exception(f&#34;Cannot infer subvalue &#39;{self.index}&#39; of type &#39;{type(value)} {value}.&#34;)
 
-    def clone(self, parent=None):
-        parent = parent or (self.parent.clone() if isinstance(self.parent, AbsCloneable) else self.parent)
+    def start_clone(self, parent=None):
+        if self.finished:  # pragma: no cover
+            raise Exception(f&#34;Cannot clone a finished content.&#34;)
+        parent = parent or (self.parent.start_clone() if isinstance(self.parent, AbsCloneable) else self.parent)
         return subcontent(parent, self.index, self.n, self.source, self._hosh)
 
-    def finish(self, data):
+    def finish_clone(self, data, out, previous):
         &#34;&#34;&#34;
         &gt;&gt;&gt; from hdict import value
         &gt;&gt;&gt; subcontent(value([3]), 0,1)
@@ -108,7 +110,7 @@ class subcontent(AbsCloneable):
         if self.finished:  # pragma: no cover
             raise Exception(f&#34;Cannot finish a subcontent twice.&#34;)
         if isinstance(self.parent, AbsCloneable) and not self.parent.finished:
-            self.parent.finish(data)
+            self.parent.finish_clone(data, out, previous)
         self._finished = True
 
     def __repr__(self):
@@ -131,7 +133,8 @@ class subcontent(AbsCloneable):
 <span>(</span><span>parent: <a title="hdict.content.abs.abscontent.AbsContent" href="abs/abscontent.html#hdict.content.abs.abscontent.AbsContent">AbsContent</a>, index: int, n: int, source: str = None, hosh: hosh.hosh_.Hosh = None)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Helper class that provides a standard way to create an ABC using
+inheritance.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -176,11 +179,13 @@ class subcontent(AbsCloneable):
         else:  # pragma: no cover
             raise Exception(f&#34;Cannot infer subvalue &#39;{self.index}&#39; of type &#39;{type(value)} {value}.&#34;)
 
-    def clone(self, parent=None):
-        parent = parent or (self.parent.clone() if isinstance(self.parent, AbsCloneable) else self.parent)
+    def start_clone(self, parent=None):
+        if self.finished:  # pragma: no cover
+            raise Exception(f&#34;Cannot clone a finished content.&#34;)
+        parent = parent or (self.parent.start_clone() if isinstance(self.parent, AbsCloneable) else self.parent)
         return subcontent(parent, self.index, self.n, self.source, self._hosh)
 
-    def finish(self, data):
+    def finish_clone(self, data, out, previous):
         &#34;&#34;&#34;
         &gt;&gt;&gt; from hdict import value
         &gt;&gt;&gt; subcontent(value([3]), 0,1)
@@ -189,7 +194,7 @@ class subcontent(AbsCloneable):
         if self.finished:  # pragma: no cover
             raise Exception(f&#34;Cannot finish a subcontent twice.&#34;)
         if isinstance(self.parent, AbsCloneable) and not self.parent.finished:
-            self.parent.finish(data)
+            self.parent.finish_clone(data, out, previous)
         self._finished = True
 
     def __repr__(self):
@@ -200,6 +205,7 @@ class subcontent(AbsCloneable):
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li><a title="hdict.content.abs.abscloneable.AbsCloneable" href="abs/abscloneable.html#hdict.content.abs.abscloneable.AbsCloneable">AbsCloneable</a></li>
+<li>abc.ABC</li>
 <li><a title="hdict.content.abs.abscontent.AbsContent" href="abs/abscontent.html#hdict.content.abs.abscontent.AbsContent">AbsContent</a></li>
 </ul>
 <h3>Class variables</h3>
@@ -294,22 +300,8 @@ def requirements(self):
 </dl>
 <h3>Methods</h3>
 <dl>
-<dt id="hdict.content.subcontent.subcontent.clone"><code class="name flex">
-<span>def <span class="ident">clone</span></span>(<span>self, parent=None) ‑> <built-in function callable></span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def clone(self, parent=None):
-    parent = parent or (self.parent.clone() if isinstance(self.parent, AbsCloneable) else self.parent)
-    return subcontent(parent, self.index, self.n, self.source, self._hosh)</code></pre>
-</details>
-</dd>
-<dt id="hdict.content.subcontent.subcontent.finish"><code class="name flex">
-<span>def <span class="ident">finish</span></span>(<span>self, data)</span>
+<dt id="hdict.content.subcontent.subcontent.finish_clone"><code class="name flex">
+<span>def <span class="ident">finish_clone</span></span>(<span>self, data, out, previous)</span>
 </code></dt>
 <dd>
 <div class="desc"><pre><code class="language-python-repl">&gt;&gt;&gt; from hdict import value
@@ -320,7 +312,7 @@ def requirements(self):
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def finish(self, data):
+<pre><code class="python">def finish_clone(self, data, out, previous):
     &#34;&#34;&#34;
     &gt;&gt;&gt; from hdict import value
     &gt;&gt;&gt; subcontent(value([3]), 0,1)
@@ -329,11 +321,19 @@ def requirements(self):
     if self.finished:  # pragma: no cover
         raise Exception(f&#34;Cannot finish a subcontent twice.&#34;)
     if isinstance(self.parent, AbsCloneable) and not self.parent.finished:
-        self.parent.finish(data)
+        self.parent.finish_clone(data, out, previous)
     self._finished = True</code></pre>
 </details>
 </dd>
 </dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="hdict.content.abs.abscloneable.AbsCloneable" href="abs/abscloneable.html#hdict.content.abs.abscloneable.AbsCloneable">AbsCloneable</a></b></code>:
+<ul class="hlist">
+<li><code><a title="hdict.content.abs.abscloneable.AbsCloneable.start_clone" href="abs/abscloneable.html#hdict.content.abs.abscloneable.AbsCloneable.start_clone">start_clone</a></code></li>
+</ul>
+</li>
+</ul>
 </dd>
 </dl>
 </section>
@@ -354,9 +354,8 @@ def requirements(self):
 <li>
 <h4><code><a title="hdict.content.subcontent.subcontent" href="#hdict.content.subcontent.subcontent">subcontent</a></code></h4>
 <ul class="two-column">
-<li><code><a title="hdict.content.subcontent.subcontent.clone" href="#hdict.content.subcontent.subcontent.clone">clone</a></code></li>
 <li><code><a title="hdict.content.subcontent.subcontent.content" href="#hdict.content.subcontent.subcontent.content">content</a></code></li>
-<li><code><a title="hdict.content.subcontent.subcontent.finish" href="#hdict.content.subcontent.subcontent.finish">finish</a></code></li>
+<li><code><a title="hdict.content.subcontent.subcontent.finish_clone" href="#hdict.content.subcontent.subcontent.finish_clone">finish_clone</a></code></li>
 <li><code><a title="hdict.content.subcontent.subcontent.hosh" href="#hdict.content.subcontent.subcontent.hosh">hosh</a></code></li>
 <li><code><a title="hdict.content.subcontent.subcontent.isevaluated" href="#hdict.content.subcontent.subcontent.isevaluated">isevaluated</a></code></li>
 <li><code><a title="hdict.content.subcontent.subcontent.requirements" href="#hdict.content.subcontent.subcontent.requirements">requirements</a></code></li>

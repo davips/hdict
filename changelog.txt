@@ -1,1 +1,4 @@
-Reflect hosh theme on hdict.show()
+Handle circular refs
+Rename to start_clone() finish_clone() for better semantics, and adopt abstractclass
+Fix show() for set()
+Make frozenhdict hashable

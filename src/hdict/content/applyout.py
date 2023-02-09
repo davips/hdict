@@ -47,6 +47,7 @@ class applyOut(AbsContent, AbsSampleable):
         if isinstance(other, (pipeline, applyOut)):
             return pipeline(self, other)
         return NotImplemented  # pragma: no cover
+
     #
     #     Traceback (most recent call last):
     #   File "/home/davi/.config/JetBrains/PyCharmCE2022.3/scratches/scratch_14.py", line 44, in <module>
