@@ -41,6 +41,10 @@ class applyOut(AbsContent, AbsSampleable):
     def sample(self, rnd: int | Random = None):
         return applyOut(self.nested.sample(rnd), self.out)
 
+    @property
+    def isevaluated(self):
+        return self.nested.isevaluated
+
     def __rshift__(self, other):
         from hdict.pipeline import pipeline
         if isinstance(other, dict):

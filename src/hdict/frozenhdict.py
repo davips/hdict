@@ -46,6 +46,32 @@ class frozenhdict(UserDict, dict[str, VT]):
     {'x': 3, 'y': 5, '_id': 'r5A2Mh6vRRO5rxi5nfXv1myeguGSTmqHuHev38qM', '_ids': {'x': 'KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr', 'y': 'ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2'}}
     >>> from hdict import _
     >>> d >>= _.z(lambda v, x: v - x)
+    >>> str(d)
+    '{x: 3, y: 5, _id: "r5A2Mh6vRRO5rxi5nfXv1myeguGSTmqHuHev38qM", _ids: {x: "KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr", y: "ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2"}} » λ(v x)'
+    >>> d.show(colored=False)
+    {
+        x: 3,
+        y: 5,
+        _id: r5A2Mh6vRRO5rxi5nfXv1myeguGSTmqHuHev38qM,
+        _ids: {
+            x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+            y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2
+        },
+        v: ✗ missing ✗
+    } » λ(v x)
+    >>> d >>= {"v": 7} >> d
+    >>> d.show(colored=False)
+    {
+        y: 4,
+        v: 7,
+        z: λ(v 2),
+        _id: "ahok8O56sFnLYOmbZhLBj7TgCxhisjvPUMX16d8T",
+        _ids: {
+            y: "W3QJJ0uPoAbcbwCXeTGjCUvqDvQiRByTufh5c1j5",
+            v: "eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf",
+            z: "ol4yTUnI3nuvFu5Hk7bHxJaC-ynhiINl0Tqq4Mr2"
+        }
+    }
     """
 
     _evaluated = None
@@ -236,18 +262,22 @@ class frozenhdict(UserDict, dict[str, VT]):
         dic["_ids"] = self.ids.copy()
         return dic, hoshes
 
-    def astext(self, colored=True, key_quotes=False):
+    def astext(self, colored=True, key_quotes=False, extra_items=None):
         r"""Textual representation of a frozenidict object"""
         dicts, hoshes = self.asdicts_hoshes_noneval
+        if extra_items:
+            dicts.update(extra_items)
         txt = json.dumps(dicts, indent=4, ensure_ascii=False, cls=CustomJSONEncoder)
 
         # Put colors after json, to avoid escaping ansi codes.  TODO: check how HTML behaves here
-        if colored:
-            for h in hoshes:
-                txt = txt.replace(f'"{h.id}"', repr(h))
+        for h in hoshes:
+            txt = txt.replace(f'"{h.id}"', repr(h)) if colored else txt.replace(f'"{h.id}"', h.id)
         txt = re.sub(r'(": )"(λ.+?)"(?=,\n)', '": \\2', txt)
         if not key_quotes:
-            txt = re.sub(r'(?<!: )"([a-zA-Z0-9_ ]+?)"(?=: )', "\\1", txt)
+            txt = re.sub(r'(?<!: )"([\-a-zA-Z0-9_ ]+?)"(?=: )', "\\1", txt)
+        if extra_items:
+            for v in extra_items.values():
+                txt = txt.replace(f'"{v}"', f"{v}")
         return txt
 
     def show(self, colored=True, key_quotes=False):

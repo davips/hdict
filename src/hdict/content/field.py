@@ -41,13 +41,13 @@ class field(AbsCloneable):
     >>> d = _.Ø
     >>> d.show(colored=False)
     {
-        _id: "0000000000000000000000000000000000000000",
+        _id: 0000000000000000000000000000000000000000,
         _ids: {}
     }
     >>> d = _()
     >>> d.show(colored=False)
     {
-        _id: "0000000000000000000000000000000000000000",
+        _id: 0000000000000000000000000000000000000000,
         _ids: {}
     }
     >>> d >>= {"x": 3, "y": 5} >> _.z(lambda x, y: x + y)
@@ -56,11 +56,11 @@ class field(AbsCloneable):
         x: 3,
         y: 5,
         z: λ(x y),
-        _id: "P0R5Ra1aPrsql5iYJsmYG56.0oCFvqPQIMv3Qe7b",
+        _id: P0R5Ra1aPrsql5iYJsmYG56.0oCFvqPQIMv3Qe7b,
         _ids: {
-            x: "KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr",
-            y: "ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2",
-            z: "Q1ypbWuXlEf9MeJNT1wyFcA8V0.DvHEFOeCidBrZ"
+            x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+            y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+            z: Q1ypbWuXlEf9MeJNT1wyFcA8V0.DvHEFOeCidBrZ
         }
     }
     >>> d >>= {"x": 3, "y": 5} >> _.x(lambda x, y: x + y)

@@ -454,7 +454,7 @@ class hdict(dict[str, VT]):
         """
         return self.frozen.asdicts
 
-    def astext(self, colored=True, key_quotes=False):
+    def astext(self, colored=True, key_quotes=False, extra_items=None):
         r"""
         >>> from hdict import hdict
         >>> repr(hdict(x=3, y=5)) == hdict(x=3, y=5).astext()
@@ -470,7 +470,7 @@ class hdict(dict[str, VT]):
             }
         }
         """
-        return self.frozen.astext(colored, key_quotes)
+        return self.frozen.astext(colored, key_quotes, extra_items)
 
     def show(self, colored=True, key_quotes=False):
         r"""

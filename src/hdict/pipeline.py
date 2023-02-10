@@ -60,3 +60,24 @@ class pipeline(AbsSampleable):
 
     def __repr__(self):
         return " » ".join(repr(step) for step in self.steps)
+
+    def show(self, colored=True, key_quotes=False):
+        r"""Print textual representation of a pipeline object"""
+        print(self.astext(colored, key_quotes))
+
+    def astext(self, colored=True, key_quotes=False, extra_items=None):
+        r"""Textual representation of a pipeline object"""
+        extra_items = extra_items or {self.missing: "✗ missing ✗"}
+        out = []
+        for step in self.steps:
+            if hasattr(step, "astext"):
+                out.append(step.astext(colored=colored, key_quotes=key_quotes, extra_items=extra_items))
+            else:
+                out.append(repr(step))
+        return " » ".join(out)
+
+    def __str__(self):
+        out = []
+        for step in self.steps:
+            out.append(str(step))
+        return " » ".join(out)
