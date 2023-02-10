@@ -186,9 +186,13 @@ class hdict(dict[str, VT]):
     >>> p = a1("z") >> a2(w="a", v="b")
     >>> h = lambda a=_[0, 3, 6, ..., 9], b=4: 5
     >>> app = _(h)
+    >>> app
+    λ(a=default(sample()) b=default(4))
+    >>> app.c
+    c=λ(a=default(sample()) b=default(4))
     >>> sampled = app.c.sample(0)
     >>> sampled
-    applyOut(nested=λ(a=default(9) b=default(4)), out='c')
+    c=λ(a=default(9) b=default(4))
     >>> r = hdict() >> sampled
     >>> r.show(colored=False)
     {
@@ -350,7 +354,11 @@ class hdict(dict[str, VT]):
         return self.__getattribute__(item)  # pragma: no cover
 
     def __rrshift__(self, other):
-        return (other >> self.frozen).unfrozen
+        from hdict.pipeline import pipeline
+        res = other >> self.frozen
+        if isinstance(res, pipeline):
+            return pipeline(other, self, missing=res.missing)
+        return res.unfrozen
 
     def __rshift__(self, other):
         from hdict import apply
@@ -362,7 +370,7 @@ class hdict(dict[str, VT]):
         if isinstance(other, (dict, applyOut, pipeline)):
             res = self.frozen >> other
             if isinstance(res, pipeline):
-                return pipeline(self.frozen, other, missing=res.missing)
+                return pipeline(self, other, missing=res.missing)
             return res.unfrozen
         return NotImplemented  # pragma: no cover
 

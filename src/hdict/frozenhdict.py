@@ -44,7 +44,7 @@ class frozenhdict(UserDict, dict[str, VT]):
     >>> d.data
     {'x': 3, 'y': 5, '_id': 'r5A2Mh6vRRO5rxi5nfXv1myeguGSTmqHuHev38qM', '_ids': {'x': 'KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr', 'y': 'ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2'}}
     >>> from hdict import _
-    >>> d >>= _.z(lambda v, x: v - x)
+    >>> d >>= _(lambda v, x: v - x).z
     >>> str(d)
     '{x: 3, y: 5, _id: "r5A2Mh6vRRO5rxi5nfXv1myeguGSTmqHuHev38qM", _ids: {x: "KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr", y: "ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2"}} » z=λ(v x)'
     >>> d.show(colored=False)
@@ -113,7 +113,7 @@ class frozenhdict(UserDict, dict[str, VT]):
         try:
             if isinstance(other, pipeline):
                 if other.hasmissing:
-                    return pipeline(self, other, missing=other.missing)
+                    return pipeline(self, other.clean)
                 result = self
                 for step in other.steps:
                     result >>= step
@@ -238,7 +238,7 @@ class frozenhdict(UserDict, dict[str, VT]):
             self._asdicts = dic
         return self._asdicts
 
-    @cached_property
+    @property
     def asdicts_hoshes_noneval(self):
         from hdict.content.abs.abscloneable import AbsCloneable
 

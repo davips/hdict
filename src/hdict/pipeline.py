@@ -32,26 +32,37 @@ class pipeline(AbsSampleable):
         self.hasmissing = missing is not None
 
     def sample(self, rnd: int | Random = None):
-        newsteps = [(step.sample(rnd) if isinstance(step, AbsSampleable) else step) for step in self.steps]
-        return pipeline(newsteps, missing=self.missing)
+        new = pipeline()
+        new.steps = [(step.sample(rnd) if isinstance(step, AbsSampleable) else step) for step in self.steps]
+        new.missing = self.missing
+        return new
 
     def __rrshift__(self, other):
         from hdict.content.applyout import applyOut
         if not isinstance(other, pipeline) and isinstance(other, (applyOut, dict)):  # 'dict' includes 'hdict', 'frozenhdict'
             # REMINDER: all combinations of steps are valid pipelines
-            return pipeline(other, self)
+            return pipeline(other, self.clean)
         return NotImplemented  # pragma: no cover
+
+    @property
+    def clean(self):
+        new = pipeline()
+        new.steps = self.steps
+        return new
 
     def __rshift__(self, other):
         from hdict import apply
         from hdict.content.applyout import applyOut
-        if isinstance(other, (pipeline, applyOut, dict)):
+        if isinstance(other, pipeline):
+            return pipeline(self.clean, other.clean, missing=self.missing)
+        if isinstance(other, (applyOut, dict)):
             return pipeline(self, other, missing=self.missing)
         if isinstance(other, apply):  # pragma: no cover
             raise Exception(f"Cannot apply before specifying the output field.")
         return NotImplemented  # pragma: no cover
 
     def __getattr__(self, item):
+        mudar
         if self.missing is not None:  # pragma: no cover
             raise Exception(f"'pipeline' has no attribute '{item}'.\n"
                             f"If you are expecting a 'hdict' instead of a 'pipeline',\n"
@@ -67,7 +78,8 @@ class pipeline(AbsSampleable):
 
     def astext(self, colored=True, key_quotes=False, extra_items=None):
         r"""Textual representation of a pipeline object"""
-        extra_items = extra_items or {self.missing: "✗ missing ✗"}
+        if self.missing and not extra_items:
+            extra_items = {self.missing: "✗ missing ✗"}
         out = []
         for step in self.steps:
             if hasattr(step, "astext"):
