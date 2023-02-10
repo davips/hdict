@@ -41,11 +41,11 @@ class hdict(dict[str, VT]):
         x: 3,
         y: 5,
         alpha: 11,
-        _id: "e6WGyTj7trk6AUUcdxGAefyG.T9j.SvBdEsHF.r5",
+        _id: e6WGyTj7trk6AUUcdxGAefyG.T9j.SvBdEsHF.r5,
         _ids: {
-            x: "KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr",
-            y: "ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2",
-            alpha: "A1RyW.GoA3q9-iCbCvWyWClExm1J3wI.ok6UA3Nk"
+            x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+            y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+            alpha: A1RyW.GoA3q9-iCbCvWyWClExm1J3wI.ok6UA3Nk
         }
     }
     >>> d >>= {"beta": 12, "gamma": 17}
@@ -113,39 +113,39 @@ class hdict(dict[str, VT]):
         www1: λ('str 1' 'str 2')→1,
         zzz2: λ(r1 'str 2')→0,
         www2: λ(r1 'str 2')→1,
-        _id: "2.IiQkj2nns.VFlw.8sygoCZfbsqmD8T4OLNiO6Y",
+        _id: 2.IiQkj2nns.VFlw.8sygoCZfbsqmD8T4OLNiO6Y,
         _ids: {
-            x: "KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr",
-            y: "ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2",
-            alpha: "A1RyW.GoA3q9-iCbCvWyWClExm1J3wI.ok6UA3Nk",
-            beta: "WM5TbiaJ1gLqKRSFiY3VkZEu1PwQcaAokBKBPrWg",
-            gamma: "yb-HU.jSxd496XfId1J..MkX7xfUPJOL1-07hHdt",
-            p1: "hllpFtAFKUz3OXOJOr3RbpvL8RjwGvwypfgS8WEi",
-            q1: "9Fx79MuqFKeorCqJ1Gb-uaGPCwBwT8NliAzSQ2aL",
-            pq: "PdulOo9BsqAYMi0.1h15yKZjjq-dExhUHnkJZYO1",
-            p2: "LDtY9HmXuNn8uzQyA06-.sb2dMOMSA1H95HZgo2o",
-            q2: "VjJ9OEByD74oMAkCXa9QMwyz4HQRWBpGEqhR0l2F",
-            z1: "8dPQ2blIctM6p7mByuoL0EnTlg5no0TxEJtoACbt",
-            w1: "JbWdguqn24m9-XathFYdhhMRBDvWFQVktmxj7gWL",
-            z2: "8dPQ2blIctM6p7mByuoL0EnTlg5no0TxEJtoACbt",
-            w2: "JbWdguqn24m9-XathFYdhhMRBDvWFQVktmxj7gWL",
-            r1: "Y3AxJytRz1Pnf8Q1bjC2jWUs3oTzAALXYkwlH1GI",
-            r2: "JdDJ6LPyvJ2xnbPUwBFKDIt8k-udb4czb8PjX8dh",
-            r3: "015TXOnn-Z6AfT1ajcNN4brMD6c8YsRn73kA7RPh",
-            ra1: "8dPQ2blIctM6p7mByuoL0EnTlg5no0TxEJtoACbt",
-            rb1: "JbWdguqn24m9-XathFYdhhMRBDvWFQVktmxj7gWL",
-            ra2: "8dPQ2blIctM6p7mByuoL0EnTlg5no0TxEJtoACbt",
-            rb2: "JbWdguqn24m9-XathFYdhhMRBDvWFQVktmxj7gWL",
-            zz1: "mQUu0IxSblJEAplB0yVRVN-rY6bv06spvVH8krlt",
-            ww1: "7J8PIEG1QPZMBDimMibqHaJPFg6pHG8mQGvDM9Pf",
-            zz2: "sHib6xdxGc8tQ6CzacEANreEUZH.sjkZhIa6ZJRc",
-            ww2: "FO-4MA-2R.Hp40Fa1cOnY70x.vFfraTBMvYDCTa7",
-            zzzz: "GCskxsxNUipp-aSntVX1tASXmXbTqCEJ46YonXVu",
-            f: "Some.arbitrary.identifier.with.length.40",
-            zzz1: "8psQH6IYL-875mdf0ONueb.GPElYQSs9EVmhUqgk",
-            www1: "x.NpepViaL0yjKMHzZbVXeloQksMuGoUQvLZRM2c",
-            zzz2: "Hhw3UoRceatED9jYFRkGeUteWupRdQUZab0Vlgud",
-            www2: "Ie3whxRJ8TeJurdTfwg7G9zK9CyUfUym.kqsWTgx"
+            x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+            y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+            alpha: A1RyW.GoA3q9-iCbCvWyWClExm1J3wI.ok6UA3Nk,
+            beta: WM5TbiaJ1gLqKRSFiY3VkZEu1PwQcaAokBKBPrWg,
+            gamma: yb-HU.jSxd496XfId1J..MkX7xfUPJOL1-07hHdt,
+            p1: hllpFtAFKUz3OXOJOr3RbpvL8RjwGvwypfgS8WEi,
+            q1: 9Fx79MuqFKeorCqJ1Gb-uaGPCwBwT8NliAzSQ2aL,
+            pq: PdulOo9BsqAYMi0.1h15yKZjjq-dExhUHnkJZYO1,
+            p2: LDtY9HmXuNn8uzQyA06-.sb2dMOMSA1H95HZgo2o,
+            q2: VjJ9OEByD74oMAkCXa9QMwyz4HQRWBpGEqhR0l2F,
+            z1: 8dPQ2blIctM6p7mByuoL0EnTlg5no0TxEJtoACbt,
+            w1: JbWdguqn24m9-XathFYdhhMRBDvWFQVktmxj7gWL,
+            z2: 8dPQ2blIctM6p7mByuoL0EnTlg5no0TxEJtoACbt,
+            w2: JbWdguqn24m9-XathFYdhhMRBDvWFQVktmxj7gWL,
+            r1: Y3AxJytRz1Pnf8Q1bjC2jWUs3oTzAALXYkwlH1GI,
+            r2: JdDJ6LPyvJ2xnbPUwBFKDIt8k-udb4czb8PjX8dh,
+            r3: 015TXOnn-Z6AfT1ajcNN4brMD6c8YsRn73kA7RPh,
+            ra1: 8dPQ2blIctM6p7mByuoL0EnTlg5no0TxEJtoACbt,
+            rb1: JbWdguqn24m9-XathFYdhhMRBDvWFQVktmxj7gWL,
+            ra2: 8dPQ2blIctM6p7mByuoL0EnTlg5no0TxEJtoACbt,
+            rb2: JbWdguqn24m9-XathFYdhhMRBDvWFQVktmxj7gWL,
+            zz1: mQUu0IxSblJEAplB0yVRVN-rY6bv06spvVH8krlt,
+            ww1: 7J8PIEG1QPZMBDimMibqHaJPFg6pHG8mQGvDM9Pf,
+            zz2: sHib6xdxGc8tQ6CzacEANreEUZH.sjkZhIa6ZJRc,
+            ww2: FO-4MA-2R.Hp40Fa1cOnY70x.vFfraTBMvYDCTa7,
+            zzzz: GCskxsxNUipp-aSntVX1tASXmXbTqCEJ46YonXVu,
+            f: Some.arbitrary.identifier.with.length.40,
+            zzz1: 8psQH6IYL-875mdf0ONueb.GPElYQSs9EVmhUqgk,
+            www1: x.NpepViaL0yjKMHzZbVXeloQksMuGoUQvLZRM2c,
+            zzz2: Hhw3UoRceatED9jYFRkGeUteWupRdQUZab0Vlgud,
+            www2: Ie3whxRJ8TeJurdTfwg7G9zK9CyUfUym.kqsWTgx
         }
     }
     >>> d["p1"]
@@ -175,10 +175,10 @@ class hdict(dict[str, VT]):
     {
         k: λ(9 9)→0,
         t: λ(9 9)→1,
-        _id: "eeMrAInYUG2lzUrGqgY0vSZd4KpYpc5vu.bV9bbP",
+        _id: eeMrAInYUG2lzUrGqgY0vSZd4KpYpc5vu.bV9bbP,
         _ids: {
-            k: "UgmJcTz6qQgNFiwe.S40EC69Ab6drWQ5JCw8ON3q",
-            t: "MCyEzFX.viNxTiRwTio0j7dA9LDf-TwFRNKA0JhY"
+            k: UgmJcTz6qQgNFiwe.S40EC69Ab6drWQ5JCw8ON3q,
+            t: MCyEzFX.viNxTiRwTio0j7dA9LDf-TwFRNKA0JhY
         }
     }
     >>> ppp.k
@@ -193,9 +193,9 @@ class hdict(dict[str, VT]):
     >>> r.show(colored=False)
     {
         c: λ(9 4),
-        _id: "5jRrcCFkdhQJ0H0U7BrrXpcS4iyYdVRvowUJOCsG",
+        _id: 5jRrcCFkdhQJ0H0U7BrrXpcS4iyYdVRvowUJOCsG,
         _ids: {
-            c: "TvlvyI83Z6Ze67xhPp3R5F9GawJ4ziXOfyGGUToj"
+            c: TvlvyI83Z6Ze67xhPp3R5F9GawJ4ziXOfyGGUToj
         }
     }
     >>> from random import Random
@@ -215,11 +215,11 @@ class hdict(dict[str, VT]):
         w: λ(4 7)→0,
         z: λ(w 3)→z,
         v: λ(4 7)→1,
-        _id: "cexo8AfBKo4Ku.4IctlyPMSSZpDvjrl-ncyVUmmd",
+        _id: cexo8AfBKo4Ku.4IctlyPMSSZpDvjrl-ncyVUmmd,
         _ids: {
-            w: "VdHav0HHdJC6gfOF8Fqw7AFX9IYQyrIUOZc8G.Pp",
-            z: "3eItvrVzHQPDEYbQRbksBHiCaQbe2Ia2m7Z2P1lw",
-            v: "KtYqDG5UPyrYEv-5V5RaUQasieAwAjF1bYf3Tvyy"
+            w: VdHav0HHdJC6gfOF8Fqw7AFX9IYQyrIUOZc8G.Pp,
+            z: 3eItvrVzHQPDEYbQRbksBHiCaQbe2Ia2m7Z2P1lw,
+            v: KtYqDG5UPyrYEv-5V5RaUQasieAwAjF1bYf3Tvyy
         }
     }
     >>> d = hdict(x=3) >> p.sample(rnd)
@@ -229,12 +229,12 @@ class hdict(dict[str, VT]):
         z: λ(x 16),
         w: λ(x 9)→a,
         v: λ(x 9)→b,
-        _id: "OIVFm0IdYK3jtOApTVCwdLTVXXNGarxDkUCwB0Iv",
+        _id: OIVFm0IdYK3jtOApTVCwdLTVXXNGarxDkUCwB0Iv,
         _ids: {
-            x: "KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr",
-            z: "-F83hM-wE8ykmcEM1XvuG.XBpo7rzkuHfNKzTVMz",
-            w: "G7CpHeVpUD5KfNpJmRaMC2Rt4rTeQjIuAeGuZXSa",
-            v: "glVBFsjtDi7RrpvqrV.5vh.dp.RgASp25V-qlClj"
+            x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+            z: -F83hM-wE8ykmcEM1XvuG.XBpo7rzkuHfNKzTVMz,
+            w: G7CpHeVpUD5KfNpJmRaMC2Rt4rTeQjIuAeGuZXSa,
+            v: glVBFsjtDi7RrpvqrV.5vh.dp.RgASp25V-qlClj
         }
     }
     >>> d1 = hdict(x=52, y=13)
@@ -243,18 +243,18 @@ class hdict(dict[str, VT]):
     {
         x: 52,
         y: 13,
-        _id: "5pwGP0LxQRbQaDEk9ztQ4V4qz.A-IIhVNTrcyt8U",
+        _id: 5pwGP0LxQRbQaDEk9ztQ4V4qz.A-IIhVNTrcyt8U,
         _ids: {
-            x: "c.llz05T6ZXw5AlsU4xfmMxcvvHZhLl60LckZis9",
-            y: "zplslThZYha4haD2VmGxZqrFSw5RJcFJd2E-Ku6s"
+            x: c.llz05T6ZXw5AlsU4xfmMxcvvHZhLl60LckZis9,
+            y: zplslThZYha4haD2VmGxZqrFSw5RJcFJd2E-Ku6s
         }
     }
     >>> d2.show(colored=False)
     {
         x: 52,
-        _id: "kYzgpPdRgQSYSEpp1qt4EHQLQJXuyb2WDQS-iNPh",
+        _id: kYzgpPdRgQSYSEpp1qt4EHQLQJXuyb2WDQS-iNPh,
         _ids: {
-            x: "1234567890123456789012345678901234567890"
+            x: 1234567890123456789012345678901234567890
         }
     }
     >>> d3 = d1 >> d2
@@ -262,20 +262,20 @@ class hdict(dict[str, VT]):
     {
         x: 52,
         y: 13,
-        _id: "-EFuy5NAeK.LIALpBiZKK-fYQmc9AZYQQck-HiRK",
+        _id: -EFuy5NAeK.LIALpBiZKK-fYQmc9AZYQQck-HiRK,
         _ids: {
-            x: "1234567890123456789012345678901234567890",
-            y: "zplslThZYha4haD2VmGxZqrFSw5RJcFJd2E-Ku6s"
+            x: 1234567890123456789012345678901234567890,
+            y: zplslThZYha4haD2VmGxZqrFSw5RJcFJd2E-Ku6s
         }
     }
     >>> (d3 >> d1.frozen).show(colored=False)
     {
         x: 52,
         y: 13,
-        _id: "5pwGP0LxQRbQaDEk9ztQ4V4qz.A-IIhVNTrcyt8U",
+        _id: 5pwGP0LxQRbQaDEk9ztQ4V4qz.A-IIhVNTrcyt8U,
         _ids: {
-            x: "c.llz05T6ZXw5AlsU4xfmMxcvvHZhLl60LckZis9",
-            y: "zplslThZYha4haD2VmGxZqrFSw5RJcFJd2E-Ku6s"
+            x: c.llz05T6ZXw5AlsU4xfmMxcvvHZhLl60LckZis9,
+            y: zplslThZYha4haD2VmGxZqrFSw5RJcFJd2E-Ku6s
         }
     }
 
@@ -482,10 +482,10 @@ class hdict(dict[str, VT]):
         {
             x: 1,
             y: 2,
-            _id: "41wHsGFMSo0vbD2n6zAXogYG9YE3FwzIRSqjWc8N",
+            _id: 41wHsGFMSo0vbD2n6zAXogYG9YE3FwzIRSqjWc8N,
             _ids: {
-                x: "DYu5bfVvb6FOhBCWNsss4wsEWHZYTbKnsVgoWFvl",
-                y: "k3PWYRxIEc0lEvD1f6rbnk.36RAD5AyfROy1aT29"
+                x: DYu5bfVvb6FOhBCWNsss4wsEWHZYTbKnsVgoWFvl,
+                y: k3PWYRxIEc0lEvD1f6rbnk.36RAD5AyfROy1aT29
             }
         }
         """

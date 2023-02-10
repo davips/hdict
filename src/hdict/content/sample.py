@@ -44,6 +44,7 @@ class sample(AbsContent, AbsSampleable):
 
     def __init__(self, *values: list[int | float], rnd: int | Random = 0, maxdigits=28):
         self.rnd = rnd
+        # TODO: accept non numeric types (categoric)?
         prog = list2progression(values, maxdigits=maxdigits)
         if prog.n.is_infinite():  # pragma: no cover
             raise Exception(f"Cannot sample from an infinite list: {prog}")

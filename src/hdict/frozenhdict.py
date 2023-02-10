@@ -24,7 +24,6 @@
 import json
 import re
 from collections import UserDict
-from functools import cached_property
 from typing import TypeVar
 
 from hdict.content import MissingFieldException
@@ -47,7 +46,7 @@ class frozenhdict(UserDict, dict[str, VT]):
     >>> from hdict import _
     >>> d >>= _.z(lambda v, x: v - x)
     >>> str(d)
-    '{x: 3, y: 5, _id: "r5A2Mh6vRRO5rxi5nfXv1myeguGSTmqHuHev38qM", _ids: {x: "KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr", y: "ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2"}} » λ(v x)'
+    '{x: 3, y: 5, _id: "r5A2Mh6vRRO5rxi5nfXv1myeguGSTmqHuHev38qM", _ids: {x: "KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr", y: "ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2"}} » z=λ(v x)'
     >>> d.show(colored=False)
     {
         x: 3,

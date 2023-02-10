@@ -20,26 +20,32 @@
 #  part of this work is illegal and it is unethical regarding the effort and
 #  time spent here.
 #
+from types import NoneType
 from typing import Union
 
-from hdict.frozenhdict import frozenhdict
+from hosh import Hosh
 
 from hdict.content.apply import apply
 from hdict.content.default import default
 from hdict.content.field import field
 from hdict.content.sample import sample
 from hdict.content.value import value
+from hdict.frozenhdict import frozenhdict
 from hdict.hdict_ import hdict
-from hosh import Hosh
 
-class _:
-    Ø = hdict()
 
-    def __call__(self, /, _dictionary: dict = None, **kwargs):
-        if _dictionary is None:
-            _dictionary = kwargs
-            kwargs = {}
-        return hdict(_dictionary, **kwargs)
+class _(frozenhdict):
+    Ø = frozenhdict()
+
+    def __call__(self, f_or_dictionary: Union[callable, "apply", field] = None, *applied_args, fhosh: Hosh = None, **kwargs):
+        if isinstance(f_or_dictionary, (NoneType, dict)):
+            if fhosh is None:
+                raise Exception(f"Cannot use '_()' as hdict constructor and provide 'fhosh' at the same time.")
+            if f_or_dictionary is None:
+                f_or_dictionary = applied_args
+                kwargs = {}
+            return hdict(f_or_dictionary, **kwargs)
+        return apply(f_or_dictionary, *applied_args, fhosh=fhosh, **kwargs)
 
     def __getattr__(self, item):
         return field(item)
@@ -49,4 +55,4 @@ class _:
 
 
 _ = _()
-Ø = hdict()
+Ø = _.Ø
