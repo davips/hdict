@@ -74,37 +74,53 @@ class frozenhdict(UserDict, dict[str, VT]):
         self.data["_id"] = self.id = self.hosh.id
         self.data["_ids"] = self.ids
 
-    def __rshift__(self, other):
+    def __rrshift__(self, other):
+        from hdict.hdict_ import hdict
+        if isinstance(other, dict) and not isinstance(other, (hdict, frozenhdict)):
+            return pipeline(other, self)
+        return NotImplemented  # pragma: no cover
+
+    def __rshift__(self, other0):
         from hdict import hdict
         from hdict.content.applyout import applyOut
 
-        if isinstance(other, pipeline):
-            result = self
-            for step in other.steps:
-                result >>= step
-            return result
-        data: dict[str, object] = self.data.copy()
-        if isinstance(other, hdict):  # merge keeping ids
-            other = other.frozen
-        if isinstance(other, frozenhdict):  # merge keeping ids
-            other = other.data
-        if isinstance(other, applyOut):
-            other = {other.out: other.nested}
-        if isinstance(other, dict):  # merge keeping ids of AbsContent objects if any is present
-            for k, v in other.items():
-                if isinstance(v, applyOut):  # pragma: no cover
-                    raise Exception("Cannot assign output through both apply and dict-key: '>> {out: apply(...)(out)}'.")
-                if isinstance(k, tuple):
-                    from hdict.content.handling import handle_multioutput
+        other = other0
+        try:
+            if isinstance(other, pipeline):
+                if other.hasmissing:
+                    return pipeline(self, other, missing=other.missing)
+                result = self
+                for step in other.steps:
+                    result >>= step
+                return result
+            data: dict[str, object] = self.data.copy()
+            if isinstance(other, hdict):  # merge keeping ids
+                other = other.frozen
+            if isinstance(other, frozenhdict):  # merge keeping ids
+                other = other.data
+            if isinstance(other, applyOut):
+                other = {other.out: other.nested}
+            if isinstance(other, dict):  # merge keeping ids of AbsContent objects if any is present
+                for k, v in other.items():
+                    if isinstance(v, applyOut):  # pragma: no cover
+                        raise Exception("Cannot assign output through both apply and dict-key: '>> {out: apply(...)(out)}'.")
+                    if isinstance(k, tuple):
+                        from hdict.content.handling import handle_multioutput
 
-                    handle_multioutput(data, k, v)
-                elif isinstance(k, str):
-                    data[k] = v
-                else:  # pragma: no cover
-                    raise Exception(f"Invalid type for input field specification: {type(k)}")
-            del data["_id"]
-            del data["_ids"]
-            return frozenhdict(data, _previous=self.data)
+                        handle_multioutput(data, k, v)
+                    elif isinstance(k, str):
+                        data[k] = v
+                    else:  # pragma: no cover
+                        raise Exception(f"Invalid type for input field specification: {type(k)}")
+                del data["_id"]
+                del data["_ids"]
+                return frozenhdict(data, _previous=self.data)
+        except MissingFieldException as e:
+            if isinstance(other0, (pipeline, dict, applyOut)):
+                return pipeline(self, other0, missing=e.args[0])
+            else:
+                print(type(other0))
+                raise e from None
         return NotImplemented  # pragma: no cover
 
     def __getitem__(self, item):  # pragma: no cover

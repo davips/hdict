@@ -360,7 +360,10 @@ class hdict(dict[str, VT]):
         if isinstance(other, apply):  # pragma: no cover
             raise Exception(f"Cannot apply without specifying output.")
         if isinstance(other, (dict, applyOut, pipeline)):
-            return (self.frozen >> other).unfrozen
+            res = self.frozen >> other
+            if isinstance(res, pipeline):
+                return pipeline(self.frozen, other, missing=res.missing)
+            return res.unfrozen
         return NotImplemented  # pragma: no cover
 
     @property

@@ -26,20 +26,37 @@ from hdict.content.abs.abssampleable import AbsSampleable
 
 
 class pipeline(AbsSampleable):
-    def __init__(self, *args, _previous: list = None):
-        self.steps = _previous.copy() if _previous else []
-        self.steps.extend(args)
+    def __init__(self, *args, missing=None):
+        self.steps = args
+        self.missing = missing
+        self.hasmissing = missing is not None
 
     def sample(self, rnd: int | Random = None):
         newsteps = [(step.sample(rnd) if isinstance(step, AbsSampleable) else step) for step in self.steps]
-        return pipeline(_previous=newsteps)
+        return pipeline(newsteps, missing=self.missing)
+
+    def __rrshift__(self, other):
+        from hdict.content.applyout import applyOut
+        if not isinstance(other, pipeline) and isinstance(other, (applyOut, dict)):  # 'dict' includes 'hdict', 'frozenhdict'
+            # REMINDER: all combinations of steps are valid pipelines
+            return pipeline(other, self)
+        return NotImplemented  # pragma: no cover
 
     def __rshift__(self, other):
         from hdict import apply
         from hdict.content.applyout import applyOut
-
-        if isinstance(other, pipeline):
-            return pipeline(*other.steps, _previous=self.steps)
-        if isinstance(other, (apply, applyOut)):
-            return pipeline(other, _previous=self.steps)
+        if isinstance(other, (pipeline, applyOut, dict)):
+            return pipeline(self, other, missing=self.missing)
+        if isinstance(other, apply):  # pragma: no cover
+            raise Exception(f"Cannot apply before specifying the output field.")
         return NotImplemented  # pragma: no cover
+
+    def __getattr__(self, item):
+        if self.missing is not None:  # pragma: no cover
+            raise Exception(f"'pipeline' has no attribute '{item}'.\n"
+                            f"If you are expecting a 'hdict' instead of a 'pipeline',\n"
+                            f"you need to provide the missing field '{self.missing}' before application.")
+        return self.__getattribute__(item)  # pragma: no cover
+
+    def __repr__(self):
+        return " » ".join(repr(step) for step in self.steps)
