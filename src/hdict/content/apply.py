@@ -43,6 +43,10 @@ from hosh.misc import hoshes
 # TODO: discard dependencies after evaluation, to avoid wasted memory, e.g., even after the deps are deleted from hdict
 class apply(AbsCloneable, AbsSampleable):
     """
+    Function application
+
+    Single output application can be defined through attribute: 'apply(f).my_output_field'.
+
     >>> from hdict import apply
     >>> f = lambda a, b: a**b
     >>> v = apply(f, 5, b=7)
