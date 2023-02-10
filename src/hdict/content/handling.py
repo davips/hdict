@@ -248,7 +248,7 @@ def handle_identity(data):
             except AttributeError as e:  # pragma: no cover
                 if "'sample' object has no attribute 'hosh'" in str(e):
                     raise Exception(f"Cannot apply before sampling.")
-                raise e
+                raise e from None
             # PAPER REMINDER: state in the paper that hash(identifier) must be different from hash(value), for any identifier and value. E.g.: hash(X) != hash("X")    #   Here the difference always happen because values are pickled, while identifiers are just encoded().
             ids[k] = data[k].hosh.id
     return hosh, ids

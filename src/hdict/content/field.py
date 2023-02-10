@@ -20,6 +20,14 @@
 #  part of this work is illegal and it is unethical regarding the effort and
 #  time spent here.
 #
+from typing import Union
+
+from typing import TYPE_CHECKING
+
+from hdict.content import MissingFieldException
+
+if TYPE_CHECKING:
+    from hdict.content.apply import apply
 
 from hdict.content.abs.abscloneable import AbsCloneable
 from hosh import Hosh
@@ -28,6 +36,39 @@ from hosh import Hosh
 class field(AbsCloneable):
     """
     Pointer to a field
+
+    >>> from hdict import _
+    >>> d = _.Ø
+    >>> d.show(colored=False)
+    {
+        _id: "0000000000000000000000000000000000000000",
+        _ids: {}
+    }
+    >>> d = _()
+    >>> d.show(colored=False)
+    {
+        _id: "0000000000000000000000000000000000000000",
+        _ids: {}
+    }
+    >>> d >>= {"x": 3, "y": 5} >> _.z(lambda x, y: x + y)
+    >>> d.show(colored=False)
+    {
+        x: 3,
+        y: 5,
+        z: λ(x y),
+        _id: "P0R5Ra1aPrsql5iYJsmYG56.0oCFvqPQIMv3Qe7b",
+        _ids: {
+            x: "KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr",
+            y: "ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2",
+            z: "Q1ypbWuXlEf9MeJNT1wyFcA8V0.DvHEFOeCidBrZ"
+        }
+    }
+    >>> d >>= {"x": 3, "y": 5} >> _.x(lambda x, y: x + y)
+    >>> d.x
+    8
+    >>> d["x"] = _._(lambda x, y: x + y)
+    >>> d.x
+    13
     """
 
     content = None
@@ -72,17 +113,26 @@ class field(AbsCloneable):
         >>> d["a"].value
         5
         """
-        if self.content is not None:  # pragma: no cover
+        if self.finished:  # pragma: no cover
             raise Exception(f"Cannot finish a field pointer twice. name: {self.name}.\n" f"Please check if there are indirect circular references.")
         if self.name not in data:  # pragma: no cover
-            raise Exception(f"Missing field '{self.name}'")
+            raise MissingFieldException(self.name)
         self.content = data[self.name]
         if isinstance(self.content, AbsCloneable) and not self.content.finished:
             self.content.finish_clone(data, out, previous)
         self._finished = True
 
+    def __call__(self, f: Union[callable, "apply", "field"], *applied_args, fhosh: Hosh = None, **applied_kwargs):
+        from hdict.content.apply import apply
+        if self.finished:
+            raise Exception(f"Cannot convert a finished 'field' object into 'apply': '{self.name}'.")
+        a = apply(f, *applied_args, fhosh=fhosh or self._hosh, **applied_kwargs)
+        if self.name != "_":
+            a = a(self.name)
+        return a
+
     def __repr__(self):
-        if self.content is None:
+        if not self.finished:
             txt = f"field('{self.name}'"
             txt += ")" if self._hosh is None else ", '{self._hosh}')"
             return txt

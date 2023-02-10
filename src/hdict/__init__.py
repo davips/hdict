@@ -22,6 +22,8 @@
 #
 from typing import Union
 
+from hdict.frozenhdict import frozenhdict
+
 from hdict.content.apply import apply
 from hdict.content.default import default
 from hdict.content.field import field
@@ -30,12 +32,14 @@ from hdict.content.value import value
 from hdict.hdict_ import hdict
 from hosh import Hosh
 
-
 class _:
     Ø = hdict()
 
-    def __call__(self, f: Union[callable, "apply", field], *applied_args, fhosh: Hosh = None, **applied_kwargs):
-        return apply(f, *applied_args, fhosh=fhosh, **applied_kwargs)
+    def __call__(self, /, _dictionary: dict = None, **kwargs):
+        if _dictionary is None:
+            _dictionary = kwargs
+            kwargs = {}
+        return hdict(_dictionary, **kwargs)
 
     def __getattr__(self, item):
         return field(item)

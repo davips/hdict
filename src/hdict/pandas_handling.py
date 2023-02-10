@@ -32,11 +32,11 @@ def explode_df(df) -> value:
     >>> d = hdict(df=df)
     >>> d.show(colored=False)
     {
-        df: "«{'x': {'a': 1, 'b': 2, 'c': 3}, 'y': {'a': 5, 'b': 6, 'c': 7}}»",
+        df: "‹{'x': {'a': 1, 'b': 2, 'c': 3}, 'y': {'a': 5, 'b': 6, 'c': 7}}›",
         df_: {
-            index: "«{'a': 'a', 'b': 'b', 'c': 'c'}»",
-            x: "«{'a': 1, 'b': 2, 'c': 3}»",
-            y: "«{'a': 5, 'b': 6, 'c': 7}»",
+            index: "‹{'a': 'a', 'b': 'b', 'c': 'c'}›",
+            x: "‹{'a': 1, 'b': 2, 'c': 3}›",
+            y: "‹{'a': 5, 'b': 6, 'c': 7}›",
             _id: "CO3m4w1vqM.etZXkoHQoNxA.PS.kQI-LomW.H6VC",
             _ids: {
                 index: "HBNoEs58wCDhsdWWisp0sjMwsWmNMXuwaGFE9UAt",

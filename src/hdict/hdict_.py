@@ -349,6 +349,9 @@ class hdict(dict[str, VT]):
             return self.frozen[item]
         return self.__getattribute__(item)  # pragma: no cover
 
+    def __rrshift__(self, other):
+        return (other >> self.frozen).unfrozen
+
     def __rshift__(self, other):
         from hdict import apply
         from hdict.content.applyout import applyOut

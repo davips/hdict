@@ -27,6 +27,7 @@ from collections import UserDict
 from functools import cached_property
 from typing import TypeVar
 
+from hdict.content import MissingFieldException
 from hdict.customjson import CustomJSONEncoder, stringfy
 from hdict.pipeline import pipeline
 
@@ -43,7 +44,8 @@ class frozenhdict(UserDict, dict[str, VT]):
     >>> d = frozenhdict({"x": 3}, y=5)
     >>> d.data
     {'x': 3, 'y': 5, '_id': 'r5A2Mh6vRRO5rxi5nfXv1myeguGSTmqHuHev38qM', '_ids': {'x': 'KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr', 'y': 'ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2'}}
-
+    >>> from hdict import _
+    >>> d >>= _.z(lambda v, x: v - x)
     """
 
     _evaluated = None

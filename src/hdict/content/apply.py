@@ -235,6 +235,12 @@ class apply(AbsCloneable, AbsSampleable):
             return applyOut(self, item)
         return self.__getattribute__(item)  # pragma: no cover
 
+    def __rshift__(self, other):  # pragma: no cover
+        raise Exception(f"Cannot apply before specifying the output field.")
+
+    def __rrshift__(self, other):  # pragma: no cover
+        raise Exception(f"Cannot apply before specifying the output field.")
+
     def __repr__(self):
         if not self.isevaluated:
             from hdict.content.default import default

@@ -64,12 +64,12 @@ class CustomJSONEncoder(JSONEncoder):
             }
         },
         y: 5,
-        df: "«{0: {0: 1, 1: 3}, 1: {0: 2, 1: 4}}»",
+        df: "‹{0: {0: 1, 1: 3}, 1: {0: 2, 1: 4}}›",
         ell: "...",
         df_: {
-            index: "«{0: 0, 1: 1}»",
-            0: "«{0: 1, 1: 3}»",
-            1: "«{0: 2, 1: 4}»",
+            index: "‹{0: 0, 1: 1}›",
+            0: "‹{0: 1, 1: 3}›",
+            1: "‹{0: 2, 1: 4}›",
             _id: "Zrz1JpxxZz7HIZDWPjdZEvMsqClGQnH7qcIqzhOb",
             _ids: {
                 index: "DQa5yWRkGo-9FLqmaST8pbElYdUEgqF8xPvip6-3",
@@ -97,12 +97,12 @@ class CustomJSONEncoder(JSONEncoder):
                 }
             },
             y: 5,
-            df: "«{0: {0: 1, 1: 3}, 1: {0: 2, 1: 4}}»",
+            df: "‹{0: {0: 1, 1: 3}, 1: {0: 2, 1: 4}}›",
             ell: "...",
             df_: {
-                index: "«{0: 0, 1: 1}»",
-                0: "«{0: 1, 1: 3}»",
-                1: "«{0: 2, 1: 4}»",
+                index: "‹{0: 0, 1: 1}›",
+                0: "‹{0: 1, 1: 3}›",
+                1: "‹{0: 2, 1: 4}›",
                 _id: "Zrz1JpxxZz7HIZDWPjdZEvMsqClGQnH7qcIqzhOb",
                 _ids: {
                     index: "DQa5yWRkGo-9FLqmaST8pbElYdUEgqF8xPvip6-3",
@@ -119,9 +119,9 @@ class CustomJSONEncoder(JSONEncoder):
             }
         },
         z: 9,
-        c: "«[1 2 3]»",
-        d: "«{0: 1, 1: 2, 2: 3}»",
-        dd: "«[[1 2] [3 4]]»",
+        c: "‹[1 2 3]›",
+        d: "‹{0: 1, 1: 2, 2: 3}›",
+        dd: "‹[[1 2] [3 4]]›",
         _id: "75i4qCm0ZAOdRV9TWDeUNQ7GuGmWWMQ8dndlVEsm",
         _ids: {
             b: "VRlid5klewaC1bro7soJEr8Ynmt-N9YCNjW8iPN0",
@@ -169,11 +169,11 @@ class CustomJSONEncoder(JSONEncoder):
             #     return str(obj)
             if not isinstance(obj, (dict, list, str, int, float, bytearray, bool)):
                 if obj.__class__.__name__ in ["DataFrame", "Series"]:
-                    # «str()» is to avoid nested identation
-                    return f"«{truncate(str(obj.to_dict()), self.width)}»"
+                    # ‹str()› is to avoid nested identation
+                    return f"‹{truncate(str(obj.to_dict()), self.width)}›"
                 if obj.__class__.__name__ == "ndarray":
                     txt = str(obj).replace("\n", "")
-                    return f"«{truncate(txt, self.width)}»"
+                    return f"‹{truncate(txt, self.width)}›"
                 return truncate(str(obj).replace("\n", ""), self.width)
         return JSONEncoder.default(self, obj)  # pragma: no cover
 
@@ -195,7 +195,7 @@ def truncate(txt, width=200):
     'lk···'
     """
     if len(txt) > width:
-        txt = txt[:width] + ("···»" if txt.endswith("»") else ("···)" if txt.endswith(")") else "···"))
+        txt = txt[:width] + ("···›" if txt.endswith("›") else ("···)" if txt.endswith(")") else "···"))
     return txt
 
 
