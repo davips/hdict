@@ -122,14 +122,14 @@ class field(AbsCloneable):
             self.content.finish_clone(data, out, previous)
         self._finished = True
 
-    def __call__(self, f: Union[callable, "apply", "field"], *applied_args, fhosh: Hosh = None, **applied_kwargs):
-        from hdict.content.apply import apply
-        if self.finished:
-            raise Exception(f"Cannot convert a finished 'field' object into 'apply': '{self.name}'.")
-        a = apply(f, *applied_args, fhosh=fhosh or self._hosh, **applied_kwargs)
-        if self.name != "_":
-            a = a(self.name)
-        return a
+    # def __call__(self, f: Union[callable, "apply", "field"], *applied_args, fhosh: Hosh = None, **applied_kwargs):
+    #     from hdict.content.apply import apply
+    #     if self.finished:
+    #         raise Exception(f"Cannot convert a finished 'field' object into 'apply': '{self.name}'.")
+    #     a = apply(f, *applied_args, fhosh=fhosh or self._hosh, **applied_kwargs)
+    #     if self.name != "_":
+    #         a = a(self.name)
+    #     return a
 
     def __repr__(self):
         if not self.finished:
