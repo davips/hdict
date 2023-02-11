@@ -385,26 +385,26 @@ class hdict(dict[str, VT]):
         >>> d.show(colored=False)
         {
             x: λ(),
-            _id: "GJC7Qc4lmfpP32nUEG6UAe2fL35KL1wDnubPFgJS",
+            _id: GJC7Qc4lmfpP32nUEG6UAe2fL35KL1wDnubPFgJS,
             _ids: {
-                x: "uOjLdXgq4zFpx0Hw7Ofsj1PiXt64oSuLOFpWtD2B"
+                x: uOjLdXgq4zFpx0Hw7Ofsj1PiXt64oSuLOFpWtD2B
             }
         }
         >>> d.evaluate()
         >>> d.show(colored=False)
         {
             x: 2,
-            _id: "GJC7Qc4lmfpP32nUEG6UAe2fL35KL1wDnubPFgJS",
+            _id: GJC7Qc4lmfpP32nUEG6UAe2fL35KL1wDnubPFgJS,
             _ids: {
-                x: "uOjLdXgq4zFpx0Hw7Ofsj1PiXt64oSuLOFpWtD2B"
+                x: uOjLdXgq4zFpx0Hw7Ofsj1PiXt64oSuLOFpWtD2B
             }
         }
         >>> d.evaluated.show(colored=False)
         {
             x: 2,
-            _id: "GJC7Qc4lmfpP32nUEG6UAe2fL35KL1wDnubPFgJS",
+            _id: GJC7Qc4lmfpP32nUEG6UAe2fL35KL1wDnubPFgJS,
             _ids: {
-                x: "uOjLdXgq4zFpx0Hw7Ofsj1PiXt64oSuLOFpWtD2B"
+                x: uOjLdXgq4zFpx0Hw7Ofsj1PiXt64oSuLOFpWtD2B
             }
         }
         """

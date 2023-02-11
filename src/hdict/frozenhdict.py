@@ -57,18 +57,31 @@ class frozenhdict(UserDict, dict[str, VT]):
             y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2
         },
         v: ✗ missing ✗
-    } » λ(v x)
-    >>> d >>= {"v": 7} >> d
+    } » z=λ(v x)
+    >>> d = {"v": 7} >> d
     >>> d.show(colored=False)
-    {
-        y: 4,
-        v: 7,
-        z: λ(v 2),
-        _id: "ahok8O56sFnLYOmbZhLBj7TgCxhisjvPUMX16d8T",
+    {'v': 7} » {
+        x: 3,
+        y: 5,
+        _id: r5A2Mh6vRRO5rxi5nfXv1myeguGSTmqHuHev38qM,
         _ids: {
-            y: "W3QJJ0uPoAbcbwCXeTGjCUvqDvQiRByTufh5c1j5",
-            v: "eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf",
-            z: "ol4yTUnI3nuvFu5Hk7bHxJaC-ynhiINl0Tqq4Mr2"
+            x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+            y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2
+        },
+        v: ✗ missing ✗
+    } » z=λ(v x)
+    >>> (_() >> d).show(colored=False)
+    {
+        v: 7,
+        x: 3,
+        y: 5,
+        z: λ(v x),
+        _id: -a24f2g4z-c-tPEss6G8WEd7h8zMopCCsCdQowjL,
+        _ids: {
+            v: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf,
+            x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+            y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+            z: .beBfajsUjKto9qdBCKsLmBgsaNPpJiyz24P9.qg
         }
     }
     """
@@ -102,7 +115,7 @@ class frozenhdict(UserDict, dict[str, VT]):
     def __rrshift__(self, other):
         from hdict.hdict_ import hdict
         if isinstance(other, dict) and not isinstance(other, (hdict, frozenhdict)):
-            return pipeline(other, self)
+            return pipeline(other, self, missing={self.id: self.missing})
         return NotImplemented  # pragma: no cover
 
     def __rshift__(self, other0):
@@ -142,7 +155,7 @@ class frozenhdict(UserDict, dict[str, VT]):
                 return frozenhdict(data, _previous=self.data)
         except MissingFieldException as e:
             if isinstance(other0, (pipeline, dict, applyOut)):
-                return pipeline(self, other0, missing=e.args[0])
+                return pipeline(self, other0, missing={self.id: e.args[0]})
             else:
                 print(type(other0))
                 raise e from None
@@ -171,9 +184,9 @@ class frozenhdict(UserDict, dict[str, VT]):
         >>> hdict.fromdict({"x": value(5, hosh="0123456789012345678901234567890123456789")}, {"x": "0123456789012345678901234567890123456789"}).show(colored=False)
         {
             x: 5,
-            _id: "bi5Qdbh-zgA1ZQdxGhxqjaKaQROtxk1VCPRZhMOq",
+            _id: bi5Qdbh-zgA1ZQdxGhxqjaKaQROtxk1VCPRZhMOq,
             _ids: {
-                x: "0123456789012345678901234567890123456789"
+                x: 0123456789012345678901234567890123456789
             }
         }
         """

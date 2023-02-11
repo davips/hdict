@@ -60,7 +60,8 @@ class applyOut(AbsContent, AbsSampleable):
         return NotImplemented  # pragma: no cover
 
     def __repr__(self):
-        return repr(self.nested)
+        out = "" if self.nested.finished else f"{self.out}="
+        return out + repr(self.nested)
 
     #
     #     Traceback (most recent call last):

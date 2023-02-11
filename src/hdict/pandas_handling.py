@@ -37,16 +37,16 @@ def explode_df(df) -> value:
             index: "‹{'a': 'a', 'b': 'b', 'c': 'c'}›",
             x: "‹{'a': 1, 'b': 2, 'c': 3}›",
             y: "‹{'a': 5, 'b': 6, 'c': 7}›",
-            _id: "CO3m4w1vqM.etZXkoHQoNxA.PS.kQI-LomW.H6VC",
+            _id: CO3m4w1vqM.etZXkoHQoNxA.PS.kQI-LomW.H6VC,
             _ids: {
-                index: "HBNoEs58wCDhsdWWisp0sjMwsWmNMXuwaGFE9UAt",
-                x: "3F.7UkfLr2tpB-FxATaRJYIpbYpg9oa1r5M31M0j",
-                y: "bqYjHGDn-brebdANtxtNo4OkpOXfDwwVYejlzo4t"
+                index: HBNoEs58wCDhsdWWisp0sjMwsWmNMXuwaGFE9UAt,
+                x: 3F.7UkfLr2tpB-FxATaRJYIpbYpg9oa1r5M31M0j,
+                y: bqYjHGDn-brebdANtxtNo4OkpOXfDwwVYejlzo4t
             }
         },
-        _id: "qMP.-f8p3zIrmTuOOqBLCVurT6uIIfihnR3rZne4",
+        _id: qMP.-f8p3zIrmTuOOqBLCVurT6uIIfihnR3rZne4,
         _ids: {
-            df: "CO3m4w1vqM.etZXkoHQoNxA.PS.kQI-LomW.H6VC"
+            df: CO3m4w1vqM.etZXkoHQoNxA.PS.kQI-LomW.H6VC
         }
     }
     >>> d.df

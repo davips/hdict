@@ -50,7 +50,7 @@ class field(AbsCloneable):
         _id: 0000000000000000000000000000000000000000,
         _ids: {}
     }
-    >>> d >>= {"x": 3, "y": 5} >> _.z(lambda x, y: x + y)
+    >>> d >>= {"x": 3, "y": 5} >> _(lambda x, y: x + y).z
     >>> d.show(colored=False)
     {
         x: 3,
@@ -63,10 +63,10 @@ class field(AbsCloneable):
             z: Q1ypbWuXlEf9MeJNT1wyFcA8V0.DvHEFOeCidBrZ
         }
     }
-    >>> d >>= {"x": 3, "y": 5} >> _.x(lambda x, y: x + y)
+    >>> d >>= {"x": 3, "y": 5} >> _(lambda x, y: x + y).x
     >>> d.x
     8
-    >>> d["x"] = _._(lambda x, y: x + y)
+    >>> d["x"] = _(lambda x, y: x + y)
     >>> d.x
     13
     """

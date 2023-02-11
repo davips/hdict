@@ -35,16 +35,16 @@ class CustomJSONEncoder(JSONEncoder):
     {
         d: {
             x: 3,
-            _id: "fBb9FHVYpHC7vyM-B8UrXuN4oCcQ4Y7pnQ6oSK3J",
+            _id: fBb9FHVYpHC7vyM-B8UrXuN4oCcQ4Y7pnQ6oSK3J,
             _ids: {
-                x: "KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr"
+                x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr
             }
         },
         y: 5,
-        _id: "YyAtuyiPhC7pHV-ADAoh1Lp30TM-08swr40vOmk1",
+        _id: YyAtuyiPhC7pHV-ADAoh1Lp30TM-08swr40vOmk1,
         _ids: {
-            d: "fBb9FHVYpHC7vyM-B8UrXuN4oCcQ4Y7pnQ6oSK3J",
-            y: "ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2"
+            d: fBb9FHVYpHC7vyM-B8UrXuN4oCcQ4Y7pnQ6oSK3J,
+            y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2
         }
     }
     >>> from pandas.core.frame import DataFrame, Series
@@ -58,9 +58,9 @@ class CustomJSONEncoder(JSONEncoder):
     {
         d: {
             x: 3,
-            _id: "fBb9FHVYpHC7vyM-B8UrXuN4oCcQ4Y7pnQ6oSK3J",
+            _id: fBb9FHVYpHC7vyM-B8UrXuN4oCcQ4Y7pnQ6oSK3J,
             _ids: {
-                x: "KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr"
+                x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr
             }
         },
         y: 5,
@@ -70,19 +70,19 @@ class CustomJSONEncoder(JSONEncoder):
             index: "‹{0: 0, 1: 1}›",
             0: "‹{0: 1, 1: 3}›",
             1: "‹{0: 2, 1: 4}›",
-            _id: "Zrz1JpxxZz7HIZDWPjdZEvMsqClGQnH7qcIqzhOb",
+            _id: Zrz1JpxxZz7HIZDWPjdZEvMsqClGQnH7qcIqzhOb,
             _ids: {
-                index: "DQa5yWRkGo-9FLqmaST8pbElYdUEgqF8xPvip6-3",
-                0: "8ianf2LAQlxK7ZFvdOX.avsuK4L9FjUiMC7sM2Lm",
-                1: "IIffH-qkWUFB.-VFd0z6BBrIpfvNuc8GPxlQYgg3"
+                index: DQa5yWRkGo-9FLqmaST8pbElYdUEgqF8xPvip6-3,
+                0: 8ianf2LAQlxK7ZFvdOX.avsuK4L9FjUiMC7sM2Lm,
+                1: IIffH-qkWUFB.-VFd0z6BBrIpfvNuc8GPxlQYgg3
             }
         },
-        _id: "VRlid5klewaC1bro7soJEr8Ynmt-N9YCNjW8iPN0",
+        _id: VRlid5klewaC1bro7soJEr8Ynmt-N9YCNjW8iPN0,
         _ids: {
-            d: "fBb9FHVYpHC7vyM-B8UrXuN4oCcQ4Y7pnQ6oSK3J",
-            y: "ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2",
-            df: "Zrz1JpxxZz7HIZDWPjdZEvMsqClGQnH7qcIqzhOb",
-            ell: "P1oPe-8hTjTdV6gKov4oIQnmTUXyD2fU6E7C8MS6"
+            d: fBb9FHVYpHC7vyM-B8UrXuN4oCcQ4Y7pnQ6oSK3J,
+            y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+            df: Zrz1JpxxZz7HIZDWPjdZEvMsqClGQnH7qcIqzhOb,
+            ell: P1oPe-8hTjTdV6gKov4oIQnmTUXyD2fU6E7C8MS6
         }
     }
     >>> from numpy import array
@@ -91,9 +91,9 @@ class CustomJSONEncoder(JSONEncoder):
         b: {
             d: {
                 x: 3,
-                _id: "fBb9FHVYpHC7vyM-B8UrXuN4oCcQ4Y7pnQ6oSK3J",
+                _id: fBb9FHVYpHC7vyM-B8UrXuN4oCcQ4Y7pnQ6oSK3J,
                 _ids: {
-                    x: "KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr"
+                    x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr
                 }
             },
             y: 5,
@@ -103,32 +103,32 @@ class CustomJSONEncoder(JSONEncoder):
                 index: "‹{0: 0, 1: 1}›",
                 0: "‹{0: 1, 1: 3}›",
                 1: "‹{0: 2, 1: 4}›",
-                _id: "Zrz1JpxxZz7HIZDWPjdZEvMsqClGQnH7qcIqzhOb",
+                _id: Zrz1JpxxZz7HIZDWPjdZEvMsqClGQnH7qcIqzhOb,
                 _ids: {
-                    index: "DQa5yWRkGo-9FLqmaST8pbElYdUEgqF8xPvip6-3",
-                    0: "8ianf2LAQlxK7ZFvdOX.avsuK4L9FjUiMC7sM2Lm",
-                    1: "IIffH-qkWUFB.-VFd0z6BBrIpfvNuc8GPxlQYgg3"
+                    index: DQa5yWRkGo-9FLqmaST8pbElYdUEgqF8xPvip6-3,
+                    0: 8ianf2LAQlxK7ZFvdOX.avsuK4L9FjUiMC7sM2Lm,
+                    1: IIffH-qkWUFB.-VFd0z6BBrIpfvNuc8GPxlQYgg3
                 }
             },
-            _id: "VRlid5klewaC1bro7soJEr8Ynmt-N9YCNjW8iPN0",
+            _id: VRlid5klewaC1bro7soJEr8Ynmt-N9YCNjW8iPN0,
             _ids: {
-                d: "fBb9FHVYpHC7vyM-B8UrXuN4oCcQ4Y7pnQ6oSK3J",
-                y: "ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2",
-                df: "Zrz1JpxxZz7HIZDWPjdZEvMsqClGQnH7qcIqzhOb",
-                ell: "P1oPe-8hTjTdV6gKov4oIQnmTUXyD2fU6E7C8MS6"
+                d: fBb9FHVYpHC7vyM-B8UrXuN4oCcQ4Y7pnQ6oSK3J,
+                y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+                df: Zrz1JpxxZz7HIZDWPjdZEvMsqClGQnH7qcIqzhOb,
+                ell: P1oPe-8hTjTdV6gKov4oIQnmTUXyD2fU6E7C8MS6
             }
         },
         z: 9,
         c: "‹[1 2 3]›",
         d: "‹{0: 1, 1: 2, 2: 3}›",
         dd: "‹[[1 2] [3 4]]›",
-        _id: "75i4qCm0ZAOdRV9TWDeUNQ7GuGmWWMQ8dndlVEsm",
+        _id: 75i4qCm0ZAOdRV9TWDeUNQ7GuGmWWMQ8dndlVEsm,
         _ids: {
-            b: "VRlid5klewaC1bro7soJEr8Ynmt-N9YCNjW8iPN0",
-            z: "GuwIQCrendfKXZr5jGfrUwoP-8TWMhmLHYrja2yj",
-            c: "QkfVsy7ITAmoIiOFgbYpsQodBSIYshhiUm3v2r8d",
-            d: "5iU-DAFL3XTLno88g056s2G12RidCKkCgLCLIwB5",
-            dd: "fVj30baMeet4PcN9ZY-8uMpFin89FY8h8MI4RkDd"
+            b: VRlid5klewaC1bro7soJEr8Ynmt-N9YCNjW8iPN0,
+            z: GuwIQCrendfKXZr5jGfrUwoP-8TWMhmLHYrja2yj,
+            c: QkfVsy7ITAmoIiOFgbYpsQodBSIYshhiUm3v2r8d,
+            d: 5iU-DAFL3XTLno88g056s2G12RidCKkCgLCLIwB5,
+            dd: fVj30baMeet4PcN9ZY-8uMpFin89FY8h8MI4RkDd
         }
     }
     >>> hdict(s={1,3,2}, t={3,1,2}, u={2,1,3}, v={2,1,3}).show(colored=False)
@@ -137,12 +137,12 @@ class CustomJSONEncoder(JSONEncoder):
         t: "{1, 2, 3}",
         u: "{1, 2, 3}",
         v: "{1, 2, 3}",
-        _id: "0WaiiSdaTRaHqFjzD-Y8Mm2v1Ym.Nj9UUxPIVMax",
+        _id: 0WaiiSdaTRaHqFjzD-Y8Mm2v1Ym.Nj9UUxPIVMax,
         _ids: {
-            s: "kDsYXHYuZJ9o7GXZLx6lYu0GpEqyrCmBpt0xoy60",
-            t: "kDsYXHYuZJ9o7GXZLx6lYu0GpEqyrCmBpt0xoy60",
-            u: "kDsYXHYuZJ9o7GXZLx6lYu0GpEqyrCmBpt0xoy60",
-            v: "kDsYXHYuZJ9o7GXZLx6lYu0GpEqyrCmBpt0xoy60"
+            s: kDsYXHYuZJ9o7GXZLx6lYu0GpEqyrCmBpt0xoy60,
+            t: kDsYXHYuZJ9o7GXZLx6lYu0GpEqyrCmBpt0xoy60,
+            u: kDsYXHYuZJ9o7GXZLx6lYu0GpEqyrCmBpt0xoy60,
+            v: kDsYXHYuZJ9o7GXZLx6lYu0GpEqyrCmBpt0xoy60
         }
     }
     """

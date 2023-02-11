@@ -20,15 +20,17 @@
 #  part of this work is illegal and it is unethical regarding the effort and
 #  time spent here.
 #
+import operator
+from functools import reduce
 from random import Random
 
 from hdict.content.abs.abssampleable import AbsSampleable
 
 
 class pipeline(AbsSampleable):
-    def __init__(self, *args, missing=None):
+    def __init__(self, *args, missing: dict = None):
         self.steps = args
-        self.missing = missing
+        self.missing = missing or {}
         self.hasmissing = missing is not None
 
     def sample(self, rnd: int | Random = None):
@@ -37,37 +39,38 @@ class pipeline(AbsSampleable):
         new.missing = self.missing
         return new
 
-    def __rrshift__(self, other):
-        from hdict.content.applyout import applyOut
-        if not isinstance(other, pipeline) and isinstance(other, (applyOut, dict)):  # 'dict' includes 'hdict', 'frozenhdict'
-            # REMINDER: all combinations of steps are valid pipelines
-            return pipeline(other, self.clean).apply()
-        return NotImplemented  # pragma: no cover
-
     @property
     def clean(self):
         new = pipeline()
         new.steps = self.steps
         return new
 
+    def __rrshift__(self, other):
+        from hdict.content.applyout import applyOut
+        # REMINDER: 'dict' includes 'hdict', 'frozenhdict'
+        if not isinstance(other, pipeline) and isinstance(other, (applyOut, dict)):
+            # REMINDER: all combinations of steps are valid pipelines
+            return pipeline(other, self.clean, missing=self.missing).apply()
+        return NotImplemented  # pragma: no cover
+
     def __rshift__(self, other):
         from hdict import apply
         from hdict.content.applyout import applyOut
         if isinstance(other, pipeline):
-            return pipeline(self.clean, other.clean, missing=self.missing).apply()
+            return pipeline(*iter(self), *iter(other), missing=self.missing).apply()
         if isinstance(other, (applyOut, dict)):
             return pipeline(self, other, missing=self.missing)
         if isinstance(other, apply):  # pragma: no cover
             raise Exception(f"Cannot apply before specifying the output field.")
         return NotImplemented  # pragma: no cover
 
-    def __getattr__(self, item):
-        mudar
-        if self.missing is not None:  # pragma: no cover
+    def __getattr__(self, item): # pragma: no cover
+        if self.missing:
+            self.show()
             raise Exception(f"'pipeline' has no attribute '{item}'.\n"
                             f"If you are expecting a 'hdict' instead of a 'pipeline',\n"
-                            f"you need to provide the missing field '{self.missing}' before application.")
-        return self.__getattribute__(item)  # pragma: no cover
+                            f"you need to provide the hdict its respective missing field '{self.missing}' before application.")
+        return self.__getattribute__(item)
 
     def __repr__(self):
         return " » ".join(repr(step) for step in self.steps)
@@ -78,12 +81,23 @@ class pipeline(AbsSampleable):
 
     def astext(self, colored=True, key_quotes=False, extra_items=None):
         r"""Textual representation of a pipeline object"""
-        if self.missing and not extra_items:
-            extra_items = {self.missing: "✗ missing ✗"}
+        from hdict.frozenhdict import frozenhdict
+        from hdict.hdict_ import hdict
+        extra_items = extra_items or {}
+        if self.missing:
+            if len(self.missing) != 1:
+                raise Exception(f"'missing' should have only one item.")
         out = []
-        for step in self.steps:
+        extra_items_ = extra_items.copy()
+        for step in self:
             if hasattr(step, "astext"):
-                out.append(step.astext(colored=colored, key_quotes=key_quotes, extra_items=extra_items))
+                delete = False
+                if isinstance(step, (frozenhdict, hdict)) and step.id in self.missing:
+                    extra_items_[self.missing[step.id]] = "✗ missing ✗"
+                    delete = True
+                out.append(step.astext(colored=colored, key_quotes=key_quotes, extra_items=extra_items_))
+                if delete:
+                    del extra_items_[self.missing[step.id]]
             else:
                 out.append(repr(step))
         return " » ".join(out)
@@ -128,26 +142,13 @@ class pipeline(AbsSampleable):
         """
         from hdict.hdict_ import hdict
         from hdict.frozenhdict import frozenhdict
-        if self.missing is not None:  # pragma: no cover
-            raise Exception(f"Cannot apply a pipeline before providing the missing field '{self.missing}'.")
+        if self.missing:  # pragma: no cover
+            # Cannot apply a pipeline before providing the missing field.
+            return self
         if isinstance(self.steps[0], dict) and not isinstance(self.steps[0], (hdict, frozenhdict)):
-            raise Exception(f"Cannot apply a pipeline started by a 'dict'. It is incomplete.")  # pragma: no cover
-        result = NoOp
-        missing = []
-        for step in self:
-            result >>= step
-            if isinstance(result, pipeline) and result.missing is not None:
-                # REMINDER: '{"y": 4} >> hdict()' is necessarily a pipeline.
-                #   Reason: dicts are intended to provide application as well 'hdict() >> {"y": 4, "z": _(f)}'
-                #           and can't depend on futures values (those to the right of '>>').
-                missing.append(result.missing)
-        if missing:#TODO: remove exception
-            self.show()
-            msg = f"Cannot apply incomplete pipeline.\n" \
-                  f"Missing fields: '{missing}'.\n" \
-                  f"The fields should appear before application in the pipeline."
-            raise Exception(msg)
-        return result
+            # Cannot apply a pipeline started by a 'dict'.
+            return self
+        return reduce(operator.rshift, self.steps)
 
     def evaluate(self):
         result = self.apply()
@@ -159,11 +160,3 @@ class pipeline(AbsSampleable):
                 yield from step
             else:
                 yield step
-
-
-class NoOp:
-    def __rshift__(self, other):
-        return other
-
-
-NoOp = NoOp()
