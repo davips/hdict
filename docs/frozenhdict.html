@@ -52,9 +52,10 @@
 import json
 import re
 from collections import UserDict
-from functools import cached_property
 from typing import TypeVar
 
+from hdict.aux import handle_rshift
+from hdict.content import MissingFieldException
 from hdict.customjson import CustomJSONEncoder, stringfy
 from hdict.pipeline import pipeline
 
@@ -71,7 +72,66 @@ class frozenhdict(UserDict, dict[str, VT]):
     &gt;&gt;&gt; d = frozenhdict({&#34;x&#34;: 3}, y=5)
     &gt;&gt;&gt; d.data
     {&#39;x&#39;: 3, &#39;y&#39;: 5, &#39;_id&#39;: &#39;r5A2Mh6vRRO5rxi5nfXv1myeguGSTmqHuHev38qM&#39;, &#39;_ids&#39;: {&#39;x&#39;: &#39;KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr&#39;, &#39;y&#39;: &#39;ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2&#39;}}
-
+    &gt;&gt;&gt; from hdict import _
+    &gt;&gt;&gt; d &gt;&gt;= _(lambda v, x: v - x).z
+    &gt;&gt;&gt; str(d)
+    &#39;{x: 3, y: 5, _id: &#34;r5A2Mh6vRRO5rxi5nfXv1myeguGSTmqHuHev38qM&#34;, _ids: {x: &#34;KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr&#34;, y: &#34;ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2&#34;}} » z=λ(v x)&#39;
+    &gt;&gt;&gt; d.show(colored=False)
+    {
+        x: 3,
+        y: 5,
+        _id: r5A2Mh6vRRO5rxi5nfXv1myeguGSTmqHuHev38qM,
+        _ids: {
+            x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+            y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2
+        },
+        v: ✗ missing ✗
+    } » z=λ(v x)
+    &gt;&gt;&gt; d = {&#34;v&#34;: 7} &gt;&gt; d
+    &gt;&gt;&gt; d.show(colored=False)
+    {
+        v: 7,
+        x: 3,
+        y: 5,
+        z: λ(v x),
+        _id: -a24f2g4z-c-tPEss6G8WEd7h8zMopCCsCdQowjL,
+        _ids: {
+            v: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf,
+            x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+            y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+            z: .beBfajsUjKto9qdBCKsLmBgsaNPpJiyz24P9.qg
+        }
+    }
+    &gt;&gt;&gt; d = _() &gt;&gt; d
+    &gt;&gt;&gt; d.show(colored=False)
+    {
+        v: 7,
+        x: 3,
+        y: 5,
+        z: λ(v x),
+        _id: -a24f2g4z-c-tPEss6G8WEd7h8zMopCCsCdQowjL,
+        _ids: {
+            v: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf,
+            x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+            y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+            z: .beBfajsUjKto9qdBCKsLmBgsaNPpJiyz24P9.qg
+        }
+    }
+    &gt;&gt;&gt; d = {&#34;a&#34;: 5} &gt;&gt; d
+    &gt;&gt;&gt; d.show(colored=False)
+    {&#39;a&#39;: 5} » {
+        v: 7,
+        x: 3,
+        y: 5,
+        z: λ(v x),
+        _id: -a24f2g4z-c-tPEss6G8WEd7h8zMopCCsCdQowjL,
+        _ids: {
+            v: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf,
+            x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+            y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+            z: .beBfajsUjKto9qdBCKsLmBgsaNPpJiyz24P9.qg
+        }
+    }
     &#34;&#34;&#34;
 
     _evaluated = None
@@ -100,38 +160,25 @@ class frozenhdict(UserDict, dict[str, VT]):
         self.data[&#34;_id&#34;] = self.id = self.hosh.id
         self.data[&#34;_ids&#34;] = self.ids
 
+    def __rrshift__(self, other):
+        from hdict.hdict_ import hdict
+
+        if isinstance(other, dict) and not isinstance(other, (hdict, frozenhdict)):
+            return pipeline(hdict() &gt;&gt; other, self)
+        return NotImplemented  # pragma: no cover
+
     def __rshift__(self, other):
-        from hdict import hdict
         from hdict.content.applyout import applyOut
 
-        if isinstance(other, pipeline):
-            result = self
-            for step in other.steps:
-                result &gt;&gt;= step
-            return result
-        data: dict[str, object] = self.data.copy()
-        if isinstance(other, hdict):  # merge keeping ids
-            other = other.frozen
-        if isinstance(other, frozenhdict):  # merge keeping ids
-            other = other.data
-        if isinstance(other, applyOut):
-            other = {other.out: other.nested}
-        if isinstance(other, dict):  # merge keeping ids of AbsContent objects if any is present
-            for k, v in other.items():
-                if isinstance(v, applyOut):  # pragma: no cover
-                    raise Exception(&#34;Cannot assign output through both apply and dict-key: &#39;&gt;&gt; {out: apply(...)(out)}&#39;.&#34;)
-                if isinstance(k, tuple):
-                    from hdict.content.handling import handle_multioutput
-
-                    handle_multioutput(data, k, v)
-                elif isinstance(k, str):
-                    data[k] = v
-                else:  # pragma: no cover
-                    raise Exception(f&#34;Invalid type for input field specification: {type(k)}&#34;)
-            del data[&#34;_id&#34;]
-            del data[&#34;_ids&#34;]
-            return frozenhdict(data, _previous=self.data)
-        return NotImplemented  # pragma: no cover
+        try:
+            return handle_rshift(self, other)
+        except MissingFieldException as e:
+            # REMINDER: dict includes hdict/frozenhdict.
+            if isinstance(other, (pipeline, dict, applyOut)):
+                return pipeline(self, other, missing={self.id: e.args[0]})
+            else:  # pragma: no cover
+                print(type(other))
+                raise e from None
 
     def __getitem__(self, item):  # pragma: no cover
         return self.data[item] if item in [&#34;_id&#34;, &#34;_ids&#34;] else self.data[item].value
@@ -156,9 +203,9 @@ class frozenhdict(UserDict, dict[str, VT]):
         &gt;&gt;&gt; hdict.fromdict({&#34;x&#34;: value(5, hosh=&#34;0123456789012345678901234567890123456789&#34;)}, {&#34;x&#34;: &#34;0123456789012345678901234567890123456789&#34;}).show(colored=False)
         {
             x: 5,
-            _id: &#34;bi5Qdbh-zgA1ZQdxGhxqjaKaQROtxk1VCPRZhMOq&#34;,
+            _id: bi5Qdbh-zgA1ZQdxGhxqjaKaQROtxk1VCPRZhMOq,
             _ids: {
-                x: &#34;0123456789012345678901234567890123456789&#34;
+                x: 0123456789012345678901234567890123456789
             }
         }
         &#34;&#34;&#34;
@@ -223,7 +270,7 @@ class frozenhdict(UserDict, dict[str, VT]):
             self._asdicts = dic
         return self._asdicts
 
-    @cached_property
+    @property
     def asdicts_hoshes_noneval(self):
         from hdict.content.abs.abscloneable import AbsCloneable
 
@@ -246,18 +293,22 @@ class frozenhdict(UserDict, dict[str, VT]):
         dic[&#34;_ids&#34;] = self.ids.copy()
         return dic, hoshes
 
-    def astext(self, colored=True, key_quotes=False):
+    def astext(self, colored=True, key_quotes=False, extra_items=None):
         r&#34;&#34;&#34;Textual representation of a frozenidict object&#34;&#34;&#34;
         dicts, hoshes = self.asdicts_hoshes_noneval
+        if extra_items:
+            dicts.update(extra_items)
         txt = json.dumps(dicts, indent=4, ensure_ascii=False, cls=CustomJSONEncoder)
 
         # Put colors after json, to avoid escaping ansi codes.  TODO: check how HTML behaves here
-        if colored:
-            for h in hoshes:
-                txt = txt.replace(f&#39;&#34;{h.id}&#34;&#39;, repr(h))
+        for h in hoshes:
+            txt = txt.replace(f&#39;&#34;{h.id}&#34;&#39;, repr(h)) if colored else txt.replace(f&#39;&#34;{h.id}&#34;&#39;, h.id)
         txt = re.sub(r&#39;(&#34;: )&#34;(λ.+?)&#34;(?=,\n)&#39;, &#39;&#34;: \\2&#39;, txt)
         if not key_quotes:
-            txt = re.sub(r&#39;(?&lt;!: )&#34;([a-zA-Z0-9_ ]+?)&#34;(?=: )&#39;, &#34;\\1&#34;, txt)
+            txt = re.sub(r&#39;(?&lt;!: )&#34;([\-a-zA-Z0-9_ ]+?)&#34;(?=: )&#39;, &#34;\\1&#34;, txt)
+        if extra_items:
+            for v in extra_items.values():
+                txt = txt.replace(f&#39;&#34;{v}&#34;&#39;, f&#34;{v}&#34;)
         return txt
 
     def show(self, colored=True, key_quotes=False):
@@ -417,6 +468,66 @@ class frozenhdict(UserDict, dict[str, VT]):
 &gt;&gt;&gt; d = frozenhdict({&quot;x&quot;: 3}, y=5)
 &gt;&gt;&gt; d.data
 {'x': 3, 'y': 5, '_id': 'r5A2Mh6vRRO5rxi5nfXv1myeguGSTmqHuHev38qM', '_ids': {'x': 'KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr', 'y': 'ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2'}}
+&gt;&gt;&gt; from hdict import _
+&gt;&gt;&gt; d &gt;&gt;= _(lambda v, x: v - x).z
+&gt;&gt;&gt; str(d)
+'{x: 3, y: 5, _id: &quot;r5A2Mh6vRRO5rxi5nfXv1myeguGSTmqHuHev38qM&quot;, _ids: {x: &quot;KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr&quot;, y: &quot;ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2&quot;}} » z=λ(v x)'
+&gt;&gt;&gt; d.show(colored=False)
+{
+    x: 3,
+    y: 5,
+    _id: r5A2Mh6vRRO5rxi5nfXv1myeguGSTmqHuHev38qM,
+    _ids: {
+        x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+        y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2
+    },
+    v: ✗ missing ✗
+} » z=λ(v x)
+&gt;&gt;&gt; d = {&quot;v&quot;: 7} &gt;&gt; d
+&gt;&gt;&gt; d.show(colored=False)
+{
+    v: 7,
+    x: 3,
+    y: 5,
+    z: λ(v x),
+    _id: -a24f2g4z-c-tPEss6G8WEd7h8zMopCCsCdQowjL,
+    _ids: {
+        v: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf,
+        x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+        y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+        z: .beBfajsUjKto9qdBCKsLmBgsaNPpJiyz24P9.qg
+    }
+}
+&gt;&gt;&gt; d = _() &gt;&gt; d
+&gt;&gt;&gt; d.show(colored=False)
+{
+    v: 7,
+    x: 3,
+    y: 5,
+    z: λ(v x),
+    _id: -a24f2g4z-c-tPEss6G8WEd7h8zMopCCsCdQowjL,
+    _ids: {
+        v: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf,
+        x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+        y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+        z: .beBfajsUjKto9qdBCKsLmBgsaNPpJiyz24P9.qg
+    }
+}
+&gt;&gt;&gt; d = {&quot;a&quot;: 5} &gt;&gt; d
+&gt;&gt;&gt; d.show(colored=False)
+{'a': 5} » {
+    v: 7,
+    x: 3,
+    y: 5,
+    z: λ(v x),
+    _id: -a24f2g4z-c-tPEss6G8WEd7h8zMopCCsCdQowjL,
+    _ids: {
+        v: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf,
+        x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+        y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+        z: .beBfajsUjKto9qdBCKsLmBgsaNPpJiyz24P9.qg
+    }
+}
 </code></pre></div>
 <details class="source">
 <summary>
@@ -432,7 +543,66 @@ class frozenhdict(UserDict, dict[str, VT]):
     &gt;&gt;&gt; d = frozenhdict({&#34;x&#34;: 3}, y=5)
     &gt;&gt;&gt; d.data
     {&#39;x&#39;: 3, &#39;y&#39;: 5, &#39;_id&#39;: &#39;r5A2Mh6vRRO5rxi5nfXv1myeguGSTmqHuHev38qM&#39;, &#39;_ids&#39;: {&#39;x&#39;: &#39;KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr&#39;, &#39;y&#39;: &#39;ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2&#39;}}
-
+    &gt;&gt;&gt; from hdict import _
+    &gt;&gt;&gt; d &gt;&gt;= _(lambda v, x: v - x).z
+    &gt;&gt;&gt; str(d)
+    &#39;{x: 3, y: 5, _id: &#34;r5A2Mh6vRRO5rxi5nfXv1myeguGSTmqHuHev38qM&#34;, _ids: {x: &#34;KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr&#34;, y: &#34;ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2&#34;}} » z=λ(v x)&#39;
+    &gt;&gt;&gt; d.show(colored=False)
+    {
+        x: 3,
+        y: 5,
+        _id: r5A2Mh6vRRO5rxi5nfXv1myeguGSTmqHuHev38qM,
+        _ids: {
+            x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+            y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2
+        },
+        v: ✗ missing ✗
+    } » z=λ(v x)
+    &gt;&gt;&gt; d = {&#34;v&#34;: 7} &gt;&gt; d
+    &gt;&gt;&gt; d.show(colored=False)
+    {
+        v: 7,
+        x: 3,
+        y: 5,
+        z: λ(v x),
+        _id: -a24f2g4z-c-tPEss6G8WEd7h8zMopCCsCdQowjL,
+        _ids: {
+            v: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf,
+            x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+            y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+            z: .beBfajsUjKto9qdBCKsLmBgsaNPpJiyz24P9.qg
+        }
+    }
+    &gt;&gt;&gt; d = _() &gt;&gt; d
+    &gt;&gt;&gt; d.show(colored=False)
+    {
+        v: 7,
+        x: 3,
+        y: 5,
+        z: λ(v x),
+        _id: -a24f2g4z-c-tPEss6G8WEd7h8zMopCCsCdQowjL,
+        _ids: {
+            v: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf,
+            x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+            y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+            z: .beBfajsUjKto9qdBCKsLmBgsaNPpJiyz24P9.qg
+        }
+    }
+    &gt;&gt;&gt; d = {&#34;a&#34;: 5} &gt;&gt; d
+    &gt;&gt;&gt; d.show(colored=False)
+    {&#39;a&#39;: 5} » {
+        v: 7,
+        x: 3,
+        y: 5,
+        z: λ(v x),
+        _id: -a24f2g4z-c-tPEss6G8WEd7h8zMopCCsCdQowjL,
+        _ids: {
+            v: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf,
+            x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+            y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+            z: .beBfajsUjKto9qdBCKsLmBgsaNPpJiyz24P9.qg
+        }
+    }
     &#34;&#34;&#34;
 
     _evaluated = None
@@ -461,38 +631,25 @@ class frozenhdict(UserDict, dict[str, VT]):
         self.data[&#34;_id&#34;] = self.id = self.hosh.id
         self.data[&#34;_ids&#34;] = self.ids
 
+    def __rrshift__(self, other):
+        from hdict.hdict_ import hdict
+
+        if isinstance(other, dict) and not isinstance(other, (hdict, frozenhdict)):
+            return pipeline(hdict() &gt;&gt; other, self)
+        return NotImplemented  # pragma: no cover
+
     def __rshift__(self, other):
-        from hdict import hdict
         from hdict.content.applyout import applyOut
 
-        if isinstance(other, pipeline):
-            result = self
-            for step in other.steps:
-                result &gt;&gt;= step
-            return result
-        data: dict[str, object] = self.data.copy()
-        if isinstance(other, hdict):  # merge keeping ids
-            other = other.frozen
-        if isinstance(other, frozenhdict):  # merge keeping ids
-            other = other.data
-        if isinstance(other, applyOut):
-            other = {other.out: other.nested}
-        if isinstance(other, dict):  # merge keeping ids of AbsContent objects if any is present
-            for k, v in other.items():
-                if isinstance(v, applyOut):  # pragma: no cover
-                    raise Exception(&#34;Cannot assign output through both apply and dict-key: &#39;&gt;&gt; {out: apply(...)(out)}&#39;.&#34;)
-                if isinstance(k, tuple):
-                    from hdict.content.handling import handle_multioutput
-
-                    handle_multioutput(data, k, v)
-                elif isinstance(k, str):
-                    data[k] = v
-                else:  # pragma: no cover
-                    raise Exception(f&#34;Invalid type for input field specification: {type(k)}&#34;)
-            del data[&#34;_id&#34;]
-            del data[&#34;_ids&#34;]
-            return frozenhdict(data, _previous=self.data)
-        return NotImplemented  # pragma: no cover
+        try:
+            return handle_rshift(self, other)
+        except MissingFieldException as e:
+            # REMINDER: dict includes hdict/frozenhdict.
+            if isinstance(other, (pipeline, dict, applyOut)):
+                return pipeline(self, other, missing={self.id: e.args[0]})
+            else:  # pragma: no cover
+                print(type(other))
+                raise e from None
 
     def __getitem__(self, item):  # pragma: no cover
         return self.data[item] if item in [&#34;_id&#34;, &#34;_ids&#34;] else self.data[item].value
@@ -517,9 +674,9 @@ class frozenhdict(UserDict, dict[str, VT]):
         &gt;&gt;&gt; hdict.fromdict({&#34;x&#34;: value(5, hosh=&#34;0123456789012345678901234567890123456789&#34;)}, {&#34;x&#34;: &#34;0123456789012345678901234567890123456789&#34;}).show(colored=False)
         {
             x: 5,
-            _id: &#34;bi5Qdbh-zgA1ZQdxGhxqjaKaQROtxk1VCPRZhMOq&#34;,
+            _id: bi5Qdbh-zgA1ZQdxGhxqjaKaQROtxk1VCPRZhMOq,
             _ids: {
-                x: &#34;0123456789012345678901234567890123456789&#34;
+                x: 0123456789012345678901234567890123456789
             }
         }
         &#34;&#34;&#34;
@@ -584,7 +741,7 @@ class frozenhdict(UserDict, dict[str, VT]):
             self._asdicts = dic
         return self._asdicts
 
-    @cached_property
+    @property
     def asdicts_hoshes_noneval(self):
         from hdict.content.abs.abscloneable import AbsCloneable
 
@@ -607,18 +764,22 @@ class frozenhdict(UserDict, dict[str, VT]):
         dic[&#34;_ids&#34;] = self.ids.copy()
         return dic, hoshes
 
-    def astext(self, colored=True, key_quotes=False):
+    def astext(self, colored=True, key_quotes=False, extra_items=None):
         r&#34;&#34;&#34;Textual representation of a frozenidict object&#34;&#34;&#34;
         dicts, hoshes = self.asdicts_hoshes_noneval
+        if extra_items:
+            dicts.update(extra_items)
         txt = json.dumps(dicts, indent=4, ensure_ascii=False, cls=CustomJSONEncoder)
 
         # Put colors after json, to avoid escaping ansi codes.  TODO: check how HTML behaves here
-        if colored:
-            for h in hoshes:
-                txt = txt.replace(f&#39;&#34;{h.id}&#34;&#39;, repr(h))
+        for h in hoshes:
+            txt = txt.replace(f&#39;&#34;{h.id}&#34;&#39;, repr(h)) if colored else txt.replace(f&#39;&#34;{h.id}&#34;&#39;, h.id)
         txt = re.sub(r&#39;(&#34;: )&#34;(λ.+?)&#34;(?=,\n)&#39;, &#39;&#34;: \\2&#39;, txt)
         if not key_quotes:
-            txt = re.sub(r&#39;(?&lt;!: )&#34;([a-zA-Z0-9_ ]+?)&#34;(?=: )&#39;, &#34;\\1&#34;, txt)
+            txt = re.sub(r&#39;(?&lt;!: )&#34;([\-a-zA-Z0-9_ ]+?)&#34;(?=: )&#39;, &#34;\\1&#34;, txt)
+        if extra_items:
+            for v in extra_items.values():
+                txt = txt.replace(f&#39;&#34;{v}&#34;&#39;, f&#34;{v}&#34;)
         return txt
 
     def show(self, colored=True, key_quotes=False):
@@ -768,6 +929,10 @@ class frozenhdict(UserDict, dict[str, VT]):
 <li>collections.abc.Container</li>
 <li>builtins.dict</li>
 </ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li>hdict._</li>
+</ul>
 <h3>Static methods</h3>
 <dl>
 <dt id="hdict.frozenhdict.frozenhdict.fromdict"><code class="name flex">
@@ -779,9 +944,9 @@ class frozenhdict(UserDict, dict[str, VT]):
 &gt;&gt;&gt; hdict.fromdict({&quot;x&quot;: value(5, hosh=&quot;0123456789012345678901234567890123456789&quot;)}, {&quot;x&quot;: &quot;0123456789012345678901234567890123456789&quot;}).show(colored=False)
 {
     x: 5,
-    _id: &quot;bi5Qdbh-zgA1ZQdxGhxqjaKaQROtxk1VCPRZhMOq&quot;,
+    _id: bi5Qdbh-zgA1ZQdxGhxqjaKaQROtxk1VCPRZhMOq,
     _ids: {
-        x: &quot;0123456789012345678901234567890123456789&quot;
+        x: 0123456789012345678901234567890123456789
     }
 }
 </code></pre></div>
@@ -797,9 +962,9 @@ def fromdict(dictionary, ids):
     &gt;&gt;&gt; hdict.fromdict({&#34;x&#34;: value(5, hosh=&#34;0123456789012345678901234567890123456789&#34;)}, {&#34;x&#34;: &#34;0123456789012345678901234567890123456789&#34;}).show(colored=False)
     {
         x: 5,
-        _id: &#34;bi5Qdbh-zgA1ZQdxGhxqjaKaQROtxk1VCPRZhMOq&#34;,
+        _id: bi5Qdbh-zgA1ZQdxGhxqjaKaQROtxk1VCPRZhMOq,
         _ids: {
-            x: &#34;0123456789012345678901234567890123456789&#34;
+            x: 0123456789012345678901234567890123456789
         }
     }
     &#34;&#34;&#34;
@@ -886,36 +1051,28 @@ def asdicts(self):
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def __get__(self, instance, owner=None):
-    if instance is None:
-        return self
-    if self.attrname is None:
-        raise TypeError(
-            &#34;Cannot use cached_property instance without calling __set_name__ on it.&#34;)
-    try:
-        cache = instance.__dict__
-    except AttributeError:  # not all objects have __dict__ (e.g. class defines slots)
-        msg = (
-            f&#34;No &#39;__dict__&#39; attribute on {type(instance).__name__!r} &#34;
-            f&#34;instance to cache {self.attrname!r} property.&#34;
-        )
-        raise TypeError(msg) from None
-    val = cache.get(self.attrname, _NOT_FOUND)
-    if val is _NOT_FOUND:
-        with self.lock:
-            # check if another thread filled cache while we awaited lock
-            val = cache.get(self.attrname, _NOT_FOUND)
-            if val is _NOT_FOUND:
-                val = self.func(instance)
-                try:
-                    cache[self.attrname] = val
-                except TypeError:
-                    msg = (
-                        f&#34;The &#39;__dict__&#39; attribute on {type(instance).__name__!r} instance &#34;
-                        f&#34;does not support item assignment for caching {self.attrname!r} property.&#34;
-                    )
-                    raise TypeError(msg) from None
-    return val</code></pre>
+<pre><code class="python">@property
+def asdicts_hoshes_noneval(self):
+    from hdict.content.abs.abscloneable import AbsCloneable
+
+    hoshes = set()
+    dic = {}
+    for k, val in self.data.items():
+        if k not in [&#34;_id&#34;, &#34;_ids&#34;]:
+            hoshes.add(val.hosh)
+            if isinstance(val, AbsCloneable):
+                dic[k] = val
+            else:
+                v = val.value
+                if isinstance(v, frozenhdict):
+                    dic[k], subhoshes = v.asdicts_hoshes_noneval
+                    hoshes.update(subhoshes)
+                else:
+                    dic[k] = v
+    hoshes.add(self.hosh)
+    dic[&#34;_id&#34;] = self.id
+    dic[&#34;_ids&#34;] = self.ids.copy()
+    return dic, hoshes</code></pre>
 </details>
 </dd>
 <dt id="hdict.frozenhdict.frozenhdict.evaluated"><code class="name">var <span class="ident">evaluated</span></code></dt>
@@ -950,7 +1107,7 @@ def unfrozen(self):
 <h3>Methods</h3>
 <dl>
 <dt id="hdict.frozenhdict.frozenhdict.astext"><code class="name flex">
-<span>def <span class="ident">astext</span></span>(<span>self, colored=True, key_quotes=False)</span>
+<span>def <span class="ident">astext</span></span>(<span>self, colored=True, key_quotes=False, extra_items=None)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Textual representation of a frozenidict object</p></div>
@@ -958,18 +1115,22 @@ def unfrozen(self):
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def astext(self, colored=True, key_quotes=False):
+<pre><code class="python">def astext(self, colored=True, key_quotes=False, extra_items=None):
     r&#34;&#34;&#34;Textual representation of a frozenidict object&#34;&#34;&#34;
     dicts, hoshes = self.asdicts_hoshes_noneval
+    if extra_items:
+        dicts.update(extra_items)
     txt = json.dumps(dicts, indent=4, ensure_ascii=False, cls=CustomJSONEncoder)
 
     # Put colors after json, to avoid escaping ansi codes.  TODO: check how HTML behaves here
-    if colored:
-        for h in hoshes:
-            txt = txt.replace(f&#39;&#34;{h.id}&#34;&#39;, repr(h))
+    for h in hoshes:
+        txt = txt.replace(f&#39;&#34;{h.id}&#34;&#39;, repr(h)) if colored else txt.replace(f&#39;&#34;{h.id}&#34;&#39;, h.id)
     txt = re.sub(r&#39;(&#34;: )&#34;(λ.+?)&#34;(?=,\n)&#39;, &#39;&#34;: \\2&#39;, txt)
     if not key_quotes:
-        txt = re.sub(r&#39;(?&lt;!: )&#34;([a-zA-Z0-9_ ]+?)&#34;(?=: )&#39;, &#34;\\1&#34;, txt)
+        txt = re.sub(r&#39;(?&lt;!: )&#34;([\-a-zA-Z0-9_ ]+?)&#34;(?=: )&#39;, &#34;\\1&#34;, txt)
+    if extra_items:
+        for v in extra_items.values():
+            txt = txt.replace(f&#39;&#34;{v}&#34;&#39;, f&#34;{v}&#34;)
     return txt</code></pre>
 </details>
 </dd>

@@ -48,22 +48,32 @@
 #  part of this work is illegal and it is unethical regarding the effort and
 #  time spent here.
 #
+from types import NoneType
 from typing import Union
+
+from hosh import Hosh
 
 from hdict.content.apply import apply
 from hdict.content.default import default
 from hdict.content.field import field
 from hdict.content.sample import sample
 from hdict.content.value import value
+from hdict.frozenhdict import frozenhdict
 from hdict.hdict_ import hdict
-from hosh import Hosh
 
 
-class _:
-    Ø = hdict()
+class _(frozenhdict):
+    Ø = frozenhdict()
 
-    def __call__(self, f: Union[callable, &#34;apply&#34;, field], *applied_args, fhosh: Hosh = None, **applied_kwargs):
-        return apply(f, *applied_args, fhosh=fhosh, **applied_kwargs)
+    def __call__(self, f_or_dictionary: Union[callable, &#34;apply&#34;, field] = None, *applied_args, fhosh: Hosh = None, **kwargs):
+        if isinstance(f_or_dictionary, (NoneType, dict)):
+            if fhosh is not None:  # pragma: no cover
+                raise Exception(f&#34;Cannot use &#39;_()&#39; as hdict constructor and provide &#39;fhosh&#39; at the same time.&#34;)
+            if f_or_dictionary is None:
+                f_or_dictionary = kwargs
+                kwargs = {}
+            return hdict(f_or_dictionary, **kwargs)
+        return apply(f_or_dictionary, *applied_args, fhosh=fhosh, **kwargs)
 
     def __getattr__(self, item):
         return field(item)
@@ -73,12 +83,16 @@ class _:
 
 
 _ = _()
-Ø = hdict()</code></pre>
+Ø = _.Ø</code></pre>
 </details>
 </section>
 <section>
 <h2 class="section-title" id="header-submodules">Sub-modules</h2>
 <dl>
+<dt><code class="name"><a title="hdict.aux" href="aux.html">hdict.aux</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
 <dt><code class="name"><a title="hdict.cache" href="cache.html">hdict.cache</a></code></dt>
 <dd>
 <div class="desc"></div>
@@ -132,6 +146,7 @@ _ = _()
 <ul id="index">
 <li><h3><a href="#header-submodules">Sub-modules</a></h3>
 <ul>
+<li><code><a title="hdict.aux" href="aux.html">hdict.aux</a></code></li>
 <li><code><a title="hdict.cache" href="cache.html">hdict.cache</a></code></li>
 <li><code><a title="hdict.content" href="content/index.html">hdict.content</a></code></li>
 <li><code><a title="hdict.customjson" href="customjson.html">hdict.customjson</a></code></li>

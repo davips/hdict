@@ -12,6 +12,7 @@ def handle_rshift(self, other):
     from hdict.frozenhdict import frozenhdict
     from hdict import hdict
     from hdict.content.applyout import applyOut
+
     if isinstance(other, pipeline):
         return reduce(rshift, chain([self], other))
     data: dict[str, object] = self.data.copy()

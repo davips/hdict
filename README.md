@@ -61,11 +61,11 @@ d.show(colored=False)
     x: 5,
     y: 7,
     z: 10,
-    _id: "BN-3Q3Z.2Q.9nsbIYnOI75HT7xhgjvF6wErwBPTn",
+    _id: BN-3Q3Z.2Q.9nsbIYnOI75HT7xhgjvF6wErwBPTn,
     _ids: {
-        x: "ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2",
-        y: "eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf",
-        z: "u-Yykj2nDtKaUMGzfqScX5Y14qC7eqJrO7lXrJ1m"
+        x: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+        y: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf,
+        z: u-Yykj2nDtKaUMGzfqScX5Y14qC7eqJrO7lXrJ1m
     }
 }
 """
@@ -85,11 +85,11 @@ d.show(colored=False)
     x: 5,
     y: 7,
     z: 10,
-    _id: "BN-3Q3Z.2Q.9nsbIYnOI75HT7xhgjvF6wErwBPTn",
+    _id: BN-3Q3Z.2Q.9nsbIYnOI75HT7xhgjvF6wErwBPTn,
     _ids: {
-        x: "ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2",
-        y: "eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf",
-        z: "u-Yykj2nDtKaUMGzfqScX5Y14qC7eqJrO7lXrJ1m"
+        x: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+        y: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf,
+        z: u-Yykj2nDtKaUMGzfqScX5Y14qC7eqJrO7lXrJ1m
     }
 }
 """

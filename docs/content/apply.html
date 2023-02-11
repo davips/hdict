@@ -71,6 +71,10 @@ from hosh.misc import hoshes
 # TODO: discard dependencies after evaluation, to avoid wasted memory, e.g., even after the deps are deleted from hdict
 class apply(AbsCloneable, AbsSampleable):
     &#34;&#34;&#34;
+    Function application
+
+    Single output application can be defined through attribute: &#39;apply(f).my_output_field&#39;.
+
     &gt;&gt;&gt; from hdict import apply
     &gt;&gt;&gt; f = lambda a, b: a**b
     &gt;&gt;&gt; v = apply(f, 5, b=7)
@@ -263,6 +267,12 @@ class apply(AbsCloneable, AbsSampleable):
             return applyOut(self, item)
         return self.__getattribute__(item)  # pragma: no cover
 
+    def __rshift__(self, other):  # pragma: no cover
+        raise Exception(f&#34;Cannot apply before specifying the output field.&#34;)
+
+    def __rrshift__(self, other):  # pragma: no cover
+        raise Exception(f&#34;Cannot apply before specifying the output field.&#34;)
+
     def __repr__(self):
         if not self.isevaluated:
             from hdict.content.default import default
@@ -294,7 +304,9 @@ class apply(AbsCloneable, AbsSampleable):
 <span>(</span><span>f: Union[<built-in function callable>, ForwardRef('<a title="hdict.content.apply.apply" href="#hdict.content.apply.apply">apply</a>'), <a title="hdict.content.field.field" href="field.html#hdict.content.field.field">field</a>], *applied_args, fhosh: hosh.hosh_.Hosh = None, **applied_kwargs)</span>
 </code></dt>
 <dd>
-<div class="desc"><pre><code class="language-python-repl">&gt;&gt;&gt; from hdict import apply
+<div class="desc"><p>Function application</p>
+<p>Single output application can be defined through attribute: 'apply(f).my_output_field'.</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; from hdict import apply
 &gt;&gt;&gt; f = lambda a, b: a**b
 &gt;&gt;&gt; v = apply(f, 5, b=7)
 &gt;&gt;&gt; v
@@ -359,6 +371,10 @@ False
 </summary>
 <pre><code class="python">class apply(AbsCloneable, AbsSampleable):
     &#34;&#34;&#34;
+    Function application
+
+    Single output application can be defined through attribute: &#39;apply(f).my_output_field&#39;.
+
     &gt;&gt;&gt; from hdict import apply
     &gt;&gt;&gt; f = lambda a, b: a**b
     &gt;&gt;&gt; v = apply(f, 5, b=7)
@@ -550,6 +566,12 @@ False
 
             return applyOut(self, item)
         return self.__getattribute__(item)  # pragma: no cover
+
+    def __rshift__(self, other):  # pragma: no cover
+        raise Exception(f&#34;Cannot apply before specifying the output field.&#34;)
+
+    def __rrshift__(self, other):  # pragma: no cover
+        raise Exception(f&#34;Cannot apply before specifying the output field.&#34;)
 
     def __repr__(self):
         if not self.isevaluated:

@@ -34,8 +34,6 @@ from hdict.pipeline import pipeline
 VT = TypeVar("VT")
 
 
-
-
 class frozenhdict(UserDict, dict[str, VT]):
     """
     Immutable hdict.
@@ -136,6 +134,7 @@ class frozenhdict(UserDict, dict[str, VT]):
 
     def __rrshift__(self, other):
         from hdict.hdict_ import hdict
+
         if isinstance(other, dict) and not isinstance(other, (hdict, frozenhdict)):
             return pipeline(hdict() >> other, self)
         return NotImplemented  # pragma: no cover

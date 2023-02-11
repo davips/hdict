@@ -1,3 +1,4 @@
+Fix show() for missing fields
 Always try to apply()/solve pipeline
 Fix _()
 Improve missing field detector for pipeline

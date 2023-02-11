@@ -69,12 +69,34 @@ class applyOut(AbsContent, AbsSampleable):
     def sample(self, rnd: int | Random = None):
         return applyOut(self.nested.sample(rnd), self.out)
 
+    @property
+    def isevaluated(self):
+        &#34;&#34;&#34;
+        &gt;&gt;&gt; from hdict import _
+        &gt;&gt;&gt; _(lambda x, y: x + y).x.isevaluated
+        False
+        &#34;&#34;&#34;
+        return self.nested.isevaluated
+
+    def __rrshift__(self, other):
+        from hdict.hdict_ import hdict
+        from hdict.frozenhdict import frozenhdict
+
+        if isinstance(other, dict) and not isinstance(other, (hdict, frozenhdict)):
+            return hdict() &gt;&gt; other &gt;&gt; self
+        return NotImplemented  # pragma: no cover
+
     def __rshift__(self, other):
         from hdict.pipeline import pipeline
 
-        if isinstance(other, (pipeline, applyOut)):
+        # REMINDER: dict includes hdict/frozenhdict.
+        if isinstance(other, (dict, applyOut, pipeline)):
             return pipeline(self, other)
         return NotImplemented  # pragma: no cover
+
+    def __repr__(self):
+        out = &#34;&#34; if self.nested.finished else f&#34;{self.out}=&#34;
+        return out + repr(self.nested)
 
     #
     #     Traceback (most recent call last):
@@ -116,12 +138,34 @@ class applyOut(AbsContent, AbsSampleable):
     def sample(self, rnd: int | Random = None):
         return applyOut(self.nested.sample(rnd), self.out)
 
+    @property
+    def isevaluated(self):
+        &#34;&#34;&#34;
+        &gt;&gt;&gt; from hdict import _
+        &gt;&gt;&gt; _(lambda x, y: x + y).x.isevaluated
+        False
+        &#34;&#34;&#34;
+        return self.nested.isevaluated
+
+    def __rrshift__(self, other):
+        from hdict.hdict_ import hdict
+        from hdict.frozenhdict import frozenhdict
+
+        if isinstance(other, dict) and not isinstance(other, (hdict, frozenhdict)):
+            return hdict() &gt;&gt; other &gt;&gt; self
+        return NotImplemented  # pragma: no cover
+
     def __rshift__(self, other):
         from hdict.pipeline import pipeline
 
-        if isinstance(other, (pipeline, applyOut)):
+        # REMINDER: dict includes hdict/frozenhdict.
+        if isinstance(other, (dict, applyOut, pipeline)):
             return pipeline(self, other)
         return NotImplemented  # pragma: no cover
+
+    def __repr__(self):
+        out = &#34;&#34; if self.nested.finished else f&#34;{self.out}=&#34;
+        return out + repr(self.nested)
 
     #
     #     Traceback (most recent call last):
@@ -145,6 +189,29 @@ class applyOut(AbsContent, AbsSampleable):
 <dt id="hdict.content.applyout.applyOut.out"><code class="name">var <span class="ident">out</span> : [str | tuple[str, str]]</code></dt>
 <dd>
 <div class="desc"></div>
+</dd>
+</dl>
+<h3>Instance variables</h3>
+<dl>
+<dt id="hdict.content.applyout.applyOut.isevaluated"><code class="name">var <span class="ident">isevaluated</span> : bool</code></dt>
+<dd>
+<div class="desc"><pre><code class="language-python-repl">&gt;&gt;&gt; from hdict import _
+&gt;&gt;&gt; _(lambda x, y: x + y).x.isevaluated
+False
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def isevaluated(self):
+    &#34;&#34;&#34;
+    &gt;&gt;&gt; from hdict import _
+    &gt;&gt;&gt; _(lambda x, y: x + y).x.isevaluated
+    False
+    &#34;&#34;&#34;
+    return self.nested.isevaluated</code></pre>
+</details>
 </dd>
 </dl>
 <h3>Methods</h3>
@@ -183,6 +250,7 @@ class applyOut(AbsContent, AbsSampleable):
 <li>
 <h4><code><a title="hdict.content.applyout.applyOut" href="#hdict.content.applyout.applyOut">applyOut</a></code></h4>
 <ul class="">
+<li><code><a title="hdict.content.applyout.applyOut.isevaluated" href="#hdict.content.applyout.applyOut.isevaluated">isevaluated</a></code></li>
 <li><code><a title="hdict.content.applyout.applyOut.nested" href="#hdict.content.applyout.applyOut.nested">nested</a></code></li>
 <li><code><a title="hdict.content.applyout.applyOut.out" href="#hdict.content.applyout.applyOut.out">out</a></code></li>
 <li><code><a title="hdict.content.applyout.applyOut.sample" href="#hdict.content.applyout.applyOut.sample">sample</a></code></li>

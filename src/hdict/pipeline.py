@@ -84,6 +84,7 @@ class pipeline(AbsSampleable):
     def __rrshift__(self, other):
         from hdict.frozenhdict import frozenhdict
         from hdict.hdict_ import hdict
+
         # REMINDER: 'dict' includes 'hdict', 'frozenhdict'
         if not isinstance(other, (frozenhdict, hdict)) and isinstance(other, dict):
             return hdict() >> other >> self
@@ -92,6 +93,7 @@ class pipeline(AbsSampleable):
     def __rshift__(self, other):
         from hdict import apply
         from hdict.content.applyout import applyOut
+
         if isinstance(other, pipeline):
             return reduce(rshift, chain(self, other))
         if isinstance(other, (applyOut, dict)):
@@ -103,9 +105,11 @@ class pipeline(AbsSampleable):
     def __getattr__(self, item):  # pragma: no cover
         if self.missing:
             self.show()
-            raise Exception(f"'pipeline' has no attribute '{item}'.\n"
-                            f"If you are expecting a 'hdict' instead of a 'pipeline',\n"
-                            f"you need to provide the hdict its respective missing field '{self.missing}' before application.")
+            raise Exception(
+                f"'pipeline' has no attribute '{item}'.\n"
+                f"If you are expecting a 'hdict' instead of a 'pipeline',\n"
+                f"you need to provide the hdict its respective missing field '{self.missing}' before application."
+            )
         return self.__getattribute__(item)
 
     def __repr__(self):
@@ -127,6 +131,7 @@ class pipeline(AbsSampleable):
         """
         from hdict.frozenhdict import frozenhdict
         from hdict.hdict_ import hdict
+
         extra_items = extra_items or {}
         if self.missing:
             if len(self.missing) != 1:  # pragma: no cover

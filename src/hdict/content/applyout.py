@@ -53,12 +53,14 @@ class applyOut(AbsContent, AbsSampleable):
     def __rrshift__(self, other):
         from hdict.hdict_ import hdict
         from hdict.frozenhdict import frozenhdict
+
         if isinstance(other, dict) and not isinstance(other, (hdict, frozenhdict)):
             return hdict() >> other >> self
         return NotImplemented  # pragma: no cover
 
     def __rshift__(self, other):
         from hdict.pipeline import pipeline
+
         # REMINDER: dict includes hdict/frozenhdict.
         if isinstance(other, (dict, applyOut, pipeline)):
             return pipeline(self, other)

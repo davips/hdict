@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "hdict"
-version = "0.230211.0"
+version = "0.230211.1"
 description = "A versatile dictionary based on a novel paradigm useful for computing, caching, experiments, distributed data, among others."
 authors = ["davips <dpsabc@gmail.com>"]
 license = "GPLv3"

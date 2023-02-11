@@ -366,6 +366,7 @@ class hdict(dict[str, VT]):
 
     def __rrshift__(self, other):
         from hdict.pipeline import pipeline
+
         res = other >> self.frozen
         if isinstance(res, pipeline):
             return pipeline(other, self, missing=res.missing)

@@ -49,13 +49,48 @@
 #  time spent here.
 #
 
-from hdict.content.abs.abscloneable import AbsCloneable
 from hosh import Hosh
+
+from hdict.content import MissingFieldException
+from hdict.content.abs.abscloneable import AbsCloneable
 
 
 class field(AbsCloneable):
     &#34;&#34;&#34;
     Pointer to a field
+
+    &gt;&gt;&gt; from hdict import _
+    &gt;&gt;&gt; d = _.Ø
+    &gt;&gt;&gt; d.show(colored=False)
+    {
+        _id: 0000000000000000000000000000000000000000,
+        _ids: {}
+    }
+    &gt;&gt;&gt; d = _()
+    &gt;&gt;&gt; d.show(colored=False)
+    {
+        _id: 0000000000000000000000000000000000000000,
+        _ids: {}
+    }
+    &gt;&gt;&gt; d &gt;&gt;= {&#34;x&#34;: 3, &#34;y&#34;: 5} &gt;&gt; _(lambda x, y: x + y).z
+    &gt;&gt;&gt; d.show(colored=False)
+    {
+        x: 3,
+        y: 5,
+        z: λ(x y),
+        _id: P0R5Ra1aPrsql5iYJsmYG56.0oCFvqPQIMv3Qe7b,
+        _ids: {
+            x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+            y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+            z: Q1ypbWuXlEf9MeJNT1wyFcA8V0.DvHEFOeCidBrZ
+        }
+    }
+    &gt;&gt;&gt; d &gt;&gt;= {&#34;x&#34;: 3, &#34;y&#34;: 5} &gt;&gt; _(lambda x, y: x + y).x
+    &gt;&gt;&gt; d.x
+    8
+    &gt;&gt;&gt; d[&#34;x&#34;] = _(lambda x, y: x + y)
+    &gt;&gt;&gt; d.x
+    13
     &#34;&#34;&#34;
 
     content = None
@@ -100,17 +135,17 @@ class field(AbsCloneable):
         &gt;&gt;&gt; d[&#34;a&#34;].value
         5
         &#34;&#34;&#34;
-        if self.content is not None:  # pragma: no cover
+        if self.finished:  # pragma: no cover
             raise Exception(f&#34;Cannot finish a field pointer twice. name: {self.name}.\n&#34; f&#34;Please check if there are indirect circular references.&#34;)
         if self.name not in data:  # pragma: no cover
-            raise Exception(f&#34;Missing field &#39;{self.name}&#39;&#34;)
+            raise MissingFieldException(self.name)
         self.content = data[self.name]
         if isinstance(self.content, AbsCloneable) and not self.content.finished:
             self.content.finish_clone(data, out, previous)
         self._finished = True
 
     def __repr__(self):
-        if self.content is None:
+        if not self.finished:
             txt = f&#34;field(&#39;{self.name}&#39;&#34;
             txt += &#34;)&#34; if self._hosh is None else &#34;, &#39;{self._hosh}&#39;)&#34;
             return txt
@@ -131,7 +166,40 @@ class field(AbsCloneable):
 <span>(</span><span>name: str, hosh: hosh.hosh_.Hosh | str = None)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Pointer to a field</p></div>
+<div class="desc"><p>Pointer to a field</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; from hdict import _
+&gt;&gt;&gt; d = _.Ø
+&gt;&gt;&gt; d.show(colored=False)
+{
+    _id: 0000000000000000000000000000000000000000,
+    _ids: {}
+}
+&gt;&gt;&gt; d = _()
+&gt;&gt;&gt; d.show(colored=False)
+{
+    _id: 0000000000000000000000000000000000000000,
+    _ids: {}
+}
+&gt;&gt;&gt; d &gt;&gt;= {&quot;x&quot;: 3, &quot;y&quot;: 5} &gt;&gt; _(lambda x, y: x + y).z
+&gt;&gt;&gt; d.show(colored=False)
+{
+    x: 3,
+    y: 5,
+    z: λ(x y),
+    _id: P0R5Ra1aPrsql5iYJsmYG56.0oCFvqPQIMv3Qe7b,
+    _ids: {
+        x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+        y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+        z: Q1ypbWuXlEf9MeJNT1wyFcA8V0.DvHEFOeCidBrZ
+    }
+}
+&gt;&gt;&gt; d &gt;&gt;= {&quot;x&quot;: 3, &quot;y&quot;: 5} &gt;&gt; _(lambda x, y: x + y).x
+&gt;&gt;&gt; d.x
+8
+&gt;&gt;&gt; d[&quot;x&quot;] = _(lambda x, y: x + y)
+&gt;&gt;&gt; d.x
+13
+</code></pre></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -139,6 +207,39 @@ class field(AbsCloneable):
 <pre><code class="python">class field(AbsCloneable):
     &#34;&#34;&#34;
     Pointer to a field
+
+    &gt;&gt;&gt; from hdict import _
+    &gt;&gt;&gt; d = _.Ø
+    &gt;&gt;&gt; d.show(colored=False)
+    {
+        _id: 0000000000000000000000000000000000000000,
+        _ids: {}
+    }
+    &gt;&gt;&gt; d = _()
+    &gt;&gt;&gt; d.show(colored=False)
+    {
+        _id: 0000000000000000000000000000000000000000,
+        _ids: {}
+    }
+    &gt;&gt;&gt; d &gt;&gt;= {&#34;x&#34;: 3, &#34;y&#34;: 5} &gt;&gt; _(lambda x, y: x + y).z
+    &gt;&gt;&gt; d.show(colored=False)
+    {
+        x: 3,
+        y: 5,
+        z: λ(x y),
+        _id: P0R5Ra1aPrsql5iYJsmYG56.0oCFvqPQIMv3Qe7b,
+        _ids: {
+            x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+            y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+            z: Q1ypbWuXlEf9MeJNT1wyFcA8V0.DvHEFOeCidBrZ
+        }
+    }
+    &gt;&gt;&gt; d &gt;&gt;= {&#34;x&#34;: 3, &#34;y&#34;: 5} &gt;&gt; _(lambda x, y: x + y).x
+    &gt;&gt;&gt; d.x
+    8
+    &gt;&gt;&gt; d[&#34;x&#34;] = _(lambda x, y: x + y)
+    &gt;&gt;&gt; d.x
+    13
     &#34;&#34;&#34;
 
     content = None
@@ -183,17 +284,17 @@ class field(AbsCloneable):
         &gt;&gt;&gt; d[&#34;a&#34;].value
         5
         &#34;&#34;&#34;
-        if self.content is not None:  # pragma: no cover
+        if self.finished:  # pragma: no cover
             raise Exception(f&#34;Cannot finish a field pointer twice. name: {self.name}.\n&#34; f&#34;Please check if there are indirect circular references.&#34;)
         if self.name not in data:  # pragma: no cover
-            raise Exception(f&#34;Missing field &#39;{self.name}&#39;&#34;)
+            raise MissingFieldException(self.name)
         self.content = data[self.name]
         if isinstance(self.content, AbsCloneable) and not self.content.finished:
             self.content.finish_clone(data, out, previous)
         self._finished = True
 
     def __repr__(self):
-        if self.content is None:
+        if not self.finished:
             txt = f&#34;field(&#39;{self.name}&#39;&#34;
             txt += &#34;)&#34; if self._hosh is None else &#34;, &#39;{self._hosh}&#39;)&#34;
             return txt
@@ -289,10 +390,10 @@ def value(self):
     &gt;&gt;&gt; d[&#34;a&#34;].value
     5
     &#34;&#34;&#34;
-    if self.content is not None:  # pragma: no cover
+    if self.finished:  # pragma: no cover
         raise Exception(f&#34;Cannot finish a field pointer twice. name: {self.name}.\n&#34; f&#34;Please check if there are indirect circular references.&#34;)
     if self.name not in data:  # pragma: no cover
-        raise Exception(f&#34;Missing field &#39;{self.name}&#39;&#34;)
+        raise MissingFieldException(self.name)
     self.content = data[self.name]
     if isinstance(self.content, AbsCloneable) and not self.content.finished:
         self.content.finish_clone(data, out, previous)
