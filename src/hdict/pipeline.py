@@ -41,7 +41,7 @@ class pipeline(AbsSampleable):
         from hdict.content.applyout import applyOut
         if not isinstance(other, pipeline) and isinstance(other, (applyOut, dict)):  # 'dict' includes 'hdict', 'frozenhdict'
             # REMINDER: all combinations of steps are valid pipelines
-            return pipeline(other, self.clean)
+            return pipeline(other, self.clean).apply()
         return NotImplemented  # pragma: no cover
 
     @property
@@ -54,7 +54,7 @@ class pipeline(AbsSampleable):
         from hdict import apply
         from hdict.content.applyout import applyOut
         if isinstance(other, pipeline):
-            return pipeline(self.clean, other.clean, missing=self.missing)
+            return pipeline(self.clean, other.clean, missing=self.missing).apply()
         if isinstance(other, (applyOut, dict)):
             return pipeline(self, other, missing=self.missing)
         if isinstance(other, apply):  # pragma: no cover
@@ -89,7 +89,81 @@ class pipeline(AbsSampleable):
         return " » ".join(out)
 
     def __str__(self):
+        # TODO: include 'missing' annotation like done for astext/repr?
         out = []
         for step in self.steps:
             out.append(str(step))
         return " » ".join(out)
+
+    def apply(self):
+        """
+        Solve a complete pipeline, resulting in a hdict/frozenhdict
+
+        Not intended to be called directly as providing the missing field will result in the expected hdict/frozenhdict
+
+        >>> from hdict import _
+        >>> p = _(x=5) >> _(lambda x, y: x + y).r
+        >>> p.show(colored=False)
+        {
+            x: 5,
+            _id: PRj.5PqNWuPfNvmXl83el.sSMPcTS02ZIl4.K.5k,
+            _ids: {
+                x: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2
+            },
+            y: ✗ missing ✗
+        } » r=λ(x y)
+        >>> p2 = _(y=7) >> p
+        >>> p2.show(colored=False)
+        {
+            y: 7,
+            x: 5,
+            r: λ(x y),
+            _id: e6de0.-QdmYbais2opJzX8momKCV2jdGGSu6kV5H,
+            _ids: {
+                y: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf,
+                x: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+                r: orsvTbm.vJYQS4Jw0Z-oGjcGdFFyDWp9CVj7M1CN
+            }
+        }
+        """
+        from hdict.hdict_ import hdict
+        from hdict.frozenhdict import frozenhdict
+        if self.missing is not None:  # pragma: no cover
+            raise Exception(f"Cannot apply a pipeline before providing the missing field '{self.missing}'.")
+        if isinstance(self.steps[0], dict) and not isinstance(self.steps[0], (hdict, frozenhdict)):
+            raise Exception(f"Cannot apply a pipeline started by a 'dict'. It is incomplete.")  # pragma: no cover
+        result = NoOp
+        missing = []
+        for step in self:
+            result >>= step
+            if isinstance(result, pipeline) and result.missing is not None:
+                # REMINDER: '{"y": 4} >> hdict()' is necessarily a pipeline.
+                #   Reason: dicts are intended to provide application as well 'hdict() >> {"y": 4, "z": _(f)}'
+                #           and can't depend on futures values (those to the right of '>>').
+                missing.append(result.missing)
+        if missing:#TODO: remove exception
+            self.show()
+            msg = f"Cannot apply incomplete pipeline.\n" \
+                  f"Missing fields: '{missing}'.\n" \
+                  f"The fields should appear before application in the pipeline."
+            raise Exception(msg)
+        return result
+
+    def evaluate(self):
+        result = self.apply()
+        # result.evaluate()
+
+    def __iter__(self):
+        for step in self.steps:
+            if isinstance(step, pipeline):
+                yield from step
+            else:
+                yield step
+
+
+class NoOp:
+    def __rshift__(self, other):
+        return other
+
+
+NoOp = NoOp()

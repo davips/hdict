@@ -113,7 +113,7 @@ class frozenhdict(UserDict, dict[str, VT]):
         try:
             if isinstance(other, pipeline):
                 if other.hasmissing:
-                    return pipeline(self, other.clean)
+                    return pipeline(self, other.clean).apply()
                 result = self
                 for step in other.steps:
                     result >>= step
