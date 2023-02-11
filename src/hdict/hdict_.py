@@ -326,6 +326,17 @@ class hdict(dict[str, VT]):
     {y: 28, _id: "EtPSkexkaJ1HvgUWYBA5iZ5HzIpBGTgqafKSs0jb", _ids: {y: "kFHvjNc17K0O5.7.V0xRNKmiBOmMmi.cbVUROZna"}}
     >>> hash(e.frozen) == hash(d.frozen)
     True
+    >>> d = hdict(a=5) >> hdict(y=28)
+    >>> d.show(colored=False)
+    {
+        a: 5,
+        y: 28,
+        _id: C-xKyWCyBL6g32KIuxoANoF9czLaJTh-emPsMqOg,
+        _ids: {
+            a: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+            y: -2A0hTRBN1wtIKQxLzRcYDBkhv1hu-dMY-24Jye9
+        }
+    }
     """
 
     # noinspection PyMissingConstructor
@@ -358,7 +369,7 @@ class hdict(dict[str, VT]):
         res = other >> self.frozen
         if isinstance(res, pipeline):
             return pipeline(other, self, missing=res.missing)
-        return res.unfrozen
+        raise Exception(f"Unexpected condition.")  # pragma: no cover
 
     def __rshift__(self, other):
         from hdict import apply
@@ -367,6 +378,7 @@ class hdict(dict[str, VT]):
 
         if isinstance(other, apply):  # pragma: no cover
             raise Exception(f"Cannot apply without specifying output.")
+        # REMINDER: dict includes hdict/frozenhdict.
         if isinstance(other, (dict, applyOut, pipeline)):
             res = self.frozen >> other
             if isinstance(res, pipeline):

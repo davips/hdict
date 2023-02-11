@@ -20,17 +20,11 @@
 #  part of this work is illegal and it is unethical regarding the effort and
 #  time spent here.
 #
-from typing import Union
 
-from typing import TYPE_CHECKING
+from hosh import Hosh
 
 from hdict.content import MissingFieldException
-
-if TYPE_CHECKING:
-    from hdict.content.apply import apply
-
 from hdict.content.abs.abscloneable import AbsCloneable
-from hosh import Hosh
 
 
 class field(AbsCloneable):
@@ -121,15 +115,6 @@ class field(AbsCloneable):
         if isinstance(self.content, AbsCloneable) and not self.content.finished:
             self.content.finish_clone(data, out, previous)
         self._finished = True
-
-    # def __call__(self, f: Union[callable, "apply", "field"], *applied_args, fhosh: Hosh = None, **applied_kwargs):
-    #     from hdict.content.apply import apply
-    #     if self.finished:
-    #         raise Exception(f"Cannot convert a finished 'field' object into 'apply': '{self.name}'.")
-    #     a = apply(f, *applied_args, fhosh=fhosh or self._hosh, **applied_kwargs)
-    #     if self.name != "_":
-    #         a = a(self.name)
-    #     return a
 
     def __repr__(self):
         if not self.finished:

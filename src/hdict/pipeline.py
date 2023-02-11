@@ -20,14 +20,56 @@
 #  part of this work is illegal and it is unethical regarding the effort and
 #  time spent here.
 #
-import operator
 from functools import reduce
+from itertools import chain
+from operator import rshift
 from random import Random
 
 from hdict.content.abs.abssampleable import AbsSampleable
 
 
 class pipeline(AbsSampleable):
+    """
+    Sequence of steps, tries to solve on update, resulting in a hdict/frozenhdict
+
+    >>> from hdict import _
+    >>> p = _(x=5) >> _(lambda x, y: x + y).r
+    >>> p.show(colored=False)
+    {
+        x: 5,
+        _id: PRj.5PqNWuPfNvmXl83el.sSMPcTS02ZIl4.K.5k,
+        _ids: {
+            x: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2
+        },
+        y: ✗ missing ✗
+    } » r=λ(x y)
+    >>> p2 = _(y=7) >> p
+    >>> p2.show(colored=False)
+    {
+        y: 7,
+        x: 5,
+        r: λ(x y),
+        _id: e6de0.-QdmYbais2opJzX8momKCV2jdGGSu6kV5H,
+        _ids: {
+            y: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf,
+            x: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+            r: orsvTbm.vJYQS4Jw0Z-oGjcGdFFyDWp9CVj7M1CN
+        }
+    }
+    >>> ({} >> p2).show(colored=False)
+    {} » {
+        y: 7,
+        x: 5,
+        r: λ(x y),
+        _id: e6de0.-QdmYbais2opJzX8momKCV2jdGGSu6kV5H,
+        _ids: {
+            y: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf,
+            x: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+            r: orsvTbm.vJYQS4Jw0Z-oGjcGdFFyDWp9CVj7M1CN
+        }
+    }
+    """
+
     def __init__(self, *args, missing: dict = None):
         self.steps = args
         self.missing = missing or {}
@@ -35,36 +77,30 @@ class pipeline(AbsSampleable):
 
     def sample(self, rnd: int | Random = None):
         new = pipeline()
-        new.steps = [(step.sample(rnd) if isinstance(step, AbsSampleable) else step) for step in self.steps]
+        new.steps = [(step.sample(rnd) if isinstance(step, AbsSampleable) else step) for step in self]
         new.missing = self.missing
         return new
 
-    @property
-    def clean(self):
-        new = pipeline()
-        new.steps = self.steps
-        return new
-
     def __rrshift__(self, other):
-        from hdict.content.applyout import applyOut
+        from hdict.frozenhdict import frozenhdict
+        from hdict.hdict_ import hdict
         # REMINDER: 'dict' includes 'hdict', 'frozenhdict'
-        if not isinstance(other, pipeline) and isinstance(other, (applyOut, dict)):
-            # REMINDER: all combinations of steps are valid pipelines
-            return pipeline(other, self.clean, missing=self.missing).apply()
+        if not isinstance(other, (frozenhdict, hdict)) and isinstance(other, dict):
+            return hdict() >> other >> self
         return NotImplemented  # pragma: no cover
 
     def __rshift__(self, other):
         from hdict import apply
         from hdict.content.applyout import applyOut
         if isinstance(other, pipeline):
-            return pipeline(*iter(self), *iter(other), missing=self.missing).apply()
+            return reduce(rshift, chain(self, other))
         if isinstance(other, (applyOut, dict)):
             return pipeline(self, other, missing=self.missing)
         if isinstance(other, apply):  # pragma: no cover
             raise Exception(f"Cannot apply before specifying the output field.")
         return NotImplemented  # pragma: no cover
 
-    def __getattr__(self, item): # pragma: no cover
+    def __getattr__(self, item):  # pragma: no cover
         if self.missing:
             self.show()
             raise Exception(f"'pipeline' has no attribute '{item}'.\n"
@@ -73,26 +109,34 @@ class pipeline(AbsSampleable):
         return self.__getattribute__(item)
 
     def __repr__(self):
-        return " » ".join(repr(step) for step in self.steps)
+        return " » ".join(repr(step) for step in self)
 
     def show(self, colored=True, key_quotes=False):
         r"""Print textual representation of a pipeline object"""
         print(self.astext(colored, key_quotes))
 
     def astext(self, colored=True, key_quotes=False, extra_items=None):
-        r"""Textual representation of a pipeline object"""
+        r"""
+        Textual representation of a pipeline object
+
+        >>> p = pipeline({"b":2}, {"a":1})
+        >>> p
+        {'b': 2} » {'a': 1}
+        >>> p.show()
+        {'b': 2} » {'a': 1}
+        """
         from hdict.frozenhdict import frozenhdict
         from hdict.hdict_ import hdict
         extra_items = extra_items or {}
         if self.missing:
-            if len(self.missing) != 1:
+            if len(self.missing) != 1:  # pragma: no cover
                 raise Exception(f"'missing' should have only one item.")
         out = []
         extra_items_ = extra_items.copy()
         for step in self:
-            if hasattr(step, "astext"):
+            if isinstance(step, (frozenhdict, hdict)):
                 delete = False
-                if isinstance(step, (frozenhdict, hdict)) and step.id in self.missing:
+                if step.id in self.missing:
                     extra_items_[self.missing[step.id]] = "✗ missing ✗"
                     delete = True
                 out.append(step.astext(colored=colored, key_quotes=key_quotes, extra_items=extra_items_))
@@ -105,54 +149,9 @@ class pipeline(AbsSampleable):
     def __str__(self):
         # TODO: include 'missing' annotation like done for astext/repr?
         out = []
-        for step in self.steps:
+        for step in self:
             out.append(str(step))
         return " » ".join(out)
-
-    def apply(self):
-        """
-        Solve a complete pipeline, resulting in a hdict/frozenhdict
-
-        Not intended to be called directly as providing the missing field will result in the expected hdict/frozenhdict
-
-        >>> from hdict import _
-        >>> p = _(x=5) >> _(lambda x, y: x + y).r
-        >>> p.show(colored=False)
-        {
-            x: 5,
-            _id: PRj.5PqNWuPfNvmXl83el.sSMPcTS02ZIl4.K.5k,
-            _ids: {
-                x: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2
-            },
-            y: ✗ missing ✗
-        } » r=λ(x y)
-        >>> p2 = _(y=7) >> p
-        >>> p2.show(colored=False)
-        {
-            y: 7,
-            x: 5,
-            r: λ(x y),
-            _id: e6de0.-QdmYbais2opJzX8momKCV2jdGGSu6kV5H,
-            _ids: {
-                y: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf,
-                x: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
-                r: orsvTbm.vJYQS4Jw0Z-oGjcGdFFyDWp9CVj7M1CN
-            }
-        }
-        """
-        from hdict.hdict_ import hdict
-        from hdict.frozenhdict import frozenhdict
-        if self.missing:  # pragma: no cover
-            # Cannot apply a pipeline before providing the missing field.
-            return self
-        if isinstance(self.steps[0], dict) and not isinstance(self.steps[0], (hdict, frozenhdict)):
-            # Cannot apply a pipeline started by a 'dict'.
-            return self
-        return reduce(operator.rshift, self.steps)
-
-    def evaluate(self):
-        result = self.apply()
-        # result.evaluate()
 
     def __iter__(self):
         for step in self.steps:
