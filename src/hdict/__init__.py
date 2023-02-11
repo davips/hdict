@@ -39,10 +39,10 @@ class _(frozenhdict):
 
     def __call__(self, f_or_dictionary: Union[callable, "apply", field] = None, *applied_args, fhosh: Hosh = None, **kwargs):
         if isinstance(f_or_dictionary, (NoneType, dict)):
-            if fhosh is None:
+            if fhosh is not None:
                 raise Exception(f"Cannot use '_()' as hdict constructor and provide 'fhosh' at the same time.")
             if f_or_dictionary is None:
-                f_or_dictionary = applied_args
+                f_or_dictionary = kwargs
                 kwargs = {}
             return hdict(f_or_dictionary, **kwargs)
         return apply(f_or_dictionary, *applied_args, fhosh=fhosh, **kwargs)
