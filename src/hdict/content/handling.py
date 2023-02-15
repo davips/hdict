@@ -218,7 +218,8 @@ def handle_values(data: Dict[str, object], previous):
         elif str(type(content)) == "<class 'pandas.core.frame.DataFrame'>":
             val = explode_df(content)
             data[k] = val
-            mirror_fields[f"{k}_"] = value(val.hdict, val.hosh)
+            if k.endswith("_"):
+                mirror_fields[f"{k[:-1]}"] = value(val.hdict, val.hosh)
         elif isinstance(content, AbsContent):  # pragma: no cover
             raise Exception(f"Cannot handle instance of type '{type(content)}'.")
         else:
