@@ -26,6 +26,7 @@ import re
 from collections import UserDict
 from typing import TypeVar
 
+
 from hdict.aux import handle_rshift
 from hdict.content import MissingFieldException
 from hdict.customjson import CustomJSONEncoder, stringfy
@@ -42,12 +43,23 @@ class frozenhdict(UserDict, dict[str, VT]):
 
     >>> from hdict.frozenhdict import frozenhdict
     >>> d = frozenhdict({"x": 3}, y=5)
+    >>> from hosh._internals_appearance import decolorize
+    >>> print(decolorize(repr(d)))  # This is equivalent to just 'd', without colors.
+    {
+        x: 3,
+        y: 5,
+        _id: r5A2Mh6vRRO5rxi5nfXv1myeguGSTmqHuHev38qM,
+        _ids: {
+            x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+            y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2
+        }
+    }
     >>> d.data
-    {'x': 3, 'y': 5, '_id': 'r5A2Mh6vRRO5rxi5nfXv1myeguGSTmqHuHev38qM', '_ids': {'x': 'KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr', 'y': 'ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2'}}
+    {'x': 3, 'y': 5}
     >>> from hdict import _
     >>> d >>= _(lambda v, x: v - x).z
     >>> str(d)
-    '{x: 3, y: 5, _id: "r5A2Mh6vRRO5rxi5nfXv1myeguGSTmqHuHev38qM", _ids: {x: "KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr", y: "ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2"}} » z=λ(v x)'
+    '{x: 3, y: 5} » z=λ(v x)'
     >>> d.show(colored=False)
     {
         x: 3,
@@ -119,18 +131,18 @@ class frozenhdict(UserDict, dict[str, VT]):
             _previous = {}
 
         data = _dictionary or {}
+        # TODO: check if _dictionary keys is 'str'; regex to check if k is an identifier;
         data.update(kwargs)
         if "_id" in data.keys() or "_ids" in data.keys():  # pragma: no cover
             raise Exception(f"Hosh-indexed dict cannot have a field named '_id'/'_ids': {data.keys()}")
-        handle_values(data, _previous)
+        self.raw = handle_values(data, _previous)
 
         # REMINDER: Inside data, the only 'dict' entries are "_id" and "_ids", the rest is AbsContent.
         self.data: dict[str, AbsContent | str | dict[str, str]] = data
 
         # REMINDER: "lazy hoshes" are only available after handling values (call above).
         self.hosh, self.ids = handle_identity(self.data)
-        self.data["_id"] = self.id = self.hosh.id
-        self.data["_ids"] = self.ids
+        self.id = self.hosh.id
 
     def __rrshift__(self, other):
         from hdict.hdict_ import hdict
@@ -153,7 +165,7 @@ class frozenhdict(UserDict, dict[str, VT]):
                 raise e from None
 
     def __getitem__(self, item):  # pragma: no cover
-        return self.data[item] if item in ["_id", "_ids"] else self.data[item].value
+        return self.data[item].value
 
     def __getattr__(self, item):  # pragma: no cover
         if item in self.data:
@@ -211,6 +223,10 @@ class frozenhdict(UserDict, dict[str, VT]):
     @property
     def asdict(self):
         """
+        Convert to 'dict', including ids.
+
+        HINT: Use 'dict(d)' to convert a 'hdict' 'd' to 'dict' excluding ids.
+
         >>> from hdict import hdict, value
         >>> d = hdict.fromdict({"x": value(5, hosh="0123456789012345678901234567890123456789")}, {"x": "0123456789012345678901234567890123456789"})
         >>> d.asdict
@@ -226,12 +242,44 @@ class frozenhdict(UserDict, dict[str, VT]):
     @property
     def asdicts(self):
         """
-        Recurse into nested frozenhdicts (REMINDER: hdict is never nested)
+        Convert to 'dict' recursing into nested frozenhdicts, including ids.
+
+        REMINDER: hdict is never nested, frozenhdict is used instead
+        HINT: Use 'asdicts_noid' to recursively convert a 'hdict' 'd' to 'dict' excluding ids.
 
         >>> from hdict import value, hdict
         >>> d = hdict(x=value(5, hosh="0123456789012345678901234567890123456789"))
-        >>> d.asdicts
-        {'x': 5, '_id': 'bi5Qdbh-zgA1ZQdxGhxqjaKaQROtxk1VCPRZhMOq', '_ids': {'x': '0123456789012345678901234567890123456789'}}
+        >>> e = hdict(d=d)
+        >>> e.asdicts
+        {'d': {'x': 5, '_id': 'bi5Qdbh-zgA1ZQdxGhxqjaKaQROtxk1VCPRZhMOq', '_ids': {'x': '0123456789012345678901234567890123456789'}}, '_id': 'GGhKhUmGhISaoHevn39hb-pLZEMoAc3KzE6Z0.IH', '_ids': {'d': 'bi5Qdbh-zgA1ZQdxGhxqjaKaQROtxk1VCPRZhMOq'}}
+        >>> dict(e), e
+
+        """
+        if self._asdicts is None:
+            dic = {}
+            for k, v in self.items():
+                dic[k] = v.asdicts if isinstance(v, frozenhdict) else v
+            dic["_id"] = self.id
+            dic["_ids"] = self.ids.copy()
+            self._asdicts = dic
+        return self._asdicts
+
+
+    @property
+    def asdicts_noid(self):
+        """
+        Convert to 'dict' recursing into nested frozenhdicts, excluding ids.
+
+        REMINDER: hdict is never nested, frozenhdict is used instead
+        HINT: Use 'asdicts' to recursively convert a 'hdict' 'd' to 'dict' including ids.
+
+        >>> from hdict import value, hdict
+        >>> d = hdict(x=value(5, hosh="0123456789012345678901234567890123456789"))
+        >>> e = hdict(d=d)
+        >>> e.asdicts_noid
+        {'d': {'x': 5}}
+        >>> dict(e), e
+
         """
         if self._asdicts is None:
             dic = {}
@@ -359,11 +407,12 @@ class frozenhdict(UserDict, dict[str, VT]):
                 return self.id == other["_id"]
             if list(self.keys()) != list(other.keys()):
                 return False
+            from hdict.hdict_ import hdict
+            if isinstance(other, (frozenhdict, hdict)):
+                return self.id == other.id
         if isinstance(other, dict):
             self.evaluate()
             data = self.asdict
-            del data["_id"]
-            del data["_ids"]
             return data == other
         raise TypeError(f"Cannot compare {type(self)} and {type(other)}")  # pragma: no cover
 

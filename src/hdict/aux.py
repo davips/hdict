@@ -34,7 +34,5 @@ def handle_rshift(self, other):
                 data[k] = v
             else:  # pragma: no cover
                 raise Exception(f"Invalid type for input field specification: {type(k)}")
-        del data["_id"]
-        del data["_ids"]
         return frozenhdict(data, _previous=self.data)
     return NotImplemented  # pragma: no cover

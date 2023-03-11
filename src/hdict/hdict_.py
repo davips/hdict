@@ -286,6 +286,7 @@ class hdict(dict[str, VT]):
     >>> d = hdict(x=2, y=4)
     >>> d == {"x": 2, "y": 4}
     True
+    >>> dict(d)
     >>> hdict() >> {"x": 3} == {"x": 3}
     True
     >>> hdict(x=3) == {"x": 3, "_id": hdict(x=3).id}
@@ -352,8 +353,6 @@ class hdict(dict[str, VT]):
     def __delitem__(self, key):
         data = self.frozen.data.copy()
         del data[key]
-        del data["_id"]
-        del data["_ids"]
         self.frozen = frozenhdict(data)
 
     def __getitem__(self, item):
