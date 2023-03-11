@@ -26,7 +26,6 @@ import re
 from collections import UserDict
 from typing import TypeVar
 
-
 from hdict.aux import handle_rshift
 from hdict.content import MissingFieldException
 from hdict.customjson import CustomJSONEncoder, stringfy
@@ -119,7 +118,7 @@ class frozenhdict(UserDict, dict[str, VT]):
     """
 
     _evaluated = None
-    _asdict, _asdicts = None, None
+    _asdict, _asdicts, _asdicts_noid = None, None, None
 
     # noinspection PyMissingConstructor
     def __init__(self, /, _dictionary=None, _previous=None, **kwargs):
@@ -225,7 +224,8 @@ class frozenhdict(UserDict, dict[str, VT]):
         """
         Convert to 'dict', including ids.
 
-        HINT: Use 'dict(d)' to convert a 'hdict' 'd' to 'dict' excluding ids.
+        This evaluates all fields.
+        HINT: Use 'dict(d)' to convert a 'hdict' to a 'dict' excluding ids.
 
         >>> from hdict import hdict, value
         >>> d = hdict.fromdict({"x": value(5, hosh="0123456789012345678901234567890123456789")}, {"x": "0123456789012345678901234567890123456789"})
@@ -233,7 +233,7 @@ class frozenhdict(UserDict, dict[str, VT]):
         {'x': 5, '_id': 'bi5Qdbh-zgA1ZQdxGhxqjaKaQROtxk1VCPRZhMOq', '_ids': {'x': '0123456789012345678901234567890123456789'}}
         """
         if self._asdict is None:
-            dic = {k: v for k, v in self.items()}
+            dic = dict(self.items())
             dic["_id"] = self.id
             dic["_ids"] = self.ids.copy()
             self._asdict = dic
@@ -244,16 +244,17 @@ class frozenhdict(UserDict, dict[str, VT]):
         """
         Convert to 'dict' recursing into nested frozenhdicts, including ids.
 
+        This evaluates all fields.
         REMINDER: hdict is never nested, frozenhdict is used instead
-        HINT: Use 'asdicts_noid' to recursively convert a 'hdict' 'd' to 'dict' excluding ids.
+        HINT: Use 'asdicts_noid' to recursively convert a 'hdict' to a 'dict' excluding ids.
 
         >>> from hdict import value, hdict
         >>> d = hdict(x=value(5, hosh="0123456789012345678901234567890123456789"))
         >>> e = hdict(d=d)
         >>> e.asdicts
         {'d': {'x': 5, '_id': 'bi5Qdbh-zgA1ZQdxGhxqjaKaQROtxk1VCPRZhMOq', '_ids': {'x': '0123456789012345678901234567890123456789'}}, '_id': 'GGhKhUmGhISaoHevn39hb-pLZEMoAc3KzE6Z0.IH', '_ids': {'d': 'bi5Qdbh-zgA1ZQdxGhxqjaKaQROtxk1VCPRZhMOq'}}
-        >>> dict(e), e
-
+        >>> dict(e) == e
+        True
         """
         if self._asdicts is None:
             dic = {}
@@ -263,7 +264,6 @@ class frozenhdict(UserDict, dict[str, VT]):
             dic["_ids"] = self.ids.copy()
             self._asdicts = dic
         return self._asdicts
-
 
     @property
     def asdicts_noid(self):
@@ -278,17 +278,16 @@ class frozenhdict(UserDict, dict[str, VT]):
         >>> e = hdict(d=d)
         >>> e.asdicts_noid
         {'d': {'x': 5}}
-        >>> dict(e), e
+        >>> dict(e) == e
+        True
 
         """
-        if self._asdicts is None:
+        if self._asdicts_noid is None:
             dic = {}
             for k, v in self.items():
-                dic[k] = v.asdicts if isinstance(v, frozenhdict) else v
-            dic["_id"] = self.id
-            dic["_ids"] = self.ids.copy()
-            self._asdicts = dic
-        return self._asdicts
+                dic[k] = v.asdicts_noid if isinstance(v, frozenhdict) else v
+            self._asdicts_noid = dic
+        return self._asdicts_noid
 
     @property
     def asdicts_hoshes_noneval(self):
@@ -357,17 +356,19 @@ class frozenhdict(UserDict, dict[str, VT]):
         >>> list(hdict(x=3, y=5).values())
         [3, 5]
         """
-        return (k for k in self.data if not k.startswith("_"))
+        # return (k for k in self.data if not k.startswith("_"))
+        return self.data.keys()
 
     def values(self, evaluate=True):
         """Generator of field values (keys that don't start with '_')"""
-        return ((v.value if evaluate else v) for k, v in self.data.items() if not k.startswith("_"))
+        return ((v.value if evaluate else v) for k, v in self.data.items())
+        # return ((v.value if evaluate else v) for k, v in self.data.items() if not k.startswith("_"))
 
     def items(self, evaluate=True):
         """Generator over field-value pairs"""
         for k, val in self.data.items():
-            if not k.startswith("_"):
-                yield k, (val.value if evaluate else val)
+            # if not k.startswith("_"):
+            yield k, (val.value if evaluate else val)
 
     # @cached_property
     # def aslist(self):
@@ -410,10 +411,7 @@ class frozenhdict(UserDict, dict[str, VT]):
             from hdict.hdict_ import hdict
             if isinstance(other, (frozenhdict, hdict)):
                 return self.id == other.id
-        if isinstance(other, dict):
-            self.evaluate()
-            data = self.asdict
-            return data == other
+            return dict(self) == other
         raise TypeError(f"Cannot compare {type(self)} and {type(other)}")  # pragma: no cover
 
     def __ne__(self, other):
@@ -434,8 +432,8 @@ class frozenhdict(UserDict, dict[str, VT]):
 
     def __iter__(self):
         for k in self.data:
-            if not k.startswith("_"):
-                yield k
+            # if not k.startswith("_"):
+            yield k
 
     def __hash__(self):
         return hash(self.hosh)

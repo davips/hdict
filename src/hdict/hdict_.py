@@ -284,10 +284,21 @@ class hdict(dict[str, VT]):
     }
 
     >>> d = hdict(x=2, y=4)
+    >>> {"x": 2, "y": 4} == d.frozen
+    True
+    >>> {"x": 2, "y": 4} == d
+    True
     >>> d == {"x": 2, "y": 4}
     True
     >>> dict(d)
+    {'x': 2, 'y': 4}
     >>> hdict() >> {"x": 3} == {"x": 3}
+    True
+    >>> {"x": 3, "d": {"x": 7}} == hdict(x=3, d=hdict(x=7))
+    True
+    >>> hdict(x=3, d=hdict(x=7)) == {"x": 3, "d": {"x": 7}}
+    True
+    >>> {"x": 3, "_id": hdict(x=3).id} == hdict(x=3)
     True
     >>> hdict(x=3) == {"x": 3, "_id": hdict(x=3).id}
     True
@@ -315,16 +326,16 @@ class hdict(dict[str, VT]):
     >>> print(f2hosh(lambda y: y*7))
     54YCMDJIlsIvMQ.KJtT-vFyjg83Zgfj2xSHOgCj8
     >>> print(e)
-    {y: "λ(4)", _id: "EtPSkexkaJ1HvgUWYBA5iZ5HzIpBGTgqafKSs0jb", _ids: {y: "kFHvjNc17K0O5.7.V0xRNKmiBOmMmi.cbVUROZna"}}
+    {y: "λ(4)"}
     >>> e.evaluate()
     >>> print(e)
-    {y: 28, _id: "EtPSkexkaJ1HvgUWYBA5iZ5HzIpBGTgqafKSs0jb", _ids: {y: "kFHvjNc17K0O5.7.V0xRNKmiBOmMmi.cbVUROZna"}}
+    {y: 28}
     >>> d = d >> _(lambda y=1: y*7, fhosh="54YCMDJIlsIvMQ.KJtT-vFyjg83Zgfj2xSHOgCj8")("y")
     >>> print(d)
-    {y: "λ(4)", _id: "EtPSkexkaJ1HvgUWYBA5iZ5HzIpBGTgqafKSs0jb", _ids: {y: "kFHvjNc17K0O5.7.V0xRNKmiBOmMmi.cbVUROZna"}}
+    {y: "λ(4)"}
     >>> d.evaluate()
     >>> print(d)
-    {y: 28, _id: "EtPSkexkaJ1HvgUWYBA5iZ5HzIpBGTgqafKSs0jb", _ids: {y: "kFHvjNc17K0O5.7.V0xRNKmiBOmMmi.cbVUROZna"}}
+    {y: 28}
     >>> hash(e.frozen) == hash(d.frozen)
     True
     >>> d = hdict(a=5) >> hdict(y=28)
@@ -336,6 +347,33 @@ class hdict(dict[str, VT]):
         _ids: {
             a: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
             y: -2A0hTRBN1wtIKQxLzRcYDBkhv1hu-dMY-24Jye9
+        }
+    }
+    >>> d >>= _(lambda a: a)("x")
+    >>> d.show(colored=False)
+    {
+        a: 5,
+        y: 28,
+        x: λ(a),
+        _id: q5J7ZUr3gs0bKrG4AxVEY2q0-XH3Suvw5X8-j6do,
+        _ids: {
+            a: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+            y: -2A0hTRBN1wtIKQxLzRcYDBkhv1hu-dMY-24Jye9,
+            x: gak9o6ZS9plw9l63f0WtAFnr52.1HycGhc3En2MR
+        }
+    }
+    >>> {"_id": "q5J7ZUr3gs0bKrG4AxVEY2q0-XH3Suvw5X8-j6do"} == d
+    True
+    >>> d.show(colored=False)
+    {
+        a: 5,
+        y: 28,
+        x: λ(a),
+        _id: q5J7ZUr3gs0bKrG4AxVEY2q0-XH3Suvw5X8-j6do,
+        _ids: {
+            a: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+            y: -2A0hTRBN1wtIKQxLzRcYDBkhv1hu-dMY-24Jye9,
+            x: gak9o6ZS9plw9l63f0WtAFnr52.1HycGhc3En2MR
         }
     }
     """
@@ -449,8 +487,19 @@ class hdict(dict[str, VT]):
         """Build an idict from values and pre-defined ids
 
         >>> from hosh import Hosh
-        >>> print(hdict.fromdict({"x": 3, "y": 5, "z": 7}, ids={"x": Hosh(b"x"), "y": Hosh(b"y").id}))
-        {x: 3, y: 5, z: 7, _id: "uf--zyyiojm5Tl.vFKALuyGhZRO0e0eH9irosr0i", _ids: {x: "ue7X2I7fd9j0mLl1GjgJ2btdX1QFnb1UAQNUbFGh", y: "5yg5fDxFPxhEqzhoHgXpKyl5f078iBhd.pR0G2X0", z: "eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf"}}
+        >>> e = hdict.fromdict({"x": 3, "y": 5, "z": 7}, ids={"x": Hosh(b"x"), "y": Hosh(b"y").id})
+        >>> e.show(colored=False)
+        {
+            x: 3,
+            y: 5,
+            z: 7,
+            _id: uf--zyyiojm5Tl.vFKALuyGhZRO0e0eH9irosr0i,
+            _ids: {
+                x: ue7X2I7fd9j0mLl1GjgJ2btdX1QFnb1UAQNUbFGh,
+                y: 5yg5fDxFPxhEqzhoHgXpKyl5f078iBhd.pR0G2X0,
+                z: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf
+            }
+        }
         """
         from hdict.frozenhdict import frozenhdict
 
@@ -473,6 +522,10 @@ class hdict(dict[str, VT]):
         {'x': 3, 'y': 5, '_id': 'r5A2Mh6vRRO5rxi5nfXv1myeguGSTmqHuHev38qM', '_ids': {'x': 'KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr', 'y': 'ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2'}}
         """
         return self.frozen.asdicts
+
+    @property
+    def asdicts_noid(self):
+        return self.frozen.asdicts_noid
 
     def astext(self, colored=True, key_quotes=False, extra_items=None):
         r"""
@@ -527,7 +580,7 @@ class hdict(dict[str, VT]):
         return self.frozen == other
 
     def __ne__(self, other):
-        return not (self == other)
+        return self.frozen != other
 
     # def __reduce__(self):
     #     return self.frozen.__reduce__()
