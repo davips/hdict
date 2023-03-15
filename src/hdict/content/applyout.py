@@ -44,15 +44,14 @@ class applyOut(AbsContent, AbsSampleable):
     @property
     def isevaluated(self):
         """
-        >>> from hdict import _
-        >>> _(lambda x, y: x + y).x.isevaluated
+        >>> from hdict import apply
+        >>> apply(lambda x, y: x + y).x.isevaluated
         False
         """
         return self.nested.isevaluated
 
     def __rrshift__(self, other):
-        from hdict.hdict_ import hdict
-        from hdict.frozenhdict import frozenhdict
+        from hdict import hdict, frozenhdict
 
         if isinstance(other, dict) and not isinstance(other, (hdict, frozenhdict)):
             return hdict() >> other >> self
@@ -69,6 +68,10 @@ class applyOut(AbsContent, AbsSampleable):
     def __repr__(self):
         out = "" if self.nested.finished else f"{self.out}="
         return out + repr(self.nested)
+
+    def cached(self, cache):
+        # TODO: def cached(self, cache)
+        return self
 
     #
     #     Traceback (most recent call last):

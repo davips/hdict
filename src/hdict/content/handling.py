@@ -24,7 +24,6 @@ from dataclasses import dataclass
 from typing import Dict
 
 from hdict.content.abs.abscontent import AbsContent
-from hdict.hdict_ import hdict
 from hdict.indexeddict import IndexedDict
 from hdict.pandas_handling import explode_df
 from hosh import ø
@@ -182,7 +181,7 @@ def handle_values(data: Dict[str, object], previous):
     from hdict.content.apply import apply
     from hdict.content.field import field
     from hdict.content.subcontent import subcontent
-    from hdict import default
+    from hdict import default, hdict
 
     unfinished, mirror_fields, subcontent_cloned_parent = {}, {}, {}
     for k, content in data.items():

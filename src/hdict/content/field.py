@@ -31,20 +31,20 @@ class field(AbsCloneable):
     """
     Pointer to a field
 
-    >>> from hdict import _
-    >>> d = _.Ø
+    >>> from hdict import Ø, _, apply
+    >>> d = Ø
     >>> d.show(colored=False)
     {
         _id: 0000000000000000000000000000000000000000,
         _ids: {}
     }
-    >>> d = _()
+    >>> d = _
     >>> d.show(colored=False)
     {
         _id: 0000000000000000000000000000000000000000,
         _ids: {}
     }
-    >>> d >>= {"x": 3, "y": 5} >> _(lambda x, y: x + y).z
+    >>> d >>= {"x": 3, "y": 5} >> apply(lambda x, y: x + y).z
     >>> d.show(colored=False)
     {
         x: 3,
@@ -57,10 +57,10 @@ class field(AbsCloneable):
             z: Q1ypbWuXlEf9MeJNT1wyFcA8V0.DvHEFOeCidBrZ
         }
     }
-    >>> d >>= {"x": 3, "y": 5} >> _(lambda x, y: x + y).x
+    >>> d >>= {"x": 3, "y": 5} >> apply(lambda x, y: x + y).x
     >>> d.x
     8
-    >>> d["x"] = _(lambda x, y: x + y)
+    >>> d["x"] = apply(lambda x, y: x + y)
     >>> d.x
     13
     """

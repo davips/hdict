@@ -55,8 +55,8 @@ class frozenhdict(UserDict, dict[str, VT]):
     }
     >>> d.data
     {'x': 3, 'y': 5}
-    >>> from hdict import _
-    >>> d >>= _(lambda v, x: v - x).z
+    >>> from hdict import _, apply
+    >>> d >>= apply(lambda v, x: v - x).z
     >>> str(d)
     '{x: 3, y: 5} » z=λ(v x)'
     >>> d.show(colored=False)
@@ -85,7 +85,7 @@ class frozenhdict(UserDict, dict[str, VT]):
             z: .beBfajsUjKto9qdBCKsLmBgsaNPpJiyz24P9.qg
         }
     }
-    >>> d = _() >> d
+    >>> d = _ >> d
     >>> d.show(colored=False)
     {
         v: 7,
@@ -144,7 +144,7 @@ class frozenhdict(UserDict, dict[str, VT]):
         self.id = self.hosh.id
 
     def __rrshift__(self, other):
-        from hdict.hdict_ import hdict
+        from hdict import hdict
 
         if isinstance(other, dict) and not isinstance(other, (hdict, frozenhdict)):
             return pipeline(hdict() >> other, self)
@@ -408,7 +408,8 @@ class frozenhdict(UserDict, dict[str, VT]):
                 return self.id == other["_id"]
             if list(self.keys()) != list(other.keys()):
                 return False
-            from hdict.hdict_ import hdict
+            from hdict import hdict
+
             if isinstance(other, (frozenhdict, hdict)):
                 return self.id == other.id
             return dict(self) == other

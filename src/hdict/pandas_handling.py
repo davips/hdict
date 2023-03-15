@@ -29,11 +29,11 @@ def explode_df(df) -> value:
     >>> from pandas import DataFrame
     >>> from hdict import hdict
     >>> df = DataFrame({"x": [1,2,3], "y": [5,6,7]}, index=["a", "b", "c"])
-    >>> d = hdict(df=df)
+    >>> d = hdict(df_=df)
     >>> d.show(colored=False)
     {
-        df: "‹{'x': {'a': 1, 'b': 2, 'c': 3}, 'y': {'a': 5, 'b': 6, 'c': 7}}›",
-        df_: {
+        df_: "‹{'x': {'a': 1, 'b': 2, 'c': 3}, 'y': {'a': 5, 'b': 6, 'c': 7}}›",
+        df: {
             index: "‹{'a': 'a', 'b': 'b', 'c': 'c'}›",
             x: "‹{'a': 1, 'b': 2, 'c': 3}›",
             y: "‹{'a': 5, 'b': 6, 'c': 7}›",
@@ -49,7 +49,7 @@ def explode_df(df) -> value:
             df: CO3m4w1vqM.etZXkoHQoNxA.PS.kQI-LomW.H6VC
         }
     }
-    >>> d.df
+    >>> d.df_
        x  y
     a  1  5
     b  2  6

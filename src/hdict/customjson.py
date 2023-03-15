@@ -53,7 +53,7 @@ class CustomJSONEncoder(JSONEncoder):
        0  1
     0  1  2
     1  3  4
-    >>> b = hdict(d=a, y=5, df=df, ell=...)
+    >>> b = hdict(d=a, y=5, df_=df, ell=...)
     >>> b.show(colored=False)
     {
         d: {
@@ -64,9 +64,9 @@ class CustomJSONEncoder(JSONEncoder):
             }
         },
         y: 5,
-        df: "‹{0: {0: 1, 1: 3}, 1: {0: 2, 1: 4}}›",
+        df_: "‹{0: {0: 1, 1: 3}, 1: {0: 2, 1: 4}}›",
         ell: "...",
-        df_: {
+        df: {
             index: "‹{0: 0, 1: 1}›",
             0: "‹{0: 1, 1: 3}›",
             1: "‹{0: 2, 1: 4}›",
@@ -81,8 +81,8 @@ class CustomJSONEncoder(JSONEncoder):
         _ids: {
             d: fBb9FHVYpHC7vyM-B8UrXuN4oCcQ4Y7pnQ6oSK3J,
             y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
-            df: Zrz1JpxxZz7HIZDWPjdZEvMsqClGQnH7qcIqzhOb,
-            ell: P1oPe-8hTjTdV6gKov4oIQnmTUXyD2fU6E7C8MS6
+            ell: P1oPe-8hTjTdV6gKov4oIQnmTUXyD2fU6E7C8MS6,
+            df: Zrz1JpxxZz7HIZDWPjdZEvMsqClGQnH7qcIqzhOb
         }
     }
     >>> from numpy import array
@@ -97,9 +97,9 @@ class CustomJSONEncoder(JSONEncoder):
                 }
             },
             y: 5,
-            df: "‹{0: {0: 1, 1: 3}, 1: {0: 2, 1: 4}}›",
+            df_: "‹{0: {0: 1, 1: 3}, 1: {0: 2, 1: 4}}›",
             ell: "...",
-            df_: {
+            df: {
                 index: "‹{0: 0, 1: 1}›",
                 0: "‹{0: 1, 1: 3}›",
                 1: "‹{0: 2, 1: 4}›",
@@ -114,8 +114,8 @@ class CustomJSONEncoder(JSONEncoder):
             _ids: {
                 d: fBb9FHVYpHC7vyM-B8UrXuN4oCcQ4Y7pnQ6oSK3J,
                 y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
-                df: Zrz1JpxxZz7HIZDWPjdZEvMsqClGQnH7qcIqzhOb,
-                ell: P1oPe-8hTjTdV6gKov4oIQnmTUXyD2fU6E7C8MS6
+                ell: P1oPe-8hTjTdV6gKov4oIQnmTUXyD2fU6E7C8MS6,
+                df: Zrz1JpxxZz7HIZDWPjdZEvMsqClGQnH7qcIqzhOb
             }
         },
         z: 9,

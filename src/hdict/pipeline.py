@@ -32,8 +32,8 @@ class pipeline(AbsSampleable):
     """
     Sequence of steps, tries to solve on update, resulting in a hdict/frozenhdict
 
-    >>> from hdict import _
-    >>> p = _(x=5) >> _(lambda x, y: x + y).r
+    >>> from hdict import apply
+    >>> p = dict(x=5) >> apply(lambda x, y: x + y).r
     >>> p.show(colored=False)
     {
         x: 5,
@@ -43,7 +43,7 @@ class pipeline(AbsSampleable):
         },
         y: ✗ missing ✗
     } » r=λ(x y)
-    >>> p2 = _(y=7) >> p
+    >>> p2 = dict(y=7) >> p
     >>> p2.show(colored=False)
     {
         y: 7,
@@ -83,7 +83,7 @@ class pipeline(AbsSampleable):
 
     def __rrshift__(self, other):
         from hdict.frozenhdict import frozenhdict
-        from hdict.hdict_ import hdict
+        from hdict import hdict
 
         # REMINDER: 'dict' includes 'hdict', 'frozenhdict'
         if not isinstance(other, (frozenhdict, hdict)) and isinstance(other, dict):
@@ -130,7 +130,7 @@ class pipeline(AbsSampleable):
         {'b': 2} » {'a': 1}
         """
         from hdict.frozenhdict import frozenhdict
-        from hdict.hdict_ import hdict
+        from hdict import hdict
 
         extra_items = extra_items or {}
         if self.missing:
