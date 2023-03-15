@@ -33,13 +33,14 @@ from hdict.content.apply import apply
 class applyOut(AbsContent, AbsSampleable):
     nested: apply
     out: [str | tuple[str, str]]
+    caches: tuple
 
     def __post_init__(self):
         outs = [self.out] if isinstance(self.out, str) else self.out
         keys = self.nested.requirements.keys()
 
     def sample(self, rnd: int | Random = None):
-        return applyOut(self.nested.sample(rnd), self.out)
+        return applyOut(self.nested.sample(rnd), self.out, self.caches)
 
     @property
     def isevaluated(self):
@@ -49,6 +50,12 @@ class applyOut(AbsContent, AbsSampleable):
         False
         """
         return self.nested.isevaluated
+
+    def cached(self, *caches):
+        if not caches:  # pragma: no cover
+            raise Exception(f"Missing at least one dict-like object for caching.")
+        nested = "TODO"  # apply(f,self.nested.args
+        return applyOut(nested, self.out, caches)
 
     def __rrshift__(self, other):
         from hdict import hdict, frozenhdict
@@ -68,10 +75,6 @@ class applyOut(AbsContent, AbsSampleable):
     def __repr__(self):
         out = "" if self.nested.finished else f"{self.out}="
         return out + repr(self.nested)
-
-    def cached(self, cache):
-        # TODO: def cached(self, cache)
-        return self
 
     #
     #     Traceback (most recent call last):

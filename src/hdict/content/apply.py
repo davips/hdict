@@ -229,14 +229,14 @@ class apply(AbsCloneable, AbsSampleable):
             raise Exception(f"Cannot mix translated and non translated outputs.")
         if len(out) == 1:
             out = out[0]
-        return applyOut(self, out or tuple(kwout.items()))
+        return applyOut(self, out or tuple(kwout.items()), ())
 
     def __getattr__(self, item):
         # REMINDER: Work around getattribute missing all properties.
         if item not in ["isevaluated", "fun", "value", "hosh", "ahosh"]:
             from hdict.content.applyout import applyOut
 
-            return applyOut(self, item)
+            return applyOut(self, item, ())
         return self.__getattribute__(item)  # pragma: no cover
 
     def __rshift__(self, other):  # pragma: no cover
