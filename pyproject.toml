@@ -29,6 +29,7 @@ pdoc3 = "^0.10.0"
 pylint = "^2.7.4"
 ipython = "^8.9.0"
 pandas = "^1.5.3"
+arff = "^0.9"
 
 [build-system]
 requires = ["poetry-core"]

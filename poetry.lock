@@ -29,6 +29,17 @@ files = [
 ]
 
 [[package]]
+name = "arff"
+version = "0.9"
+description = "Python package for reading and writing Weka arff files"
+category = "dev"
+optional = false
+python-versions = "*"
+files = [
+    {file = "arff-0.9.tar.gz", hash = "sha256:a4013e25a01a88a08e33aae60ec5c66deba0565709d056d2c20819d032fdd1eb"},
+]
+
+[[package]]
 name = "astroid"
 version = "2.15.0"
 description = "An abstract syntax tree for Python with inference support."
@@ -1256,4 +1267,4 @@ full = ["pandas"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "162bc5fd8791ce3bcfd307e82e90d1de1aa9a1d6b2f6b5768c3b338e302c5500"
+content-hash = "613d87e81462074dfc3408e9a3ed93091f88aef27d30c9a2f85921aced657d53"

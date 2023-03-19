@@ -1,2 +1,4 @@
+Refactor and adopt sane syntax with mandatory 'apply'
 Fix eq
 Remove _id / _ids from 'd.data'
+Turn mirror field optional; enabled explicitly by putting an "_" suffix for the original data

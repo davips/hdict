@@ -628,6 +628,33 @@ class hdict(dict[str, VT]):
         #     raise Exception("Cannot pass more arguments when loading from cache (i.e., first argument is an id and the second argument is a dict-like cache).")
         # self.frozen = frozenhdict.fromid(_dictionary__id, _frozen__cache)
 
+    @staticmethod
+    def fromfile(name, fields=None, format="df", include_name=False):
+        """Input format is defined by file extension: .arff, .csv
+        """
+        from hdict.data.load import file2df
+        from hdict.data.dataset import df2Xy
+        if fields is None:
+            fields = ["df"]
+        df, name = file2df(name)
+        # if include_name
+        if format == "df":
+            if fields == ["X", "y"]:
+                fields = ["df"]
+            if len(fields) != 1:  # pragma: no cover
+                raise Exception(f"Wrong number of fields {len(fields)}. Expected: 1.", fields)
+            return frozenhdict({fields[0]: df})
+        elif format == "Xy":
+            if fields == ["df"]:
+                fields = ["X", "y"]
+            if len(fields) != 2:  # pragma: no cover
+                raise Exception(f"Wrong number of fields {len(fields)}. Expected: 2.", fields)
+            dic = df2Xy(df=df)
+            del dic["_history"]
+            return frozenhdict({fields[0]: dic["X"], fields[1]: dic["y"]})
+        else:  # pragma: no cover
+            raise Exception(f"Unknown {format=}.")
+
     # @property
     # def aslist(self):
     #     return self.frozen.aslist
