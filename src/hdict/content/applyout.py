@@ -55,6 +55,7 @@ class applyOut(AbsContent, AbsSampleable):
         if not caches:  # pragma: no cover
             raise Exception(f"Missing at least one dict-like object for caching.")
         nested = "TODO"  # apply(f,self.nested.args
+        return self
         return applyOut(nested, self.out, caches)
 
     def __rrshift__(self, other):
