@@ -26,8 +26,9 @@ import re
 from collections import UserDict
 from typing import TypeVar
 
-from hdict.aux import handle_rshift
-from hdict.content import MissingFieldException
+from hdict.aux import handle_rshift, handle_values
+from hdict.content import MissingFieldException, UnsampledException
+from hdict.content.abs.entry import AbsEntry
 from hdict.customjson import CustomJSONEncoder, stringfy
 from hdict.pipeline import pipeline
 
@@ -68,7 +69,7 @@ class frozenhdict(UserDict, dict[str, VT]):
             x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
             y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2
         },
-        v: ✗ missing ✗
+        v: ✗ first missing field ✗
     } » z=λ(v x)
     >>> d = {"v": 7} >> d
     >>> d.show(colored=False)
@@ -121,25 +122,14 @@ class frozenhdict(UserDict, dict[str, VT]):
     _asdict, _asdicts, _asdicts_noid = None, None, None
 
     # noinspection PyMissingConstructor
-    def __init__(self, /, _dictionary=None, _previous=None, **kwargs):
-        from hdict.content.handling import handle_values
-        from hdict.content.abs.abscontent import AbsContent
+    def __init__(self, /, _dictionary=None, **kwargs):
         from hdict.content.handling import handle_identity
+        # TODO: criar absclass para diferenciar apply de Apply etc. na hora de checar o que está chegando?
 
-        if _previous is None:
-            _previous = {}
-
-        data = _dictionary or {}
         # TODO: check if _dictionary keys is 'str'; regex to check if k is an identifier;
-        data.update(kwargs)
-        if "_id" in data.keys() or "_ids" in data.keys():  # pragma: no cover
-            raise Exception(f"Hosh-indexed dict cannot have a field named '_id'/'_ids': {data.keys()}")
-        self.raw = handle_values(data, _previous)
-
-        # REMINDER: Inside data, the only 'dict' entries are "_id" and "_ids", the rest is AbsContent.
-        self.data: dict[str, AbsContent | str | dict[str, str]] = data
-
-        # REMINDER: "lazy hoshes" are only available after handling values (call above).
+        data = _dictionary or {}
+        # REMINDER: Inside data, the only 'dict' entries are "_id" and "_ids", the rest are AbsEntry objects.
+        self.data: dict[str, AbsEntry | str | dict[str, str]] = handle_values(data, kwargs)
         self.hosh, self.ids = handle_identity(self.data)
         self.id = self.hosh.id
 
@@ -155,7 +145,7 @@ class frozenhdict(UserDict, dict[str, VT]):
 
         try:
             return handle_rshift(self, other)
-        except MissingFieldException as e:
+        except (MissingFieldException, UnsampledException) as e:
             # REMINDER: dict includes hdict/frozenhdict.
             if isinstance(other, (pipeline, dict, applyOut)):
                 return pipeline(self, other, missing={self.id: e.args[0]})
@@ -192,12 +182,11 @@ class frozenhdict(UserDict, dict[str, VT]):
             }
         }
         """
-        from hdict.content.abs.abscontent import AbsContent
         from hdict.content.value import value
 
         data = {}
         for k, v in dictionary.items():
-            if isinstance(v, AbsContent):
+            if isinstance(v, AbsEntry):
                 if k in ids and ids[k] != v.id:  # pragma: no cover
                     raise Exception(f"Conflicting ids provided for key '{k}': ival.id={v.id}; ids[{k}]={ids[k]}")
                 data[k] = v
@@ -212,10 +201,10 @@ class frozenhdict(UserDict, dict[str, VT]):
         return self
 
     def evaluate(self):
-        from hdict import apply
+        from hdict.content.closure import Closure
 
         for k, val in self.data.items():
-            if isinstance(val, apply):
+            if isinstance(val, Closure):
                 val.evaluate()
         return self
 
@@ -291,22 +280,21 @@ class frozenhdict(UserDict, dict[str, VT]):
 
     @property
     def asdicts_hoshes_noneval(self):
-        from hdict.content.abs.abscloneable import AbsCloneable
-
+        from hdict import value
         hoshes = set()
         dic = {}
         for k, val in self.data.items():
             if k not in ["_id", "_ids"]:
                 hoshes.add(val.hosh)
-                if isinstance(val, AbsCloneable):
-                    dic[k] = val
-                else:
+                if isinstance(val, value):
                     v = val.value
                     if isinstance(v, frozenhdict):
                         dic[k], subhoshes = v.asdicts_hoshes_noneval
                         hoshes.update(subhoshes)
                     else:
                         dic[k] = v
+                else:
+                    dic[k] = val
         hoshes.add(self.hosh)
         dic["_id"] = self.id
         dic["_ids"] = self.ids.copy()

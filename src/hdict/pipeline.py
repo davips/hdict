@@ -25,10 +25,10 @@ from itertools import chain
 from operator import rshift
 from random import Random
 
-from hdict.content.abs.abssampleable import AbsSampleable
+from hdict.content.abs.sampling import withSampling
 
 
-class pipeline(AbsSampleable):
+class pipeline(withSampling):
     """
     Sequence of steps, tries to solve on update, resulting in a hdict/frozenhdict
 
@@ -41,7 +41,7 @@ class pipeline(AbsSampleable):
         _ids: {
             x: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2
         },
-        y: ✗ missing ✗
+        y: ✗ first missing field ✗
     } » r=λ(x y)
     >>> p2 = dict(y=7) >> p
     >>> p2.show(colored=False)
@@ -69,15 +69,25 @@ class pipeline(AbsSampleable):
         }
     }
     """
+    _sampleable_steps = None
 
-    def __init__(self, *args, missing: dict = None):
+    def __init__(self, *args, missing: dict = None, _sampleable=None):
         self.steps = args
         self.missing = missing or {}
         self.hasmissing = missing is not None
+        self.sampleable = bool(self.sampleable_steps) if _sampleable is None else _sampleable
+
+    @property
+    def sampleable_steps(self):
+        if self._sampleable_steps is None:
+            self._sampleable_steps = [step for step in self.steps if step.sampleable]
+        return self._sampleable_steps
 
     def sample(self, rnd: int | Random = None):
-        new = pipeline()
-        new.steps = [(step.sample(rnd) if isinstance(step, AbsSampleable) else step) for step in self]
+        if not self.sampleable:
+            return self
+        new = pipeline(_sampleable=False)
+        new.steps = [step.sample(rnd) for step in self.sampleable_steps]
         new.missing = self.missing
         return new
 
@@ -142,7 +152,7 @@ class pipeline(AbsSampleable):
             if isinstance(step, (frozenhdict, hdict)):
                 delete = False
                 if step.id in self.missing:
-                    extra_items_[self.missing[step.id]] = "✗ missing ✗"
+                    extra_items_[self.missing[step.id]] = "✗ first missing field ✗"
                     delete = True
                 out.append(step.astext(colored=colored, key_quotes=key_quotes, extra_items=extra_items_))
                 if delete:

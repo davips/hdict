@@ -22,17 +22,16 @@
 #
 
 from dataclasses import dataclass
-from math import inf
 from random import Random
 
 from lange.tricks import list2progression
 
-from hdict.content.abs.abscontent import AbsContent
-from hdict.content.abs.abssampleable import AbsSampleable
+from hdict.content.abs.sampling import withSampling
+from hdict.content.abs.variable import AbsVariable
 
 
 @dataclass
-class sample(AbsContent, AbsSampleable):
+class sample(AbsVariable, withSampling):
     """
     >>> (s := sample(1, 2, 3, ..., 9).values)
     [1 2 .+. 9]
@@ -41,6 +40,7 @@ class sample(AbsContent, AbsSampleable):
     >>> (s := sample(2, -4, 8, ..., 12).values)
     [2 -4 8]
     """
+    unsampled = True
 
     def __init__(self, *values: list[int | float], rnd: int | Random = 0, maxdigits=28):
         self.rnd = rnd

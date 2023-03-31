@@ -20,40 +20,37 @@
 #  part of this work is illegal and it is unethical regarding the effort and
 #  time spent here.
 #
-from functools import cached_property
+from hdict import field, apply
+from hdict.content.abs.requirements import withRequirements
 
-from hdict.content.abs.abscloneable import AbsCloneable
-from hdict.content.abs.abscontent import AbsContent
-from hosh import Hosh
+from hdict.content.abs.appliable import AbsAppliable
 
 
-class subcontent(AbsCloneable):
-    content = None
-    _finished = False
+class subcontent(AbsAppliable, withRequirements):
+    """
+    >>> from hdict import value
+    >>> subcontent(value([3]), 0,1)
+    3
+    """
 
-    def __init__(self, parent: AbsContent, index: int, n: int, source: str = None, hosh: Hosh = None):
-        self.parent, self.index, self.n, self.source, self._hosh = parent, index, n, source, hosh
-
-    @property
-    def requirements(self):
+    def __init__(self, parent: AbsAppliable, index: int, n: int, source: str = None):
         from hdict import apply
+        self.parent, self.index, self.n, self.source = parent, index, n, source
+        if isinstance(parent, apply):
+            self.fargs, self.fkwargs = parent.fargs, parent.fkwargs
+            self.appliable = parent.appliable
+            self.ahosh = parent.ahosh
+            self.isfield = parent.isfield
+        else:
+            # nested subcontent
+            raise Exception(f"")  # TODO
+            self.fargs, self.fkwargs = {}, {}
+            self.appliable = None
+            # self.ahosh = None
+            # self.isfield = None
 
-        return self.parent.requirements if isinstance(self.parent, apply) else {}
-
-    @property
-    def hosh(self):
-        if self._hosh is None:
-            h = self.parent.hosh
-            self._hosh = h[self.index : self.n]
-        return self._hosh
-
-    @property
-    def isevaluated(self):
-        return self.parent.isevaluated
-
-    @cached_property
-    def value(self):
-        value = self.parent.value
+    def value(self, fargs, fkwargs, appliable_content):
+        value = self.parent.value(fargs, fkwargs, appliable_content) if isinstance(self.parent, AbsAppliable) else self.parent.value
         if isinstance(value, list):
             if len(value) < self.n:  # pragma: no cover
                 raise Exception(f"Number of output fields ('{self.n}') should not exceed number of resulting list elements ('{len(value)}').")
@@ -67,25 +64,5 @@ class subcontent(AbsCloneable):
         else:  # pragma: no cover
             raise Exception(f"Cannot infer subvalue '{self.index}' of type '{type(value)} {value}.")
 
-    def start_clone(self, parent=None):
-        if self.finished:  # pragma: no cover
-            raise Exception(f"Cannot clone a finished content.")
-        parent = parent or (self.parent.start_clone() if isinstance(self.parent, AbsCloneable) else self.parent)
-        return subcontent(parent, self.index, self.n, self.source, self._hosh)
-
-    def finish_clone(self, data, out, previous):
-        """
-        >>> from hdict import value
-        >>> subcontent(value([3]), 0,1)
-        3
-        """
-        if self.finished:  # pragma: no cover
-            raise Exception(f"Cannot finish a subcontent twice.")
-        if isinstance(self.parent, AbsCloneable) and not self.parent.finished:
-            self.parent.finish_clone(data, out, previous)
-        self._finished = True
-
     def __repr__(self):
-        if self.isevaluated:
-            return repr(self.value)
         return f"{self.parent}→{str(self.index if self.source is None else self.source)}"

@@ -20,13 +20,14 @@
 #  part of this work is illegal and it is unethical regarding the effort and
 #  time spent here.
 #
-
-from hdict.content.abs.abscontent import AbsContent
-from hdict.hoshfication import v2hosh
+from hdict.content.abs.any import AbsAny
+from hdict.content.abs.entry import AbsEntry
 from hosh import Hosh
 
+from hdict.hoshfication import v2hosh
 
-class value(AbsContent):
+
+class value(AbsEntry):
     """
     >>> x = 5
     >>> from hdict.content.value import value
@@ -46,8 +47,10 @@ class value(AbsContent):
             hosh:
             hdict:  optional reference to the object if it has a hdict counterpart (e.g.: pandas DF)
         """
-        if isinstance(val, AbsContent):  # pragma: no cover
-            raise Exception(f"Cannot nest AbsContent object inside a 'value' object: '{type(val)}")
+        from hdict import field
+        from hdict import apply
+        if isinstance(val, AbsAny):  # pragma: no cover
+            raise Exception(f"Cannot nest AbsAny object inside a 'value' object: '{type(val)}")
         self.value = val
         if isinstance(hosh, str):
             hosh = Hosh.fromid(hosh)

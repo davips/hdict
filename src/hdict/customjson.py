@@ -24,7 +24,7 @@ import json
 import re
 from json import JSONEncoder
 
-from hdict.content.abs.abscontent import AbsContent
+from hdict.content.abs.entry import AbsEntry
 
 
 class CustomJSONEncoder(JSONEncoder):
@@ -158,7 +158,7 @@ class CustomJSONEncoder(JSONEncoder):
             #     return obj.asdicts
             if obj is Ellipsis:
                 return "..."
-            if isinstance(obj, AbsContent) and obj.isevaluated:
+            if isinstance(obj, AbsEntry) and obj.isevaluated:
                 # from hoshmap import FrozenIdict, Idict
                 # if isinstance(obj.value, Idict):
                 #     return obj.value.frozen.asdicts

@@ -22,27 +22,28 @@
 #
 from random import Random
 
-from hdict.content.abs.abssampleable import AbsSampleable
-from hdict.hoshfication import v2hosh
 from hosh import Hosh
 
+from hdict.content.abs.any import AbsAny
+from hdict.content.abs.sampling import withSampling
+from hdict.content.abs.variable import AbsVariable
+from hdict.hoshfication import v2hosh
 
-class default(AbsSampleable):
-    def __init__(self, val: object, hosh: Hosh | str = None):
-        from hdict.content.field import field
-        from hdict.content.abs.abscontent import AbsContent
-        from hdict import sample, value
 
-        if isinstance(val, AbsContent) and not isinstance(val, (value, field, sample)):  # pragma: no cover
-            raise Exception(f"Can only define a field or use ordinary values as a default function parameter, not: '{type(val)}")
+class default(AbsVariable, withSampling):
+    def __init__(self, val: object | AbsVariable | 'value', hosh: Hosh | str = None, _sampleable=None):
+        from hdict import value, field, sample
+        if not isinstance(val, (value, field, sample)) and isinstance(val, AbsAny):  # pragma: no cover
+            raise Exception(f"Cannot use '{type(val)}' as a default function parameter.")
         self.value = val
         self._hosh = Hosh.fromid(hosh) if isinstance(hosh, str) else hosh
         self.isevaluated = True
+        self.sampleable = val.sampleable if _sampleable is None else _sampleable
 
     def sample(self, rnd: int | Random = None):
-        if not isinstance(self.value, AbsSampleable):
+        if not self.sampleable:
             return self
-        return default(self.value.sample(rnd), self.hosh)
+        return default(self.value.sample(rnd), self.hosh, _sampleable=False)
 
     @property
     def hosh(self):

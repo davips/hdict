@@ -20,5 +20,6 @@
 #  part of this work is illegal and it is unethical regarding the effort and
 #  time spent here.
 #
-class AbsSampleable:
+class withSampling:
     sample: None
+    sampleable: bool

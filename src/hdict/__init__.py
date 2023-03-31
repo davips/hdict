@@ -22,6 +22,7 @@
 #
 from typing import TypeVar, Union
 
+from hdict.content.abs.pipeable import AbsPipeable
 from hdict.content.apply import apply
 from hdict.content.default import default
 from hdict.content.field import field
@@ -421,7 +422,7 @@ class hdict(dict[str, VT]):
         if isinstance(other, apply):  # pragma: no cover
             raise Exception(f"Cannot apply without specifying output.")
         # REMINDER: dict includes hdict/frozenhdict.
-        if isinstance(other, (dict, applyOut, pipeline)):
+        if isinstance(other, (dict, AbsPipeable)):
             res = self.frozen >> other
             if isinstance(res, pipeline):
                 return pipeline(self, other, missing=res.missing)

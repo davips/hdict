@@ -20,21 +20,12 @@
 #  part of this work is illegal and it is unethical regarding the effort and
 #  time spent here.
 #
-from dataclasses import dataclass
-from typing import Dict
-
-from hdict.content.abs.abscontent import AbsContent
-from hdict.indexeddict import IndexedDict
-from hdict.pandas_handling import explode_df
 from hosh import ø
 
-
-@dataclass
-class Unevaluated:
-    n = 0
-
-
-Unevaluated = Unevaluated()
+from hdict import field
+from hdict.content.abs.appliable import AbsAppliable
+from hdict.content.abs.variable import AbsVariable
+from hdict.indexeddict import IndexedDict
 
 
 class Arg:
@@ -51,7 +42,12 @@ class Arg:
         return f"_{self.position}"
 
 
-def handle_multioutput(data, field_names: tuple, content: list | dict | AbsContent):
+def check_dup(field_name, result):
+    if field_name in result:  # pragma: no cover
+        raise Exception(f"The same field cannot be provided more than once: {k}")
+
+
+def handle_multioutput(result, field_names: tuple, content: list | dict | AbsAppliable | field):
     """Fields and hoshes are assigned to each output according to the alphabetical order of the original keys.
 
     >>> from hdict import field
@@ -65,23 +61,24 @@ def handle_multioutput(data, field_names: tuple, content: list | dict | AbsConte
     >>> d
     {'a': field('b'), 'b': field('c'), 'c': 5, 'x': 'b', 'y': 'a'}
     """
+    from hdict.content.subcontent import subcontent
     if isinstance(content, list):
         if len(field_names) != len(content):  # pragma: no cover
             raise Exception(f"Number of output fields ('{len(field_names)}') should match number of list elements ('{len(content)}').")
         for field_name, val in zip(field_names, content):
             if not isinstance(field_name, str):  # pragma: no cover
                 raise Exception(f"Can only accept target-field strings when unpacking a list, not '{type(field_name)}'.")
-            data[field_name] = val
+            check_dup(field_name, result)
+            result[field_name] = val
     elif isinstance(content, dict):
         if len(field_names) != len(content):  # pragma: no cover
             raise Exception(f"Number of output fields ('{len(field_names)}') should match number of dict entries ('{len(content)}').")
         for field_name, (_, val) in zip(field_names, sorted(content.items())):
             if not isinstance(field_name, str):  # pragma: no cover
                 raise Exception(f"Can only accept target-field strings when unpacking a dict, not '{type(field_name)}'.")
-            data[field_name] = val
-    elif isinstance(content, AbsContent):
-        from hdict.content.subcontent import subcontent
-
+            check_dup(field_name, result)
+            result[field_name] = val
+    elif isinstance(content, (AbsAppliable, field)):
         n = len(field_names)
         if all(isinstance(x, tuple) for x in field_names):
             source_target = sorted((sour, targ) for targ, sour in field_names)
@@ -89,12 +86,14 @@ def handle_multioutput(data, field_names: tuple, content: list | dict | AbsConte
                 if len(sour_targ) != 2:  # pragma: no cover
                     raise Exception(f"Output tuples should be string pairs 'target=source', not a sequence of length '{len(sour_targ)}'.", sour_targ)
                 source, target = sour_targ
-                data[target] = subcontent(content, i, n, source)
+                check_dup(target, result)
+                result[target] = subcontent(content, i, n, source)
         elif any(isinstance(x, tuple) for x in field_names):  # pragma: no cover
             raise Exception(f"Cannot mix translated and non translated outputs.", field_names)
         else:
             for i, field_name in enumerate(field_names):
-                data[field_name] = subcontent(content, i, n)
+                check_dup(field_name, result)
+                result[field_name] = subcontent(content, i, n)
     else:  # pragma: no cover
         raise Exception(f"Cannot handle multioutput for key '{field_names}' and type '{type(content)}'.")
 
@@ -109,10 +108,11 @@ def handle_args(signature, applied_args, applied_kwargs):
     params = []
     hasargs, haskwargs = False, False
     if signature is None:
+        # Applying a field.
         for v in applied_args:
             if not isinstance(v, field):  # pragma: no cover
                 print(applied_args)
-                raise Exception(f"Cannot apply a field ('{v}') with non field positional arguments.")
+                raise Exception(f"Cannot apply a field ('{v}') with non field positional arguments.")  # TODO: why??
             fargs[v.name] = v
             params.append(v.name)
         for k, v in applied_kwargs.items():
@@ -134,7 +134,7 @@ def handle_args(signature, applied_args, applied_kwargs):
             params.append(name)
 
     # apply's entry override f's entry
-    wrap = lambda x: x if isinstance(x, AbsContent) else value(x)
+    wrap = lambda x: x if isinstance(x, AbsVariable) else value(x)
     used = set()
     for i, applied_arg in enumerate(applied_args):
         if i < len(fargs):
@@ -145,7 +145,7 @@ def handle_args(signature, applied_args, applied_kwargs):
             if i >= len(params):
                 if not hasargs:  # pragma: no cover
                     raise Exception("Too many arguments to apply. No '*contentarg' detected for 'f'.")
-                name = Arg(i)
+                name = Arg(i)  # TODO: is this still useful?
             else:
                 name = params[i]
                 if name in fkwargs:
@@ -163,72 +163,6 @@ def handle_args(signature, applied_args, applied_kwargs):
             raise Exception(f"Parameter '{applied_kwarg}' is not present in 'f' signature nor '**kwargs' was detected for 'f'.")
 
     return fargs, fkwargs
-
-
-def handle_default(name, content, data):
-    from hdict.content.value import value
-    from hdict.content.field import field
-
-    if name in data:
-        while isinstance(data[name], field):
-            name = data[name].name
-        return field(name, content.hosh)
-    return content.value if isinstance(content.value, (field, value)) else value(content.value, content.hosh)
-
-
-def handle_values(data: Dict[str, object], previous):
-    from hdict.content.value import value
-    from hdict.content.apply import apply
-    from hdict.content.field import field
-    from hdict.content.subcontent import subcontent
-    from hdict import default, hdict
-
-    unfinished, mirror_fields, subcontent_cloned_parent = {}, {}, {}
-    for k, content in data.items():
-        if isinstance(content, value):
-            pass
-        elif isinstance(content, default):  # pragma: no cover
-            # data[k] = handle_default(k, content, data)
-            raise Exception(f"Cannot pass object of type 'default' directly to hdict. Param:", k)
-        elif isinstance(content, field):
-            if not content.finished:
-                # REMINDER: start_clone() makes a deep copy to avoid mutation in original 'content' when finishing it below
-                content = content.start_clone()
-                unfinished[k] = content
-            data[k] = content
-        elif isinstance(content, (apply, subcontent)):
-            if isinstance(content, subcontent) and not content.finished:
-                skip_key = id(content.parent)
-                if skip_key in subcontent_cloned_parent:
-                    content = content.start_clone(subcontent_cloned_parent[skip_key])
-                else:
-                    content = content.start_clone()
-                    subcontent_cloned_parent[skip_key] = content.parent
-            elif not content.finished:
-                content = content.start_clone()
-            reqs = content.requirements
-            for kreq, req in reqs.items():
-                if isinstance(req, default):
-                    reqs[kreq] = handle_default(kreq, req, data)
-            unfinished[k] = content
-            data[k] = content
-        elif isinstance(content, hdict):
-            data[k] = value(content.frozen, content.hosh)
-        elif str(type(content)) == "<class 'pandas.core.frame.DataFrame'>":
-            val = explode_df(content)
-            data[k] = val
-            if k.endswith("_"):
-                mirror_fields[f"{k[:-1]}"] = value(val.hdict, val.hosh)
-        elif isinstance(content, AbsContent):  # pragma: no cover
-            raise Exception(f"Cannot handle instance of type '{type(content)}'.")
-        else:
-            data[k] = value(content)
-    data.update(mirror_fields)
-
-    # Finish state of field-dependent objects created above.
-    for out, item in unfinished.items():
-        if not item.finished:
-            item.finish_clone(data, out, previous)
 
 
 def handle_identity(data):

@@ -24,32 +24,33 @@
 from dataclasses import dataclass
 from random import Random
 
-from hdict.content.abs.abscontent import AbsContent
-from hdict.content.abs.abssampleable import AbsSampleable
+from hdict.content.abs.any import AbsAny
+from hdict.content.abs.sampling import withSampling
 from hdict.content.apply import apply
 
 
 @dataclass
-class applyOut(AbsContent, AbsSampleable):
+class applyOut(AbsAny, withSampling):
+    """Wrapper for 'apply' to append the output field(s)"""
     nested: apply
     out: [str | tuple[str, str]]
     caches: tuple
-
-    def __post_init__(self):
-        outs = [self.out] if isinstance(self.out, str) else self.out
-        keys = self.nested.requirements.keys()
-
-    def sample(self, rnd: int | Random = None):
-        return applyOut(self.nested.sample(rnd), self.out, self.caches)
+    _sampleable = None
 
     @property
-    def isevaluated(self):
-        """
-        >>> from hdict import apply
-        >>> apply(lambda x, y: x + y).x.isevaluated
-        False
-        """
-        return self.nested.isevaluated
+    def sampleable(self):
+        if self._sampleable is None:
+            self._sampleable = self.nested.sampleable
+        return self._sampleable
+
+    # def __post_init__(self):
+    #     outs = [self.out] if isinstance(self.out, str) else self.out
+    #     keys = self.nested.requirements.keys()
+
+    def sample(self, rnd: int | Random = None):
+        if not self.sampleable:
+            return self
+        return applyOut(self.nested.sample(rnd), self.out, self.caches)
 
     def cached(self, *caches):
         if not caches:  # pragma: no cover
@@ -74,8 +75,7 @@ class applyOut(AbsContent, AbsSampleable):
         return NotImplemented  # pragma: no cover
 
     def __repr__(self):
-        out = "" if self.nested.finished else f"{self.out}="
-        return out + repr(self.nested)
+        return f"{self.out}={repr(self.nested)}"
 
     #
     #     Traceback (most recent call last):

@@ -23,9 +23,12 @@
 
 from hosh import Hosh
 
+from hdict.content.abs.any import AbsAny
 
-class AbsContent:
-    value: object
+
+class AbsEntry(AbsAny):
+    """hdict entry at implementation level"""
+    value: object | callable  # REMINDER: 'callable' is here for a 'field' containing a function
     hosh: Hosh
     isevaluated: bool
 

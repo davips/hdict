@@ -24,12 +24,14 @@
 from hosh import Hosh
 
 from hdict.content import MissingFieldException
-from hdict.content.abs.abscloneable import AbsCloneable
+from hdict.content.abs.variable import AbsVariable
 
 
-class field(AbsCloneable):
+# from hdict.content.abs.abscloneable import AbsCloneable
+
+class field(AbsVariable):
     """
-    Pointer to a field
+    Pointer to a field, without knowing the concrete value yet
 
     >>> from hdict import Ø, _, apply
     >>> d = Ø
@@ -65,60 +67,14 @@ class field(AbsCloneable):
     13
     """
 
-    content = None
-
     def __init__(self, name: str, hosh: Hosh | str = None):
         self.name = name
-        self._hosh = Hosh.fromid(hosh) if isinstance(hosh, str) else hosh
+        self.hosh = Hosh.fromid(hosh) if isinstance(hosh, str) else hosh
+    #     TODO: what to do with this hosh? see 'default' as well
 
-    @property
-    def hosh(self):
-        if self.content is None:  # pragma: no cover
-            raise Exception(f"Cannot know hosh before finishing pointer to field '{self.name}'.")
-        if self._hosh is None:
-            self._hosh = self.content.hosh
-        return self._hosh
-
-    @property
-    def value(self):
-        from hdict.content.abs.abscontent import AbsContent
-
-        if self.content is None:  # pragma: no cover
-            raise Exception(f"Cannot access value before finishing pointer to field '{self.name}'.")
-        return self.content.value if isinstance(self.content, AbsContent) else self.content
-
-    @property
-    def isevaluated(self):  # pragma: no cover
-        return self.content and self.content.isevaluated
-
-    def start_clone(self):
-        if self.finished:  # pragma: no cover
-            raise Exception(f"Cannot clone a finished content.")
-        return field(self.name, self._hosh)
-
-    def finish_clone(self, data, out, previous):
-        """
-        >>> d = {"a": field("b"), "b": field("c"), "c": 5}
-        >>> d
-        {'a': field('b'), 'b': field('c'), 'c': 5}
-        >>> d["a"].finish_clone(d, "", {})
-        >>> d
-        {'a': c, 'b': c, 'c': 5}
-        >>> d["a"].value
-        5
-        """
-        if self.finished:  # pragma: no cover
-            raise Exception(f"Cannot finish a field pointer twice. name: {self.name}.\n" f"Please check if there are indirect circular references.")
-        if self.name not in data:  # pragma: no cover
-            raise MissingFieldException(self.name)
-        self.content = data[self.name]
-        if isinstance(self.content, AbsCloneable) and not self.content.finished:
-            self.content.finish_clone(data, out, previous)
-        self._finished = True
-
-    def __repr__(self):
-        if not self.finished:
-            txt = f"field('{self.name}'"
-            txt += ")" if self._hosh is None else ", '{self._hosh}')"
-            return txt
-        return repr(self.content) if isinstance(self.content, field) else self.name
+    # def __repr__(self):
+    #     if not self.finished:
+    #         txt = f"field('{self.name}'"
+    #         txt += ")" if self._hosh is None else ", '{self._hosh}')"
+    #         return txt
+    #     return repr(self.content) if isinstance(self.content, field) else self.name

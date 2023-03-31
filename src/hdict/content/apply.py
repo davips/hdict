@@ -20,32 +20,30 @@
 #  part of this work is illegal and it is unethical regarding the effort and
 #  time spent here.
 #
+from __future__ import annotations
 
-from functools import reduce
 from inspect import isfunction
 from inspect import signature
-from itertools import chain
-from operator import mul
 from random import Random
-from typing import Union
 
-from hdict.content.abs.abscloneable import AbsCloneable
-from hdict.content.abs.abssampleable import AbsSampleable
+from hdict.content.abs.any import AbsAny
+from hosh import Hosh
+
+from hdict.content.abs.sampling import withSampling
 from hdict.content.field import field
-from hdict.content.handling import Unevaluated, handle_args
+from hdict.content.handling import handle_args
 from hdict.content.value import value
 from hdict.customjson import truncate
 from hdict.hoshfication import f2hosh
-from hosh import Hosh
-from hosh.misc import hoshes
+from hdict.content.abs.appliable import AbsAppliable
 
 
-# TODO: discard dependencies after evaluation, to avoid wasted memory, e.g., even after the deps are deleted from hdict
-class apply(AbsCloneable, AbsSampleable):
+class apply(AbsAppliable, withSampling):
     """
     Function application
 
-    Single output application can be defined through attribute: 'apply(f).my_output_field'.
+    Single output application is defined by attribute: 'apply(f).my_output_field'.
+    Multioutput application is defined by a call: 'apply(f)("output_field1", "output_field2")'.
 
     >>> from hdict import apply
     >>> f = lambda a, b: a**b
@@ -79,10 +77,10 @@ class apply(AbsCloneable, AbsSampleable):
     >>> ap.finish_clone({"b": value(77)}, "", {})
     >>> ap
     λ(3 b c=default(1) d=default(2) e=default(13))
-    >>> from hdict.content.handling import handle_values
     >>> d = {"f": ap, "b": 5, "d": 1, "e": field("b")}
     >>> d
     {'f': λ(3 b c=default(1) d=default(2) e=default(13)), 'b': 5, 'd': 1, 'e': field('b')}
+    >>> from hdict.aux import handle_values
     >>> handle_values(d, {})
     >>> d
     {'f': λ(3 b 1 d b), 'b': 5, 'd': 1, 'e': b}
@@ -106,157 +104,104 @@ class apply(AbsCloneable, AbsSampleable):
     >>> apply(f,b=77,x=5).requirements
     {'a': field('a'), 'b': 77, 'c': default(1), 'd': default(2), 'e': default(13), 'x': 5}
     """
+    hosh, _sampleable, isfield = None, None, False
 
-    out = None
-    _value = Unevaluated
-    _hosh = None
-
-    def __init__(self, f: Union[callable, "apply", field], *applied_args, fhosh: Hosh = None, **applied_kwargs):
-        self.f = f
+    def __init__(self, appliable: callable | apply | field, *applied_args, fhosh: Hosh = None, _sampleable=None, **applied_kwargs):
+        self.appliable = appliable
         if isinstance(fhosh, str):  # pragma: no cover
             fhosh = Hosh.fromid(fhosh)
-        if isinstance(f, apply):  # "clone" mode
-            fun = f.fun
-            self.f = f.f
-            self.fhosh = f.fhosh
-            self.args = {k: req.start_clone() if isinstance(req, AbsCloneable) else req for k, req in f.args.items()}
-            self.kwargs = {k: req.start_clone() if isinstance(req, AbsCloneable) else req for k, req in f.kwargs.items()}
-            from hdict.content.default import default
-        elif isinstance(f, field):  # "function will be provided by hdict"-mode constrains 'applied_args'
+
+        if isinstance(appliable, apply):  # "clone" mode
+            self.fhosh = appliable.fhosh
+            self.fargs, self.fkwargs = appliable.fargs.copy(), appliable.fkwargs.copy()
+            self._sampleable = appliable.sampleable if _sampleable is None else _sampleable
+        elif isinstance(appliable, field):
+            # TODO: i que era isso mesmo?::  "function will be provided by hdict"-mode constrains 'applied_args'
             self.fhosh = fhosh
-            fun = lambda *args, **kwargs: f.value(*args, **kwargs)
-            self.args, self.kwargs = handle_args(None, applied_args, applied_kwargs)
-        elif callable(fun := f):
-            if not isfunction(fun):  # "not function" means "custom callable"
-                if not hasattr(fun, "__call__"):  # pragma: no cover
-                    raise Exception(f"Cannot infer method to apply non custom callable type '{type(fun)}'.")
-                if not hasattr(fun, "hosh"):  # pragma: no cover
-                    raise Exception(f"Missing 'hosh' attribute while applying custom callable class '{type(fun)}'")
+            self.fargs, self.fkwargs = handle_args(None, applied_args, applied_kwargs)
+            self.isfield = True
+            self._sampleable = _sampleable
+        elif callable(appliable):
+            if not isfunction(appliable):  # "not function" means "custom callable"
+                if not hasattr(appliable, "__call__"):  # pragma: no cover
+                    raise Exception(f"Cannot infer method to apply non custom callable type '{type(appliable)}'.")
+                if not hasattr(appliable, "hosh"):  # pragma: no cover
+                    raise Exception(f"Missing 'hosh' attribute while applying custom callable class '{type(appliable)}'")
                 # noinspection PyUnresolvedReferences
                 sig = signature(fun.__call__)
                 self.fhosh = fhosh
             else:
-                self.fhosh = f2hosh(fun) if fhosh is None else fhosh
-                sig = signature(fun)
+                self.fhosh = f2hosh(appliable) if fhosh is None else fhosh
+                sig = signature(appliable)
 
             # Separate positional parameters from named parameters looking at 'f' signature.
-            self.args, self.kwargs = handle_args(sig, applied_args, applied_kwargs)
+            self.fargs, self.fkwargs = handle_args(sig, applied_args, applied_kwargs)
+            self._sampleable = _sampleable
         else:  # pragma: no cover
-            raise Exception(f"Cannot apply type '{type(f)}'.")
-        self._fun = fun
-        self.requirements = {k: v for k, v in sorted((self.args | self.kwargs).items())}
-        # Requirements (dependencies stub) are alphabetically sorted to ensure we keep the same resulting hosh no matter in which order the parameters are defined in the function.
+            raise Exception(f"Cannot apply type '{type(appliable)}'.")
+
+    @property
+    def sampleable(self):
+        if self._sampleable is None:
+            gen = (req.sampleable for req in self.fargs.values())
+            kwgen = (req.sampleable for req in self.fkwargs.values())
+            self._sampleable = any(gen) or any(kwgen)
+        return self._sampleable
 
     @property
     def ahosh(self):
         return self.fhosh.rev  # 'f' identified as an appliable function
 
-    def start_clone(self):
-        if self.finished:  # pragma: no cover
-            raise Exception(f"Cannot clone a finished content.")
-        return apply(self)
-
-    def finish_clone(self, data, out, previous):
-        if self.finished:  # pragma: no cover
-            raise Exception(f"Cannot finish an application twice.")
-        if isinstance(self.f, apply):  # pragma: no cover
-            raise Exception(f"Why applying another apply object?")
-        if isinstance(self.f, AbsCloneable) and not self.f.finished:
-            self.f.finish_clone(data, out, previous)
-        if self.fhosh is None:
-            self.fhosh = self.f.hosh
-        reqs = self.requirements
-        for kreq, req in reqs.items():
-            if isinstance(req, field) and req.name == out:
-                if kreq not in previous:  # pragma: no cover
-                    raise Exception(f"Application at '{out}' depends on a previous '{out}' value, which does not exist.")
-                reqs[kreq] = previous[kreq]
-                if kreq in self.args:
-                    self.args[kreq] = previous[kreq]
-                elif kreq in self.kwargs:
-                    self.kwargs[kreq] = previous[kreq]
-            if isinstance(req, AbsCloneable) and not req.finished:
-                req.finish_clone(data, out, previous)
-        self._finished = True
-
-    @property
-    def hosh(self):
-        if not self.finished:  # pragma: no cover
-            from hdict import sample
-
-            if any(isinstance(x, sample) for x in self.requirements.values()):
-                raise Exception(f"Cannot know the identity of this hdict or apply object before sampling. Provided callable:", self.f)
-            raise Exception(f"Cannot know apply.hosh before finishing object apply. Provided callable:", self.f)
-        if self._hosh is None:
-            self._hosh = reduce(mul, chain(hoshes(self.requirements.values()), [self.ahosh]))
-        return self._hosh
-
-    @property
-    def value(self):
-        if self._value == Unevaluated:
-            if not self.finished:  # pragma: no cover
-                raise Exception(f"Cannot access apply.value before finishing object '{self.fhosh}'.")
-            args = (x.value for x in self.args.values())
-            kwargs = {k: v.value for k, v in self.kwargs.items()}
-            self._value = self._fun(*args, **kwargs)
-        return self._value
-
-    @property
-    def fun(self):
-        return self._fun
-
-    @property
-    def isevaluated(self):
-        return self._value != Unevaluated
+    def clone(self, _sampleable=None):
+        return apply(self, _sampleable=_sampleable)
 
     def sample(self, rnd: int | Random = None):
-        clone = self.start_clone()
-        args = clone.args
-        kwargs = clone.kwargs
-        reqs = clone.requirements
-        for k, v in args.items():
-            if isinstance(v, AbsSampleable):
-                args[k] = reqs[k] = v.sample(rnd)
-        for k, v in kwargs.items():
-            if isinstance(v, AbsSampleable):
-                kwargs[k] = reqs[k] = v.sample(rnd)
+        if not self.sampleable:
+            return self
+        clone = self.clone(_sampleable=False)
+        for k, v in clone.fargs.items():
+            if isinstance(v, withSampling):
+                clone.fargs[k] = v.sample(rnd)
+        for k, v in clone.fkwargs.items():
+            if isinstance(v, withSampling):
+                clone.fkwargs[k] = v.sample(rnd)
         return clone
 
     def __call__(self, *out, **kwout):
         from hdict.content.applyout import applyOut
 
         if out and kwout:  # pragma: no cover
-            raise Exception(f"Cannot mix translated and non translated outputs.")
+            raise Exception(f"Cannot mix translated (**kwargs) and non translated (*args) outputs.")
         if len(out) == 1:
             out = out[0]
-        return applyOut(self, out or tuple(kwout.items()), ())
+        return applyOut(self, out or tuple(kwout.items()), caches=())
 
     def __getattr__(self, item):
         # REMINDER: Work around getattribute missing all properties.
-        if item not in ["isevaluated", "fun", "value", "hosh", "ahosh"]:
+        if item not in ["ahosh", "requirements"]:
             from hdict.content.applyout import applyOut
 
             return applyOut(self, item, ())
         return self.__getattribute__(item)  # pragma: no cover
 
     def __rshift__(self, other):  # pragma: no cover
-        raise Exception(f"Cannot apply before specifying the output field.")
+        raise Exception(f"Cannot pipeline an application before specifying the output field.")
 
     def __rrshift__(self, other):  # pragma: no cover
         raise Exception(f"Cannot apply before specifying the output field.")
 
     def __repr__(self):
-        if not self.isevaluated:
-            from hdict.content.default import default
+        from hdict.content.default import default
 
-            lst = []
-            for param, content in self.requirements.items():
-                if isinstance(content, field):
-                    txt = content.name
-                elif isinstance(content, (apply, default)):
-                    txt = f"{param}={repr(content)}"
-                else:
-                    txt = truncate(repr(content), width=7)
-                lst.append(txt)
-            return f"λ({' '.join(lst)})"
-        return repr(self._value)
+        lst = []
+        for param, content in self.fargs.items() | self.fkwargs.items():
+            if isinstance(content, field):
+                txt = content.name
+            elif isinstance(content, default):
+                txt = f"{param}={repr(content)}"
+            elif isinstance(content, AbsAny):  # TODO
+                raise Exception(f"")
+            else:
+                txt = truncate(repr(content), width=7)
+            lst.append(txt)
+        return f"λ({' '.join(lst)})"
