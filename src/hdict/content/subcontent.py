@@ -20,10 +20,8 @@
 #  part of this work is illegal and it is unethical regarding the effort and
 #  time spent here.
 #
-from hdict import field, apply
-from hdict.content.abs.requirements import withRequirements
-
 from hdict.content.abs.appliable import AbsAppliable
+from hdict.content.abs.requirements import withRequirements
 
 
 class subcontent(AbsAppliable, withRequirements):

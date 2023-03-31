@@ -12,82 +12,78 @@ from hdict.pipeline import pipeline
 VT = TypeVar("VT")
 
 
-def handle_field(name, result):
-    if name not in result:
-        raise MissingFieldException(name)
-    return result[name]
+def traverse_field(content, result):
+    from hdict import field
+    while isinstance(content, field):
+        name = content.name
+        if name not in result:
+            raise MissingFieldException(name)
+        content = result[name]
+    return content
 
 
-def handle_default(key, val, result):
+def handle_default(key, defv, result):
     from hdict.content.value import value
-    from hdict.content.field import field
     if key in result:
-        # 'default' unneeded.
-        return result[key]
-    elif isinstance(val.value, field):
-        return handle_field(val.value.name, result)
-    elif isinstance(val.value, value):
-        return val.value
+        return traverse_field(result[key], result)
+    content = traverse_field(defv.value, result)
+    if isinstance(content, value):
+        return content
     else:  # TODO: 'object' ?
-        raise Exception(f"Unhandled type for default value: '{type(val)}.{type(val.value)}'")
+        raise Exception(f"Unhandled type for default value: '{type(defv)}.{type(defv.value)}'")
 
 
 def handle_applied_arg(key, val, result):
     from hdict.content.value import value
     from hdict.content.field import field
     from hdict import default
-    if isinstance(val, default):
-        return handle_default(key, val, result)
-    elif isinstance(val, field):
-        return handle_field(val.name, result)
-    elif isinstance(val, value):
-        if isinstance(val.value, field):
+    content = traverse_field(val, result)
+    if isinstance(content, default):
+        return handle_default(key, content, result)
+    elif isinstance(content, value):
+        if isinstance(content.value, field):
             raise Exception(f"")  # TODO: useless excep?
-        return val
+        return content
     else:
-        print(val)
-        print(val.value.name)
-        raise Exception(f"Unhandled type as requirement: '{type(val)}.{type(val.value)}'")
+        print(content)
+        print(content.value.name)
+        raise Exception(f"Unhandled type as requirement: '{type(content)}.{type(content.value)}'")
 
 
 def handle_values(*datas: [Dict[str, object]]):
     from hdict import hdict
     from hdict.content.value import value
-    from hdict.content.field import field
     from hdict import default
     from hdict.content.closure import Closure
     from hdict.content.abs.sampling import withSampling
     from hdict.content.applyout import applyOut
     from hdict.content.handling import handle_multioutput
     from hdict.content.abs.appliable import AbsAppliable
-    from hdict.content.handling import check_dup
+    from hdict.content.handling import create_entry
 
     result, unfinished, result__mirror_fields, subcontent_cloned_parent = {}, {}, {}, {}
     for k, content in chain(*(data.items() for data in datas)):
-        check_dup(k, result)
         if isinstance(content, withSampling) and content.sampleable:
             raise UnsampledException(k, type(content))
 
+        content = traverse_field(content, result)
+
         if isinstance(k, tuple):
-            if isinstance(content, field):
-                content = handle_field(content.name, result)
             handle_multioutput(result, k, content)
-            continue
+            res=None
         elif not isinstance(k, str):  # pragma: no cover
             raise Exception(f"Invalid type for input field specification: {type(k)}")
 
-        if isinstance(content, value):
-            result[k] = content
-        elif isinstance(content, field):
-            result[k] = handle_field(content.name, result)
+        elif isinstance(content, value):
+            res = content
         elif isinstance(content, default):  # pragma: no cover
             raise Exception(f"Cannot pass object of type 'default' directly to hdict. Param:", k)
         elif isinstance(content, AbsAppliable):
-            result[k] = Closure(content, result)
+            res = Closure(content, result)
         elif isinstance(content, hdict):
-            result[k] = value(content.frozen, content.hosh)
+            res = value(content.frozen, content.hosh)
         elif str(type(content)) == "<class 'pandas.core.frame.DataFrame'>":
-            result[k] = val = explode_df(content)
+            res = val = explode_df(content)
             if k.endswith("_"):
                 result__mirror_fields[f"{k[:-1]}"] = value(val.hdict, val.hosh)
         elif isinstance(content, applyOut):  # pragma: no cover
@@ -95,10 +91,12 @@ def handle_values(*datas: [Dict[str, object]]):
         elif isinstance(content, AbsAny):  # pragma: no cover
             raise Exception(f"Cannot handle instance of type '{type(content)}'.")
         else:
-            result[k] = value(content)
+            res = value(content)
 
         if k.startswith("_"):  # pragma: no cover
             raise Exception(f"Field names cannot start with '_': {k}")
+        if res is not None:
+            create_entry(k, result, res)
 
     # Mirror fields should appear at the end of hdict.
     result.update(result__mirror_fields)

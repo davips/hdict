@@ -26,9 +26,10 @@ from operator import rshift
 from random import Random
 
 from hdict.content.abs.sampling import withSampling
+from hdict.content.abs.pipeable import AbsPipeable
 
 
-class pipeline(withSampling):
+class pipeline(AbsPipeable, withSampling):
     """
     Sequence of steps, tries to solve on update, resulting in a hdict/frozenhdict
 

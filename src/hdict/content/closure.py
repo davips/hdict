@@ -23,6 +23,9 @@ class Closure(AbsEntry):
 
     def __init__(self, content: AbsAppliable, result: dict[str, AbsEntry]):
         from hdict.aux import handle_applied_arg
+        from hdict.content import MissingFieldException
+        from hdict.aux import traverse_field
+
         self.content = content
 
         # TODO:  Remove redundance: só precisa calcular isso tudo uma vez pra todos os subcontents.
@@ -39,7 +42,10 @@ class Closure(AbsEntry):
         hosh *= content.ahosh
 
         if content.isfield:
-            appliable_value = result[content.appliable.name]
+            name = content.appliable.name
+            if name not in result:
+                raise MissingFieldException(name)
+            appliable_value = traverse_field(name, result)
 
             def f():
                 args = (x.value for x in fargs)

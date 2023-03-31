@@ -42,12 +42,14 @@ class Arg:
         return f"_{self.position}"
 
 
-def check_dup(field_name, result):
+def create_entry(field_name, result, val):
     if field_name in result:  # pragma: no cover
         raise Exception(f"The same field cannot be provided more than once: {k}")
+    from hdict.aux import traverse_field
+    result[field_name] = traverse_field(val, result)
 
 
-def handle_multioutput(result, field_names: tuple, content: list | dict | AbsAppliable | field):
+def handle_multioutput(result, field_names: tuple, content: list | dict | AbsAppliable):
     """Fields and hoshes are assigned to each output according to the alphabetical order of the original keys.
 
     >>> from hdict import field
@@ -68,17 +70,15 @@ def handle_multioutput(result, field_names: tuple, content: list | dict | AbsApp
         for field_name, val in zip(field_names, content):
             if not isinstance(field_name, str):  # pragma: no cover
                 raise Exception(f"Can only accept target-field strings when unpacking a list, not '{type(field_name)}'.")
-            check_dup(field_name, result)
-            result[field_name] = val
+            create_entry(field_name, result, val)
     elif isinstance(content, dict):
         if len(field_names) != len(content):  # pragma: no cover
             raise Exception(f"Number of output fields ('{len(field_names)}') should match number of dict entries ('{len(content)}').")
         for field_name, (_, val) in zip(field_names, sorted(content.items())):
             if not isinstance(field_name, str):  # pragma: no cover
                 raise Exception(f"Can only accept target-field strings when unpacking a dict, not '{type(field_name)}'.")
-            check_dup(field_name, result)
-            result[field_name] = val
-    elif isinstance(content, (AbsAppliable, field)):
+            create_entry(field_name, result, val)
+    elif isinstance(content, AbsAppliable):
         n = len(field_names)
         if all(isinstance(x, tuple) for x in field_names):
             source_target = sorted((sour, targ) for targ, sour in field_names)
@@ -86,14 +86,12 @@ def handle_multioutput(result, field_names: tuple, content: list | dict | AbsApp
                 if len(sour_targ) != 2:  # pragma: no cover
                     raise Exception(f"Output tuples should be string pairs 'target=source', not a sequence of length '{len(sour_targ)}'.", sour_targ)
                 source, target = sour_targ
-                check_dup(target, result)
-                result[target] = subcontent(content, i, n, source)
+                create_entry(target, result, subcontent(content, i, n, source))
         elif any(isinstance(x, tuple) for x in field_names):  # pragma: no cover
             raise Exception(f"Cannot mix translated and non translated outputs.", field_names)
         else:
             for i, field_name in enumerate(field_names):
-                check_dup(field_name, result)
-                result[field_name] = subcontent(content, i, n)
+                create_entry(field_name, result, subcontent(content, i, n))
     else:  # pragma: no cover
         raise Exception(f"Cannot handle multioutput for key '{field_names}' and type '{type(content)}'.")
 
