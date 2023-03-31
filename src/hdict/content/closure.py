@@ -2,11 +2,10 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from hdict.content.abs.appliable import AbsAppliable
-from hdict.content.abs.entry import AbsEntry
 from hosh import ø
 
-from hdict import apply, value
+from hdict import apply
+from hdict.content.abs.entry import AbsEntry
 from hdict.content.subcontent import subcontent
 
 

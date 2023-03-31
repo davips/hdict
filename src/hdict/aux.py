@@ -4,6 +4,7 @@ from operator import rshift
 from typing import Dict
 from typing import TypeVar
 
+from hdict import apply
 from hdict.content import MissingFieldException, UnsampledException
 from hdict.content.abs.any import AbsAny
 from hdict.pandas_handling import explode_df
@@ -58,7 +59,6 @@ def handle_values(*datas: [Dict[str, object]]):
     from hdict.content.abs.sampling import withSampling
     from hdict.content.applyout import applyOut
     from hdict.content.handling import handle_multioutput
-    from hdict.content.abs.appliable import AbsAppliable
     from hdict.content.handling import create_entry
 
     result, unfinished, result__mirror_fields, subcontent_cloned_parent = {}, {}, {}, {}
@@ -73,12 +73,14 @@ def handle_values(*datas: [Dict[str, object]]):
             res=None
         elif not isinstance(k, str):  # pragma: no cover
             raise Exception(f"Invalid type for input field specification: {type(k)}")
+        elif k.startswith("_"):  # pragma: no cover
+            raise Exception(f"Field names cannot start with '_': {k}")
 
         elif isinstance(content, value):
             res = content
         elif isinstance(content, default):  # pragma: no cover
             raise Exception(f"Cannot pass object of type 'default' directly to hdict. Param:", k)
-        elif isinstance(content, AbsAppliable):
+        elif isinstance(content, apply):
             res = Closure(content, result)
         elif isinstance(content, hdict):
             res = value(content.frozen, content.hosh)
@@ -93,8 +95,6 @@ def handle_values(*datas: [Dict[str, object]]):
         else:
             res = value(content)
 
-        if k.startswith("_"):  # pragma: no cover
-            raise Exception(f"Field names cannot start with '_': {k}")
         if res is not None:
             create_entry(k, result, res)
 

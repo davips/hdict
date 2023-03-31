@@ -25,20 +25,21 @@ from random import Random
 from hosh import Hosh
 
 from hdict.content.abs.any import AbsAny
+from hdict.content.value import value
 from hdict.content.abs.sampling import withSampling
 from hdict.content.abs.variable import AbsVariable
 from hdict.hoshfication import v2hosh
 
 
 class default(AbsVariable, withSampling):
-    def __init__(self, val: object | AbsVariable | 'value', hosh: Hosh | str = None, _sampleable=None):
+    def __init__(self, val: object | AbsVariable | value, hosh: Hosh | str = None, _sampleable=None):
         from hdict import value, field, sample
         if not isinstance(val, (value, field, sample)) and isinstance(val, AbsAny):  # pragma: no cover
             raise Exception(f"Cannot use '{type(val)}' as a default function parameter.")
         self.value = val
         self._hosh = Hosh.fromid(hosh) if isinstance(hosh, str) else hosh
         self.isevaluated = True
-        self.sampleable = val.sampleable if _sampleable is None else _sampleable
+        self.sampleable = val.sampleable if _sampleable is None and isinstance(val, (AbsVariable, value)) else _sampleable
 
     def sample(self, rnd: int | Random = None):
         if not self.sampleable:

@@ -25,9 +25,9 @@ from typing import TypeVar, Union
 from hdict.content.abs.pipeable import AbsPipeable
 from hdict.content.apply import apply
 from hdict.content.default import default
-from hdict.content.field import field
 from hdict.content.sample import sample
 from hdict.content.value import value
+from hdict.content.field import field
 from hdict.frozenhdict import frozenhdict
 
 __all__ = ["hdict", "_", "Ø"]

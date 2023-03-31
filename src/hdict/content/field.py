@@ -23,7 +23,6 @@
 
 from hosh import Hosh
 
-from hdict.content import MissingFieldException
 from hdict.content.abs.variable import AbsVariable
 
 

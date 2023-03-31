@@ -22,8 +22,8 @@
 #
 from hosh import ø
 
-from hdict import field
-from hdict.content.abs.appliable import AbsAppliable
+from hdict.content.apply import apply
+from hdict.content.abs.entry import AbsEntry
 from hdict.content.abs.variable import AbsVariable
 from hdict.indexeddict import IndexedDict
 
@@ -44,12 +44,12 @@ class Arg:
 
 def create_entry(field_name, result, val):
     if field_name in result:  # pragma: no cover
-        raise Exception(f"The same field cannot be provided more than once: {k}")
+        raise Exception(f"The same field cannot be provided more than once: {field_name}")
     from hdict.aux import traverse_field
     result[field_name] = traverse_field(val, result)
 
 
-def handle_multioutput(result, field_names: tuple, content: list | dict | AbsAppliable):
+def handle_multioutput(result, field_names: tuple, content: list | dict | apply | AbsEntry):
     """Fields and hoshes are assigned to each output according to the alphabetical order of the original keys.
 
     >>> from hdict import field
@@ -78,7 +78,7 @@ def handle_multioutput(result, field_names: tuple, content: list | dict | AbsApp
             if not isinstance(field_name, str):  # pragma: no cover
                 raise Exception(f"Can only accept target-field strings when unpacking a dict, not '{type(field_name)}'.")
             create_entry(field_name, result, val)
-    elif isinstance(content, AbsAppliable):
+    elif isinstance(content, (apply, AbsEntry)):
         n = len(field_names)
         if all(isinstance(x, tuple) for x in field_names):
             source_target = sorted((sour, targ) for targ, sour in field_names)

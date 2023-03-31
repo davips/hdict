@@ -31,14 +31,12 @@ from hosh import Hosh
 
 from hdict.content.abs.sampling import withSampling
 from hdict.content.field import field
-from hdict.content.handling import handle_args
 from hdict.content.value import value
 from hdict.customjson import truncate
 from hdict.hoshfication import f2hosh
-from hdict.content.abs.appliable import AbsAppliable
 
 
-class apply(AbsAppliable, withSampling):
+class apply(AbsAny, withSampling):
     """
     Function application
 
@@ -118,6 +116,7 @@ class apply(AbsAppliable, withSampling):
         elif isinstance(appliable, field):
             # TODO: i que era isso mesmo?::  "function will be provided by hdict"-mode constrains 'applied_args'
             self.fhosh = fhosh
+            from hdict.content.handling import handle_args
             self.fargs, self.fkwargs = handle_args(None, applied_args, applied_kwargs)
             self.isfield = True
             self._sampleable = _sampleable
@@ -135,6 +134,7 @@ class apply(AbsAppliable, withSampling):
                 sig = signature(appliable)
 
             # Separate positional parameters from named parameters looking at 'f' signature.
+            from hdict.content.handling import handle_args
             self.fargs, self.fkwargs = handle_args(sig, applied_args, applied_kwargs)
             self._sampleable = _sampleable
         else:  # pragma: no cover

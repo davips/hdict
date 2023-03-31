@@ -20,47 +20,38 @@
 #  part of this work is illegal and it is unethical regarding the effort and
 #  time spent here.
 #
-from hdict.content.abs.appliable import AbsAppliable
+from hdict.content.abs.entry import AbsEntry
 from hdict.content.abs.requirements import withRequirements
 
 
-class subcontent(AbsAppliable, withRequirements):
+class subcontent(AbsEntry, withRequirements):
     """
     >>> from hdict import value
     >>> subcontent(value([3]), 0,1)
     3
     """
+    _value = None
 
-    def __init__(self, parent: AbsAppliable, index: int, n: int, source: str = None):
-        from hdict import apply
+    def __init__(self, parent: AbsEntry, index: int, n: int, source: str = None):
         self.parent, self.index, self.n, self.source = parent, index, n, source
-        if isinstance(parent, apply):
-            self.fargs, self.fkwargs = parent.fargs, parent.fkwargs
-            self.appliable = parent.appliable
-            self.ahosh = parent.ahosh
-            self.isfield = parent.isfield
-        else:
-            # nested subcontent
-            raise Exception(f"")  # TODO
-            self.fargs, self.fkwargs = {}, {}
-            self.appliable = None
-            # self.ahosh = None
-            # self.isfield = None
 
-    def value(self, fargs, fkwargs, appliable_content):
-        value = self.parent.value(fargs, fkwargs, appliable_content) if isinstance(self.parent, AbsAppliable) else self.parent.value
-        if isinstance(value, list):
-            if len(value) < self.n:  # pragma: no cover
-                raise Exception(f"Number of output fields ('{self.n}') should not exceed number of resulting list elements ('{len(value)}').")
-            return value[self.index]
-        if isinstance(value, dict):
-            if len(value) != self.n:  # pragma: no cover
-                raise Exception(f"Number of output fields ('{self.n}') should match number of resulting dict entries ('{len(value)}').")
-            if self.source:
-                return value[self.source]
-            return list(sorted(value.items()))[self.index][1]
-        else:  # pragma: no cover
-            raise Exception(f"Cannot infer subvalue '{self.index}' of type '{type(value)} {value}.")
+    @property
+    def value(self):
+        if self._value is None:
+            value = self.parent.value
+            if isinstance(value, list):
+                if len(value) < self.n:  # pragma: no cover
+                    raise Exception(f"Number of output fields ('{self.n}') should not exceed number of resulting list elements ('{len(value)}').")
+                self._value = value[self.index]
+            if isinstance(value, dict):
+                if len(value) != self.n:  # pragma: no cover
+                    raise Exception(f"Number of output fields ('{self.n}') should match number of resulting dict entries ('{len(value)}').")
+                if self.source:
+                    self._value = value[self.source]
+                self._value = list(sorted(value.items()))[self.index][1]
+            else:  # pragma: no cover
+                raise Exception(f"Cannot infer subvalue '{self.index}' of type '{type(value)} {value}.")
+        return self._value
 
     def __repr__(self):
         return f"{self.parent}→{str(self.index if self.source is None else self.source)}"
