@@ -29,6 +29,7 @@ from random import Random
 from hdict.content.abs.any import AbsAny
 from hosh import Hosh
 
+from hdict.content.abs.appliable import asAppliable
 from hdict.content.abs.sampling import withSampling
 from hdict.content.field import field
 from hdict.content.value import value
@@ -36,7 +37,7 @@ from hdict.customjson import truncate
 from hdict.hoshfication import f2hosh
 
 
-class apply(AbsAny, withSampling):
+class apply(AbsAny, asAppliable, withSampling):
     """
     Function application
 
@@ -102,7 +103,7 @@ class apply(AbsAny, withSampling):
     >>> apply(f,b=77,x=5).requirements
     {'a': field('a'), 'b': 77, 'c': default(1), 'd': default(2), 'e': default(13), 'x': 5}
     """
-    hosh, _sampleable, isfield = None, None, False
+    _sampleable, isfield = None, False
 
     def __init__(self, appliable: callable | apply | field, *applied_args, fhosh: Hosh = None, _sampleable=None, **applied_kwargs):
         self.appliable = appliable
@@ -110,12 +111,12 @@ class apply(AbsAny, withSampling):
             fhosh = Hosh.fromid(fhosh)
 
         if isinstance(appliable, apply):  # "clone" mode
-            self.fhosh = appliable.fhosh
+            self.fhosh =  fhosh or appliable.fhosh
             self.fargs, self.fkwargs = appliable.fargs.copy(), appliable.fkwargs.copy()
             self._sampleable = appliable.sampleable if _sampleable is None else _sampleable
         elif isinstance(appliable, field):
-            # TODO: i que era isso mesmo?::  "function will be provided by hdict"-mode constrains 'applied_args'
-            self.fhosh = fhosh
+            # TODO: o que era isso mesmo?::  "function will be provided by hdict"-mode constrains 'applied_args'
+            self.fhosh = fhosh or appliable.hosh
             from hdict.content.handling import handle_args
             self.fargs, self.fkwargs = handle_args(None, applied_args, applied_kwargs)
             self.isfield = True
@@ -127,8 +128,9 @@ class apply(AbsAny, withSampling):
                 if not hasattr(appliable, "hosh"):  # pragma: no cover
                     raise Exception(f"Missing 'hosh' attribute while applying custom callable class '{type(appliable)}'")
                 # noinspection PyUnresolvedReferences
-                sig = signature(fun.__call__)
-                self.fhosh = fhosh
+                sig = signature(appliable.__call__)
+                # noinspection PyUnresolvedReferences
+                self.fhosh = fhosh or appliable.hosh
             else:
                 self.fhosh = f2hosh(appliable) if fhosh is None else fhosh
                 sig = signature(appliable)
@@ -178,7 +180,7 @@ class apply(AbsAny, withSampling):
 
     def __getattr__(self, item):
         # REMINDER: Work around getattribute missing all properties.
-        if item not in ["ahosh", "requirements"]:
+        if item not in ["ahosh", "requirements", "hosh"]:
             from hdict.content.applyout import applyOut
 
             return applyOut(self, item, ())

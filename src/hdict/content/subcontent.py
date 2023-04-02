@@ -20,11 +20,12 @@
 #  part of this work is illegal and it is unethical regarding the effort and
 #  time spent here.
 #
+from hdict.content.abs.appliable import asAppliable
 from hdict.content.abs.entry import AbsEntry
 from hdict.content.abs.requirements import withRequirements
 
 
-class subcontent(AbsEntry, withRequirements):
+class subcontent(AbsEntry, asAppliable, withRequirements):
     """
     >>> from hdict import value
     >>> subcontent(value([3]), 0,1)
@@ -34,6 +35,7 @@ class subcontent(AbsEntry, withRequirements):
 
     def __init__(self, parent: AbsEntry, index: int, n: int, source: str = None):
         self.parent, self.index, self.n, self.source = parent, index, n, source
+        self.hosh = parent.hosh
 
     @property
     def value(self):

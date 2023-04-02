@@ -35,20 +35,21 @@ def handle_default(key, defv, result):
 
 
 def handle_applied_arg(key, val, result):
-    from hdict.content.value import value
     from hdict.content.field import field
     from hdict import default
+    from hdict.content.abs.sampling import withSampling
+    from hdict.content.abs.entry import AbsEntry
     content = traverse_field(val, result)
     if isinstance(content, default):
         return handle_default(key, content, result)
-    elif isinstance(content, value):
+    elif isinstance(content, AbsEntry):
         if isinstance(content.value, field):
             raise Exception(f"")  # TODO: useless excep?
         return content
+    elif isinstance(content, withSampling) and content.sampleable:
+        raise UnsampledException(key, type(content))
     else:
-        print(content)
-        print(content.value.name)
-        raise Exception(f"Unhandled type as requirement: '{type(content)}.{type(content.value)}'")
+        raise Exception(f"Unhandled type as requirement: '{type(content)}'")
 
 
 def handle_values(*datas: [Dict[str, object]]):
@@ -68,15 +69,16 @@ def handle_values(*datas: [Dict[str, object]]):
 
         content = traverse_field(content, result)
 
+        from hdict.content.abs.entry import AbsEntry
         if isinstance(k, tuple):
             handle_multioutput(result, k, content)
-            res=None
+            continue
         elif not isinstance(k, str):  # pragma: no cover
             raise Exception(f"Invalid type for input field specification: {type(k)}")
         elif k.startswith("_"):  # pragma: no cover
             raise Exception(f"Field names cannot start with '_': {k}")
 
-        elif isinstance(content, value):
+        elif isinstance(content, AbsEntry):
             res = content
         elif isinstance(content, default):  # pragma: no cover
             raise Exception(f"Cannot pass object of type 'default' directly to hdict. Param:", k)
@@ -95,8 +97,7 @@ def handle_values(*datas: [Dict[str, object]]):
         else:
             res = value(content)
 
-        if res is not None:
-            create_entry(k, result, res)
+        create_entry(k, result, res)
 
     # Mirror fields should appear at the end of hdict.
     result.update(result__mirror_fields)

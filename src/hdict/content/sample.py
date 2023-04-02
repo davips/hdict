@@ -40,7 +40,7 @@ class sample(AbsVariable, withSampling):
     >>> (s := sample(2, -4, 8, ..., 12).values)
     [2 -4 8]
     """
-    unsampled = True
+    sampleable = True
 
     def __init__(self, *values: list[int | float], rnd: int | Random = 0, maxdigits=28):
         self.rnd = rnd

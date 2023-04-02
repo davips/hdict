@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from hosh import ø
 
 from hdict import apply
+from hdict.content.abs.appliable import asAppliable
 from hdict.content.abs.entry import AbsEntry
 from hdict.content.subcontent import subcontent
 
@@ -20,7 +21,7 @@ Unevaluated = Unevaluated()
 class Closure(AbsEntry):
     _value = Unevaluated
 
-    def __init__(self, content: AbsAppliable, result: dict[str, AbsEntry]):
+    def __init__(self, content: asAppliable, result: dict[str, AbsEntry]):
         from hdict.aux import handle_applied_arg
         from hdict.content import MissingFieldException
         from hdict.aux import traverse_field
@@ -38,19 +39,22 @@ class Closure(AbsEntry):
             app = handle_applied_arg(key, val, result)
             fkwargs[key] = app
             hosh *= app.hosh
-        hosh *= content.ahosh
 
         if content.isfield:
             name = content.appliable.name
             if name not in result:
                 raise MissingFieldException(name)
             appliable_value = traverse_field(name, result)
+            if isinstance(appliable_value, str):
+                raise Exception(f"{type(appliable_value)}")
+            hosh *= appliable_value.ahosh
 
             def f():
                 args = (x.value for x in fargs)
                 kwargs = {k: v.value for k, v in fkwargs.items()}
                 return appliable_value.value(*args, *kwargs)
         else:
+            hosh *= content.ahosh
             appliable_function = content.appliable
 
             def f():
@@ -62,6 +66,8 @@ class Closure(AbsEntry):
             self.hosh = hosh
         elif isinstance(content, subcontent):
             self.hosh = hosh[content.index: content.n]
+        else:
+            raise Exception(f"")
 
     @property
     def value(self):

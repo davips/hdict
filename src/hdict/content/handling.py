@@ -25,6 +25,7 @@ from hosh import ø
 from hdict.content.apply import apply
 from hdict.content.abs.entry import AbsEntry
 from hdict.content.abs.variable import AbsVariable
+from hdict.content.closure import Closure
 from hdict.indexeddict import IndexedDict
 
 
@@ -86,12 +87,14 @@ def handle_multioutput(result, field_names: tuple, content: list | dict | apply 
                 if len(sour_targ) != 2:  # pragma: no cover
                     raise Exception(f"Output tuples should be string pairs 'target=source', not a sequence of length '{len(sour_targ)}'.", sour_targ)
                 source, target = sour_targ
-                create_entry(target, result, subcontent(content, i, n, source))
+                entry = subcontent(Closure(content, result), i, n, source)
+                create_entry(target, result, entry)
         elif any(isinstance(x, tuple) for x in field_names):  # pragma: no cover
             raise Exception(f"Cannot mix translated and non translated outputs.", field_names)
         else:
             for i, field_name in enumerate(field_names):
-                create_entry(field_name, result, subcontent(content, i, n))
+                entry = subcontent(Closure(content, result), i, n)
+                create_entry(field_name, result, entry)
     else:  # pragma: no cover
         raise Exception(f"Cannot handle multioutput for key '{field_names}' and type '{type(content)}'.")
 
