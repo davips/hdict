@@ -127,7 +127,7 @@ class frozenhdict(UserDict, dict[str, VT]):
     _asdict, _asdicts, _asdicts_noid = None, None, None
 
     # noinspection PyMissingConstructor
-    def __init__(self, /, _dictionary=None, _previous=None, **kwargs):
+    def __init__(self, /, _dictionary=None, _previous=None, _hasmissing=False, _sampleable=False, **kwargs):
         from hdict.content.entry import AbsEntry
         from hdict.aux_frozendict import handle_items, handle_identity
 
@@ -135,14 +135,16 @@ class frozenhdict(UserDict, dict[str, VT]):
         data = _dictionary or {}
         # REMINDER: Inside data, the only 'dict' entries are "_id" and "_ids", the rest are AbsEntry objects.
         self.data: dict[str, AbsEntry | str | dict[str, str]]
-        self.data, self.hasmissing, self.sampleable = handle_items(data, kwargs, result=_previous)
+        self.data, hasmissing, sampleable = handle_items(data, kwargs, result=_previous)
+        self.hasmissing = _hasmissing or hasmissing
+        self.sampleable = _sampleable or sampleable
         self.unready = self.hasmissing or self.sampleable
         self.hosh, self.ids = handle_identity(self.data, self.unready)
         self.id = self.hosh.id
 
     def sample(self, rnd: int | Random = None):
         if not self.sampleable:
-            raise Exception(f"Unsampleable {self.__class__.__name__}.")
+            raise Exception(f"Unsampleable (frozen)hdict or all `sample` arguments depend on delayed fields.")
         data = {k: v.argument.sample(rnd) if isinstance(v, UnsampledEntry) else v for k, v in self.data.items()}
         return frozenhdict(data)
 
@@ -166,7 +168,7 @@ class frozenhdict(UserDict, dict[str, VT]):
             other = {other.out: other.nested}
 
         if isinstance(other, dict):  # merge keeping ids of AbsReadyEntry objects if any is present
-            return frozenhdict(other, _previous=self.data)
+            return frozenhdict(other, _previous=self.data, _hasmissing=self.hasmissing, _sampleable=self.sampleable)
         return NotImplemented  # pragma: no cover
 
     def __getitem__(self, item):  # pragma: no cover
