@@ -20,6 +20,17 @@
 #  part of this work is illegal and it is unethical regarding the effort and
 #  time spent here.
 #
-class withSampling:
-    sample: None
-    sampleable: bool
+from typing import Callable
+
+from hdict.abs import AbsAny
+from hdict.content.argument import AbsMetaArgument
+
+
+class default(AbsMetaArgument):
+    def __init__(self, value: object | Callable):
+        self.value = value
+        if isinstance(value, AbsAny):
+            raise Exception(f"Cannot use a `{value.__class__.__name__}` as a default function value.")
+
+    def __repr__(self):
+        return f"default({repr(self.value)})"

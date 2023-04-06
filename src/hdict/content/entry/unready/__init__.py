@@ -20,3 +20,10 @@
 #  part of this work is illegal and it is unethical regarding the effort and
 #  time spent here.
 #
+from hdict.content.entry import AbsEntry
+
+
+class AbsUnreadyEntry(AbsEntry):
+    """
+    hdict unfinished entry at internal level: MissingEntry, DelayedEntry, UnsampledEntry
+    """

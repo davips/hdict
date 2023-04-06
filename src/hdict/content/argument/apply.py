@@ -24,65 +24,63 @@ from __future__ import annotations
 
 from inspect import isfunction
 from inspect import signature
+from itertools import chain
 from random import Random
 
-from hdict.content.abs.any import AbsAny
 from hosh import Hosh
 
-from hdict.content.abs.appliable import asAppliable
-from hdict.content.abs.sampling import withSampling
-from hdict.content.field import field
-from hdict.content.value import value
+from hdict.content.argument import AbsBaseArgument, AbsMetaArgument, AbsArgument
+from hdict.content.argument.field import field
 from hdict.customjson import truncate
 from hdict.hoshfication import f2hosh
 
 
-class apply(AbsAny, asAppliable, withSampling):
+class apply(AbsBaseArgument):
     """
     Function application
 
     Single output application is defined by attribute: 'apply(f).my_output_field'.
     Multioutput application is defined by a call: 'apply(f)("output_field1", "output_field2")'.
 
-    >>> from hdict import apply
+    >>> from hdict import apply, value
     >>> f = lambda a, b: a**b
     >>> v = apply(f, 5, b=7)
     >>> v
     λ(5 7)
     >>> g = lambda x, y: x**y
-    >>> v.isevaluated
-    False
     >>> apply(g, y=value(7777), x=v)
     λ(x=λ(5 7) 7777)
 
     >>> v2 = apply(f, a=v, b=value(7))
     >>> v2
     λ(a=λ(5 7) 7)
-    >>> v.finish_clone({}, "", {})
-    >>> v.value, v2
-    (78125, λ(a=78125 7))
-    >>> v2.finish_clone({}, "", {})
-    >>> v2.value, v2
-    (17763568394002504646778106689453125, 17763568394002504646778106689453125)
+    >>> v.enclosure({}).value
+    78125
+    >>> v2.enclosure({})
+    λ(a=λ(5 7) 7)
+    >>> v2.enclosure({}).value
+    17763568394002504646778106689453125
 
     >>> f = lambda a,b, c=1,d=2,e=13: 0
     >>> apply(f).requirements
-    {'a': field('a'), 'b': field('b'), 'c': default(1), 'd': default(2), 'e': default(13)}
+    {'a': field(a), 'b': field(b), 'c': default(1), 'd': default(2), 'e': default(13)}
     >>> ap = apply(f,3)
     >>> ap.requirements
-    {'a': 3, 'b': field('b'), 'c': default(1), 'd': default(2), 'e': default(13)}
+    {'a': 3, 'b': field(b), 'c': default(1), 'd': default(2), 'e': default(13)}
     >>> ap
     λ(3 b c=default(1) d=default(2) e=default(13))
-    >>> ap.finish_clone({"b": value(77)}, "", {})
+    >>> ap.enclosure({"b": value(77)})
+    λ(3 b c=default(1) d=default(2) e=default(13))
     >>> ap
     λ(3 b c=default(1) d=default(2) e=default(13))
     >>> d = {"f": ap, "b": 5, "d": 1, "e": field("b")}
     >>> d
-    {'f': λ(3 b c=default(1) d=default(2) e=default(13)), 'b': 5, 'd': 1, 'e': field('b')}
-    >>> from hdict.aux import handle_values
-    >>> handle_values(d, {})
+    {'f': λ(3 b c=default(1) d=default(2) e=default(13)), 'b': 5, 'd': 1, 'e': field(b)}
+    >>> from hdict.aux_frozendict import handle_items
+    >>> handle_items(d, {})
+    ({'b': 5, 'f': ✗ delayed: λ(3 b c=default(1) d=default(2) e=default(13)), 'd': 1, 'e': 5}, True, False)
     >>> d
-    {'f': λ(3 b 1 d b), 'b': 5, 'd': 1, 'e': b}
+    {'f': λ(3 b c=default(1) d=default(2) e=default(13)), 'b': 5, 'd': 1, 'e': field(b)}
     >>> apply(f,3,4).requirements
     {'a': 3, 'b': 4, 'c': default(1), 'd': default(2), 'e': default(13)}
     >>> apply(f,3,4,5).requirements
@@ -92,41 +90,43 @@ class apply(AbsAny, asAppliable, withSampling):
     >>> apply(f,3,4,5,6,7).requirements
     {'a': 3, 'b': 4, 'c': 5, 'd': 6, 'e': 7}
     >>> apply(f,d=5).requirements
-    {'a': field('a'), 'b': field('b'), 'c': default(1), 'd': 5, 'e': default(13)}
+    {'a': field(a), 'b': field(b), 'c': default(1), 'd': 5, 'e': default(13)}
     >>> f = lambda a,b, *contentarg, c=1,d=2,e=13, **kwargs: 0
     >>> apply(f,3,4,5,6,7,8).requirements
     {'a': 3, 'b': 4, 'c': 5, 'd': 6, 'e': 7, _5: 8}
     >>> apply(f,x=3,e=4,d=5,c=6,b=7,a=8).requirements
     {'a': 8, 'b': 7, 'c': 6, 'd': 5, 'e': 4, 'x': 3}
     >>> apply(f,3,c=77,x=5).requirements
-    {'a': 3, 'b': field('b'), 'c': 77, 'd': default(2), 'e': default(13), 'x': 5}
+    {'a': 3, 'b': field(b), 'c': 77, 'd': default(2), 'e': default(13), 'x': 5}
     >>> apply(f,b=77,x=5).requirements
-    {'a': field('a'), 'b': 77, 'c': default(1), 'd': default(2), 'e': default(13), 'x': 5}
+    {'a': field(a), 'b': 77, 'c': default(1), 'd': default(2), 'e': default(13), 'x': 5}
     """
-    _sampleable, isfield = None, False
+    _sampleable, isfield, _requirements = None, False, None
 
     def __init__(self, appliable: callable | apply | field, *applied_args, fhosh: Hosh = None, _sampleable=None, **applied_kwargs):
+        from hdict.content.argument.aux_apply import handle_args
         self.appliable = appliable
         if isinstance(fhosh, str):  # pragma: no cover
             fhosh = Hosh.fromid(fhosh)
 
         if isinstance(appliable, apply):  # "clone" mode
-            self.fhosh =  fhosh or appliable.fhosh
+            self.fhosh = fhosh or appliable.fhosh
             self.fargs, self.fkwargs = appliable.fargs.copy(), appliable.fkwargs.copy()
+            self.isfield = appliable.isfield
             self._sampleable = appliable.sampleable if _sampleable is None else _sampleable
+            self.appliable = appliable.appliable
         elif isinstance(appliable, field):
             # TODO: o que era isso mesmo?::  "function will be provided by hdict"-mode constrains 'applied_args'
-            self.fhosh = fhosh or appliable.hosh
-            from hdict.content.handling import handle_args
+            self.fhosh = fhosh
             self.fargs, self.fkwargs = handle_args(None, applied_args, applied_kwargs)
             self.isfield = True
             self._sampleable = _sampleable
         elif callable(appliable):
             if not isfunction(appliable):  # "not function" means "custom callable"
                 if not hasattr(appliable, "__call__"):  # pragma: no cover
-                    raise Exception(f"Cannot infer method to apply non custom callable type '{type(appliable)}'.")
+                    raise Exception(f"Cannot infer method to apply non custom callable type '{appliable.__class__.__name__}'.")
                 if not hasattr(appliable, "hosh"):  # pragma: no cover
-                    raise Exception(f"Missing 'hosh' attribute while applying custom callable class '{type(appliable)}'")
+                    raise Exception(f"Missing 'hosh' attribute while applying custom callable class '{appliable.__class__.__name__}'")
                 # noinspection PyUnresolvedReferences
                 sig = signature(appliable.__call__)
                 # noinspection PyUnresolvedReferences
@@ -136,11 +136,10 @@ class apply(AbsAny, asAppliable, withSampling):
                 sig = signature(appliable)
 
             # Separate positional parameters from named parameters looking at 'f' signature.
-            from hdict.content.handling import handle_args
             self.fargs, self.fkwargs = handle_args(sig, applied_args, applied_kwargs)
             self._sampleable = _sampleable
         else:  # pragma: no cover
-            raise Exception(f"Cannot apply type '{type(appliable)}'.")
+            raise Exception(f"Cannot apply type '{appliable.__class__.__name__}'.")
 
     @property
     def sampleable(self):
@@ -162,28 +161,30 @@ class apply(AbsAny, asAppliable, withSampling):
             return self
         clone = self.clone(_sampleable=False)
         for k, v in clone.fargs.items():
-            if isinstance(v, withSampling):
-                clone.fargs[k] = v.sample(rnd)
+            clone.fargs[k] = v.sample(rnd)
         for k, v in clone.fkwargs.items():
-            if isinstance(v, withSampling):
-                clone.fkwargs[k] = v.sample(rnd)
+            clone.fkwargs[k] = v.sample(rnd)
         return clone
 
+    def enclosure(self, data, ignore):
+        from hdict.content.entry.ready.closure import Closure
+        return Closure(self, data, ignore)
+
     def __call__(self, *out, **kwout):
-        from hdict.content.applyout import applyOut
+        from hdict.applyout import ApplyOut
 
         if out and kwout:  # pragma: no cover
             raise Exception(f"Cannot mix translated (**kwargs) and non translated (*args) outputs.")
         if len(out) == 1:
             out = out[0]
-        return applyOut(self, out or tuple(kwout.items()), caches=())
+        return ApplyOut(self, out or tuple(kwout.items()))
 
     def __getattr__(self, item):
         # REMINDER: Work around getattribute missing all properties.
         if item not in ["ahosh", "requirements", "hosh"]:
-            from hdict.content.applyout import applyOut
+            from hdict.applyout import ApplyOut
 
-            return applyOut(self, item, ())
+            return ApplyOut(self, item)
         return self.__getattribute__(item)  # pragma: no cover
 
     def __rshift__(self, other):  # pragma: no cover
@@ -193,17 +194,23 @@ class apply(AbsAny, asAppliable, withSampling):
         raise Exception(f"Cannot apply before specifying the output field.")
 
     def __repr__(self):
-        from hdict.content.default import default
+        from hdict import value
 
         lst = []
-        for param, content in self.fargs.items() | self.fkwargs.items():
-            if isinstance(content, field):
-                txt = content.name
-            elif isinstance(content, default):
-                txt = f"{param}={repr(content)}"
-            elif isinstance(content, AbsAny):  # TODO
-                raise Exception(f"")
-            else:
-                txt = truncate(repr(content), width=7)
-            lst.append(txt)
+        for param, content in chain(self.fargs.items(), sorted(self.fkwargs.items())):
+            match content:
+                case field(name=param):
+                    lst.append(f"{param}")
+                case value():
+                    lst.append(truncate(repr(content), width=7))
+                case AbsArgument():
+                    lst.append(f"{param}={repr(content)}")
+                case _:
+                    raise Exception(f"")
         return f"λ({' '.join(lst)})"
+
+    @property
+    def requirements(self):
+        if self._requirements is None:
+            self._requirements = {k: v for k, v in chain(self.fargs.items(), sorted(self.fkwargs.items()))}
+        return self._requirements

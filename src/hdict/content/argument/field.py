@@ -20,15 +20,13 @@
 #  part of this work is illegal and it is unethical regarding the effort and
 #  time spent here.
 #
+from dataclasses import dataclass
 
-from hosh import Hosh
-
-from hdict.content.abs.variable import AbsVariable
+from hdict.content.argument import AbsBaseArgument
 
 
-# from hdict.content.abs.abscloneable import AbsCloneable
-
-class field(AbsVariable):
+@dataclass
+class field(AbsBaseArgument):
     """
     Pointer to a field, without knowing the concrete value yet
 
@@ -65,15 +63,7 @@ class field(AbsVariable):
     >>> d.x
     13
     """
+    name: str
 
-    def __init__(self, name: str, hosh: Hosh | str = None):
-        self.name = name
-        self.hosh = Hosh.fromid(hosh) if isinstance(hosh, str) else hosh
-    #     TODO: what to do with this hosh? see 'default' as well
-
-    # def __repr__(self):
-    #     if not self.finished:
-    #         txt = f"field('{self.name}'"
-    #         txt += ")" if self._hosh is None else ", '{self._hosh}')"
-    #         return txt
-    #     return repr(self.content) if isinstance(self.content, field) else self.name
+    def __repr__(self):
+        return f"field({self.name})"

@@ -22,42 +22,16 @@
 #
 
 from dataclasses import dataclass
-from random import Random
 
-from hdict.content.apply import apply
-from hdict.content.abs.pipeable import AbsPipeable
-from hdict.content.abs.sampling import withSampling
+from hdict.abs import AbsAny
+from hdict.content.argument.apply import apply
 
 
 @dataclass
-class applyOut(AbsPipeable, withSampling):
+class ApplyOut(AbsAny):
     """Wrapper for 'apply' to append the output field(s)"""
     nested: apply
     out: [str | tuple[str, str]]
-    caches: tuple
-    _sampleable = None
-
-    @property
-    def sampleable(self):
-        if self._sampleable is None:
-            self._sampleable = self.nested.sampleable
-        return self._sampleable
-
-    # def __post_init__(self):
-    #     outs = [self.out] if isinstance(self.out, str) else self.out
-    #     keys = self.nested.requirements.keys()
-
-    def sample(self, rnd: int | Random = None):
-        if not self.sampleable:
-            return self
-        return applyOut(self.nested.sample(rnd), self.out, self.caches)
-
-    def cached(self, *caches):
-        if not caches:  # pragma: no cover
-            raise Exception(f"Missing at least one dict-like object for caching.")
-        nested = "TODO"  # apply(f,self.nested.args
-        return self
-        return applyOut(nested, self.out, caches)
 
     def __rrshift__(self, other):
         from hdict import hdict, frozenhdict
@@ -67,20 +41,12 @@ class applyOut(AbsPipeable, withSampling):
         return NotImplemented  # pragma: no cover
 
     def __rshift__(self, other):
-        from hdict.pipeline import pipeline
+        from hdict import hdict
 
         # REMINDER: dict includes hdict/frozenhdict.
-        if isinstance(other, (dict, applyOut, pipeline)):
-            return pipeline(self, other)
+        if isinstance(other, (dict, ApplyOut)):
+            return hdict() >> self >> other
         return NotImplemented  # pragma: no cover
 
     def __repr__(self):
         return f"{self.out}={repr(self.nested)}"
-
-    #
-    #     Traceback (most recent call last):
-    #   File "/home/davi/.config/JetBrains/PyCharmCE2022.3/scratches/scratch_14.py", line 44, in <module>
-    #     du = dumps(d, protocol=5)
-    # TypeError: 'applyOut' object is not callable
-    # def __reduce__(self):
-    #     print(111111111111111111)

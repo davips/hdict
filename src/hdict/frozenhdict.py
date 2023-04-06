@@ -24,13 +24,13 @@
 import json
 import re
 from collections import UserDict
+from random import Random
 from typing import TypeVar
 
-from hdict.aux import handle_rshift, handle_values
-from hdict.content import MissingFieldException, UnsampledException
-from hdict.content.abs.entry import AbsEntry
+from hdict.applyout import ApplyOut
+from hdict.content.entry.ready import AbsReadyEntry
+from hdict.content.entry.unready.unsampled import UnsampledEntry
 from hdict.customjson import CustomJSONEncoder, stringfy
-from hdict.pipeline import pipeline
 
 VT = TypeVar("VT")
 
@@ -59,18 +59,21 @@ class frozenhdict(UserDict, dict[str, VT]):
     >>> from hdict import _, apply
     >>> d >>= apply(lambda v, x: v - x).z
     >>> str(d)
-    '{x: 3, y: 5} » z=λ(v x)'
+    '{x: 3, y: 5, v: "✗ missing", z: "✗ delayed: λ(v x)"}'
     >>> d.show(colored=False)
     {
         x: 3,
         y: 5,
-        _id: r5A2Mh6vRRO5rxi5nfXv1myeguGSTmqHuHev38qM,
+        v: "✗ missing",
+        z: "✗ delayed: λ(v x)",
+        _id: 0000000000000000000000000000000000000000,
         _ids: {
             x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
-            y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2
-        },
-        v: ✗ first missing field ✗
-    } » z=λ(v x)
+            y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+            v: "✗ missing",
+            z: "✗ delayed"
+        }
+    }
     >>> d = {"v": 7} >> d
     >>> d.show(colored=False)
     {
@@ -103,13 +106,15 @@ class frozenhdict(UserDict, dict[str, VT]):
     }
     >>> d = {"a": 5} >> d
     >>> d.show(colored=False)
-    {'a': 5} » {
+    {
+        a: 5,
         v: 7,
         x: 3,
         y: 5,
         z: λ(v x),
-        _id: -a24f2g4z-c-tPEss6G8WEd7h8zMopCCsCdQowjL,
+        _id: ELQZugqdug6eCOLZSPaimnGqgmhRjJoDLD8cOlYR,
         _ids: {
+            a: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
             v: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf,
             x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
             y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
@@ -122,36 +127,47 @@ class frozenhdict(UserDict, dict[str, VT]):
     _asdict, _asdicts, _asdicts_noid = None, None, None
 
     # noinspection PyMissingConstructor
-    def __init__(self, /, _dictionary=None, **kwargs):
-        from hdict.content.handling import handle_identity
-        # TODO: criar absclass para diferenciar apply de Apply etc. na hora de checar o que está chegando?
+    def __init__(self, /, _dictionary=None, _previous=None, **kwargs):
+        from hdict.content.entry import AbsEntry
+        from hdict.aux_frozendict import handle_items, handle_identity
 
         # TODO: check if _dictionary keys is 'str'; regex to check if k is an identifier;
         data = _dictionary or {}
         # REMINDER: Inside data, the only 'dict' entries are "_id" and "_ids", the rest are AbsEntry objects.
-        self.data: dict[str, AbsEntry | str | dict[str, str]] = handle_values(data, kwargs)
-        self.hosh, self.ids = handle_identity(self.data)
+        self.data: dict[str, AbsEntry | str | dict[str, str]]
+        self.data, self.hasmissing, self.sampleable = handle_items(data, kwargs, result=_previous)
+        self.unready = self.hasmissing or self.sampleable
+        self.hosh, self.ids = handle_identity(self.data, self.unready)
         self.id = self.hosh.id
+
+    def sample(self, rnd: int | Random = None):
+        if not self.sampleable:
+            raise Exception(f"Unsampleable {self.__class__.__name__}.")
+        data = {k: v.argument.sample(rnd) if isinstance(v, UnsampledEntry) else v for k, v in self.data.items()}
+        return frozenhdict(data)
 
     def __rrshift__(self, other):
         from hdict import hdict
 
         if isinstance(other, dict) and not isinstance(other, (hdict, frozenhdict)):
-            return pipeline(hdict() >> other, self)
+            return frozenhdict(other) >> self
         return NotImplemented  # pragma: no cover
 
     def __rshift__(self, other):
-        from hdict.content.applyout import applyOut
+        from hdict import hdict
+        from hdict.aux_frozendict import prevent_overwriting_unready
 
-        try:
-            return handle_rshift(self, other)
-        except (MissingFieldException, UnsampledException) as e:
-            # REMINDER: dict includes hdict/frozenhdict.
-            if isinstance(other, (pipeline, dict, applyOut)):
-                return pipeline(self, other, missing={self.id: e.args[0]})
-            else:  # pragma: no cover
-                print(type(other))
-                raise e from None
+        # Merge keeping ids.
+        if isinstance(other, hdict):
+            other = other.frozen
+        if isinstance(other, frozenhdict):
+            other = other.data
+        if isinstance(other, ApplyOut):
+            other = {other.out: other.nested}
+
+        if isinstance(other, dict):  # merge keeping ids of AbsReadyEntry objects if any is present
+            return frozenhdict(other, _previous=self.data)
+        return NotImplemented  # pragma: no cover
 
     def __getitem__(self, item):  # pragma: no cover
         return self.data[item].value
@@ -186,7 +202,7 @@ class frozenhdict(UserDict, dict[str, VT]):
 
         data = {}
         for k, v in dictionary.items():
-            if isinstance(v, AbsEntry):
+            if isinstance(v, AbsReadyEntry):
                 if k in ids and ids[k] != v.id:  # pragma: no cover
                     raise Exception(f"Conflicting ids provided for key '{k}': ival.id={v.id}; ids[{k}]={ids[k]}")
                 data[k] = v
@@ -201,10 +217,10 @@ class frozenhdict(UserDict, dict[str, VT]):
         return self
 
     def evaluate(self):
-        from hdict.content.closure import Closure
+        from hdict.content.entry.ready import AbsReadyEntry
 
         for k, val in self.data.items():
-            if isinstance(val, Closure):
+            if isinstance(val, AbsReadyEntry):
                 val.evaluate()
         return self
 
@@ -246,9 +262,10 @@ class frozenhdict(UserDict, dict[str, VT]):
         True
         """
         if self._asdicts is None:
+            from hdict import hdict
             dic = {}
             for k, v in self.items():
-                dic[k] = v.asdicts if isinstance(v, frozenhdict) else v
+                dic[k] = v.asdicts if isinstance(v, (hdict, frozenhdict)) else v
             dic["_id"] = self.id
             dic["_ids"] = self.ids.copy()
             self._asdicts = dic
@@ -272,9 +289,10 @@ class frozenhdict(UserDict, dict[str, VT]):
 
         """
         if self._asdicts_noid is None:
+            from hdict import hdict
             dic = {}
             for k, v in self.items():
-                dic[k] = v.asdicts_noid if isinstance(v, frozenhdict) else v
+                dic[k] = v.asdicts_noid if isinstance(v, (hdict, frozenhdict)) else v
             self._asdicts_noid = dic
         return self._asdicts_noid
 
@@ -285,7 +303,8 @@ class frozenhdict(UserDict, dict[str, VT]):
         dic = {}
         for k, val in self.data.items():
             if k not in ["_id", "_ids"]:
-                hoshes.add(val.hosh)
+                if isinstance(val, AbsReadyEntry):
+                    hoshes.add(val.hosh)
                 if isinstance(val, value):
                     v = val.value
                     if isinstance(v, frozenhdict):
@@ -300,11 +319,9 @@ class frozenhdict(UserDict, dict[str, VT]):
         dic["_ids"] = self.ids.copy()
         return dic, hoshes
 
-    def astext(self, colored=True, key_quotes=False, extra_items=None):
+    def astext(self, colored=True, key_quotes=False):
         r"""Textual representation of a frozenidict object"""
         dicts, hoshes = self.asdicts_hoshes_noneval
-        if extra_items:
-            dicts.update(extra_items)
         txt = json.dumps(dicts, indent=4, ensure_ascii=False, cls=CustomJSONEncoder)
 
         # Put colors after json, to avoid escaping ansi codes.  TODO: check how HTML behaves here
@@ -313,9 +330,6 @@ class frozenhdict(UserDict, dict[str, VT]):
         txt = re.sub(r'(": )"(λ.+?)"(?=,\n)', '": \\2', txt)
         if not key_quotes:
             txt = re.sub(r'(?<!: )"([\-a-zA-Z0-9_ ]+?)"(?=: )', "\\1", txt)
-        if extra_items:
-            for v in extra_items.values():
-                txt = txt.replace(f'"{v}"', f"{v}")
         return txt
 
     def show(self, colored=True, key_quotes=False):
@@ -401,7 +415,7 @@ class frozenhdict(UserDict, dict[str, VT]):
             if isinstance(other, (frozenhdict, hdict)):
                 return self.id == other.id
             return dict(self) == other
-        raise TypeError(f"Cannot compare {type(self)} and {type(other)}")  # pragma: no cover
+        raise TypeError(f"Cannot compare {self.__class__.__name__} and {other.__class__.__name__}")  # pragma: no cover
 
     def __ne__(self, other):
         return not (self == other)

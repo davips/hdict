@@ -21,18 +21,18 @@
 #  time spent here.
 #
 
-from dataclasses import dataclass
 from random import Random
 
 from lange.tricks import list2progression
 
-from hdict.content.abs.sampling import withSampling
-from hdict.content.abs.variable import AbsVariable
+from hdict.content.value import value
+from ..argument import AbsMetaArgument
 
 
-@dataclass
-class sample(AbsVariable, withSampling):
+class sample(AbsMetaArgument):
     """
+    A lazily evaluated list of values
+
     >>> (s := sample(1, 2, 3, ..., 9).values)
     [1 2 .+. 9]
     >>> (s := sample(2, 4, 8, ..., 1024).values)
@@ -44,15 +44,13 @@ class sample(AbsVariable, withSampling):
 
     def __init__(self, *values: list[int | float], rnd: int | Random = 0, maxdigits=28):
         self.rnd = rnd
-        # TODO: accept non numeric types (categoric)?
+        # TODO: accept list of non numeric types (categoric)?
         prog = list2progression(values, maxdigits=maxdigits)
         if prog.n.is_infinite():  # pragma: no cover
             raise Exception(f"Cannot sample from an infinite list: {prog}")
         self.values = prog
 
     def sample(self, rnd: int | Random = None):
-        from hdict.content.value import value
-
         if rnd is None:
             rnd = self.rnd
         if isinstance(rnd, int):
@@ -61,3 +59,6 @@ class sample(AbsVariable, withSampling):
             raise Exception(f"Sampling needs an integer seed or a Random object.")
         idx = rnd.randint(0, self.values.n - 1)
         return value(self.values[idx])
+
+    def __repr__(self):
+        return f"~{self.values}"

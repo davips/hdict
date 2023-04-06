@@ -20,40 +20,45 @@
 #  part of this work is illegal and it is unethical regarding the effort and
 #  time spent here.
 #
-from hdict.content.abs.appliable import asAppliable
-from hdict.content.abs.entry import AbsEntry
-from hdict.content.abs.requirements import withRequirements
+from hdict.content.entry.ready import AbsReadyEntry
 
 
-class subcontent(AbsEntry, asAppliable, withRequirements):
+class SubValue(AbsReadyEntry):
     """
+    A field containing part of other field
+
     >>> from hdict import value
-    >>> subcontent(value([3]), 0,1)
+    >>> v = SubValue(value([3]), 0, 1)
+    >>> v
+    [3]→0
+    >>> v.value
     3
     """
-    _value = None
 
-    def __init__(self, parent: AbsEntry, index: int, n: int, source: str = None):
+    def __init__(self, parent: AbsReadyEntry, index: int, n: int, source: str = None):
         self.parent, self.index, self.n, self.source = parent, index, n, source
-        self.hosh = parent.hosh
+        self.hosh = parent.hosh[index:n]
 
     @property
     def value(self):
-        if self._value is None:
+        from hdict.content.entry import Unevaluated
+        if self._value is Unevaluated:
             value = self.parent.value
-            if isinstance(value, list):
+            if isinstance(value, (list, tuple)):
                 if len(value) < self.n:  # pragma: no cover
                     raise Exception(f"Number of output fields ('{self.n}') should not exceed number of resulting list elements ('{len(value)}').")
                 self._value = value[self.index]
-            if isinstance(value, dict):
+            elif isinstance(value, dict):
                 if len(value) != self.n:  # pragma: no cover
                     raise Exception(f"Number of output fields ('{self.n}') should match number of resulting dict entries ('{len(value)}').")
                 if self.source:
                     self._value = value[self.source]
                 self._value = list(sorted(value.items()))[self.index][1]
             else:  # pragma: no cover
-                raise Exception(f"Cannot infer subvalue '{self.index}' of type '{type(value)} {value}.")
+                raise Exception(f"Cannot infer subvalue '{self.index}' of type '{value.__class__.__name__} {value}.")
         return self._value
 
     def __repr__(self):
+        if self.isevaluated:
+            return repr(self._value)
         return f"{self.parent}→{str(self.index if self.source is None else self.source)}"

@@ -20,22 +20,35 @@
 #  part of this work is illegal and it is unethical regarding the effort and
 #  time spent here.
 #
-from typing import Union
 
-from hosh import Hosh
+from hdict.content.argument.field import field
+from hdict.content.argument.sample import sample
+from hdict.frozenhdict import frozenhdict
 
-from hdict.content.abs.any import AbsAny
 
+class Empty_(frozenhdict):
+    """
+    >>> from hdict import _
+    >>> d = _ >> {"x": 5} >> dict(y=7)
+    >>> type(_), type(d)
+    (<class 'hdict.Empty'>, <class 'hdict.hdict'>)
+    >>> d.show(colored=False)
+    {
+        x: 5,
+        y: 7,
+        _id: A0G3Y7KNMLihDvpSJ3tB.zxshc6u1CbbiiYjCAAA,
+        _ids: {
+            x: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+            y: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf
+        }
+    }
+    """
 
-class AbsEntry(AbsAny):
-    """hdict entry at implementation level"""
-    value: Union[object, callable]  # REMINDER: 'callable' is here for a 'field' containing a function
-    hosh: Hosh
-    isevaluated: bool
+    def __getattr__(self, item):
+        return field(item)
 
-    @property
-    def id(self):  # pragma: no cover
-        return self.hosh.id
+    def __getitem__(self, item):
+        return sample(*item)
 
-    def evaluate(self):
-        _ = self.value
+    def __rshift__(self, other):
+        return super().__rshift__(other).unfrozen

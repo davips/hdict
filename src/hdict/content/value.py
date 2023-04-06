@@ -20,15 +20,17 @@
 #  part of this work is illegal and it is unethical regarding the effort and
 #  time spent here.
 #
-from hdict.content.abs.any import AbsAny
-from hdict.content.abs.entry import AbsEntry
 from hosh import Hosh
 
+from hdict.content.argument import AbsBaseArgument
+from hdict.content.entry.ready import AbsReadyEntry
 from hdict.hoshfication import v2hosh
 
 
-class value(AbsEntry):
+class value(AbsBaseArgument, AbsReadyEntry):
     """
+    Wrapper for any Python object except AbsAny instances
+
     >>> x = 5
     >>> from hdict.content.value import value
     >>> v = value(x, "1234567890123456789012345678901234567890")
@@ -38,6 +40,7 @@ class value(AbsEntry):
     '1234567890123456789012345678901234567890'
 
     """
+    isevaluated = True
 
     def __init__(self, val: object, hosh: Hosh | str = None, hdict=None):
         """
@@ -47,16 +50,14 @@ class value(AbsEntry):
             hosh:
             hdict:  optional reference to the object if it has a hdict counterpart (e.g.: pandas DF)
         """
-        from hdict import field
-        from hdict import apply
+        from hdict.abs import AbsAny
         if isinstance(val, AbsAny):  # pragma: no cover
-            raise Exception(f"Cannot nest AbsAny object inside a 'value' object: '{type(val)}")
-        self.value = val
+            raise Exception(f"Cannot handle objects of type '{val.__class__.__name__}' as raw values for hdict.")
+        self.value = self._value = val
         if isinstance(hosh, str):
             hosh = Hosh.fromid(hosh)
         self.hosh = v2hosh(self.value) if hosh is None else hosh
         self.hdict = hdict
-        self.isevaluated = True
 
     def __repr__(self):
         return repr(self.value)
