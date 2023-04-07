@@ -22,6 +22,7 @@
 #
 
 from dataclasses import dataclass
+from random import Random
 
 from hdict.abs import AbsAny
 from hdict.content.argument.apply import apply
@@ -33,20 +34,40 @@ class ApplyOut(AbsAny):
     nested: apply
     out: [str | tuple[str, str]]
 
-    def __rrshift__(self, other):
+    def sample(self, rnd: int | Random = None):
+        if not self.nested.sampleable:
+            return self
+        return ApplyOut(self.nested.sample(rnd), self.out)
+
+    @property
+    def sampleable(self):
+        return self.nested.sampleable
+
+    def __rrshift__(self, left):
         from hdict import hdict, frozenhdict
 
-        if isinstance(other, dict) and not isinstance(other, (hdict, frozenhdict)):
-            return hdict() >> other >> self
+        if isinstance(left, dict) and not isinstance(left, (hdict, frozenhdict)):
+            return hdict(left) >> self
         return NotImplemented  # pragma: no cover
 
-    def __rshift__(self, other):
-        from hdict import hdict
+    def __rmul__(self, left):
+        from hdict import hdict, frozenhdict
+        from hdict.expr import Expr
+
+        if isinstance(left, dict) and not isinstance(left, (hdict, frozenhdict)):
+            return Expr(left, self)
+        return NotImplemented  # pragma: no cover
+
+    def __rshift__(self, right):
+        from hdict.expr import Expr
 
         # REMINDER: dict includes hdict/frozenhdict.
-        if isinstance(other, (dict, ApplyOut)):
-            return hdict() >> self >> other
+        if isinstance(right, (dict, ApplyOut)):
+            return Expr(self, right)
         return NotImplemented  # pragma: no cover
+
+    def __mul__(self, right):
+        return self.__rshift__(right)
 
     def __repr__(self):
         return f"{self.out}={repr(self.nested)}"

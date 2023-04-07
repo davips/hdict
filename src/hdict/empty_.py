@@ -51,4 +51,7 @@ class Empty_(frozenhdict):
         return sample(*item)
 
     def __rshift__(self, other):
-        return super().__rshift__(other).unfrozen
+        res = super().__rshift__(other)
+        if res is NotImplemented:
+            return res
+        return res.unfrozen

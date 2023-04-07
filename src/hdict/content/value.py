@@ -23,11 +23,11 @@
 from hosh import Hosh
 
 from hdict.content.argument import AbsBaseArgument
-from hdict.content.entry.ready import AbsReadyEntry
+from hdict.content.entry import AbsEntry
 from hdict.hoshfication import v2hosh
 
 
-class value(AbsBaseArgument, AbsReadyEntry):
+class value(AbsBaseArgument, AbsEntry):
     """
     Wrapper for any Python object except AbsAny instances
 
@@ -52,7 +52,7 @@ class value(AbsBaseArgument, AbsReadyEntry):
         """
         from hdict.abs import AbsAny
         if isinstance(val, AbsAny):  # pragma: no cover
-            raise Exception(f"Cannot handle objects of type '{val.__class__.__name__}' as raw values for hdict.")
+            raise Exception(f"Cannot handle objects of type '{type(val).__name__}' as raw values for hdict.")
         self.value = self._value = val
         if isinstance(hosh, str):
             hosh = Hosh.fromid(hosh)

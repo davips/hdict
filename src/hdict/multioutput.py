@@ -20,52 +20,50 @@
 #  part of this work is illegal and it is unethical regarding the effort and
 #  time spent here.
 #
-from hdict.aux_frozendict import handle_items, prevent_overwriting_unready
+from hdict.content.argument import AbsBaseArgument
 from hdict.content.argument.apply import apply
-from hdict.content.entry.ready import AbsReadyEntry
-from hdict.content.entry.ready.closure import Closure
+
+from hdict.content.entry import AbsEntry
+from hdict.content.entry.closure import Closure
 
 
-def handle_multioutput(result, field_names: tuple, entry: AbsReadyEntry, ignore):
+def handle_multioutput(previous, field_names: tuple, entry: AbsEntry | apply):
     """Fields and hoshes are assigned to each output according to the alphabetical order of the original keys.
 
     >>> from hdict import field, value
     >>> d = {"a": field("b"), "b": field("c"), "c": 5}
     >>> d
-    {'a': 'b', 'b': 'c', 'c': 5}
+    {'a': field(b), 'b': field(c), 'c': 5}
     >>> handle_multioutput(d, ("x","y"), value([0,1]))
-    ({'a': 'b', 'b': 'c', 'c': 5, 'x': 0, 'y': 1}, False, False)
-    >>> d
-    {'a': 'b', 'b': 'c', 'c': 5, 'x': 0, 'y': 1}
+    {'x': 0, 'y': 1}
     >>> handle_multioutput(d, ("x","y"), value({1:"a", 0:"b"}))
-    ({'a': 'b', 'b': 'c', 'c': 5, 'x': 'b', 'y': 'a'}, False, False)
-    >>> d
-    {'a': 'b', 'b': 'c', 'c': 5, 'x': 'b', 'y': 'a'}
+    {'x': 'b', 'y': 'a'}
     """
     from hdict import value
-    from hdict.content.entry.ready.subvalue import SubValue
+    from hdict.content.entry.subvalue import SubValue
+    from hdict.aux_frozendict import handle_item
     data = {}
     match entry:
         case value(value=list() as lst):
             if len(field_names) != len(lst):  # pragma: no cover
                 raise Exception(f"Number of output fields ('{len(field_names)}') should match number of list elements ('{len(lst)}').")
             for field_name, val in zip(field_names, lst):
-                data[field_name] = val
-            return handle_items(data, result=result, ignore=ignore)
+                data[field_name] = handle_item(field_name, val, previous)
         case value(value=dict() as dct):
             if len(field_names) != len(dct):  # pragma: no cover
                 raise Exception(f"Number of output fields ('{len(field_names)}') should match number of dict entries ('{len(dct)}').")
             for field_name, (_, val) in zip(field_names, sorted(dct.items())):
-                data[field_name] = val
-            return handle_items(data, result=result, ignore=ignore)
-        case AbsReadyEntry():
-            parent = Closure(entry, result, ignore) if isinstance(entry, apply) else entry
+                data[field_name] = handle_item(field_name, val, previous)
+        case AbsEntry() | apply():
+            keys = []  # For repr().
+            parent = Closure(entry, previous, keys) if isinstance(entry, apply) else entry
             n = len(field_names)
             for key, i, source in loop_field_names(field_names):
-                prevent_overwriting_unready(key, SubValue(parent, i, n, source), result, ignore)
-            return result, False, False
+                keys.append(key)
+                data[key] = SubValue(parent, i, n, source)
         case _:  # pragma: no cover
-            raise Exception(f"Cannot handle multioutput for key '{field_names}' and type '{entry.__class__.__name__}'.")
+            raise Exception(f"Cannot handle multioutput for key '{field_names}' and type '{type(entry).__name__}'.")
+    return data
 
 
 def loop_field_names(field_names):

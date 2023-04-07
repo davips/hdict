@@ -170,10 +170,10 @@ class hdict(hdict_):
     >>> d >>= apply(field("f"), field("x"), y=default(3))("w", "v")
     >>> d["w2", "v2"] = apply(field("f"), field("x"), y=default(3))
     >>> d >>= {"z": apply(f, field("x"), y=3), ("w", "v"): apply(g, y=7)}
-    >>> d >>= apply(f, field("x"), y=3)("z9") >> apply(g, y=7)("w9", "v9")
+    >>> d >>= apply(f, field("x"), y=3)("z9") * apply(g, y=7)("w9", "v9")
     >>> pp = apply(f, field("x"), y=3)("z") >> apply(g, y=7)("w", "v")
     >>> type(pp)
-    <class 'hdict.hdict'>
+    <class 'hdict.expr.Expr'>
     >>> d >>= {"x": 3} >> pp >> apply(g, y=7)("w", "v")
     >>> from hdict import _
     >>> a1 = apply(f, y=_[1, 2, 4, ..., 128])
@@ -232,35 +232,35 @@ class hdict(hdict_):
     >>> d["w", "v"] = apply(f, _.x, y=_.x)
     >>> d["w", "v"] = apply(_.f, _.x, y=default(3))
     >>> d = hdict() >> {"z": apply(f, 7, y=3), ("w", "v"): apply(g, default(6), y=7)}
-    >>> d = hdict(w=6) >> (apply(f, _.w, y=3)(z="z") >> apply(g, x=_[1,2,3,...,5], y=7)("ww", "v")).sample()
+    >>> d = hdict(w=6) >> (apply(f, _.w, y=3)(z="z") >> apply(g, x=_[1,2,3,...,5], y=7)("ww", "v")).sample(0)
     >>> p = apply(f, y=_[1, 2, 4, ..., 128])("z") >> apply(f, y=_[0, 3, 6, ..., 9])(w="a", v="b")
     >>> d.show(colored=False)
     {
         w: 6,
         z: λ(x=w 3)→z,
-        ww: "✗ delayed: (ww,v) = λ(x=~[1 2 .+. 5] 7)",
-        v: "✗ delayed: (ww,v) = λ(x=~[1 2 .+. 5] 7)",
-        _id: 0000000000000000000000000000000000000000,
+        ww: λ(4 7)→0,
+        v: λ(4 7)→1,
+        _id: Hu.P9nMRy97xUe7prRc3k-Uwvz2p5emCpSyVSdIC,
         _ids: {
             w: CZ7Jm5fQMZ3fZJ3kAVOi0FYK-exFqPqgoYLsGxGl,
             z: 3eItvrVzHQPDEYbQRbksBHiCaQbe2Ia2m7Z2P1lw,
-            ww: "✗ delayed (ww,v)",
-            v: "✗ delayed (ww,v)"
+            ww: VdHav0HHdJC6gfOF8Fqw7AFX9IYQyrIUOZc8G.Pp,
+            v: KtYqDG5UPyrYEv-5V5RaUQasieAwAjF1bYf3Tvyy
         }
     }
     >>> d = hdict(x=3) >> p.sample(rnd)
     >>> d.show(colored=False)
     {
         x: 3,
-        z: λ(x 64),
-        w: "✗ delayed: (w,v) = λ(x y=~[0 3 .+. 9])",
-        v: "✗ delayed: (w,v) = λ(x y=~[0 3 .+. 9])",
-        _id: 0000000000000000000000000000000000000000,
+        z: λ(x 16),
+        w: λ(x 9)→a,
+        v: λ(x 9)→b,
+        _id: OIVFm0IdYK3jtOApTVCwdLTVXXNGarxDkUCwB0Iv,
         _ids: {
             x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
-            z: L9tTTz.k7VDAeB9hRc2dD5bPy3J9HLaNY6dxO9OF,
-            w: "✗ delayed (w,v)",
-            v: "✗ delayed (w,v)"
+            z: -F83hM-wE8ykmcEM1XvuG.XBpo7rzkuHfNKzTVMz,
+            w: G7CpHeVpUD5KfNpJmRaMC2Rt4rTeQjIuAeGuZXSa,
+            v: glVBFsjtDi7RrpvqrV.5vh.dp.RgASp25V-qlClj
         }
     }
     >>> d1 = hdict(x=52, y=13)

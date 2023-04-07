@@ -29,7 +29,7 @@ from random import Random
 
 from hosh import Hosh
 
-from hdict.content.argument import AbsBaseArgument, AbsMetaArgument, AbsArgument
+from hdict.content.argument import AbsBaseArgument, AbsArgument
 from hdict.content.argument.field import field
 from hdict.customjson import truncate
 from hdict.hoshfication import f2hosh
@@ -54,11 +54,11 @@ class apply(AbsBaseArgument):
     >>> v2 = apply(f, a=v, b=value(7))
     >>> v2
     λ(a=λ(5 7) 7)
-    >>> v.enclosure({}).value
+    >>> v.enclosure({}, "j").value
     78125
-    >>> v2.enclosure({})
+    >>> v2.enclosure({}, "j")
     λ(a=λ(5 7) 7)
-    >>> v2.enclosure({}).value
+    >>> v2.enclosure({}, "j").value
     17763568394002504646778106689453125
 
     >>> f = lambda a,b, c=1,d=2,e=13: 0
@@ -69,16 +69,16 @@ class apply(AbsBaseArgument):
     {'a': 3, 'b': field(b), 'c': default(1), 'd': default(2), 'e': default(13)}
     >>> ap
     λ(3 b c=default(1) d=default(2) e=default(13))
-    >>> ap.enclosure({"b": value(77)})
-    λ(3 b c=default(1) d=default(2) e=default(13))
+    >>> ap.enclosure({"b": value(77)}, "j")
+    λ(3 b c=1 d=2 e=13)
     >>> ap
     λ(3 b c=default(1) d=default(2) e=default(13))
     >>> d = {"f": ap, "b": 5, "d": 1, "e": field("b")}
     >>> d
     {'f': λ(3 b c=default(1) d=default(2) e=default(13)), 'b': 5, 'd': 1, 'e': field(b)}
     >>> from hdict.aux_frozendict import handle_items
-    >>> handle_items(d, {})
-    ({'b': 5, 'f': ✗ delayed: λ(3 b c=default(1) d=default(2) e=default(13)), 'd': 1, 'e': 5}, True, False)
+    >>> handle_items(d, previous={"b": 5})
+    {'b': 5, 'f': λ(3 b c=1 d=2 e=13), 'd': 1, 'e': 5}
     >>> d
     {'f': λ(3 b c=default(1) d=default(2) e=default(13)), 'b': 5, 'd': 1, 'e': field(b)}
     >>> apply(f,3,4).requirements
@@ -124,9 +124,9 @@ class apply(AbsBaseArgument):
         elif callable(appliable):
             if not isfunction(appliable):  # "not function" means "custom callable"
                 if not hasattr(appliable, "__call__"):  # pragma: no cover
-                    raise Exception(f"Cannot infer method to apply non custom callable type '{appliable.__class__.__name__}'.")
+                    raise Exception(f"Cannot infer method to apply non custom callable type '{type(appliable).__name__}'.")
                 if not hasattr(appliable, "hosh"):  # pragma: no cover
-                    raise Exception(f"Missing 'hosh' attribute while applying custom callable class '{appliable.__class__.__name__}'")
+                    raise Exception(f"Missing 'hosh' attribute while applying custom callable class '{type(appliable).__name__}'")
                 # noinspection PyUnresolvedReferences
                 sig = signature(appliable.__call__)
                 # noinspection PyUnresolvedReferences
@@ -139,7 +139,7 @@ class apply(AbsBaseArgument):
             self.fargs, self.fkwargs = handle_args(sig, applied_args, applied_kwargs)
             self._sampleable = _sampleable
         else:  # pragma: no cover
-            raise Exception(f"Cannot apply type '{appliable.__class__.__name__}'.")
+            raise Exception(f"Cannot apply type '{type(appliable).__name__}'.")
 
     @property
     def sampleable(self):
@@ -166,9 +166,9 @@ class apply(AbsBaseArgument):
             clone.fkwargs[k] = v.sample(rnd)
         return clone
 
-    def enclosure(self, data, ignore):
-        from hdict.content.entry.ready.closure import Closure
-        return Closure(self, data, ignore)
+    def enclosure(self, data, key):
+        from hdict.content.entry.closure import Closure
+        return Closure(self, data, [key])
 
     def __call__(self, *out, **kwout):
         from hdict.applyout import ApplyOut
@@ -197,7 +197,7 @@ class apply(AbsBaseArgument):
         from hdict import value
 
         lst = []
-        for param, content in chain(self.fargs.items(), sorted(self.fkwargs.items())):
+        for param, content in sorted(chain(self.fargs.items(), self.fkwargs.items())):
             match content:
                 case field(name=param):
                     lst.append(f"{param}")
@@ -212,5 +212,5 @@ class apply(AbsBaseArgument):
     @property
     def requirements(self):
         if self._requirements is None:
-            self._requirements = {k: v for k, v in chain(self.fargs.items(), sorted(self.fkwargs.items()))}
+            self._requirements = {k: v for k, v in sorted(chain(self.fargs.items(), self.fkwargs.items()))}
         return self._requirements

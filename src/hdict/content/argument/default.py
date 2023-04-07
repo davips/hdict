@@ -30,7 +30,7 @@ class default(AbsMetaArgument):
     def __init__(self, value: object | Callable):
         self.value = value
         if isinstance(value, AbsAny):
-            raise Exception(f"Cannot use a `{value.__class__.__name__}` as a default function value.")
+            raise Exception(f"Cannot use a `{type(value).__name__}` as a default function value.")
 
     def __repr__(self):
         return f"default({repr(self.value)})"

@@ -4,51 +4,38 @@ from itertools import chain
 
 from hosh import ø
 
-from hdict import field
 from hdict.content.argument import AbsArgument
 from hdict.content.argument.apply import apply
 from hdict.content.argument.default import default
 from hdict.content.entry import AbsEntry, Unevaluated
 from hdict.content.entry.aux_closure import handle_arg
-from hdict.content.entry.ready import AbsReadyEntry
-from hdict.content.entry.unready import AbsUnreadyEntry
 from hdict.customjson import truncate
 
 
-class Closure(AbsReadyEntry):
-    unready = False
-
-    def __init__(self, application: apply, result: dict[str, AbsEntry], ignore):
+class Closure(AbsEntry):
+    def __init__(self, application: apply, data: dict[str, AbsEntry], out: list):
         from hdict.aux_frozendict import handle_item
         self.application = application
+        self.out = out
+        self.torepr = {}
         hosh = ø
-
-        # REMINDER: kwargs are alphabetically sorted to ensure we keep the same resulting hosh
-        #   no matter in which order the keyworded parameters are passed to the function.
-        #           If the order in which positional args are defined in the function changes, fhosh will reflect the change.
         arg = None
         fargs, fkwargs, discarded_defaults = {}, {}, set()
-        for key, val in application.fargs.items():
-            arg = handle_arg(key, val, result, discarded_defaults, ignore)
-            if arg is None:
-                self.unready = True
-            else:
+        sorted_fargs = zip(map(str, application.fargs), application.fargs.items())
+        for idx, tup in sorted(chain(sorted_fargs, application.fkwargs.items())):  # We sort by keys for a deterministic hosh.
+            if isinstance(tup, tuple):
+                key, val = tup
+                arg = handle_arg(key, val, data, discarded_defaults, out, self.torepr)
                 fargs[key] = arg
-                hosh *= arg.hosh
-        for key, val in sorted(application.fkwargs.items()):
-            arg = handle_arg(key, val, result, discarded_defaults, ignore)
-            if arg is None:
-                self.unready = True
             else:
+                key, val = idx, tup
+                arg = handle_arg(key, val, data, discarded_defaults, out, self.torepr)
                 fkwargs[key] = arg
-                hosh *= arg.hosh
+            hosh *= arg.hosh
 
         if application.isfield:
-            appliable_entry = handle_item(application.appliable, result, ignore)
-            if isinstance(appliable_entry, AbsUnreadyEntry):
-                self.unready = True
-            else:
-                hosh *= appliable_entry.hosh.rev
+            appliable_entry = handle_item(application.appliable.name, application.appliable, data)
+            hosh *= appliable_entry.hosh.rev
 
             def f():
                 args = (x.value for x in fargs.values())
@@ -64,8 +51,6 @@ class Closure(AbsReadyEntry):
                 return appliable_function(*args, **kwargs)
         self.f = f
         self.hosh = hosh
-        self.fargs = fargs
-        self.fkwargs = fkwargs
         self.discarded_defaults = discarded_defaults
 
     @property
@@ -77,9 +62,10 @@ class Closure(AbsReadyEntry):
 
     def __repr__(self):
         from hdict import value
+        from hdict import field
 
         lst = []
-        for param, content in chain(self.application.fargs.items(), sorted(self.application.fkwargs.items())):
+        for param, content in self.torepr.items():
             pre = "" if isinstance(param, int) else f"{param}="
             match content:
                 case value():
@@ -88,6 +74,8 @@ class Closure(AbsReadyEntry):
                     lst.append(f"{param}")
                 case default(value=v):
                     lst.append(f"{param}={v}")
+                case field(name) if name in self.out:
+                    lst.append(f"{repr(content)}")
                 case field(name) if name == param:
                     lst.append(f"{param}")
                 case field(name):

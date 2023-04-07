@@ -25,7 +25,6 @@ import re
 from json import JSONEncoder
 
 from hdict.content.entry import AbsEntry
-from hdict.content.entry.ready import AbsReadyEntry
 
 
 class CustomJSONEncoder(JSONEncoder):
@@ -159,7 +158,7 @@ class CustomJSONEncoder(JSONEncoder):
             #     return obj.asdicts
             if obj is Ellipsis:
                 return "..."
-            if isinstance(obj, AbsReadyEntry) and obj.isevaluated:
+            if isinstance(obj, AbsEntry) and obj.isevaluated:
                 # from hoshmap import FrozenIdict, Idict
                 # if isinstance(obj.value, Idict):
                 #     return obj.value.frozen.asdicts
@@ -169,10 +168,10 @@ class CustomJSONEncoder(JSONEncoder):
             # if isinstance(obj, FunctionType):
             #     return str(obj)
             if not isinstance(obj, (dict, list, str, int, float, bytearray, bool)):
-                if obj.__class__.__name__ in ["DataFrame", "Series"]:
+                if type(obj).__name__ in ["DataFrame", "Series"]:
                     # ‹str()› is to avoid nested identation
                     return f"‹{truncate(str(obj.to_dict()), self.width)}›"
-                if obj.__class__.__name__ == "ndarray":
+                if type(obj).__name__ == "ndarray":
                     txt = str(obj).replace("\n", "")
                     return f"‹{truncate(txt, self.width)}›"
                 return truncate(str(obj).replace("\n", ""), self.width)

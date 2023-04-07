@@ -60,7 +60,7 @@ def handle_args(signature, applied_args, applied_kwargs):
             if i >= len(params):
                 if not hasargs:  # pragma: no cover
                     raise Exception("Too many arguments to apply. No '*contentarg' detected for 'f'.")
-                name = Arg(i)  # TODO: try to remember how and why this works
+                name = Arg(i)  # REMINDER: this is just a unique hash for the nameless argument
             else:
                 name = params[i]
                 if name in fkwargs:

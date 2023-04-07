@@ -20,10 +20,10 @@
 #  part of this work is illegal and it is unethical regarding the effort and
 #  time spent here.
 #
-from hdict.content.entry.ready import AbsReadyEntry
+from hdict.content.entry import AbsEntry
 
 
-class SubValue(AbsReadyEntry):
+class SubValue(AbsEntry):
     """
     A field containing part of other field
 
@@ -35,7 +35,7 @@ class SubValue(AbsReadyEntry):
     3
     """
 
-    def __init__(self, parent: AbsReadyEntry, index: int, n: int, source: str = None):
+    def __init__(self, parent: AbsEntry, index: int, n: int, source: str = None):
         self.parent, self.index, self.n, self.source = parent, index, n, source
         self.hosh = parent.hosh[index:n]
 
@@ -55,7 +55,7 @@ class SubValue(AbsReadyEntry):
                     self._value = value[self.source]
                 self._value = list(sorted(value.items()))[self.index][1]
             else:  # pragma: no cover
-                raise Exception(f"Cannot infer subvalue '{self.index}' of type '{value.__class__.__name__} {value}.")
+                raise Exception(f"Cannot infer subvalue '{self.index}' of type '{type(value).__name__} {value}.")
         return self._value
 
     def __repr__(self):

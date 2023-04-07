@@ -38,21 +38,6 @@ class hdict_(dict[str, VT]):
         # Build hdict from frozen or fresh data. Never both.
         self.frozen = _frozen or frozenhdict(_dictionary, **kwargs)
 
-    @property
-    def sampleable(self):
-        return self.frozen.sampleable
-
-    def sample(self, rnd: int | Random = None):
-        return self.frozen.sample(rnd).unfrozen
-
-    @property
-    def hasmissing(self):
-        return self.frozen.hasmissing
-
-    @property
-    def unready(self):
-        return self.frozen.unready
-
     def __setitem__(self, key: str | tuple, value):
         if isinstance(key, tuple):
             key = tuple((x.start, x.stop) if isinstance(x, slice) else x for x in key)
@@ -78,7 +63,7 @@ class hdict_(dict[str, VT]):
         from hdict.content.argument import AbsArgument
         from hdict.applyout import ApplyOut
         if isinstance(other, AbsArgument):  # pragma: no cover
-            raise Exception(f"Cannot pipe {other.__class__.__name__} without specifying output.\n"
+            raise Exception(f"Cannot pipe {type(other).__name__} without specifying output.\n"
                             "Hint: d >> {'field name': object}")
         # REMINDER: dict includes hdict/frozenhdict.
         if isinstance(other, (dict, ApplyOut)):
@@ -317,3 +302,7 @@ class hdict_(dict[str, VT]):
 
     # def __reduce__(self):
     #     return self.frozen.__reduce__()
+
+    def __mul__(self, other):
+        from hdict.expr import Expr
+        return Expr(self, other)

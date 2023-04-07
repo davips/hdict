@@ -21,16 +21,11 @@
 #  time spent here.
 #
 from dataclasses import dataclass
+from typing import Callable
+
+from hosh import Hosh
 
 from hdict.abs import AbsAny
-
-
-class AbsEntry(AbsAny):
-    """
-    hdict entry at internal level: ready and unready
-
-    Exceptionally, 'value' objects have a meaning outside of hdict (external level)
-    """
 
 
 @dataclass
@@ -39,3 +34,31 @@ class Unevaluated:
 
 
 Unevaluated = Unevaluated()
+
+
+class AbsEntry(AbsAny):
+    """
+    hdict final entry at internal level: value*, SubValue, Closure
+
+    *value also inherits AbsBaseArgument because 'value' objects have a meaning outside of hdict (external level)
+    """
+    value: object | Callable  # REMINDER: 'callable' is here for appliable contents, like storing a raw lambda
+    hosh: Hosh
+    _value = Unevaluated
+
+    @property
+    def id(self):  # pragma: no cover
+        return self.hosh.id
+
+    def evaluate(self):
+        _ = self.value
+
+    @property
+    def isevaluated(self):
+        """
+        >>> from hdict import apply
+        >>> from hdict.content.entry.closure import Closure
+        >>> Closure(apply(lambda x, y: x + y), {"x": 3, "y": 5}, []).isevaluated
+        False
+        """
+        return self._value != Unevaluated
