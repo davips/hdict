@@ -66,25 +66,31 @@ class Closure(AbsEntry):
     def __repr__(self):
         from hdict import value
         from hdict import field
-
+        from hdict.content.entry.wrapper import Wrapper
         lst = []
         for param, content in self.torepr.items():
             pre = "" if isinstance(param, int) else f"{param}="
+
             match content:
                 case value():
                     lst.append(truncate(repr(content), width=7))
+
                 case default() if param in self.discarded_defaults:
                     lst.append(f"{param}")
                 case default(value=v):
                     lst.append(f"{param}={v}")
+
                 case field(name) if name in self.out:
-                    lst.append(f"{repr(content)}")
+                    lst.append(repr(content))
                 case field(name) if name == param:
                     lst.append(f"{param}")
                 case field(name):
                     lst.append(f"{pre}{name}")
+
                 case AbsArgument():
                     lst.append(f"{pre}{repr(content)}")
+                case Wrapper(entry):
+                    lst.append(repr(entry))
                 case _:
                     raise Exception(type(content))
         return f"λ({' '.join(lst)})"

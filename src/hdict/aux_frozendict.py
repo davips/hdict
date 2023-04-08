@@ -36,6 +36,7 @@ def handle_items(*datas: [Dict[str, object]], previous: [Dict[str, AbsEntry]]):
 
 
 def handle_item(key, item, previous):
+    from hdict.content.argument.entry import entry
     if isinstance(key, tuple):
         from hdict.multioutput import handle_multioutput
 
@@ -52,6 +53,11 @@ def handle_item(key, item, previous):
             if name not in previous:
                 raise MissingFieldException(f"Missing field `{name}`")
             return handle_item(name, previous[name], previous)
+        case entry(name=name):
+            from hdict.content.entry.wrapper import Wrapper
+            if name not in previous:
+                raise MissingFieldException(f"Missing entry `{name}`")
+            return Wrapper(handle_item(name, previous[name], previous))
         case apply():
             return item.enclosure(previous, key)
         case sample():

@@ -32,9 +32,10 @@ from operator import rshift
 from random import Random
 
 from hdict.abs import AbsAny
+from hdict.abs.step import AbsExpr
 
 
-class Expr(AbsAny):
+class Expr(AbsExpr):
     &#34;&#34;&#34;
     Expressions enable the creation of pipelines of steps
 
@@ -158,7 +159,7 @@ class Expr(AbsAny):
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class Expr(AbsAny):
+<pre><code class="python">class Expr(AbsExpr):
     &#34;&#34;&#34;
     Expressions enable the creation of pipelines of steps
 
@@ -263,6 +264,7 @@ class Expr(AbsAny):
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
+<li><a title="hdict.abs.expr.AbsExpr" href="abs/expr.html#hdict.abs.expr.AbsExpr">AbsExpr</a></li>
 <li><a title="hdict.abs.AbsAny" href="abs/index.html#hdict.abs.AbsAny">AbsAny</a></li>
 </ul>
 <h3>Static methods</h3>

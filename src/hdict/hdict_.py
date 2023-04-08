@@ -39,6 +39,7 @@ class hdict_(dict[str, VT]):
     def __init__(self, /, _dictionary: dict = None, _frozen: frozenhdict = None, **kwargs):
         # Build hdict from frozen or fresh data. Never both.
         self.frozen = _frozen or frozenhdict(_dictionary, **kwargs)
+        self.raw = self.frozen.data
 
     def __setitem__(self, key: str | tuple, value):
         if isinstance(key, tuple):
@@ -65,8 +66,14 @@ class hdict_(dict[str, VT]):
         from hdict.content.argument import AbsArgument
         from hdict.applyout import ApplyOut
 
+        from hdict.content.argument.apply import apply
+        if isinstance(other, apply):  # pragma: no cover
+            raise Exception(f"Cannot apply without specifying output(s).\n"
+                            f"Hint: d >> apply(f)('output_field1', 'output_field2')")
         if isinstance(other, AbsArgument):  # pragma: no cover
-            raise Exception(f"Cannot pipe {type(other).__name__} without specifying output.\n" "Hint: d >> {'field name': object}")
+            raise Exception(f"Cannot pipe {type(other).__name__} without specifying output.\n"
+                            f"Hint: d >> {'field name': object}\n"
+                            f"Hint: d['field name'] = object")
         # REMINDER: dict includes hdict/frozenhdict.
         if isinstance(other, (dict, ApplyOut)):
             return (self.frozen >> other).unfrozen

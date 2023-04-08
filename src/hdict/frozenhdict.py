@@ -135,6 +135,7 @@ class frozenhdict(UserDict, dict[str, VT]):
         self.data = handle_items(data, kwargs, previous=_previous)
         self.hosh, self.ids = handle_identity(self.data)
         self.id = self.hosh.id
+        self.raw = self.data
 
     def __rrshift__(self, other):
         from hdict import hdict
@@ -365,13 +366,14 @@ class frozenhdict(UserDict, dict[str, VT]):
         """
         Store an entire frozenidict
         """
+        from hdict.persistence.cache import Cached
         data = {self.id: self.ids}
         for field, fid in self.ids.items():
             value = self[field]
             if isinstance(value, frozenhdict):
                 value.save(cache)
             else:
-                data[fid] = value
+                data[fid] = Cached(value)
         cache.update(data)
 
     @staticmethod
@@ -391,6 +393,7 @@ class frozenhdict(UserDict, dict[str, VT]):
         When cache is a list, traverse it from the end (right item to the left item).
         """
         from hdict.content.entry.lazy import Lazy
+        from hdict.persistence.cache import Cached
 
         caches = cache if isinstance(cache, list) else [cache]
         while id not in (cache := caches.pop()):
@@ -399,7 +402,7 @@ class frozenhdict(UserDict, dict[str, VT]):
         obj = cache[id]
         if isinstance(obj, dict):
             ishdict = True  # Set to True, because now we have a nested frozenhdict
-        elif ishdict:
+        elif ishdict or not isinstance(obj, Cached):
             raise Exception(f"Wrong content for idict expected under id {id}: {type(obj)}.")
 
         if ishdict:

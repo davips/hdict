@@ -175,6 +175,8 @@ class apply(AbsBaseArgument):
 
     def __call__(self, *out, **kwout):
         from hdict.applyout import ApplyOut
+        if not (out or kwout):
+            raise Exception(f"At least one output field must be specified to apply.")
 
         if out and kwout:  # pragma: no cover
             raise Exception(f"Cannot mix translated (**kwargs) and non translated (*args) outputs.")
@@ -197,13 +199,16 @@ class apply(AbsBaseArgument):
         raise Exception(f"Cannot apply before specifying the output field.")
 
     def __repr__(self):
-        from hdict import value
+        from hdict.content.value import value
+        from hdict.content.argument.entry import entry
 
         lst = []
         for param, content in sorted(chain(self.fargs.items(), self.fkwargs.items())):
             match content:
                 case field(name=param):
                     lst.append(f"{param}")
+                case entry(name=param):
+                    lst.append(repr(content))
                 case value():
                     lst.append(truncate(repr(content), width=7))
                 case AbsArgument():

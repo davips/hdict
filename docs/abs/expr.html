@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
-<title>hdict.abs API documentation</title>
+<title>hdict.abs.expr API documentation</title>
 <meta name="description" content="" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
@@ -19,33 +19,21 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>hdict.abs</code></h1>
+<h1 class="title">Module <code>hdict.abs.expr</code></h1>
 </header>
 <section id="section-intro">
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class AbsAny:
-    &#34;&#34;&#34;
-    Any class defined in this project that is made to be a hdict value or should not be used as such
+<pre><code class="python">from hdict.abs import AbsAny
 
-    This intended to ease checking disallowed types being mistakengly used as user values.
-    &#34;&#34;&#34;</code></pre>
+
+class AbsExpr(AbsAny):
+    &#34;&#34;&#34;An expression, i.e., anything operable (pipelineable)&#34;&#34;&#34;</code></pre>
 </details>
 </section>
 <section>
-<h2 class="section-title" id="header-submodules">Sub-modules</h2>
-<dl>
-<dt><code class="name"><a title="hdict.abs.expr" href="expr.html">hdict.abs.expr</a></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt><code class="name"><a title="hdict.abs.step" href="step.html">hdict.abs.step</a></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-</dl>
 </section>
 <section>
 </section>
@@ -54,28 +42,26 @@
 <section>
 <h2 class="section-title" id="header-classes">Classes</h2>
 <dl>
-<dt id="hdict.abs.AbsAny"><code class="flex name class">
-<span>class <span class="ident">AbsAny</span></span>
+<dt id="hdict.abs.expr.AbsExpr"><code class="flex name class">
+<span>class <span class="ident">AbsExpr</span></span>
 </code></dt>
 <dd>
-<div class="desc"><p>Any class defined in this project that is made to be a hdict value or should not be used as such</p>
-<p>This intended to ease checking disallowed types being mistakengly used as user values.</p></div>
+<div class="desc"><p>An expression, i.e., anything operable (pipelineable)</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class AbsAny:
-    &#34;&#34;&#34;
-    Any class defined in this project that is made to be a hdict value or should not be used as such
-
-    This intended to ease checking disallowed types being mistakengly used as user values.
-    &#34;&#34;&#34;</code></pre>
+<pre><code class="python">class AbsExpr(AbsAny):
+    &#34;&#34;&#34;An expression, i.e., anything operable (pipelineable)&#34;&#34;&#34;</code></pre>
 </details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="hdict.abs.AbsAny" href="index.html#hdict.abs.AbsAny">AbsAny</a></li>
+</ul>
 <h3>Subclasses</h3>
 <ul class="hlist">
-<li><a title="hdict.abs.expr.AbsExpr" href="expr.html#hdict.abs.expr.AbsExpr">AbsExpr</a></li>
-<li><a title="hdict.content.argument.AbsArgument" href="../content/argument/index.html#hdict.content.argument.AbsArgument">AbsArgument</a></li>
-<li><a title="hdict.content.entry.AbsEntry" href="../content/entry/index.html#hdict.content.entry.AbsEntry">AbsEntry</a></li>
+<li><a title="hdict.abs.step.AbsStep" href="step.html#hdict.abs.step.AbsStep">AbsStep</a></li>
+<li><a title="hdict.expr.Expr" href="../expr.html#hdict.expr.Expr">Expr</a></li>
 </ul>
 </dd>
 </dl>
@@ -89,19 +75,13 @@
 <ul id="index">
 <li><h3>Super-module</h3>
 <ul>
-<li><code><a title="hdict" href="../index.html">hdict</a></code></li>
-</ul>
-</li>
-<li><h3><a href="#header-submodules">Sub-modules</a></h3>
-<ul>
-<li><code><a title="hdict.abs.expr" href="expr.html">hdict.abs.expr</a></code></li>
-<li><code><a title="hdict.abs.step" href="step.html">hdict.abs.step</a></code></li>
+<li><code><a title="hdict.abs" href="index.html">hdict.abs</a></code></li>
 </ul>
 </li>
 <li><h3><a href="#header-classes">Classes</a></h3>
 <ul>
 <li>
-<h4><code><a title="hdict.abs.AbsAny" href="#hdict.abs.AbsAny">AbsAny</a></code></h4>
+<h4><code><a title="hdict.abs.expr.AbsExpr" href="#hdict.abs.expr.AbsExpr">AbsExpr</a></code></h4>
 </li>
 </ul>
 </li>

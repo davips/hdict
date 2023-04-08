@@ -20,7 +20,68 @@
 #  part of this work is illegal and it is unethical regarding the effort and
 #  time spent here.
 #
+from dataclasses import dataclass
+
+from hdict.abs import AbsAny
 
 
-class cache:
-    pass
+@dataclass
+class Cache(AbsAny):
+    storage: dict
+
+    def __rrshift__(self, left):
+        from hdict import hdict, frozenhdict
+        match left:
+            case hdict() | frozenhdict():
+                fields = (field for field, entry in left.raw.items() if not entry.isevaluated)
+                return left >> cache(self.storage, *fields)
+        return NotImplemented
+
+
+def cache(storage: dict, /, *fields):
+    """
+    >>> from hdict import _, hdict, cache, apply
+    >>> storage = {}
+    >>> d = hdict(x=3, y=5) >> apply(lambda x, y: x / y).z
+    >>> d.show(colored=False)
+    {
+        x: 3,
+        y: 5,
+        z: λ(x y),
+        _id: UB8No.x9HiKWeFqpmTv1lWn0lEsTJS16lPNCojcK,
+        _ids: {
+            x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+            y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+            z: cszQVZnzMQSS3.2tdWWQL-wGCv.lO0TWqVoSNFww
+        }
+    }
+    >>> d >>= cache(storage)
+    >>> d.show(colored=False)
+    >>> d.evaluate()
+    >>> d.show(colored=False)
+    {
+        x: 3,
+        y: 5,
+        z: 0.6,
+        _id: bSXTaET8cR-V6f9Zaf1K3fIS6yYIWJhF6DgQ.At7,
+        _ids: {
+            x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+            y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+            z: XFTNm3npQiPmV4uZ4-lX8IIUWgbHW-6uc5n3pXNV
+        }
+    }
+    >>>
+    """
+    if not fields:
+        return Cache(storage)
+    from hdict.content.argument.apply import apply
+    from hdict.content.argument.entry import entry
+    def f(**kwargs):
+        return [storage[key] if key in storage else entry.value for key, entry in kwargs.items()]
+
+    return {fields: apply(f, **{k: entry(k) for k in fields})}
+
+
+@dataclass
+class Cached(AbsAny):
+    content: object

@@ -24,12 +24,12 @@
 from dataclasses import dataclass
 from random import Random
 
-from hdict.abs import AbsAny
+from hdict.abs.step import AbsStep
 from hdict.content.argument.apply import apply
 
 
 @dataclass
-class ApplyOut(AbsAny):
+class ApplyOut(AbsStep):
     """Wrapper for 'apply' to append the output field(s)"""
 
     nested: apply

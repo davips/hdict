@@ -11,7 +11,7 @@ class Lazy(AbsEntry):
     @property
     def value(self):
         if self._value is Unevaluated:
-            self._value = self.cache[self.id]
+            self._value = self.cache[self.id].content
         return self._value
 
     def __repr__(self):

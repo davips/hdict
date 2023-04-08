@@ -11,6 +11,7 @@ def handle_arg(key, val, data, discarded_defaults, out, torepr):
     from hdict.aux_frozendict import handle_item
     from hdict import field
 
+    from hdict.content.argument.entry import entry
     match val:
         case default(value=v):
             if key in data:
@@ -25,7 +26,15 @@ def handle_arg(key, val, data, discarded_defaults, out, torepr):
         case field(name=name) if name in out:  # Override case of handle_item if pseudocircular reference.
             if name not in data:
                 raise MissingFieldException(f"Missing pseudocircular field `{name}`")
-            arg = handle_item(str(key), val, data)
+            arg = handle_item(str(key), data[name], data)  # key passed for no purpose here AFAIR
+            torepr[key] = arg
+            return arg
+        case entry(name=name):
+            from hdict.content.entry.wrapper import Wrapper
+            if name not in data:
+                raise MissingFieldException(f"Missing pseudocircular field `{name}`")
+            content = handle_item(str(key), data[name], data)
+            arg = Wrapper(content)
             torepr[key] = arg
             return arg
         case AbsBaseArgument():

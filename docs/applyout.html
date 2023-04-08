@@ -52,12 +52,12 @@
 from dataclasses import dataclass
 from random import Random
 
-from hdict.abs import AbsAny
+from hdict.abs.step import AbsStep
 from hdict.content.argument.apply import apply
 
 
 @dataclass
-class ApplyOut(AbsAny):
+class ApplyOut(AbsStep):
     &#34;&#34;&#34;Wrapper for &#39;apply&#39; to append the output field(s)&#34;&#34;&#34;
 
     nested: apply
@@ -122,7 +122,7 @@ class ApplyOut(AbsAny):
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@dataclass
-class ApplyOut(AbsAny):
+class ApplyOut(AbsStep):
     &#34;&#34;&#34;Wrapper for &#39;apply&#39; to append the output field(s)&#34;&#34;&#34;
 
     nested: apply
@@ -168,6 +168,8 @@ class ApplyOut(AbsAny):
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
+<li><a title="hdict.abs.step.AbsStep" href="abs/step.html#hdict.abs.step.AbsStep">AbsStep</a></li>
+<li><a title="hdict.abs.expr.AbsExpr" href="abs/expr.html#hdict.abs.expr.AbsExpr">AbsExpr</a></li>
 <li><a title="hdict.abs.AbsAny" href="abs/index.html#hdict.abs.AbsAny">AbsAny</a></li>
 </ul>
 <h3>Class variables</h3>

@@ -3,16 +3,6 @@ echo "----------------- updating poetry... -----------------------"
 poetry update
 poetry install --no-root --extras full
 
-#################################################################################
-#################################################################################
-echo ">>>>>>   install project package for IDE class hierarchy <<<<<<<<" 
-echo "          (to remove duplicates from IDE class hierarchy)"
-source /home/davi/.cache/pypoetry/virtualenvs/hdict-ZUd5y1Rg-py3.10/bin/activate
-pip install .
-#################################################################################
-#################################################################################
-
-
 echo "----------------- updated -----------------------"
 echo; echo
 
@@ -38,6 +28,14 @@ echo; echo
 echo
 echo "----------------- docs/black... -----------------------"
 read -p "press enter"
+#################################################################################
+#################################################################################
+echo ">>>>>>   install project package for IDE class hierarchy <<<<<<<<" 
+echo "          (to remove duplicates from IDE class hierarchy)"
+source /home/davi/.cache/pypoetry/virtualenvs/hdict-ZUd5y1Rg-py3.10/bin/activate
+pip install .
+#################################################################################
+#################################################################################
 rm docs -rf
 poetry run black -l200 src/ tests/
 poetry run pdoc --html --force hdict -o docs
@@ -59,6 +57,7 @@ pip uninstall hdict -y
 deactivate
 #################################################################################
 #################################################################################
+echo; echo
 
 
 

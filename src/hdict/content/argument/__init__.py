@@ -18,7 +18,7 @@ class AbsArgument(AbsAny):
 
 class AbsBaseArgument(AbsArgument):
     """
-    Normal function argument provided by the user: value*, field, apply
+    Normal function argument provided by the user: `value`*, `field`, `apply`; or from advanced use: `entry`
 
     Exceptionally, 'field' is a subclass that can also be piped through '>>'
     *value also inherits AbsReadyEntry
@@ -27,5 +27,5 @@ class AbsBaseArgument(AbsArgument):
 
 class AbsMetaArgument(AbsArgument):
     """
-    Special temporary argument-like directive provided by the user: default, sample
+    Special temporary argument-like directive provided by the user: `default`, `sample`
     """

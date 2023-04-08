@@ -29,8 +29,9 @@ from hdict.empty_ import Empty_
 from hdict.content.value import value
 from hdict.frozenhdict import frozenhdict
 from hdict.hdict_ import hdict_
+from hdict.persistence.cache import cache
 
-__all__ = ["hdict", "_", "Ø", "apply", "field", "sample", "frozenhdict", "value"]
+__all__ = ["hdict", "_", "Ø", "apply", "field", "sample", "frozenhdict", "value", "cache"]
 
 VT = TypeVar("VT")
 

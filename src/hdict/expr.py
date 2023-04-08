@@ -4,9 +4,10 @@ from operator import rshift
 from random import Random
 
 from hdict.abs import AbsAny
+from hdict.abs.step import AbsExpr
 
 
-class Expr(AbsAny):
+class Expr(AbsExpr):
     """
     Expressions enable the creation of pipelines of steps
 
