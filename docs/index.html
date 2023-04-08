@@ -1,0 +1,2999 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.10.0" />
+<title>hdict API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Package <code>hdict</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">#  Copyright (c) 2023. Davi Pereira dos Santos
+#  This file is part of the hdict project.
+#  Please respect the license - more about this in the section (*) below.
+#
+#  hdict is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  hdict is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with hdict.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+#
+#  (*) Removing authorship by any means, e.g. by distribution of derived
+#  works or verbatim, obfuscated, compiled or rewritten versions of any
+#  part of this work is illegal and it is unethical regarding the effort and
+#  time spent here.
+#
+from typing import TypeVar
+
+from hdict.content.argument.apply import apply
+from hdict.content.argument.field import field
+from hdict.content.argument.sample import sample
+from hdict.empty_ import Empty_
+from hdict.content.value import value
+from hdict.frozenhdict import frozenhdict
+from hdict.hdict_ import hdict_
+
+__all__ = [&#34;hdict&#34;, &#34;_&#34;, &#34;Ø&#34;, &#34;apply&#34;, &#34;field&#34;, &#34;sample&#34;, &#34;frozenhdict&#34;, &#34;value&#34;]
+
+VT = TypeVar(&#34;VT&#34;)
+
+
+class hdict(hdict_):
+    &#34;&#34;&#34;
+    Function id is reversed before application.
+    This is needed to enable handling a function as a value, under the original id.
+
+    &gt;&gt;&gt; from hdict import hdict, apply, field
+    &gt;&gt;&gt; from hdict.content.argument.default import default
+    &gt;&gt;&gt; d = hdict({&#34;x&#34;: 3}, y=5)
+    &gt;&gt;&gt; d[&#34;alpha&#34;] = 11
+    &gt;&gt;&gt; d.show(colored=False)
+    {
+        x: 3,
+        y: 5,
+        alpha: 11,
+        _id: e6WGyTj7trk6AUUcdxGAefyG.T9j.SvBdEsHF.r5,
+        _ids: {
+            x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+            y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+            alpha: A1RyW.GoA3q9-iCbCvWyWClExm1J3wI.ok6UA3Nk
+        }
+    }
+    &gt;&gt;&gt; d &gt;&gt;= {&#34;beta&#34;: 12, &#34;gamma&#34;: 17}
+    &gt;&gt;&gt; d[&#34;p1&#34;, &#34;q1&#34;] = apply(lambda x, y=3: [x**y, x/y])
+    &gt;&gt;&gt; d[&#34;pq&#34;] = apply(lambda x, y=3: [x**y, x/y])
+    &gt;&gt;&gt; d[&#34;p2&#34;, &#34;q2&#34;] = apply(lambda x=2, y=None: [x**y, x/y])
+    &gt;&gt;&gt; f = lambda x, y: {&#34;a&#34;: x**y, &#34;b&#34;: x/y}
+    &gt;&gt;&gt; d[&#34;z1&#34;, &#34;w1&#34;] = apply(f)
+    &gt;&gt;&gt; d[&#34;z2&#34;:&#34;a&#34;, &#34;w2&#34;:&#34;b&#34;] = apply(f)
+    &gt;&gt;&gt; d &gt;&gt;= {
+    ...     &#34;r1&#34;: apply(lambda x: x**2),
+    ...     &#34;r2&#34;: apply(lambda x: x**3),
+    ...     &#34;r3&#34;: apply(lambda x: x**4),
+    ...     (&#34;ra1&#34;, &#34;rb1&#34;): apply(f),
+    ...     ((&#34;ra2&#34;, &#34;a&#34;), (&#34;rb2&#34;, &#34;b&#34;)): apply(f),
+    ... }
+    &gt;&gt;&gt; d[&#34;z2&#34;]
+    243
+    &gt;&gt;&gt; d[&#34;zz1&#34;, &#34;ww1&#34;] = apply(f, field(&#34;r1&#34;), y=field(&#34;r2&#34;))
+    &gt;&gt;&gt; d &gt;&gt;= {(&#34;zz2&#34;, &#34;ww2&#34;): apply(f, y=field(&#34;r2&#34;), x=9)}  # Define external value.
+    &gt;&gt;&gt; d &gt;&gt;= {&#34;zzzz&#34;: apply(f, y=13, x=9)}
+    &gt;&gt;&gt; # Non-pickable custom classes need a custom &#39;hosh&#39; attribute to be applied and also to be used as a value.
+    &gt;&gt;&gt; from hosh import Hosh
+    &gt;&gt;&gt; # Example of class that could be used as a value or as a function.
+    &gt;&gt;&gt; from dataclasses import dataclass
+    &gt;&gt;&gt; @dataclass
+    ... class CustomClass:
+    ...     hosh = Hosh.fromid(&#34;Some.arbitrary.identifier.with.length.40&#34;)
+    ...     def __call__(self, x, y):
+    ...         return x + y, x / y
+    &gt;&gt;&gt; custom = CustomClass()
+    &gt;&gt;&gt; d[&#34;f&#34;] = custom  # Custom callable handled as a value.
+    &gt;&gt;&gt; d[&#34;zzz1&#34;, &#34;www1&#34;] = apply(custom, 11, y=33)  # Custom callable being applied.
+    &gt;&gt;&gt; d[&#34;zzz2&#34;, &#34;www2&#34;] = apply(field(&#34;f&#34;), field(&#34;r1&#34;), y=44)  # Callable field being applied.
+    &gt;&gt;&gt; d.show(colored=False)
+    {
+        x: 3,
+        y: 5,
+        alpha: 11,
+        beta: 12,
+        gamma: 17,
+        p1: λ(x y)→0,
+        q1: λ(x y)→1,
+        pq: λ(x y),
+        p2: λ(x y)→0,
+        q2: λ(x y)→1,
+        z1: λ(x y)→0,
+        w1: λ(x y)→1,
+        z2: 243,
+        w2: λ(x y)→b,
+        r1: λ(x),
+        r2: λ(x),
+        r3: λ(x),
+        ra1: λ(x y)→0,
+        rb1: λ(x y)→1,
+        ra2: λ(x y)→a,
+        rb2: λ(x y)→b,
+        zz1: λ(x=r1 y=r2)→0,
+        ww1: λ(x=r1 y=r2)→1,
+        zz2: λ(9 y=r2)→0,
+        ww2: λ(9 y=r2)→1,
+        zzzz: λ(9 13),
+        f: &#34;CustomClass()&#34;,
+        zzz1: λ(11 33)→0,
+        www1: λ(11 33)→1,
+        zzz2: λ(r1 44)→0,
+        www2: λ(r1 44)→1,
+        _id: DCHyNhF2j6CaptG.6gb9UL9RVIMztgnnbVI5MHxh,
+        _ids: {
+            x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+            y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+            alpha: A1RyW.GoA3q9-iCbCvWyWClExm1J3wI.ok6UA3Nk,
+            beta: WM5TbiaJ1gLqKRSFiY3VkZEu1PwQcaAokBKBPrWg,
+            gamma: yb-HU.jSxd496XfId1J..MkX7xfUPJOL1-07hHdt,
+            p1: ggJAsAHfZm2fiI0HmIbBhyZMNP9z06QJEfO24Xx2,
+            q1: YMfRygkG8EoBSwIFWwbZfEyHcQ8dlDnKo1.gOijC,
+            pq: Zm4nTmd2OIE5Ij9NJjU4DqG.hgqMlJbs1hNjSdRE,
+            p2: -RZv1aQW198-uu1wAFsRzS5CalP8THUWSHUgTy6q,
+            q2: wPuaLzMJX-wU-b6-z4A7n1hnDi-woaKQq745qo0E,
+            z1: 8dPQ2blIctM6p7mByuoL0EnTlg5no0TxEJtoACbt,
+            w1: JbWdguqn24m9-XathFYdhhMRBDvWFQVktmxj7gWL,
+            z2: 8dPQ2blIctM6p7mByuoL0EnTlg5no0TxEJtoACbt,
+            w2: JbWdguqn24m9-XathFYdhhMRBDvWFQVktmxj7gWL,
+            r1: Y3AxJytRz1Pnf8Q1bjC2jWUs3oTzAALXYkwlH1GI,
+            r2: JdDJ6LPyvJ2xnbPUwBFKDIt8k-udb4czb8PjX8dh,
+            r3: 015TXOnn-Z6AfT1ajcNN4brMD6c8YsRn73kA7RPh,
+            ra1: 8dPQ2blIctM6p7mByuoL0EnTlg5no0TxEJtoACbt,
+            rb1: JbWdguqn24m9-XathFYdhhMRBDvWFQVktmxj7gWL,
+            ra2: 8dPQ2blIctM6p7mByuoL0EnTlg5no0TxEJtoACbt,
+            rb2: JbWdguqn24m9-XathFYdhhMRBDvWFQVktmxj7gWL,
+            zz1: mQUu0IxSblJEAplB0yVRVN-rY6bv06spvVH8krlt,
+            ww1: 7J8PIEG1QPZMBDimMibqHaJPFg6pHG8mQGvDM9Pf,
+            zz2: sHib6xdxGc8tQ6CzacEANreEUZH.sjkZhIa6ZJRc,
+            ww2: FO-4MA-2R.Hp40Fa1cOnY70x.vFfraTBMvYDCTa7,
+            zzzz: GCskxsxNUipp-aSntVX1tASXmXbTqCEJ46YonXVu,
+            f: Some.arbitrary.identifier.with.length.40,
+            zzz1: Oq-jsn9xtOoG1PvtuUo99Ha-nhgow1Wwbje4TdSd,
+            www1: lUCDq9mlpw-qZEx6DRlM5BSq.xj-mOtv.L38Yuti,
+            zzz2: ivhVbLM3q-CE9M4.MFf29k3FDj8fU.8GMfZZwKh3,
+            www2: fFEl3XJdY9-tX.iVWY2FevFv5SS85e.FDrjZm2NN
+        }
+    }
+    &gt;&gt;&gt; d[&#34;p1&#34;]
+    243
+    &gt;&gt;&gt; from hdict import value
+    &gt;&gt;&gt; d.evaluate()
+    &gt;&gt;&gt; d = hdict(x=2)
+    &gt;&gt;&gt; g = lambda x, y: [x + y, x / y]
+    &gt;&gt;&gt; d[&#34;z&#34;] = apply(f, 2, y=3)
+    &gt;&gt;&gt; d[&#34;w&#34;, &#34;v&#34;] = apply(f, field(&#34;x&#34;), y=33)
+    &gt;&gt;&gt; d[&#34;f&#34;] = f
+    &gt;&gt;&gt; cache = {}
+    &gt;&gt;&gt; d = d &gt;&gt; apply(field(&#34;f&#34;), field(&#34;x&#34;), y=default(3), nonexistent_parameter=7)(&#34;w3&#34;, &#34;v3&#34;) # TODO: nonexistent parameter should raise an exception
+    &gt;&gt;&gt; d &gt;&gt;= apply(field(&#34;f&#34;), field(&#34;x&#34;), y=default(3))(&#34;w&#34;, &#34;v&#34;)
+    &gt;&gt;&gt; d[&#34;w2&#34;, &#34;v2&#34;] = apply(field(&#34;f&#34;), field(&#34;x&#34;), y=default(3))
+    &gt;&gt;&gt; d &gt;&gt;= {&#34;z&#34;: apply(f, field(&#34;x&#34;), y=3), (&#34;w&#34;, &#34;v&#34;): apply(g, y=7)}
+    &gt;&gt;&gt; d &gt;&gt;= apply(f, field(&#34;x&#34;), y=3)(&#34;z9&#34;) * apply(g, y=7)(&#34;w9&#34;, &#34;v9&#34;)
+    &gt;&gt;&gt; pp = apply(f, field(&#34;x&#34;), y=3)(&#34;z&#34;) &gt;&gt; apply(g, y=7)(&#34;w&#34;, &#34;v&#34;)
+    &gt;&gt;&gt; type(pp)
+    &lt;class &#39;hdict.expr.Expr&#39;&gt;
+    &gt;&gt;&gt; d &gt;&gt;= {&#34;x&#34;: 3} &gt;&gt; pp &gt;&gt; apply(g, y=7)(&#34;w&#34;, &#34;v&#34;)
+    &gt;&gt;&gt; from hdict import _
+    &gt;&gt;&gt; a1 = apply(f, y=_[1, 2, 4, ..., 128])
+    &gt;&gt;&gt; a2 = apply(f, _[0, 3, 6, ..., 9], y=_[0, 3, 6, ..., 9])
+    &gt;&gt;&gt; ppp = hdict() &gt;&gt; a2.sample()(&#34;k&#34;, &#34;t&#34;)
+    &gt;&gt;&gt; ppp.show(colored=False)
+    {
+        k: λ(9 9)→0,
+        t: λ(9 9)→1,
+        _id: eeMrAInYUG2lzUrGqgY0vSZd4KpYpc5vu.bV9bbP,
+        _ids: {
+            k: UgmJcTz6qQgNFiwe.S40EC69Ab6drWQ5JCw8ON3q,
+            t: MCyEzFX.viNxTiRwTio0j7dA9LDf-TwFRNKA0JhY
+        }
+    }
+    &gt;&gt;&gt; ppp.k
+    387420489
+    &gt;&gt;&gt; a1(&#34;z&#34;)
+    z=λ(x y=~[1 2 .*. 128])
+    &gt;&gt;&gt; a2(w=&#34;a&#34;, v=&#34;b&#34;)
+    ((&#39;w&#39;, &#39;a&#39;), (&#39;v&#39;, &#39;b&#39;))=λ(x=~[0 3 .+. 9] y=~[0 3 .+. 9])
+    &gt;&gt;&gt; p = a1(&#34;z&#34;) &gt;&gt; a2(w=&#34;a&#34;, v=&#34;b&#34;)
+    &gt;&gt;&gt; h = lambda a, b=4: 5
+    &gt;&gt;&gt; app = apply(h, a=_[0, 3, 6, ..., 9])
+    &gt;&gt;&gt; app
+    λ(a=~[0 3 .+. 9] b=default(4))
+    &gt;&gt;&gt; app.c
+    c=λ(a=~[0 3 .+. 9] b=default(4))
+    &gt;&gt;&gt; sampled = app.sample(0).c
+    &gt;&gt;&gt; sampled
+    c=λ(9 b=default(4))
+    &gt;&gt;&gt; r = hdict() &gt;&gt; sampled
+    &gt;&gt;&gt; r.show(colored=False)
+    {
+        c: λ(9 b=4),
+        _id: -3fKdfaAaTp.4XwUm1FzlzM81PYZSgsIZEuRRCD4,
+        _ids: {
+            c: Ht.fDdFk9WOHzT27dOKLvaoHY0YB7Nx.Q2MNXTzJ
+        }
+    }
+    &gt;&gt;&gt; r.evaluated.show(colored=False)
+    {
+        c: 5,
+        _id: -3fKdfaAaTp.4XwUm1FzlzM81PYZSgsIZEuRRCD4,
+        _ids: {
+            c: Ht.fDdFk9WOHzT27dOKLvaoHY0YB7Nx.Q2MNXTzJ
+        }
+    }
+    &gt;&gt;&gt; from random import Random
+    &gt;&gt;&gt; rnd = Random(0)
+    &gt;&gt;&gt; p1 = p.sample(rnd)
+    &gt;&gt;&gt; d[&#34;w&#34;]
+    10
+    &gt;&gt;&gt; d &gt;&gt;= p1
+    &gt;&gt;&gt; d[&#34;z&#34;] = apply(f, 2, y=3)
+    &gt;&gt;&gt; d[&#34;w&#34;, &#34;v&#34;] = apply(f, _.x, y=_.x)
+    &gt;&gt;&gt; d[&#34;w&#34;, &#34;v&#34;] = apply(_.f, _.x, y=default(3))
+    &gt;&gt;&gt; d = hdict() &gt;&gt; {&#34;z&#34;: apply(f, 7, y=3), (&#34;w&#34;, &#34;v&#34;): apply(g, default(6), y=7)}
+    &gt;&gt;&gt; d = hdict(w=6) &gt;&gt; (apply(f, _.w, y=3)(z=&#34;z&#34;) &gt;&gt; apply(g, x=_[1,2,3,...,5], y=7)(&#34;ww&#34;, &#34;v&#34;)).sample(0)
+    &gt;&gt;&gt; p = apply(f, y=_[1, 2, 4, ..., 128])(&#34;z&#34;) &gt;&gt; apply(f, y=_[0, 3, 6, ..., 9])(w=&#34;a&#34;, v=&#34;b&#34;)
+    &gt;&gt;&gt; d.show(colored=False)
+    {
+        w: 6,
+        z: λ(x=w 3)→z,
+        ww: λ(4 7)→0,
+        v: λ(4 7)→1,
+        _id: Hu.P9nMRy97xUe7prRc3k-Uwvz2p5emCpSyVSdIC,
+        _ids: {
+            w: CZ7Jm5fQMZ3fZJ3kAVOi0FYK-exFqPqgoYLsGxGl,
+            z: 3eItvrVzHQPDEYbQRbksBHiCaQbe2Ia2m7Z2P1lw,
+            ww: VdHav0HHdJC6gfOF8Fqw7AFX9IYQyrIUOZc8G.Pp,
+            v: KtYqDG5UPyrYEv-5V5RaUQasieAwAjF1bYf3Tvyy
+        }
+    }
+    &gt;&gt;&gt; d = hdict(x=3) &gt;&gt; p.sample(rnd)
+    &gt;&gt;&gt; d.show(colored=False)
+    {
+        x: 3,
+        z: λ(x 16),
+        w: λ(x 9)→a,
+        v: λ(x 9)→b,
+        _id: OIVFm0IdYK3jtOApTVCwdLTVXXNGarxDkUCwB0Iv,
+        _ids: {
+            x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+            z: -F83hM-wE8ykmcEM1XvuG.XBpo7rzkuHfNKzTVMz,
+            w: G7CpHeVpUD5KfNpJmRaMC2Rt4rTeQjIuAeGuZXSa,
+            v: glVBFsjtDi7RrpvqrV.5vh.dp.RgASp25V-qlClj
+        }
+    }
+    &gt;&gt;&gt; d1 = hdict(x=52, y=13)
+    &gt;&gt;&gt; d2 = hdict(x=value(52, hosh=&#34;1234567890123456789012345678901234567890&#34;))
+    &gt;&gt;&gt; d1.show(colored=False)
+    {
+        x: 52,
+        y: 13,
+        _id: 5pwGP0LxQRbQaDEk9ztQ4V4qz.A-IIhVNTrcyt8U,
+        _ids: {
+            x: c.llz05T6ZXw5AlsU4xfmMxcvvHZhLl60LckZis9,
+            y: zplslThZYha4haD2VmGxZqrFSw5RJcFJd2E-Ku6s
+        }
+    }
+    &gt;&gt;&gt; d2.show(colored=False)
+    {
+        x: 52,
+        _id: kYzgpPdRgQSYSEpp1qt4EHQLQJXuyb2WDQS-iNPh,
+        _ids: {
+            x: 1234567890123456789012345678901234567890
+        }
+    }
+    &gt;&gt;&gt; d3 = d1 &gt;&gt; d2
+    &gt;&gt;&gt; d3.show(colored=False)
+    {
+        x: 52,
+        y: 13,
+        _id: -EFuy5NAeK.LIALpBiZKK-fYQmc9AZYQQck-HiRK,
+        _ids: {
+            x: 1234567890123456789012345678901234567890,
+            y: zplslThZYha4haD2VmGxZqrFSw5RJcFJd2E-Ku6s
+        }
+    }
+    &gt;&gt;&gt; (d3 &gt;&gt; d1.frozen).show(colored=False)
+    {
+        x: 52,
+        y: 13,
+        _id: 5pwGP0LxQRbQaDEk9ztQ4V4qz.A-IIhVNTrcyt8U,
+        _ids: {
+            x: c.llz05T6ZXw5AlsU4xfmMxcvvHZhLl60LckZis9,
+            y: zplslThZYha4haD2VmGxZqrFSw5RJcFJd2E-Ku6s
+        }
+    }
+
+    &gt;&gt;&gt; d = hdict(x=2, y=4)
+    &gt;&gt;&gt; {&#34;x&#34;: 2, &#34;y&#34;: 4} == d.frozen
+    True
+    &gt;&gt;&gt; {&#34;x&#34;: 2, &#34;y&#34;: 4} == d
+    True
+    &gt;&gt;&gt; d == {&#34;x&#34;: 2, &#34;y&#34;: 4}
+    True
+    &gt;&gt;&gt; dict(d)
+    {&#39;x&#39;: 2, &#39;y&#39;: 4}
+    &gt;&gt;&gt; hdict() &gt;&gt; {&#34;x&#34;: 3} == {&#34;x&#34;: 3}
+    True
+    &gt;&gt;&gt; {&#34;x&#34;: 3, &#34;d&#34;: {&#34;x&#34;: 7}} == hdict(x=3, d=hdict(x=7))
+    True
+    &gt;&gt;&gt; hdict(x=3, d=hdict(x=7)) == {&#34;x&#34;: 3, &#34;d&#34;: {&#34;x&#34;: 7}}
+    True
+    &gt;&gt;&gt; {&#34;x&#34;: 3, &#34;_id&#34;: hdict(x=3).id} == hdict(x=3)
+    True
+    &gt;&gt;&gt; hdict(x=3) == {&#34;x&#34;: 3, &#34;_id&#34;: hdict(x=3).id}
+    True
+    &gt;&gt;&gt; hdict(x=3) == hdict(x=3)
+    True
+    &gt;&gt;&gt; hdict(x=3).frozen == hdict(x=3)
+    True
+    &gt;&gt;&gt; hdict(x=3) != {&#34;x&#34;: 4}
+    True
+    &gt;&gt;&gt; hdict(x=3) != hdict(x=4)
+    True
+    &gt;&gt;&gt; hdict(x=3).frozen != hdict(x=4)
+    True
+    &gt;&gt;&gt; hdict(x=3) != {&#34;y&#34;: 3}
+    True
+    &gt;&gt;&gt; hdict(x=3) != {&#34;x&#34;: 3, &#34;_id&#34;: (~hdict(x=3).hosh).id}
+    True
+    &gt;&gt;&gt; hdict(x=3) != hdict(y=3)
+    True
+    &gt;&gt;&gt; del d[&#34;x&#34;]
+    &gt;&gt;&gt; list(d)
+    [&#39;y&#39;]
+    &gt;&gt;&gt; e = d &gt;&gt; apply(lambda y: y*7)(&#34;y&#34;)
+    &gt;&gt;&gt; from hdict.hoshfication import f2hosh
+    &gt;&gt;&gt; print(f2hosh(lambda y: y*7))
+    54YCMDJIlsIvMQ.KJtT-vFyjg83Zgfj2xSHOgCj8
+    &gt;&gt;&gt; print(e)
+    {y: &#34;λ(4)&#34;}
+    &gt;&gt;&gt; e.evaluate()
+    &gt;&gt;&gt; print(e)
+    {y: 28}
+    &gt;&gt;&gt; d = d &gt;&gt; apply(lambda y=1: y*7, fhosh=&#34;54YCMDJIlsIvMQ.KJtT-vFyjg83Zgfj2xSHOgCj8&#34;)(&#34;y&#34;)
+    &gt;&gt;&gt; print(d)
+    {y: &#34;λ(4)&#34;}
+    &gt;&gt;&gt; d.evaluate()
+    &gt;&gt;&gt; print(d)
+    {y: 28}
+    &gt;&gt;&gt; hash(e.frozen) == hash(d.frozen)
+    True
+    &gt;&gt;&gt; d = hdict(a=5) &gt;&gt; hdict(y=28)
+    &gt;&gt;&gt; d.show(colored=False)
+    {
+        a: 5,
+        y: 28,
+        _id: C-xKyWCyBL6g32KIuxoANoF9czLaJTh-emPsMqOg,
+        _ids: {
+            a: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+            y: -2A0hTRBN1wtIKQxLzRcYDBkhv1hu-dMY-24Jye9
+        }
+    }
+    &gt;&gt;&gt; d &gt;&gt;= apply(lambda a: a)(&#34;x&#34;)
+    &gt;&gt;&gt; d.show(colored=False)
+    {
+        a: 5,
+        y: 28,
+        x: λ(a),
+        _id: q5J7ZUr3gs0bKrG4AxVEY2q0-XH3Suvw5X8-j6do,
+        _ids: {
+            a: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+            y: -2A0hTRBN1wtIKQxLzRcYDBkhv1hu-dMY-24Jye9,
+            x: gak9o6ZS9plw9l63f0WtAFnr52.1HycGhc3En2MR
+        }
+    }
+    &gt;&gt;&gt; {&#34;_id&#34;: &#34;q5J7ZUr3gs0bKrG4AxVEY2q0-XH3Suvw5X8-j6do&#34;} == d
+    True
+    &gt;&gt;&gt; d.show(colored=False)
+    {
+        a: 5,
+        y: 28,
+        x: λ(a),
+        _id: q5J7ZUr3gs0bKrG4AxVEY2q0-XH3Suvw5X8-j6do,
+        _ids: {
+            a: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+            y: -2A0hTRBN1wtIKQxLzRcYDBkhv1hu-dMY-24Jye9,
+            x: gak9o6ZS9plw9l63f0WtAFnr52.1HycGhc3En2MR
+        }
+    }
+    &#34;&#34;&#34;
+
+
+class Empty(Empty_):
+    &#34;&#34;&#34;
+    &gt;&gt;&gt; from hdict import _
+    &gt;&gt;&gt; d = _ &gt;&gt; {&#34;x&#34;: 5} &gt;&gt; dict(y=7)
+    &gt;&gt;&gt; type(_), type(d)
+    (&lt;class &#39;hdict.Empty&#39;&gt;, &lt;class &#39;hdict.hdict&#39;&gt;)
+    &gt;&gt;&gt; d.show(colored=False)
+    {
+        x: 5,
+        y: 7,
+        _id: A0G3Y7KNMLihDvpSJ3tB.zxshc6u1CbbiiYjCAAA,
+        _ids: {
+            x: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+            y: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf
+        }
+    }
+    &#34;&#34;&#34;
+
+
+Ø = _ = Empty()</code></pre>
+</details>
+</section>
+<section>
+<h2 class="section-title" id="header-submodules">Sub-modules</h2>
+<dl>
+<dt><code class="name"><a title="hdict.abs" href="abs/index.html">hdict.abs</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="hdict.applyout" href="applyout.html">hdict.applyout</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="hdict.aux_frozendict" href="aux_frozendict.html">hdict.aux_frozendict</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="hdict.content" href="content/index.html">hdict.content</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="hdict.customjson" href="customjson.html">hdict.customjson</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="hdict.data" href="data/index.html">hdict.data</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="hdict.empty_" href="empty_.html">hdict.empty_</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="hdict.expr" href="expr.html">hdict.expr</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="hdict.hdict_" href="hdict_.html">hdict.hdict_</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="hdict.hoshfication" href="hoshfication.html">hdict.hoshfication</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="hdict.indexeddict" href="indexeddict.html">hdict.indexeddict</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="hdict.multioutput" href="multioutput.html">hdict.multioutput</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="hdict.pandas_handling" href="pandas_handling.html">hdict.pandas_handling</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="hdict.persistence" href="persistence/index.html">hdict.persistence</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="hdict.apply"><code class="flex name class">
+<span>class <span class="ident">apply</span></span>
+<span>(</span><span>appliable: callable | <a title="hdict.apply" href="#hdict.apply">apply</a> | <a title="hdict.field" href="#hdict.field">field</a>, *applied_args, fhosh: Hosh = None, **applied_kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Function application</p>
+<p>Single output application is defined by attribute: 'apply(f).my_output_field'.
+Multioutput application is defined by a call: 'apply(f)("output_field1", "output_field2")'.</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; from hdict import apply, value
+&gt;&gt;&gt; f = lambda a, b: a**b
+&gt;&gt;&gt; v = apply(f, 5, b=7)
+&gt;&gt;&gt; v
+λ(5 7)
+&gt;&gt;&gt; g = lambda x, y: x**y
+&gt;&gt;&gt; apply(g, y=value(7777), x=v)
+λ(x=λ(5 7) 7777)
+</code></pre>
+<pre><code class="language-python-repl">&gt;&gt;&gt; v2 = apply(f, a=v, b=value(7))
+&gt;&gt;&gt; v2
+λ(a=λ(5 7) 7)
+&gt;&gt;&gt; v.enclosure({}, &quot;j&quot;).value
+78125
+&gt;&gt;&gt; v2.enclosure({}, &quot;j&quot;)
+λ(a=λ(5 7) 7)
+&gt;&gt;&gt; v2.enclosure({}, &quot;j&quot;).value
+17763568394002504646778106689453125
+</code></pre>
+<pre><code class="language-python-repl">&gt;&gt;&gt; f = lambda a,b, c=1,d=2,e=13: 0
+&gt;&gt;&gt; apply(f).requirements
+{'a': field(a), 'b': field(b), 'c': default(1), 'd': default(2), 'e': default(13)}
+&gt;&gt;&gt; ap = apply(f,3)
+&gt;&gt;&gt; ap.requirements
+{'a': 3, 'b': field(b), 'c': default(1), 'd': default(2), 'e': default(13)}
+&gt;&gt;&gt; ap
+λ(3 b c=default(1) d=default(2) e=default(13))
+&gt;&gt;&gt; ap.enclosure({&quot;b&quot;: value(77)}, &quot;j&quot;)
+λ(3 b c=1 d=2 e=13)
+&gt;&gt;&gt; ap
+λ(3 b c=default(1) d=default(2) e=default(13))
+&gt;&gt;&gt; d = {&quot;f&quot;: ap, &quot;b&quot;: 5, &quot;d&quot;: 1, &quot;e&quot;: field(&quot;b&quot;)}
+&gt;&gt;&gt; d
+{'f': λ(3 b c=default(1) d=default(2) e=default(13)), 'b': 5, 'd': 1, 'e': field(b)}
+&gt;&gt;&gt; from hdict.aux_frozendict import handle_items
+&gt;&gt;&gt; handle_items(d, previous={&quot;b&quot;: 5})
+{'b': 5, 'f': λ(3 b c=1 d=2 e=13), 'd': 1, 'e': 5}
+&gt;&gt;&gt; d
+{'f': λ(3 b c=default(1) d=default(2) e=default(13)), 'b': 5, 'd': 1, 'e': field(b)}
+&gt;&gt;&gt; apply(f,3,4).requirements
+{'a': 3, 'b': 4, 'c': default(1), 'd': default(2), 'e': default(13)}
+&gt;&gt;&gt; apply(f,3,4,5).requirements
+{'a': 3, 'b': 4, 'c': 5, 'd': default(2), 'e': default(13)}
+&gt;&gt;&gt; apply(f,3,4,5,6).requirements
+{'a': 3, 'b': 4, 'c': 5, 'd': 6, 'e': default(13)}
+&gt;&gt;&gt; apply(f,3,4,5,6,7).requirements
+{'a': 3, 'b': 4, 'c': 5, 'd': 6, 'e': 7}
+&gt;&gt;&gt; apply(f,d=5).requirements
+{'a': field(a), 'b': field(b), 'c': default(1), 'd': 5, 'e': default(13)}
+&gt;&gt;&gt; f = lambda a,b, *contentarg, c=1,d=2,e=13, **kwargs: 0
+&gt;&gt;&gt; apply(f,3,4,5,6,7,8).requirements
+{'a': 3, 'b': 4, 'c': 5, 'd': 6, 'e': 7, _5: 8}
+&gt;&gt;&gt; apply(f,x=3,e=4,d=5,c=6,b=7,a=8).requirements
+{'a': 8, 'b': 7, 'c': 6, 'd': 5, 'e': 4, 'x': 3}
+&gt;&gt;&gt; apply(f,3,c=77,x=5).requirements
+{'a': 3, 'b': field(b), 'c': 77, 'd': default(2), 'e': default(13), 'x': 5}
+&gt;&gt;&gt; apply(f,b=77,x=5).requirements
+{'a': field(a), 'b': 77, 'c': default(1), 'd': default(2), 'e': default(13), 'x': 5}
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class apply(AbsBaseArgument):
+    &#34;&#34;&#34;
+    Function application
+
+    Single output application is defined by attribute: &#39;apply(f).my_output_field&#39;.
+    Multioutput application is defined by a call: &#39;apply(f)(&#34;output_field1&#34;, &#34;output_field2&#34;)&#39;.
+
+    &gt;&gt;&gt; from hdict import apply, value
+    &gt;&gt;&gt; f = lambda a, b: a**b
+    &gt;&gt;&gt; v = apply(f, 5, b=7)
+    &gt;&gt;&gt; v
+    λ(5 7)
+    &gt;&gt;&gt; g = lambda x, y: x**y
+    &gt;&gt;&gt; apply(g, y=value(7777), x=v)
+    λ(x=λ(5 7) 7777)
+
+    &gt;&gt;&gt; v2 = apply(f, a=v, b=value(7))
+    &gt;&gt;&gt; v2
+    λ(a=λ(5 7) 7)
+    &gt;&gt;&gt; v.enclosure({}, &#34;j&#34;).value
+    78125
+    &gt;&gt;&gt; v2.enclosure({}, &#34;j&#34;)
+    λ(a=λ(5 7) 7)
+    &gt;&gt;&gt; v2.enclosure({}, &#34;j&#34;).value
+    17763568394002504646778106689453125
+
+    &gt;&gt;&gt; f = lambda a,b, c=1,d=2,e=13: 0
+    &gt;&gt;&gt; apply(f).requirements
+    {&#39;a&#39;: field(a), &#39;b&#39;: field(b), &#39;c&#39;: default(1), &#39;d&#39;: default(2), &#39;e&#39;: default(13)}
+    &gt;&gt;&gt; ap = apply(f,3)
+    &gt;&gt;&gt; ap.requirements
+    {&#39;a&#39;: 3, &#39;b&#39;: field(b), &#39;c&#39;: default(1), &#39;d&#39;: default(2), &#39;e&#39;: default(13)}
+    &gt;&gt;&gt; ap
+    λ(3 b c=default(1) d=default(2) e=default(13))
+    &gt;&gt;&gt; ap.enclosure({&#34;b&#34;: value(77)}, &#34;j&#34;)
+    λ(3 b c=1 d=2 e=13)
+    &gt;&gt;&gt; ap
+    λ(3 b c=default(1) d=default(2) e=default(13))
+    &gt;&gt;&gt; d = {&#34;f&#34;: ap, &#34;b&#34;: 5, &#34;d&#34;: 1, &#34;e&#34;: field(&#34;b&#34;)}
+    &gt;&gt;&gt; d
+    {&#39;f&#39;: λ(3 b c=default(1) d=default(2) e=default(13)), &#39;b&#39;: 5, &#39;d&#39;: 1, &#39;e&#39;: field(b)}
+    &gt;&gt;&gt; from hdict.aux_frozendict import handle_items
+    &gt;&gt;&gt; handle_items(d, previous={&#34;b&#34;: 5})
+    {&#39;b&#39;: 5, &#39;f&#39;: λ(3 b c=1 d=2 e=13), &#39;d&#39;: 1, &#39;e&#39;: 5}
+    &gt;&gt;&gt; d
+    {&#39;f&#39;: λ(3 b c=default(1) d=default(2) e=default(13)), &#39;b&#39;: 5, &#39;d&#39;: 1, &#39;e&#39;: field(b)}
+    &gt;&gt;&gt; apply(f,3,4).requirements
+    {&#39;a&#39;: 3, &#39;b&#39;: 4, &#39;c&#39;: default(1), &#39;d&#39;: default(2), &#39;e&#39;: default(13)}
+    &gt;&gt;&gt; apply(f,3,4,5).requirements
+    {&#39;a&#39;: 3, &#39;b&#39;: 4, &#39;c&#39;: 5, &#39;d&#39;: default(2), &#39;e&#39;: default(13)}
+    &gt;&gt;&gt; apply(f,3,4,5,6).requirements
+    {&#39;a&#39;: 3, &#39;b&#39;: 4, &#39;c&#39;: 5, &#39;d&#39;: 6, &#39;e&#39;: default(13)}
+    &gt;&gt;&gt; apply(f,3,4,5,6,7).requirements
+    {&#39;a&#39;: 3, &#39;b&#39;: 4, &#39;c&#39;: 5, &#39;d&#39;: 6, &#39;e&#39;: 7}
+    &gt;&gt;&gt; apply(f,d=5).requirements
+    {&#39;a&#39;: field(a), &#39;b&#39;: field(b), &#39;c&#39;: default(1), &#39;d&#39;: 5, &#39;e&#39;: default(13)}
+    &gt;&gt;&gt; f = lambda a,b, *contentarg, c=1,d=2,e=13, **kwargs: 0
+    &gt;&gt;&gt; apply(f,3,4,5,6,7,8).requirements
+    {&#39;a&#39;: 3, &#39;b&#39;: 4, &#39;c&#39;: 5, &#39;d&#39;: 6, &#39;e&#39;: 7, _5: 8}
+    &gt;&gt;&gt; apply(f,x=3,e=4,d=5,c=6,b=7,a=8).requirements
+    {&#39;a&#39;: 8, &#39;b&#39;: 7, &#39;c&#39;: 6, &#39;d&#39;: 5, &#39;e&#39;: 4, &#39;x&#39;: 3}
+    &gt;&gt;&gt; apply(f,3,c=77,x=5).requirements
+    {&#39;a&#39;: 3, &#39;b&#39;: field(b), &#39;c&#39;: 77, &#39;d&#39;: default(2), &#39;e&#39;: default(13), &#39;x&#39;: 5}
+    &gt;&gt;&gt; apply(f,b=77,x=5).requirements
+    {&#39;a&#39;: field(a), &#39;b&#39;: 77, &#39;c&#39;: default(1), &#39;d&#39;: default(2), &#39;e&#39;: default(13), &#39;x&#39;: 5}
+    &#34;&#34;&#34;
+
+    _sampleable, isfield, _requirements = None, False, None
+
+    def __init__(self, appliable: callable | apply | field, *applied_args, fhosh: Hosh = None, _sampleable=None, **applied_kwargs):
+        from hdict.content.argument.aux_apply import handle_args
+
+        self.appliable = appliable
+        if isinstance(fhosh, str):  # pragma: no cover
+            fhosh = Hosh.fromid(fhosh)
+
+        if isinstance(appliable, apply):  # &#34;clone&#34; mode
+            self.fhosh = fhosh or appliable.fhosh
+            self.fargs, self.fkwargs = appliable.fargs.copy(), appliable.fkwargs.copy()
+            self.isfield = appliable.isfield
+            self._sampleable = appliable.sampleable if _sampleable is None else _sampleable
+            self.appliable = appliable.appliable
+        elif isinstance(appliable, field):
+            # TODO: o que era isso mesmo?::  &#34;function will be provided by hdict&#34;-mode constrains &#39;applied_args&#39;
+            self.fhosh = fhosh
+            self.fargs, self.fkwargs = handle_args(None, applied_args, applied_kwargs)
+            self.isfield = True
+            self._sampleable = _sampleable
+        elif callable(appliable):
+            if not isfunction(appliable):  # &#34;not function&#34; means &#34;custom callable&#34;
+                if not hasattr(appliable, &#34;__call__&#34;):  # pragma: no cover
+                    raise Exception(f&#34;Cannot infer method to apply non custom callable type &#39;{type(appliable).__name__}&#39;.&#34;)
+                if not hasattr(appliable, &#34;hosh&#34;):  # pragma: no cover
+                    raise Exception(f&#34;Missing &#39;hosh&#39; attribute while applying custom callable class &#39;{type(appliable).__name__}&#39;&#34;)
+                # noinspection PyUnresolvedReferences
+                sig = signature(appliable.__call__)
+                # noinspection PyUnresolvedReferences
+                self.fhosh = fhosh or appliable.hosh
+            else:
+                self.fhosh = f2hosh(appliable) if fhosh is None else fhosh
+                sig = signature(appliable)
+
+            # Separate positional parameters from named parameters looking at &#39;f&#39; signature.
+            self.fargs, self.fkwargs = handle_args(sig, applied_args, applied_kwargs)
+            self._sampleable = _sampleable
+        else:  # pragma: no cover
+            raise Exception(f&#34;Cannot apply type &#39;{type(appliable).__name__}&#39;.&#34;)
+
+    @property
+    def sampleable(self):
+        if self._sampleable is None:
+            gen = (req.sampleable for req in self.fargs.values())
+            kwgen = (req.sampleable for req in self.fkwargs.values())
+            self._sampleable = any(gen) or any(kwgen)
+        return self._sampleable
+
+    @property
+    def ahosh(self):
+        return self.fhosh.rev  # &#39;f&#39; identified as an appliable function
+
+    def clone(self, _sampleable=None):
+        return apply(self, _sampleable=_sampleable)
+
+    def sample(self, rnd: int | Random = None):
+        if not self.sampleable:
+            return self
+        clone = self.clone(_sampleable=False)
+        for k, v in clone.fargs.items():
+            clone.fargs[k] = v.sample(rnd)
+        for k, v in clone.fkwargs.items():
+            clone.fkwargs[k] = v.sample(rnd)
+        return clone
+
+    def enclosure(self, data, key):
+        from hdict.content.entry.closure import Closure
+
+        return Closure(self, data, [key])
+
+    def __call__(self, *out, **kwout):
+        from hdict.applyout import ApplyOut
+
+        if out and kwout:  # pragma: no cover
+            raise Exception(f&#34;Cannot mix translated (**kwargs) and non translated (*args) outputs.&#34;)
+        if len(out) == 1:
+            out = out[0]
+        return ApplyOut(self, out or tuple(kwout.items()))
+
+    def __getattr__(self, item):
+        # REMINDER: Work around getattribute missing all properties.
+        if item not in [&#34;ahosh&#34;, &#34;requirements&#34;, &#34;hosh&#34;]:
+            from hdict.applyout import ApplyOut
+
+            return ApplyOut(self, item)
+        return self.__getattribute__(item)  # pragma: no cover
+
+    def __rshift__(self, other):  # pragma: no cover
+        raise Exception(f&#34;Cannot pipeline an application before specifying the output field.&#34;)
+
+    def __rrshift__(self, other):  # pragma: no cover
+        raise Exception(f&#34;Cannot apply before specifying the output field.&#34;)
+
+    def __repr__(self):
+        from hdict import value
+
+        lst = []
+        for param, content in sorted(chain(self.fargs.items(), self.fkwargs.items())):
+            match content:
+                case field(name=param):
+                    lst.append(f&#34;{param}&#34;)
+                case value():
+                    lst.append(truncate(repr(content), width=7))
+                case AbsArgument():
+                    lst.append(f&#34;{param}={repr(content)}&#34;)
+                case _:
+                    raise Exception(f&#34;&#34;)
+        return f&#34;λ({&#39; &#39;.join(lst)})&#34;
+
+    @property
+    def requirements(self):
+        if self._requirements is None:
+            self._requirements = {k: v for k, v in sorted(chain(self.fargs.items(), self.fkwargs.items()))}
+        return self._requirements</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="hdict.content.argument.AbsBaseArgument" href="content/argument/index.html#hdict.content.argument.AbsBaseArgument">AbsBaseArgument</a></li>
+<li><a title="hdict.content.argument.AbsArgument" href="content/argument/index.html#hdict.content.argument.AbsArgument">AbsArgument</a></li>
+<li><a title="hdict.abs.AbsAny" href="abs/index.html#hdict.abs.AbsAny">AbsAny</a></li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="hdict.apply.isfield"><code class="name">var <span class="ident">isfield</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Instance variables</h3>
+<dl>
+<dt id="hdict.apply.ahosh"><code class="name">var <span class="ident">ahosh</span></code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def ahosh(self):
+    return self.fhosh.rev  # &#39;f&#39; identified as an appliable function</code></pre>
+</details>
+</dd>
+<dt id="hdict.apply.requirements"><code class="name">var <span class="ident">requirements</span></code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def requirements(self):
+    if self._requirements is None:
+        self._requirements = {k: v for k, v in sorted(chain(self.fargs.items(), self.fkwargs.items()))}
+    return self._requirements</code></pre>
+</details>
+</dd>
+<dt id="hdict.apply.sampleable"><code class="name">var <span class="ident">sampleable</span></code></dt>
+<dd>
+<div class="desc"><p>bool(x) -&gt; bool</p>
+<p>Returns True when the argument x is true, False otherwise.
+The builtins True and False are the only two instances of the class bool.
+The class bool is a subclass of the class int, and cannot be subclassed.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def sampleable(self):
+    if self._sampleable is None:
+        gen = (req.sampleable for req in self.fargs.values())
+        kwgen = (req.sampleable for req in self.fkwargs.values())
+        self._sampleable = any(gen) or any(kwgen)
+    return self._sampleable</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="hdict.apply.clone"><code class="name flex">
+<span>def <span class="ident">clone</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def clone(self, _sampleable=None):
+    return apply(self, _sampleable=_sampleable)</code></pre>
+</details>
+</dd>
+<dt id="hdict.apply.enclosure"><code class="name flex">
+<span>def <span class="ident">enclosure</span></span>(<span>self, data, key)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def enclosure(self, data, key):
+    from hdict.content.entry.closure import Closure
+
+    return Closure(self, data, [key])</code></pre>
+</details>
+</dd>
+<dt id="hdict.apply.sample"><code class="name flex">
+<span>def <span class="ident">sample</span></span>(<span>self, rnd: int | Random = None)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sample(self, rnd: int | Random = None):
+    if not self.sampleable:
+        return self
+    clone = self.clone(_sampleable=False)
+    for k, v in clone.fargs.items():
+        clone.fargs[k] = v.sample(rnd)
+    for k, v in clone.fkwargs.items():
+        clone.fkwargs[k] = v.sample(rnd)
+    return clone</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="hdict.field"><code class="flex name class">
+<span>class <span class="ident">field</span></span>
+<span>(</span><span>name: str)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Pointer to a field, without knowing the concrete value yet</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; from hdict import Ø, _, apply
+&gt;&gt;&gt; d = Ø
+&gt;&gt;&gt; d.show(colored=False)
+{
+    _id: 0000000000000000000000000000000000000000,
+    _ids: {}
+}
+&gt;&gt;&gt; d = _
+&gt;&gt;&gt; d.show(colored=False)
+{
+    _id: 0000000000000000000000000000000000000000,
+    _ids: {}
+}
+&gt;&gt;&gt; d &gt;&gt;= {&quot;x&quot;: 3, &quot;y&quot;: 5} &gt;&gt; apply(lambda x, y: x + y).z
+&gt;&gt;&gt; d.show(colored=False)
+{
+    x: 3,
+    y: 5,
+    z: λ(x y),
+    _id: P0R5Ra1aPrsql5iYJsmYG56.0oCFvqPQIMv3Qe7b,
+    _ids: {
+        x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+        y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+        z: Q1ypbWuXlEf9MeJNT1wyFcA8V0.DvHEFOeCidBrZ
+    }
+}
+&gt;&gt;&gt; d &gt;&gt;= {&quot;x&quot;: 3, &quot;y&quot;: 5} &gt;&gt; apply(lambda x, y: x + y).x
+&gt;&gt;&gt; d.x
+8
+&gt;&gt;&gt; d[&quot;x&quot;] = apply(lambda x, y: x + y)
+&gt;&gt;&gt; d.x
+13
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass
+class field(AbsBaseArgument):
+    &#34;&#34;&#34;
+    Pointer to a field, without knowing the concrete value yet
+
+    &gt;&gt;&gt; from hdict import Ø, _, apply
+    &gt;&gt;&gt; d = Ø
+    &gt;&gt;&gt; d.show(colored=False)
+    {
+        _id: 0000000000000000000000000000000000000000,
+        _ids: {}
+    }
+    &gt;&gt;&gt; d = _
+    &gt;&gt;&gt; d.show(colored=False)
+    {
+        _id: 0000000000000000000000000000000000000000,
+        _ids: {}
+    }
+    &gt;&gt;&gt; d &gt;&gt;= {&#34;x&#34;: 3, &#34;y&#34;: 5} &gt;&gt; apply(lambda x, y: x + y).z
+    &gt;&gt;&gt; d.show(colored=False)
+    {
+        x: 3,
+        y: 5,
+        z: λ(x y),
+        _id: P0R5Ra1aPrsql5iYJsmYG56.0oCFvqPQIMv3Qe7b,
+        _ids: {
+            x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+            y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+            z: Q1ypbWuXlEf9MeJNT1wyFcA8V0.DvHEFOeCidBrZ
+        }
+    }
+    &gt;&gt;&gt; d &gt;&gt;= {&#34;x&#34;: 3, &#34;y&#34;: 5} &gt;&gt; apply(lambda x, y: x + y).x
+    &gt;&gt;&gt; d.x
+    8
+    &gt;&gt;&gt; d[&#34;x&#34;] = apply(lambda x, y: x + y)
+    &gt;&gt;&gt; d.x
+    13
+    &#34;&#34;&#34;
+
+    name: str
+
+    def __repr__(self):
+        return f&#34;field({self.name})&#34;</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="hdict.content.argument.AbsBaseArgument" href="content/argument/index.html#hdict.content.argument.AbsBaseArgument">AbsBaseArgument</a></li>
+<li><a title="hdict.content.argument.AbsArgument" href="content/argument/index.html#hdict.content.argument.AbsArgument">AbsArgument</a></li>
+<li><a title="hdict.abs.AbsAny" href="abs/index.html#hdict.abs.AbsAny">AbsAny</a></li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="hdict.field.name"><code class="name">var <span class="ident">name</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="hdict.frozenhdict"><code class="flex name class">
+<span>class <span class="ident">frozenhdict</span></span>
+<span>(</span><span>**kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Immutable hdict.</p>
+<p>Any nested 'hdict' value will be frozen to avoid inconsistency between the hdict id (inner id) and the frozenhdict id (outer id).</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; from hdict.frozenhdict import frozenhdict
+&gt;&gt;&gt; d = frozenhdict({&quot;x&quot;: 3}, y=5)
+&gt;&gt;&gt; from hosh._internals_appearance import decolorize
+&gt;&gt;&gt; print(decolorize(repr(d)))  # This is equivalent to just 'd', without colors.
+{
+    x: 3,
+    y: 5,
+    _id: r5A2Mh6vRRO5rxi5nfXv1myeguGSTmqHuHev38qM,
+    _ids: {
+        x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+        y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2
+    }
+}
+&gt;&gt;&gt; d.data
+{'x': 3, 'y': 5}
+&gt;&gt;&gt; from hdict import _, apply
+&gt;&gt;&gt; d *= apply(lambda v, x: v - x).z
+&gt;&gt;&gt; str(d)
+'{x: 3, y: 5} » z=λ(v x)'
+&gt;&gt;&gt; d.show(colored=False)
+{
+    x: 3,
+    y: 5,
+    _id: r5A2Mh6vRRO5rxi5nfXv1myeguGSTmqHuHev38qM,
+    _ids: {
+        x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+        y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2
+    }
+} » z=λ(v x)
+&gt;&gt;&gt; d = {&quot;v&quot;: 7} * d
+&gt;&gt;&gt; d.solve().show(colored=False)
+{
+    v: 7,
+    x: 3,
+    y: 5,
+    z: λ(v x),
+    _id: -a24f2g4z-c-tPEss6G8WEd7h8zMopCCsCdQowjL,
+    _ids: {
+        v: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf,
+        x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+        y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+        z: .beBfajsUjKto9qdBCKsLmBgsaNPpJiyz24P9.qg
+    }
+}
+&gt;&gt;&gt; d = _ &gt;&gt; d
+&gt;&gt;&gt; d.show(colored=False)
+{
+    v: 7,
+    x: 3,
+    y: 5,
+    z: λ(v x),
+    _id: -a24f2g4z-c-tPEss6G8WEd7h8zMopCCsCdQowjL,
+    _ids: {
+        v: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf,
+        x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+        y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+        z: .beBfajsUjKto9qdBCKsLmBgsaNPpJiyz24P9.qg
+    }
+}
+&gt;&gt;&gt; d = {&quot;a&quot;: 5} &gt;&gt; d
+&gt;&gt;&gt; d.show(colored=False)
+{
+    a: 5,
+    v: 7,
+    x: 3,
+    y: 5,
+    z: λ(v x),
+    _id: ELQZugqdug6eCOLZSPaimnGqgmhRjJoDLD8cOlYR,
+    _ids: {
+        a: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+        v: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf,
+        x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+        y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+        z: .beBfajsUjKto9qdBCKsLmBgsaNPpJiyz24P9.qg
+    }
+}
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class frozenhdict(UserDict, dict[str, VT]):
+    &#34;&#34;&#34;
+    Immutable hdict.
+
+    Any nested &#39;hdict&#39; value will be frozen to avoid inconsistency between the hdict id (inner id) and the frozenhdict id (outer id).
+
+    &gt;&gt;&gt; from hdict.frozenhdict import frozenhdict
+    &gt;&gt;&gt; d = frozenhdict({&#34;x&#34;: 3}, y=5)
+    &gt;&gt;&gt; from hosh._internals_appearance import decolorize
+    &gt;&gt;&gt; print(decolorize(repr(d)))  # This is equivalent to just &#39;d&#39;, without colors.
+    {
+        x: 3,
+        y: 5,
+        _id: r5A2Mh6vRRO5rxi5nfXv1myeguGSTmqHuHev38qM,
+        _ids: {
+            x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+            y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2
+        }
+    }
+    &gt;&gt;&gt; d.data
+    {&#39;x&#39;: 3, &#39;y&#39;: 5}
+    &gt;&gt;&gt; from hdict import _, apply
+    &gt;&gt;&gt; d *= apply(lambda v, x: v - x).z
+    &gt;&gt;&gt; str(d)
+    &#39;{x: 3, y: 5} » z=λ(v x)&#39;
+    &gt;&gt;&gt; d.show(colored=False)
+    {
+        x: 3,
+        y: 5,
+        _id: r5A2Mh6vRRO5rxi5nfXv1myeguGSTmqHuHev38qM,
+        _ids: {
+            x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+            y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2
+        }
+    } » z=λ(v x)
+    &gt;&gt;&gt; d = {&#34;v&#34;: 7} * d
+    &gt;&gt;&gt; d.solve().show(colored=False)
+    {
+        v: 7,
+        x: 3,
+        y: 5,
+        z: λ(v x),
+        _id: -a24f2g4z-c-tPEss6G8WEd7h8zMopCCsCdQowjL,
+        _ids: {
+            v: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf,
+            x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+            y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+            z: .beBfajsUjKto9qdBCKsLmBgsaNPpJiyz24P9.qg
+        }
+    }
+    &gt;&gt;&gt; d = _ &gt;&gt; d
+    &gt;&gt;&gt; d.show(colored=False)
+    {
+        v: 7,
+        x: 3,
+        y: 5,
+        z: λ(v x),
+        _id: -a24f2g4z-c-tPEss6G8WEd7h8zMopCCsCdQowjL,
+        _ids: {
+            v: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf,
+            x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+            y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+            z: .beBfajsUjKto9qdBCKsLmBgsaNPpJiyz24P9.qg
+        }
+    }
+    &gt;&gt;&gt; d = {&#34;a&#34;: 5} &gt;&gt; d
+    &gt;&gt;&gt; d.show(colored=False)
+    {
+        a: 5,
+        v: 7,
+        x: 3,
+        y: 5,
+        z: λ(v x),
+        _id: ELQZugqdug6eCOLZSPaimnGqgmhRjJoDLD8cOlYR,
+        _ids: {
+            a: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+            v: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf,
+            x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+            y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+            z: .beBfajsUjKto9qdBCKsLmBgsaNPpJiyz24P9.qg
+        }
+    }
+    &#34;&#34;&#34;
+
+    _evaluated = None
+    _asdict, _asdicts, _asdicts_noid = None, None, None
+
+    # noinspection PyMissingConstructor
+    def __init__(self, /, _dictionary=None, _previous=None, **kwargs):
+        from hdict.content.entry import AbsEntry
+        from hdict.aux_frozendict import handle_identity
+        from hdict.aux_frozendict import handle_items
+
+        if _previous is None:
+            _previous = {}
+
+        # TODO: check if _dictionary keys is &#39;str&#39;; regex to check if k is an identifier;
+        data = _dictionary or {}
+        # REMINDER: Inside data, the only &#39;dict&#39; entries are &#34;_id&#34; and &#34;_ids&#34;, the rest are AbsEntry objects.
+        self.data: dict[str, AbsEntry | str | dict[str, str]]
+        self.data = handle_items(data, kwargs, previous=_previous)
+        self.hosh, self.ids = handle_identity(self.data)
+        self.id = self.hosh.id
+
+    def __rrshift__(self, other):
+        from hdict import hdict
+
+        if isinstance(other, dict) and not isinstance(other, (hdict, frozenhdict)):
+            return frozenhdict(other) &gt;&gt; self
+        return NotImplemented  # pragma: no cover
+
+    def __rshift__(self, other):
+        from hdict import hdict
+        from hdict.applyout import ApplyOut
+
+        # Merge keeping ids.
+        if isinstance(other, hdict):
+            other = other.frozen
+        if isinstance(other, frozenhdict):
+            other = other.data
+        if isinstance(other, ApplyOut):
+            other = {other.out: other.nested}
+
+        if isinstance(other, dict):
+            return frozenhdict(other, _previous=self.data)
+        return NotImplemented  # pragma: no cover
+
+    def __getitem__(self, item):  # pragma: no cover
+        return self.data[item].value
+
+    def __getattr__(self, item):  # pragma: no cover
+        if item in self.data:
+            return self.data[item].value
+        return self.__getattribute__(item)
+
+    def __setitem__(self, key: str, value):  # pragma: no cover
+        print(value)
+        raise Exception(f&#34;Cannot set an entry ({key}) of a frozen dict.&#34;)
+
+    def __delitem__(self, key):  # pragma: no cover
+        raise Exception(f&#34;Cannot delete an entry ({key}) from a frozen dict.&#34;)
+
+    @staticmethod
+    def fromdict(dictionary, ids):
+        &#34;&#34;&#34;Build a frozenidict from values and pre-defined ids
+
+        &gt;&gt;&gt; from hdict import hdict, value
+        &gt;&gt;&gt; hdict.fromdict({&#34;x&#34;: value(5, hosh=&#34;0123456789012345678901234567890123456789&#34;)}, {&#34;x&#34;: &#34;0123456789012345678901234567890123456789&#34;}).show(colored=False)
+        {
+            x: 5,
+            _id: bi5Qdbh-zgA1ZQdxGhxqjaKaQROtxk1VCPRZhMOq,
+            _ids: {
+                x: 0123456789012345678901234567890123456789
+            }
+        }
+        &#34;&#34;&#34;
+        from hdict.content.value import value
+
+        data = {}
+        for k, v in dictionary.items():
+            if isinstance(v, AbsEntry):
+                if k in ids and ids[k] != v.id:  # pragma: no cover
+                    raise Exception(f&#34;Conflicting ids provided for key &#39;{k}&#39;: ival.id={v.id}; ids[{k}]={ids[k]}&#34;)
+                data[k] = v
+            else:
+                data[k] = value(v, ids[k] if k in ids else None)
+        return frozenhdict(data)
+
+    @property
+    def evaluated(self):
+        if self._evaluated is None:
+            for k, val in self.data.items():
+                val.evaluate()
+            self._evaluated = self
+        return self
+
+    def evaluate(self):
+        _ = self.evaluated
+
+    @property
+    def asdict(self):
+        &#34;&#34;&#34;
+        Convert to &#39;dict&#39;, including ids.
+
+        This evaluates all fields.
+        HINT: Use &#39;dict(d)&#39; to convert a &#39;hdict&#39; to a &#39;dict&#39; excluding ids.
+
+        &gt;&gt;&gt; from hdict import hdict, value
+        &gt;&gt;&gt; d = hdict.fromdict({&#34;x&#34;: value(5, hosh=&#34;0123456789012345678901234567890123456789&#34;)}, {&#34;x&#34;: &#34;0123456789012345678901234567890123456789&#34;})
+        &gt;&gt;&gt; d.asdict
+        {&#39;x&#39;: 5, &#39;_id&#39;: &#39;bi5Qdbh-zgA1ZQdxGhxqjaKaQROtxk1VCPRZhMOq&#39;, &#39;_ids&#39;: {&#39;x&#39;: &#39;0123456789012345678901234567890123456789&#39;}}
+        &#34;&#34;&#34;
+        if self._asdict is None:
+            dic = dict(self.items())
+            dic[&#34;_id&#34;] = self.id
+            dic[&#34;_ids&#34;] = self.ids.copy()
+            self._asdict = dic
+        return self._asdict
+
+    @property
+    def asdicts(self):
+        &#34;&#34;&#34;
+        Convert to &#39;dict&#39; recursing into nested frozenhdicts, including ids.
+
+        This evaluates all fields.
+        REMINDER: hdict is never nested, frozenhdict is used instead
+        HINT: Use &#39;asdicts_noid&#39; to recursively convert a &#39;hdict&#39; to a &#39;dict&#39; excluding ids.
+
+        &gt;&gt;&gt; from hdict import value, hdict
+        &gt;&gt;&gt; d = hdict(x=value(5, hosh=&#34;0123456789012345678901234567890123456789&#34;))
+        &gt;&gt;&gt; e = hdict(d=d)
+        &gt;&gt;&gt; e.asdicts
+        {&#39;d&#39;: {&#39;x&#39;: 5, &#39;_id&#39;: &#39;bi5Qdbh-zgA1ZQdxGhxqjaKaQROtxk1VCPRZhMOq&#39;, &#39;_ids&#39;: {&#39;x&#39;: &#39;0123456789012345678901234567890123456789&#39;}}, &#39;_id&#39;: &#39;GGhKhUmGhISaoHevn39hb-pLZEMoAc3KzE6Z0.IH&#39;, &#39;_ids&#39;: {&#39;d&#39;: &#39;bi5Qdbh-zgA1ZQdxGhxqjaKaQROtxk1VCPRZhMOq&#39;}}
+        &gt;&gt;&gt; dict(e) == e
+        True
+        &#34;&#34;&#34;
+        if self._asdicts is None:
+            from hdict import hdict
+
+            dic = {}
+            for k, v in self.items():
+                dic[k] = v.asdicts if isinstance(v, (hdict, frozenhdict)) else v
+            dic[&#34;_id&#34;] = self.id
+            dic[&#34;_ids&#34;] = self.ids.copy()
+            self._asdicts = dic
+        return self._asdicts
+
+    @property
+    def asdicts_noid(self):
+        &#34;&#34;&#34;
+        Convert to &#39;dict&#39; recursing into nested frozenhdicts, excluding ids.
+
+        REMINDER: hdict is never nested, frozenhdict is used instead
+        HINT: Use &#39;asdicts&#39; to recursively convert a &#39;hdict&#39; &#39;d&#39; to &#39;dict&#39; including ids.
+
+        &gt;&gt;&gt; from hdict import value, hdict
+        &gt;&gt;&gt; d = hdict(x=value(5, hosh=&#34;0123456789012345678901234567890123456789&#34;))
+        &gt;&gt;&gt; e = hdict(d=d)
+        &gt;&gt;&gt; e.asdicts_noid
+        {&#39;d&#39;: {&#39;x&#39;: 5}}
+        &gt;&gt;&gt; dict(e) == e
+        True
+
+        &#34;&#34;&#34;
+        if self._asdicts_noid is None:
+            from hdict import hdict
+
+            dic = {}
+            for k, v in self.items():
+                dic[k] = v.asdicts_noid if isinstance(v, (hdict, frozenhdict)) else v
+            self._asdicts_noid = dic
+        return self._asdicts_noid
+
+    @property
+    def asdicts_hoshes_noneval(self):
+        from hdict import value
+
+        hoshes = set()
+        dic = {}
+        for k, val in self.data.items():
+            if isinstance(val, AbsEntry):
+                hoshes.add(val.hosh)
+            if isinstance(val, value):
+                v = val.value
+                if isinstance(v, frozenhdict):
+                    dic[k], subhoshes = v.asdicts_hoshes_noneval
+                    hoshes.update(subhoshes)
+                else:
+                    dic[k] = v
+            else:
+                dic[k] = val
+        hoshes.add(self.hosh)
+        dic[&#34;_id&#34;] = self.id
+        dic[&#34;_ids&#34;] = self.ids.copy()
+        return dic, hoshes
+
+    def astext(self, colored=True, key_quotes=False):
+        r&#34;&#34;&#34;Textual representation of a frozenidict object&#34;&#34;&#34;
+        dicts, hoshes = self.asdicts_hoshes_noneval
+        txt = json.dumps(dicts, indent=4, ensure_ascii=False, cls=CustomJSONEncoder)
+
+        # Put colors after json, to avoid escaping ansi codes.  TODO: check how HTML behaves here
+        for h in hoshes:
+            txt = txt.replace(f&#39;&#34;{h.id}&#34;&#39;, repr(h)) if colored else txt.replace(f&#39;&#34;{h.id}&#34;&#39;, h.id)
+        txt = re.sub(r&#39;(&#34;: )&#34;(λ.+?)&#34;(?=,\n)&#39;, &#39;&#34;: \\2&#39;, txt)
+        if not key_quotes:
+            txt = re.sub(r&#39;(?&lt;!: )&#34;([\-a-zA-Z0-9_ ]+?)&#34;(?=: )&#39;, &#34;\\1&#34;, txt)
+        return txt.replace(&#39;&#34;§«§lazy&#39;, &#34;&#34;).replace(&#39;lazy§«§&#34;&#39;, &#34;&#34;)
+
+    def show(self, colored=True, key_quotes=False):
+        r&#34;&#34;&#34;Print textual representation of a frozenidict object&#34;&#34;&#34;
+        print(self.astext(colored, key_quotes))
+
+    def copy(self):  # pragma: no cover
+        raise Exception(&#34;A FrozenIdict doesn&#39;t need copies&#34;)
+
+    @property
+    def unfrozen(self):
+        from hdict import hdict
+
+        return hdict(_frozen=self)
+
+    # def entries(self, evaluate=True):
+    #     &#34;&#34;&#34;Iterator over all items&#34;&#34;&#34;
+    #     yield from self.items(evaluate)
+    #     # yield from self.metaitems(evaluate)
+
+    def keys(self):
+        &#34;&#34;&#34;Generator of keys which don&#39;t start with &#39;_&#39;&#34;
+        &gt;&gt;&gt; from hdict import hdict
+        &gt;&gt;&gt; list(hdict(x=3, y=5).keys())
+        [&#39;x&#39;, &#39;y&#39;]
+        &gt;&gt;&gt; list(hdict(x=3, y=5).values())
+        [3, 5]
+        &#34;&#34;&#34;
+        # return (k for k in self.data if not k.startswith(&#34;_&#34;))
+        return self.data.keys()
+
+    def values(self, evaluate=True):
+        &#34;&#34;&#34;Generator of field values (keys that don&#39;t start with &#39;_&#39;)&#34;&#34;&#34;
+        return ((v.value if evaluate else v) for k, v in self.data.items())
+        # return ((v.value if evaluate else v) for k, v in self.data.items() if not k.startswith(&#34;_&#34;))
+
+    def items(self, evaluate=True):
+        &#34;&#34;&#34;Generator over field-value pairs&#34;&#34;&#34;
+        for k, val in self.data.items():
+            # if not k.startswith(&#34;_&#34;):
+            yield k, (val.value if evaluate else val)
+
+    def save(self, cache: dict):
+        &#34;&#34;&#34;
+        Store an entire frozenidict
+        &#34;&#34;&#34;
+        data = {self.id: self.ids}
+        for field, fid in self.ids.items():
+            value = self[field]
+            if isinstance(value, frozenhdict):
+                value.save(cache)
+            else:
+                data[fid] = value
+        cache.update(data)
+
+    @staticmethod
+    def load(id, cache: dict | list, lazy=True) -&gt; Union[&#34;frozenhdict&#34;, None]:
+        &#34;&#34;&#34;
+        Fetch an entire frozenidict
+        &#34;&#34;&#34;
+        if len(id) != 40:  # pragma: no cover
+            raise Exception(f&#34;id should have lenght of 40, not {len(id)}&#34;)
+        return frozenhdict.fetch(id, cache, lazy, ishdict=True)
+
+    @staticmethod
+    def fetch(id, cache, lazy=True, ishdict=False) -&gt; Union[&#34;frozenhdict&#34;, None]:
+        &#34;&#34;&#34;
+        Fetch a single entry
+
+        When cache is a list, traverse it from the end (right item to the left item).
+        &#34;&#34;&#34;
+        from hdict.content.entry.lazy import Lazy
+
+        caches = cache if isinstance(cache, list) else [cache]
+        while id not in (cache := caches.pop()):
+            if not caches:
+                raise Exception(f&#34;id &#39;{id}&#39; not found in the provided cache {cache.keys()}.&#34;)
+        obj = cache[id]
+        if isinstance(obj, dict):
+            ishdict = True  # Set to True, because now we have a nested frozenhdict
+        elif ishdict:
+            raise Exception(f&#34;Wrong content for idict expected under id {id}: {type(obj)}.&#34;)
+
+        if ishdict:
+            ids = obj
+            data = {}
+            for field, fid in ids.items():
+                data[field] = Lazy(fid, cache) if lazy else frozenhdict.fetch(fid, cache, lazy, False)
+            return frozenhdict.fromdict(data, ids)
+        return obj
+
+    def __eq__(self, other):
+        if isinstance(other, dict):
+            if &#34;_id&#34; in other:
+                return self.id == other[&#34;_id&#34;]
+            if list(self.keys()) != list(other.keys()):
+                return False
+            from hdict import hdict
+
+            if isinstance(other, (frozenhdict, hdict)):
+                return self.id == other.id
+            return dict(self) == other
+        raise TypeError(f&#34;Cannot compare {type(self).__name__} and {type(other).__name__}&#34;)  # pragma: no cover
+
+    def __ne__(self, other):
+        return not (self == other)
+
+    def __repr__(self):
+        return self.astext()
+
+    def __str__(self):
+        return stringfy(self.data)
+
+    def __iter__(self):
+        for k in self.data:
+            # if not k.startswith(&#34;_&#34;):
+            yield k
+
+    def __hash__(self):
+        return hash(self.hosh)
+
+    def __mul__(self, other):
+        from hdict.expr import Expr
+
+        return Expr(self, other)
+
+    # def metakeys(self):
+    #     &#34;&#34;&#34;Generator of keys which start with &#39;_&#39;&#34;&#34;&#34;
+    #     return (k for k in self.data if k.startswith(&#34;_&#34;) and k not in [&#34;_id&#34;, &#34;_ids&#34;])
+    #
+    # def metavalues(self, evaluate=True):
+    #     &#34;&#34;&#34;Generator of field values (keys don&#39;t start with &#39;_&#39;)&#34;&#34;&#34;
+    #     return ((v.value if evaluate else v) for k, v in self.data.items() if k.startswith(&#34;_&#34;) and k not in [&#34;_id&#34;, &#34;_ids&#34;])
+    #
+    # def metaitems(self, evaluate=True):
+    #     &#34;&#34;&#34;Generator over field-value pairs&#34;&#34;&#34;
+    #     for k, ival in self.data.items():
+    #         if k.startswith(&#34;_&#34;) and k not in [&#34;_id&#34;, &#34;_ids&#34;]:
+    #             yield k, (ival.value if evaluate else ival)
+    #
+    # def entries(self, evaluate=True):
+    #     &#34;&#34;&#34;Iterator over all items&#34;&#34;&#34;
+    #     yield from self.items(evaluate)
+    #     yield from self.metaitems(evaluate)
+    #
+    # @cached_property
+    # def fields(self):
+    #     return list(self.keys())
+    #
+    # @cached_property
+    # def metafields(self):
+    #     &#34;&#34;&#34;List of keys which start with &#39;_&#39;&#34;&#34;&#34;
+    #     return [k for k in self.data if k.startswith(&#34;_&#34;) and k not in [&#34;_id&#34;, &#34;_ids&#34;]]</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>collections.UserDict</li>
+<li>collections.abc.MutableMapping</li>
+<li>collections.abc.Mapping</li>
+<li>collections.abc.Collection</li>
+<li>collections.abc.Sized</li>
+<li>collections.abc.Iterable</li>
+<li>collections.abc.Container</li>
+<li>builtins.dict</li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="hdict.empty_.Empty_" href="empty_.html#hdict.empty_.Empty_">Empty_</a></li>
+</ul>
+<h3>Static methods</h3>
+<dl>
+<dt id="hdict.frozenhdict.fetch"><code class="name flex">
+<span>def <span class="ident">fetch</span></span>(<span>id, cache, lazy=True, ishdict=False) ‑> Optional[hdict.frozenhdict.frozenhdict]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Fetch a single entry</p>
+<p>When cache is a list, traverse it from the end (right item to the left item).</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def fetch(id, cache, lazy=True, ishdict=False) -&gt; Union[&#34;frozenhdict&#34;, None]:
+    &#34;&#34;&#34;
+    Fetch a single entry
+
+    When cache is a list, traverse it from the end (right item to the left item).
+    &#34;&#34;&#34;
+    from hdict.content.entry.lazy import Lazy
+
+    caches = cache if isinstance(cache, list) else [cache]
+    while id not in (cache := caches.pop()):
+        if not caches:
+            raise Exception(f&#34;id &#39;{id}&#39; not found in the provided cache {cache.keys()}.&#34;)
+    obj = cache[id]
+    if isinstance(obj, dict):
+        ishdict = True  # Set to True, because now we have a nested frozenhdict
+    elif ishdict:
+        raise Exception(f&#34;Wrong content for idict expected under id {id}: {type(obj)}.&#34;)
+
+    if ishdict:
+        ids = obj
+        data = {}
+        for field, fid in ids.items():
+            data[field] = Lazy(fid, cache) if lazy else frozenhdict.fetch(fid, cache, lazy, False)
+        return frozenhdict.fromdict(data, ids)
+    return obj</code></pre>
+</details>
+</dd>
+<dt id="hdict.frozenhdict.fromdict"><code class="name flex">
+<span>def <span class="ident">fromdict</span></span>(<span>dictionary, ids)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Build a frozenidict from values and pre-defined ids</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; from hdict import hdict, value
+&gt;&gt;&gt; hdict.fromdict({&quot;x&quot;: value(5, hosh=&quot;0123456789012345678901234567890123456789&quot;)}, {&quot;x&quot;: &quot;0123456789012345678901234567890123456789&quot;}).show(colored=False)
+{
+    x: 5,
+    _id: bi5Qdbh-zgA1ZQdxGhxqjaKaQROtxk1VCPRZhMOq,
+    _ids: {
+        x: 0123456789012345678901234567890123456789
+    }
+}
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def fromdict(dictionary, ids):
+    &#34;&#34;&#34;Build a frozenidict from values and pre-defined ids
+
+    &gt;&gt;&gt; from hdict import hdict, value
+    &gt;&gt;&gt; hdict.fromdict({&#34;x&#34;: value(5, hosh=&#34;0123456789012345678901234567890123456789&#34;)}, {&#34;x&#34;: &#34;0123456789012345678901234567890123456789&#34;}).show(colored=False)
+    {
+        x: 5,
+        _id: bi5Qdbh-zgA1ZQdxGhxqjaKaQROtxk1VCPRZhMOq,
+        _ids: {
+            x: 0123456789012345678901234567890123456789
+        }
+    }
+    &#34;&#34;&#34;
+    from hdict.content.value import value
+
+    data = {}
+    for k, v in dictionary.items():
+        if isinstance(v, AbsEntry):
+            if k in ids and ids[k] != v.id:  # pragma: no cover
+                raise Exception(f&#34;Conflicting ids provided for key &#39;{k}&#39;: ival.id={v.id}; ids[{k}]={ids[k]}&#34;)
+            data[k] = v
+        else:
+            data[k] = value(v, ids[k] if k in ids else None)
+    return frozenhdict(data)</code></pre>
+</details>
+</dd>
+<dt id="hdict.frozenhdict.load"><code class="name flex">
+<span>def <span class="ident">load</span></span>(<span>id, cache: dict | list, lazy=True) ‑> Optional[hdict.frozenhdict.frozenhdict]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Fetch an entire frozenidict</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def load(id, cache: dict | list, lazy=True) -&gt; Union[&#34;frozenhdict&#34;, None]:
+    &#34;&#34;&#34;
+    Fetch an entire frozenidict
+    &#34;&#34;&#34;
+    if len(id) != 40:  # pragma: no cover
+        raise Exception(f&#34;id should have lenght of 40, not {len(id)}&#34;)
+    return frozenhdict.fetch(id, cache, lazy, ishdict=True)</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Instance variables</h3>
+<dl>
+<dt id="hdict.frozenhdict.asdict"><code class="name">var <span class="ident">asdict</span></code></dt>
+<dd>
+<div class="desc"><p>Convert to 'dict', including ids.</p>
+<p>This evaluates all fields.
+HINT: Use 'dict(d)' to convert a 'hdict' to a 'dict' excluding ids.</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; from hdict import hdict, value
+&gt;&gt;&gt; d = hdict.fromdict({&quot;x&quot;: value(5, hosh=&quot;0123456789012345678901234567890123456789&quot;)}, {&quot;x&quot;: &quot;0123456789012345678901234567890123456789&quot;})
+&gt;&gt;&gt; d.asdict
+{'x': 5, '_id': 'bi5Qdbh-zgA1ZQdxGhxqjaKaQROtxk1VCPRZhMOq', '_ids': {'x': '0123456789012345678901234567890123456789'}}
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def asdict(self):
+    &#34;&#34;&#34;
+    Convert to &#39;dict&#39;, including ids.
+
+    This evaluates all fields.
+    HINT: Use &#39;dict(d)&#39; to convert a &#39;hdict&#39; to a &#39;dict&#39; excluding ids.
+
+    &gt;&gt;&gt; from hdict import hdict, value
+    &gt;&gt;&gt; d = hdict.fromdict({&#34;x&#34;: value(5, hosh=&#34;0123456789012345678901234567890123456789&#34;)}, {&#34;x&#34;: &#34;0123456789012345678901234567890123456789&#34;})
+    &gt;&gt;&gt; d.asdict
+    {&#39;x&#39;: 5, &#39;_id&#39;: &#39;bi5Qdbh-zgA1ZQdxGhxqjaKaQROtxk1VCPRZhMOq&#39;, &#39;_ids&#39;: {&#39;x&#39;: &#39;0123456789012345678901234567890123456789&#39;}}
+    &#34;&#34;&#34;
+    if self._asdict is None:
+        dic = dict(self.items())
+        dic[&#34;_id&#34;] = self.id
+        dic[&#34;_ids&#34;] = self.ids.copy()
+        self._asdict = dic
+    return self._asdict</code></pre>
+</details>
+</dd>
+<dt id="hdict.frozenhdict.asdicts"><code class="name">var <span class="ident">asdicts</span></code></dt>
+<dd>
+<div class="desc"><p>Convert to 'dict' recursing into nested frozenhdicts, including ids.</p>
+<p>This evaluates all fields.
+REMINDER: hdict is never nested, frozenhdict is used instead
+HINT: Use 'asdicts_noid' to recursively convert a 'hdict' to a 'dict' excluding ids.</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; from hdict import value, hdict
+&gt;&gt;&gt; d = hdict(x=value(5, hosh=&quot;0123456789012345678901234567890123456789&quot;))
+&gt;&gt;&gt; e = hdict(d=d)
+&gt;&gt;&gt; e.asdicts
+{'d': {'x': 5, '_id': 'bi5Qdbh-zgA1ZQdxGhxqjaKaQROtxk1VCPRZhMOq', '_ids': {'x': '0123456789012345678901234567890123456789'}}, '_id': 'GGhKhUmGhISaoHevn39hb-pLZEMoAc3KzE6Z0.IH', '_ids': {'d': 'bi5Qdbh-zgA1ZQdxGhxqjaKaQROtxk1VCPRZhMOq'}}
+&gt;&gt;&gt; dict(e) == e
+True
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def asdicts(self):
+    &#34;&#34;&#34;
+    Convert to &#39;dict&#39; recursing into nested frozenhdicts, including ids.
+
+    This evaluates all fields.
+    REMINDER: hdict is never nested, frozenhdict is used instead
+    HINT: Use &#39;asdicts_noid&#39; to recursively convert a &#39;hdict&#39; to a &#39;dict&#39; excluding ids.
+
+    &gt;&gt;&gt; from hdict import value, hdict
+    &gt;&gt;&gt; d = hdict(x=value(5, hosh=&#34;0123456789012345678901234567890123456789&#34;))
+    &gt;&gt;&gt; e = hdict(d=d)
+    &gt;&gt;&gt; e.asdicts
+    {&#39;d&#39;: {&#39;x&#39;: 5, &#39;_id&#39;: &#39;bi5Qdbh-zgA1ZQdxGhxqjaKaQROtxk1VCPRZhMOq&#39;, &#39;_ids&#39;: {&#39;x&#39;: &#39;0123456789012345678901234567890123456789&#39;}}, &#39;_id&#39;: &#39;GGhKhUmGhISaoHevn39hb-pLZEMoAc3KzE6Z0.IH&#39;, &#39;_ids&#39;: {&#39;d&#39;: &#39;bi5Qdbh-zgA1ZQdxGhxqjaKaQROtxk1VCPRZhMOq&#39;}}
+    &gt;&gt;&gt; dict(e) == e
+    True
+    &#34;&#34;&#34;
+    if self._asdicts is None:
+        from hdict import hdict
+
+        dic = {}
+        for k, v in self.items():
+            dic[k] = v.asdicts if isinstance(v, (hdict, frozenhdict)) else v
+        dic[&#34;_id&#34;] = self.id
+        dic[&#34;_ids&#34;] = self.ids.copy()
+        self._asdicts = dic
+    return self._asdicts</code></pre>
+</details>
+</dd>
+<dt id="hdict.frozenhdict.asdicts_hoshes_noneval"><code class="name">var <span class="ident">asdicts_hoshes_noneval</span></code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def asdicts_hoshes_noneval(self):
+    from hdict import value
+
+    hoshes = set()
+    dic = {}
+    for k, val in self.data.items():
+        if isinstance(val, AbsEntry):
+            hoshes.add(val.hosh)
+        if isinstance(val, value):
+            v = val.value
+            if isinstance(v, frozenhdict):
+                dic[k], subhoshes = v.asdicts_hoshes_noneval
+                hoshes.update(subhoshes)
+            else:
+                dic[k] = v
+        else:
+            dic[k] = val
+    hoshes.add(self.hosh)
+    dic[&#34;_id&#34;] = self.id
+    dic[&#34;_ids&#34;] = self.ids.copy()
+    return dic, hoshes</code></pre>
+</details>
+</dd>
+<dt id="hdict.frozenhdict.asdicts_noid"><code class="name">var <span class="ident">asdicts_noid</span></code></dt>
+<dd>
+<div class="desc"><p>Convert to 'dict' recursing into nested frozenhdicts, excluding ids.</p>
+<p>REMINDER: hdict is never nested, frozenhdict is used instead
+HINT: Use 'asdicts' to recursively convert a 'hdict' 'd' to 'dict' including ids.</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; from hdict import value, hdict
+&gt;&gt;&gt; d = hdict(x=value(5, hosh=&quot;0123456789012345678901234567890123456789&quot;))
+&gt;&gt;&gt; e = hdict(d=d)
+&gt;&gt;&gt; e.asdicts_noid
+{'d': {'x': 5}}
+&gt;&gt;&gt; dict(e) == e
+True
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def asdicts_noid(self):
+    &#34;&#34;&#34;
+    Convert to &#39;dict&#39; recursing into nested frozenhdicts, excluding ids.
+
+    REMINDER: hdict is never nested, frozenhdict is used instead
+    HINT: Use &#39;asdicts&#39; to recursively convert a &#39;hdict&#39; &#39;d&#39; to &#39;dict&#39; including ids.
+
+    &gt;&gt;&gt; from hdict import value, hdict
+    &gt;&gt;&gt; d = hdict(x=value(5, hosh=&#34;0123456789012345678901234567890123456789&#34;))
+    &gt;&gt;&gt; e = hdict(d=d)
+    &gt;&gt;&gt; e.asdicts_noid
+    {&#39;d&#39;: {&#39;x&#39;: 5}}
+    &gt;&gt;&gt; dict(e) == e
+    True
+
+    &#34;&#34;&#34;
+    if self._asdicts_noid is None:
+        from hdict import hdict
+
+        dic = {}
+        for k, v in self.items():
+            dic[k] = v.asdicts_noid if isinstance(v, (hdict, frozenhdict)) else v
+        self._asdicts_noid = dic
+    return self._asdicts_noid</code></pre>
+</details>
+</dd>
+<dt id="hdict.frozenhdict.evaluated"><code class="name">var <span class="ident">evaluated</span></code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def evaluated(self):
+    if self._evaluated is None:
+        for k, val in self.data.items():
+            val.evaluate()
+        self._evaluated = self
+    return self</code></pre>
+</details>
+</dd>
+<dt id="hdict.frozenhdict.unfrozen"><code class="name">var <span class="ident">unfrozen</span></code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def unfrozen(self):
+    from hdict import hdict
+
+    return hdict(_frozen=self)</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="hdict.frozenhdict.astext"><code class="name flex">
+<span>def <span class="ident">astext</span></span>(<span>self, colored=True, key_quotes=False)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Textual representation of a frozenidict object</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def astext(self, colored=True, key_quotes=False):
+    r&#34;&#34;&#34;Textual representation of a frozenidict object&#34;&#34;&#34;
+    dicts, hoshes = self.asdicts_hoshes_noneval
+    txt = json.dumps(dicts, indent=4, ensure_ascii=False, cls=CustomJSONEncoder)
+
+    # Put colors after json, to avoid escaping ansi codes.  TODO: check how HTML behaves here
+    for h in hoshes:
+        txt = txt.replace(f&#39;&#34;{h.id}&#34;&#39;, repr(h)) if colored else txt.replace(f&#39;&#34;{h.id}&#34;&#39;, h.id)
+    txt = re.sub(r&#39;(&#34;: )&#34;(λ.+?)&#34;(?=,\n)&#39;, &#39;&#34;: \\2&#39;, txt)
+    if not key_quotes:
+        txt = re.sub(r&#39;(?&lt;!: )&#34;([\-a-zA-Z0-9_ ]+?)&#34;(?=: )&#39;, &#34;\\1&#34;, txt)
+    return txt.replace(&#39;&#34;§«§lazy&#39;, &#34;&#34;).replace(&#39;lazy§«§&#34;&#39;, &#34;&#34;)</code></pre>
+</details>
+</dd>
+<dt id="hdict.frozenhdict.copy"><code class="name flex">
+<span>def <span class="ident">copy</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>D.copy() -&gt; a shallow copy of D</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def copy(self):  # pragma: no cover
+    raise Exception(&#34;A FrozenIdict doesn&#39;t need copies&#34;)</code></pre>
+</details>
+</dd>
+<dt id="hdict.frozenhdict.evaluate"><code class="name flex">
+<span>def <span class="ident">evaluate</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def evaluate(self):
+    _ = self.evaluated</code></pre>
+</details>
+</dd>
+<dt id="hdict.frozenhdict.items"><code class="name flex">
+<span>def <span class="ident">items</span></span>(<span>self, evaluate=True)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Generator over field-value pairs</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def items(self, evaluate=True):
+    &#34;&#34;&#34;Generator over field-value pairs&#34;&#34;&#34;
+    for k, val in self.data.items():
+        # if not k.startswith(&#34;_&#34;):
+        yield k, (val.value if evaluate else val)</code></pre>
+</details>
+</dd>
+<dt id="hdict.frozenhdict.keys"><code class="name flex">
+<span>def <span class="ident">keys</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Generator of keys which don't start with '_'"</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; from hdict import hdict
+&gt;&gt;&gt; list(hdict(x=3, y=5).keys())
+['x', 'y']
+&gt;&gt;&gt; list(hdict(x=3, y=5).values())
+[3, 5]
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def keys(self):
+    &#34;&#34;&#34;Generator of keys which don&#39;t start with &#39;_&#39;&#34;
+    &gt;&gt;&gt; from hdict import hdict
+    &gt;&gt;&gt; list(hdict(x=3, y=5).keys())
+    [&#39;x&#39;, &#39;y&#39;]
+    &gt;&gt;&gt; list(hdict(x=3, y=5).values())
+    [3, 5]
+    &#34;&#34;&#34;
+    # return (k for k in self.data if not k.startswith(&#34;_&#34;))
+    return self.data.keys()</code></pre>
+</details>
+</dd>
+<dt id="hdict.frozenhdict.save"><code class="name flex">
+<span>def <span class="ident">save</span></span>(<span>self, cache: dict)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Store an entire frozenidict</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def save(self, cache: dict):
+    &#34;&#34;&#34;
+    Store an entire frozenidict
+    &#34;&#34;&#34;
+    data = {self.id: self.ids}
+    for field, fid in self.ids.items():
+        value = self[field]
+        if isinstance(value, frozenhdict):
+            value.save(cache)
+        else:
+            data[fid] = value
+    cache.update(data)</code></pre>
+</details>
+</dd>
+<dt id="hdict.frozenhdict.show"><code class="name flex">
+<span>def <span class="ident">show</span></span>(<span>self, colored=True, key_quotes=False)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Print textual representation of a frozenidict object</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def show(self, colored=True, key_quotes=False):
+    r&#34;&#34;&#34;Print textual representation of a frozenidict object&#34;&#34;&#34;
+    print(self.astext(colored, key_quotes))</code></pre>
+</details>
+</dd>
+<dt id="hdict.frozenhdict.values"><code class="name flex">
+<span>def <span class="ident">values</span></span>(<span>self, evaluate=True)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Generator of field values (keys that don't start with '_')</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def values(self, evaluate=True):
+    &#34;&#34;&#34;Generator of field values (keys that don&#39;t start with &#39;_&#39;)&#34;&#34;&#34;
+    return ((v.value if evaluate else v) for k, v in self.data.items())
+    # return ((v.value if evaluate else v) for k, v in self.data.items() if not k.startswith(&#34;_&#34;))</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="hdict.hdict"><code class="flex name class">
+<span>class <span class="ident">hdict</span></span>
+<span>(</span><span>**kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Function id is reversed before application.
+This is needed to enable handling a function as a value, under the original id.</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; from hdict import hdict, apply, field
+&gt;&gt;&gt; from hdict.content.argument.default import default
+&gt;&gt;&gt; d = hdict({&quot;x&quot;: 3}, y=5)
+&gt;&gt;&gt; d[&quot;alpha&quot;] = 11
+&gt;&gt;&gt; d.show(colored=False)
+{
+    x: 3,
+    y: 5,
+    alpha: 11,
+    _id: e6WGyTj7trk6AUUcdxGAefyG.T9j.SvBdEsHF.r5,
+    _ids: {
+        x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+        y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+        alpha: A1RyW.GoA3q9-iCbCvWyWClExm1J3wI.ok6UA3Nk
+    }
+}
+&gt;&gt;&gt; d &gt;&gt;= {&quot;beta&quot;: 12, &quot;gamma&quot;: 17}
+&gt;&gt;&gt; d[&quot;p1&quot;, &quot;q1&quot;] = apply(lambda x, y=3: [x**y, x/y])
+&gt;&gt;&gt; d[&quot;pq&quot;] = apply(lambda x, y=3: [x**y, x/y])
+&gt;&gt;&gt; d[&quot;p2&quot;, &quot;q2&quot;] = apply(lambda x=2, y=None: [x**y, x/y])
+&gt;&gt;&gt; f = lambda x, y: {&quot;a&quot;: x**y, &quot;b&quot;: x/y}
+&gt;&gt;&gt; d[&quot;z1&quot;, &quot;w1&quot;] = apply(f)
+&gt;&gt;&gt; d[&quot;z2&quot;:&quot;a&quot;, &quot;w2&quot;:&quot;b&quot;] = apply(f)
+&gt;&gt;&gt; d &gt;&gt;= {
+...     &quot;r1&quot;: apply(lambda x: x**2),
+...     &quot;r2&quot;: apply(lambda x: x**3),
+...     &quot;r3&quot;: apply(lambda x: x**4),
+...     (&quot;ra1&quot;, &quot;rb1&quot;): apply(f),
+...     ((&quot;ra2&quot;, &quot;a&quot;), (&quot;rb2&quot;, &quot;b&quot;)): apply(f),
+... }
+&gt;&gt;&gt; d[&quot;z2&quot;]
+243
+&gt;&gt;&gt; d[&quot;zz1&quot;, &quot;ww1&quot;] = apply(f, field(&quot;r1&quot;), y=field(&quot;r2&quot;))
+&gt;&gt;&gt; d &gt;&gt;= {(&quot;zz2&quot;, &quot;ww2&quot;): apply(f, y=field(&quot;r2&quot;), x=9)}  # Define external value.
+&gt;&gt;&gt; d &gt;&gt;= {&quot;zzzz&quot;: apply(f, y=13, x=9)}
+&gt;&gt;&gt; # Non-pickable custom classes need a custom 'hosh' attribute to be applied and also to be used as a value.
+&gt;&gt;&gt; from hosh import Hosh
+&gt;&gt;&gt; # Example of class that could be used as a value or as a function.
+&gt;&gt;&gt; from dataclasses import dataclass
+&gt;&gt;&gt; @dataclass
+... class CustomClass:
+...     hosh = Hosh.fromid(&quot;Some.arbitrary.identifier.with.length.40&quot;)
+...     def __call__(self, x, y):
+...         return x + y, x / y
+&gt;&gt;&gt; custom = CustomClass()
+&gt;&gt;&gt; d[&quot;f&quot;] = custom  # Custom callable handled as a value.
+&gt;&gt;&gt; d[&quot;zzz1&quot;, &quot;www1&quot;] = apply(custom, 11, y=33)  # Custom callable being applied.
+&gt;&gt;&gt; d[&quot;zzz2&quot;, &quot;www2&quot;] = apply(field(&quot;f&quot;), field(&quot;r1&quot;), y=44)  # Callable field being applied.
+&gt;&gt;&gt; d.show(colored=False)
+{
+    x: 3,
+    y: 5,
+    alpha: 11,
+    beta: 12,
+    gamma: 17,
+    p1: λ(x y)→0,
+    q1: λ(x y)→1,
+    pq: λ(x y),
+    p2: λ(x y)→0,
+    q2: λ(x y)→1,
+    z1: λ(x y)→0,
+    w1: λ(x y)→1,
+    z2: 243,
+    w2: λ(x y)→b,
+    r1: λ(x),
+    r2: λ(x),
+    r3: λ(x),
+    ra1: λ(x y)→0,
+    rb1: λ(x y)→1,
+    ra2: λ(x y)→a,
+    rb2: λ(x y)→b,
+    zz1: λ(x=r1 y=r2)→0,
+    ww1: λ(x=r1 y=r2)→1,
+    zz2: λ(9 y=r2)→0,
+    ww2: λ(9 y=r2)→1,
+    zzzz: λ(9 13),
+    f: &quot;CustomClass()&quot;,
+    zzz1: λ(11 33)→0,
+    www1: λ(11 33)→1,
+    zzz2: λ(r1 44)→0,
+    www2: λ(r1 44)→1,
+    _id: DCHyNhF2j6CaptG.6gb9UL9RVIMztgnnbVI5MHxh,
+    _ids: {
+        x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+        y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+        alpha: A1RyW.GoA3q9-iCbCvWyWClExm1J3wI.ok6UA3Nk,
+        beta: WM5TbiaJ1gLqKRSFiY3VkZEu1PwQcaAokBKBPrWg,
+        gamma: yb-HU.jSxd496XfId1J..MkX7xfUPJOL1-07hHdt,
+        p1: ggJAsAHfZm2fiI0HmIbBhyZMNP9z06QJEfO24Xx2,
+        q1: YMfRygkG8EoBSwIFWwbZfEyHcQ8dlDnKo1.gOijC,
+        pq: Zm4nTmd2OIE5Ij9NJjU4DqG.hgqMlJbs1hNjSdRE,
+        p2: -RZv1aQW198-uu1wAFsRzS5CalP8THUWSHUgTy6q,
+        q2: wPuaLzMJX-wU-b6-z4A7n1hnDi-woaKQq745qo0E,
+        z1: 8dPQ2blIctM6p7mByuoL0EnTlg5no0TxEJtoACbt,
+        w1: JbWdguqn24m9-XathFYdhhMRBDvWFQVktmxj7gWL,
+        z2: 8dPQ2blIctM6p7mByuoL0EnTlg5no0TxEJtoACbt,
+        w2: JbWdguqn24m9-XathFYdhhMRBDvWFQVktmxj7gWL,
+        r1: Y3AxJytRz1Pnf8Q1bjC2jWUs3oTzAALXYkwlH1GI,
+        r2: JdDJ6LPyvJ2xnbPUwBFKDIt8k-udb4czb8PjX8dh,
+        r3: 015TXOnn-Z6AfT1ajcNN4brMD6c8YsRn73kA7RPh,
+        ra1: 8dPQ2blIctM6p7mByuoL0EnTlg5no0TxEJtoACbt,
+        rb1: JbWdguqn24m9-XathFYdhhMRBDvWFQVktmxj7gWL,
+        ra2: 8dPQ2blIctM6p7mByuoL0EnTlg5no0TxEJtoACbt,
+        rb2: JbWdguqn24m9-XathFYdhhMRBDvWFQVktmxj7gWL,
+        zz1: mQUu0IxSblJEAplB0yVRVN-rY6bv06spvVH8krlt,
+        ww1: 7J8PIEG1QPZMBDimMibqHaJPFg6pHG8mQGvDM9Pf,
+        zz2: sHib6xdxGc8tQ6CzacEANreEUZH.sjkZhIa6ZJRc,
+        ww2: FO-4MA-2R.Hp40Fa1cOnY70x.vFfraTBMvYDCTa7,
+        zzzz: GCskxsxNUipp-aSntVX1tASXmXbTqCEJ46YonXVu,
+        f: Some.arbitrary.identifier.with.length.40,
+        zzz1: Oq-jsn9xtOoG1PvtuUo99Ha-nhgow1Wwbje4TdSd,
+        www1: lUCDq9mlpw-qZEx6DRlM5BSq.xj-mOtv.L38Yuti,
+        zzz2: ivhVbLM3q-CE9M4.MFf29k3FDj8fU.8GMfZZwKh3,
+        www2: fFEl3XJdY9-tX.iVWY2FevFv5SS85e.FDrjZm2NN
+    }
+}
+&gt;&gt;&gt; d[&quot;p1&quot;]
+243
+&gt;&gt;&gt; from hdict import value
+&gt;&gt;&gt; d.evaluate()
+&gt;&gt;&gt; d = hdict(x=2)
+&gt;&gt;&gt; g = lambda x, y: [x + y, x / y]
+&gt;&gt;&gt; d[&quot;z&quot;] = apply(f, 2, y=3)
+&gt;&gt;&gt; d[&quot;w&quot;, &quot;v&quot;] = apply(f, field(&quot;x&quot;), y=33)
+&gt;&gt;&gt; d[&quot;f&quot;] = f
+&gt;&gt;&gt; cache = {}
+&gt;&gt;&gt; d = d &gt;&gt; apply(field(&quot;f&quot;), field(&quot;x&quot;), y=default(3), nonexistent_parameter=7)(&quot;w3&quot;, &quot;v3&quot;) # TODO: nonexistent parameter should raise an exception
+&gt;&gt;&gt; d &gt;&gt;= apply(field(&quot;f&quot;), field(&quot;x&quot;), y=default(3))(&quot;w&quot;, &quot;v&quot;)
+&gt;&gt;&gt; d[&quot;w2&quot;, &quot;v2&quot;] = apply(field(&quot;f&quot;), field(&quot;x&quot;), y=default(3))
+&gt;&gt;&gt; d &gt;&gt;= {&quot;z&quot;: apply(f, field(&quot;x&quot;), y=3), (&quot;w&quot;, &quot;v&quot;): apply(g, y=7)}
+&gt;&gt;&gt; d &gt;&gt;= apply(f, field(&quot;x&quot;), y=3)(&quot;z9&quot;) * apply(g, y=7)(&quot;w9&quot;, &quot;v9&quot;)
+&gt;&gt;&gt; pp = apply(f, field(&quot;x&quot;), y=3)(&quot;z&quot;) &gt;&gt; apply(g, y=7)(&quot;w&quot;, &quot;v&quot;)
+&gt;&gt;&gt; type(pp)
+&lt;class 'hdict.expr.Expr'&gt;
+&gt;&gt;&gt; d &gt;&gt;= {&quot;x&quot;: 3} &gt;&gt; pp &gt;&gt; apply(g, y=7)(&quot;w&quot;, &quot;v&quot;)
+&gt;&gt;&gt; from hdict import _
+&gt;&gt;&gt; a1 = apply(f, y=_[1, 2, 4, ..., 128])
+&gt;&gt;&gt; a2 = apply(f, _[0, 3, 6, ..., 9], y=_[0, 3, 6, ..., 9])
+&gt;&gt;&gt; ppp = hdict() &gt;&gt; a2.sample()(&quot;k&quot;, &quot;t&quot;)
+&gt;&gt;&gt; ppp.show(colored=False)
+{
+    k: λ(9 9)→0,
+    t: λ(9 9)→1,
+    _id: eeMrAInYUG2lzUrGqgY0vSZd4KpYpc5vu.bV9bbP,
+    _ids: {
+        k: UgmJcTz6qQgNFiwe.S40EC69Ab6drWQ5JCw8ON3q,
+        t: MCyEzFX.viNxTiRwTio0j7dA9LDf-TwFRNKA0JhY
+    }
+}
+&gt;&gt;&gt; ppp.k
+387420489
+&gt;&gt;&gt; a1(&quot;z&quot;)
+z=λ(x y=~[1 2 .*. 128])
+&gt;&gt;&gt; a2(w=&quot;a&quot;, v=&quot;b&quot;)
+(('w', 'a'), ('v', 'b'))=λ(x=~[0 3 .+. 9] y=~[0 3 .+. 9])
+&gt;&gt;&gt; p = a1(&quot;z&quot;) &gt;&gt; a2(w=&quot;a&quot;, v=&quot;b&quot;)
+&gt;&gt;&gt; h = lambda a, b=4: 5
+&gt;&gt;&gt; app = apply(h, a=_[0, 3, 6, ..., 9])
+&gt;&gt;&gt; app
+λ(a=~[0 3 .+. 9] b=default(4))
+&gt;&gt;&gt; app.c
+c=λ(a=~[0 3 .+. 9] b=default(4))
+&gt;&gt;&gt; sampled = app.sample(0).c
+&gt;&gt;&gt; sampled
+c=λ(9 b=default(4))
+&gt;&gt;&gt; r = hdict() &gt;&gt; sampled
+&gt;&gt;&gt; r.show(colored=False)
+{
+    c: λ(9 b=4),
+    _id: -3fKdfaAaTp.4XwUm1FzlzM81PYZSgsIZEuRRCD4,
+    _ids: {
+        c: Ht.fDdFk9WOHzT27dOKLvaoHY0YB7Nx.Q2MNXTzJ
+    }
+}
+&gt;&gt;&gt; r.evaluated.show(colored=False)
+{
+    c: 5,
+    _id: -3fKdfaAaTp.4XwUm1FzlzM81PYZSgsIZEuRRCD4,
+    _ids: {
+        c: Ht.fDdFk9WOHzT27dOKLvaoHY0YB7Nx.Q2MNXTzJ
+    }
+}
+&gt;&gt;&gt; from random import Random
+&gt;&gt;&gt; rnd = Random(0)
+&gt;&gt;&gt; p1 = p.sample(rnd)
+&gt;&gt;&gt; d[&quot;w&quot;]
+10
+&gt;&gt;&gt; d &gt;&gt;= p1
+&gt;&gt;&gt; d[&quot;z&quot;] = apply(f, 2, y=3)
+&gt;&gt;&gt; d[&quot;w&quot;, &quot;v&quot;] = apply(f, _.x, y=_.x)
+&gt;&gt;&gt; d[&quot;w&quot;, &quot;v&quot;] = apply(_.f, _.x, y=default(3))
+&gt;&gt;&gt; d = hdict() &gt;&gt; {&quot;z&quot;: apply(f, 7, y=3), (&quot;w&quot;, &quot;v&quot;): apply(g, default(6), y=7)}
+&gt;&gt;&gt; d = hdict(w=6) &gt;&gt; (apply(f, _.w, y=3)(z=&quot;z&quot;) &gt;&gt; apply(g, x=_[1,2,3,...,5], y=7)(&quot;ww&quot;, &quot;v&quot;)).sample(0)
+&gt;&gt;&gt; p = apply(f, y=_[1, 2, 4, ..., 128])(&quot;z&quot;) &gt;&gt; apply(f, y=_[0, 3, 6, ..., 9])(w=&quot;a&quot;, v=&quot;b&quot;)
+&gt;&gt;&gt; d.show(colored=False)
+{
+    w: 6,
+    z: λ(x=w 3)→z,
+    ww: λ(4 7)→0,
+    v: λ(4 7)→1,
+    _id: Hu.P9nMRy97xUe7prRc3k-Uwvz2p5emCpSyVSdIC,
+    _ids: {
+        w: CZ7Jm5fQMZ3fZJ3kAVOi0FYK-exFqPqgoYLsGxGl,
+        z: 3eItvrVzHQPDEYbQRbksBHiCaQbe2Ia2m7Z2P1lw,
+        ww: VdHav0HHdJC6gfOF8Fqw7AFX9IYQyrIUOZc8G.Pp,
+        v: KtYqDG5UPyrYEv-5V5RaUQasieAwAjF1bYf3Tvyy
+    }
+}
+&gt;&gt;&gt; d = hdict(x=3) &gt;&gt; p.sample(rnd)
+&gt;&gt;&gt; d.show(colored=False)
+{
+    x: 3,
+    z: λ(x 16),
+    w: λ(x 9)→a,
+    v: λ(x 9)→b,
+    _id: OIVFm0IdYK3jtOApTVCwdLTVXXNGarxDkUCwB0Iv,
+    _ids: {
+        x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+        z: -F83hM-wE8ykmcEM1XvuG.XBpo7rzkuHfNKzTVMz,
+        w: G7CpHeVpUD5KfNpJmRaMC2Rt4rTeQjIuAeGuZXSa,
+        v: glVBFsjtDi7RrpvqrV.5vh.dp.RgASp25V-qlClj
+    }
+}
+&gt;&gt;&gt; d1 = hdict(x=52, y=13)
+&gt;&gt;&gt; d2 = hdict(x=value(52, hosh=&quot;1234567890123456789012345678901234567890&quot;))
+&gt;&gt;&gt; d1.show(colored=False)
+{
+    x: 52,
+    y: 13,
+    _id: 5pwGP0LxQRbQaDEk9ztQ4V4qz.A-IIhVNTrcyt8U,
+    _ids: {
+        x: c.llz05T6ZXw5AlsU4xfmMxcvvHZhLl60LckZis9,
+        y: zplslThZYha4haD2VmGxZqrFSw5RJcFJd2E-Ku6s
+    }
+}
+&gt;&gt;&gt; d2.show(colored=False)
+{
+    x: 52,
+    _id: kYzgpPdRgQSYSEpp1qt4EHQLQJXuyb2WDQS-iNPh,
+    _ids: {
+        x: 1234567890123456789012345678901234567890
+    }
+}
+&gt;&gt;&gt; d3 = d1 &gt;&gt; d2
+&gt;&gt;&gt; d3.show(colored=False)
+{
+    x: 52,
+    y: 13,
+    _id: -EFuy5NAeK.LIALpBiZKK-fYQmc9AZYQQck-HiRK,
+    _ids: {
+        x: 1234567890123456789012345678901234567890,
+        y: zplslThZYha4haD2VmGxZqrFSw5RJcFJd2E-Ku6s
+    }
+}
+&gt;&gt;&gt; (d3 &gt;&gt; d1.frozen).show(colored=False)
+{
+    x: 52,
+    y: 13,
+    _id: 5pwGP0LxQRbQaDEk9ztQ4V4qz.A-IIhVNTrcyt8U,
+    _ids: {
+        x: c.llz05T6ZXw5AlsU4xfmMxcvvHZhLl60LckZis9,
+        y: zplslThZYha4haD2VmGxZqrFSw5RJcFJd2E-Ku6s
+    }
+}
+</code></pre>
+<pre><code class="language-python-repl">&gt;&gt;&gt; d = hdict(x=2, y=4)
+&gt;&gt;&gt; {&quot;x&quot;: 2, &quot;y&quot;: 4} == d.frozen
+True
+&gt;&gt;&gt; {&quot;x&quot;: 2, &quot;y&quot;: 4} == d
+True
+&gt;&gt;&gt; d == {&quot;x&quot;: 2, &quot;y&quot;: 4}
+True
+&gt;&gt;&gt; dict(d)
+{'x': 2, 'y': 4}
+&gt;&gt;&gt; hdict() &gt;&gt; {&quot;x&quot;: 3} == {&quot;x&quot;: 3}
+True
+&gt;&gt;&gt; {&quot;x&quot;: 3, &quot;d&quot;: {&quot;x&quot;: 7}} == hdict(x=3, d=hdict(x=7))
+True
+&gt;&gt;&gt; hdict(x=3, d=hdict(x=7)) == {&quot;x&quot;: 3, &quot;d&quot;: {&quot;x&quot;: 7}}
+True
+&gt;&gt;&gt; {&quot;x&quot;: 3, &quot;_id&quot;: hdict(x=3).id} == hdict(x=3)
+True
+&gt;&gt;&gt; hdict(x=3) == {&quot;x&quot;: 3, &quot;_id&quot;: hdict(x=3).id}
+True
+&gt;&gt;&gt; hdict(x=3) == hdict(x=3)
+True
+&gt;&gt;&gt; hdict(x=3).frozen == hdict(x=3)
+True
+&gt;&gt;&gt; hdict(x=3) != {&quot;x&quot;: 4}
+True
+&gt;&gt;&gt; hdict(x=3) != hdict(x=4)
+True
+&gt;&gt;&gt; hdict(x=3).frozen != hdict(x=4)
+True
+&gt;&gt;&gt; hdict(x=3) != {&quot;y&quot;: 3}
+True
+&gt;&gt;&gt; hdict(x=3) != {&quot;x&quot;: 3, &quot;_id&quot;: (~hdict(x=3).hosh).id}
+True
+&gt;&gt;&gt; hdict(x=3) != hdict(y=3)
+True
+&gt;&gt;&gt; del d[&quot;x&quot;]
+&gt;&gt;&gt; list(d)
+['y']
+&gt;&gt;&gt; e = d &gt;&gt; apply(lambda y: y*7)(&quot;y&quot;)
+&gt;&gt;&gt; from hdict.hoshfication import f2hosh
+&gt;&gt;&gt; print(f2hosh(lambda y: y*7))
+54YCMDJIlsIvMQ.KJtT-vFyjg83Zgfj2xSHOgCj8
+&gt;&gt;&gt; print(e)
+{y: &quot;λ(4)&quot;}
+&gt;&gt;&gt; e.evaluate()
+&gt;&gt;&gt; print(e)
+{y: 28}
+&gt;&gt;&gt; d = d &gt;&gt; apply(lambda y=1: y*7, fhosh=&quot;54YCMDJIlsIvMQ.KJtT-vFyjg83Zgfj2xSHOgCj8&quot;)(&quot;y&quot;)
+&gt;&gt;&gt; print(d)
+{y: &quot;λ(4)&quot;}
+&gt;&gt;&gt; d.evaluate()
+&gt;&gt;&gt; print(d)
+{y: 28}
+&gt;&gt;&gt; hash(e.frozen) == hash(d.frozen)
+True
+&gt;&gt;&gt; d = hdict(a=5) &gt;&gt; hdict(y=28)
+&gt;&gt;&gt; d.show(colored=False)
+{
+    a: 5,
+    y: 28,
+    _id: C-xKyWCyBL6g32KIuxoANoF9czLaJTh-emPsMqOg,
+    _ids: {
+        a: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+        y: -2A0hTRBN1wtIKQxLzRcYDBkhv1hu-dMY-24Jye9
+    }
+}
+&gt;&gt;&gt; d &gt;&gt;= apply(lambda a: a)(&quot;x&quot;)
+&gt;&gt;&gt; d.show(colored=False)
+{
+    a: 5,
+    y: 28,
+    x: λ(a),
+    _id: q5J7ZUr3gs0bKrG4AxVEY2q0-XH3Suvw5X8-j6do,
+    _ids: {
+        a: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+        y: -2A0hTRBN1wtIKQxLzRcYDBkhv1hu-dMY-24Jye9,
+        x: gak9o6ZS9plw9l63f0WtAFnr52.1HycGhc3En2MR
+    }
+}
+&gt;&gt;&gt; {&quot;_id&quot;: &quot;q5J7ZUr3gs0bKrG4AxVEY2q0-XH3Suvw5X8-j6do&quot;} == d
+True
+&gt;&gt;&gt; d.show(colored=False)
+{
+    a: 5,
+    y: 28,
+    x: λ(a),
+    _id: q5J7ZUr3gs0bKrG4AxVEY2q0-XH3Suvw5X8-j6do,
+    _ids: {
+        a: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+        y: -2A0hTRBN1wtIKQxLzRcYDBkhv1hu-dMY-24Jye9,
+        x: gak9o6ZS9plw9l63f0WtAFnr52.1HycGhc3En2MR
+    }
+}
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class hdict(hdict_):
+    &#34;&#34;&#34;
+    Function id is reversed before application.
+    This is needed to enable handling a function as a value, under the original id.
+
+    &gt;&gt;&gt; from hdict import hdict, apply, field
+    &gt;&gt;&gt; from hdict.content.argument.default import default
+    &gt;&gt;&gt; d = hdict({&#34;x&#34;: 3}, y=5)
+    &gt;&gt;&gt; d[&#34;alpha&#34;] = 11
+    &gt;&gt;&gt; d.show(colored=False)
+    {
+        x: 3,
+        y: 5,
+        alpha: 11,
+        _id: e6WGyTj7trk6AUUcdxGAefyG.T9j.SvBdEsHF.r5,
+        _ids: {
+            x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+            y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+            alpha: A1RyW.GoA3q9-iCbCvWyWClExm1J3wI.ok6UA3Nk
+        }
+    }
+    &gt;&gt;&gt; d &gt;&gt;= {&#34;beta&#34;: 12, &#34;gamma&#34;: 17}
+    &gt;&gt;&gt; d[&#34;p1&#34;, &#34;q1&#34;] = apply(lambda x, y=3: [x**y, x/y])
+    &gt;&gt;&gt; d[&#34;pq&#34;] = apply(lambda x, y=3: [x**y, x/y])
+    &gt;&gt;&gt; d[&#34;p2&#34;, &#34;q2&#34;] = apply(lambda x=2, y=None: [x**y, x/y])
+    &gt;&gt;&gt; f = lambda x, y: {&#34;a&#34;: x**y, &#34;b&#34;: x/y}
+    &gt;&gt;&gt; d[&#34;z1&#34;, &#34;w1&#34;] = apply(f)
+    &gt;&gt;&gt; d[&#34;z2&#34;:&#34;a&#34;, &#34;w2&#34;:&#34;b&#34;] = apply(f)
+    &gt;&gt;&gt; d &gt;&gt;= {
+    ...     &#34;r1&#34;: apply(lambda x: x**2),
+    ...     &#34;r2&#34;: apply(lambda x: x**3),
+    ...     &#34;r3&#34;: apply(lambda x: x**4),
+    ...     (&#34;ra1&#34;, &#34;rb1&#34;): apply(f),
+    ...     ((&#34;ra2&#34;, &#34;a&#34;), (&#34;rb2&#34;, &#34;b&#34;)): apply(f),
+    ... }
+    &gt;&gt;&gt; d[&#34;z2&#34;]
+    243
+    &gt;&gt;&gt; d[&#34;zz1&#34;, &#34;ww1&#34;] = apply(f, field(&#34;r1&#34;), y=field(&#34;r2&#34;))
+    &gt;&gt;&gt; d &gt;&gt;= {(&#34;zz2&#34;, &#34;ww2&#34;): apply(f, y=field(&#34;r2&#34;), x=9)}  # Define external value.
+    &gt;&gt;&gt; d &gt;&gt;= {&#34;zzzz&#34;: apply(f, y=13, x=9)}
+    &gt;&gt;&gt; # Non-pickable custom classes need a custom &#39;hosh&#39; attribute to be applied and also to be used as a value.
+    &gt;&gt;&gt; from hosh import Hosh
+    &gt;&gt;&gt; # Example of class that could be used as a value or as a function.
+    &gt;&gt;&gt; from dataclasses import dataclass
+    &gt;&gt;&gt; @dataclass
+    ... class CustomClass:
+    ...     hosh = Hosh.fromid(&#34;Some.arbitrary.identifier.with.length.40&#34;)
+    ...     def __call__(self, x, y):
+    ...         return x + y, x / y
+    &gt;&gt;&gt; custom = CustomClass()
+    &gt;&gt;&gt; d[&#34;f&#34;] = custom  # Custom callable handled as a value.
+    &gt;&gt;&gt; d[&#34;zzz1&#34;, &#34;www1&#34;] = apply(custom, 11, y=33)  # Custom callable being applied.
+    &gt;&gt;&gt; d[&#34;zzz2&#34;, &#34;www2&#34;] = apply(field(&#34;f&#34;), field(&#34;r1&#34;), y=44)  # Callable field being applied.
+    &gt;&gt;&gt; d.show(colored=False)
+    {
+        x: 3,
+        y: 5,
+        alpha: 11,
+        beta: 12,
+        gamma: 17,
+        p1: λ(x y)→0,
+        q1: λ(x y)→1,
+        pq: λ(x y),
+        p2: λ(x y)→0,
+        q2: λ(x y)→1,
+        z1: λ(x y)→0,
+        w1: λ(x y)→1,
+        z2: 243,
+        w2: λ(x y)→b,
+        r1: λ(x),
+        r2: λ(x),
+        r3: λ(x),
+        ra1: λ(x y)→0,
+        rb1: λ(x y)→1,
+        ra2: λ(x y)→a,
+        rb2: λ(x y)→b,
+        zz1: λ(x=r1 y=r2)→0,
+        ww1: λ(x=r1 y=r2)→1,
+        zz2: λ(9 y=r2)→0,
+        ww2: λ(9 y=r2)→1,
+        zzzz: λ(9 13),
+        f: &#34;CustomClass()&#34;,
+        zzz1: λ(11 33)→0,
+        www1: λ(11 33)→1,
+        zzz2: λ(r1 44)→0,
+        www2: λ(r1 44)→1,
+        _id: DCHyNhF2j6CaptG.6gb9UL9RVIMztgnnbVI5MHxh,
+        _ids: {
+            x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+            y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+            alpha: A1RyW.GoA3q9-iCbCvWyWClExm1J3wI.ok6UA3Nk,
+            beta: WM5TbiaJ1gLqKRSFiY3VkZEu1PwQcaAokBKBPrWg,
+            gamma: yb-HU.jSxd496XfId1J..MkX7xfUPJOL1-07hHdt,
+            p1: ggJAsAHfZm2fiI0HmIbBhyZMNP9z06QJEfO24Xx2,
+            q1: YMfRygkG8EoBSwIFWwbZfEyHcQ8dlDnKo1.gOijC,
+            pq: Zm4nTmd2OIE5Ij9NJjU4DqG.hgqMlJbs1hNjSdRE,
+            p2: -RZv1aQW198-uu1wAFsRzS5CalP8THUWSHUgTy6q,
+            q2: wPuaLzMJX-wU-b6-z4A7n1hnDi-woaKQq745qo0E,
+            z1: 8dPQ2blIctM6p7mByuoL0EnTlg5no0TxEJtoACbt,
+            w1: JbWdguqn24m9-XathFYdhhMRBDvWFQVktmxj7gWL,
+            z2: 8dPQ2blIctM6p7mByuoL0EnTlg5no0TxEJtoACbt,
+            w2: JbWdguqn24m9-XathFYdhhMRBDvWFQVktmxj7gWL,
+            r1: Y3AxJytRz1Pnf8Q1bjC2jWUs3oTzAALXYkwlH1GI,
+            r2: JdDJ6LPyvJ2xnbPUwBFKDIt8k-udb4czb8PjX8dh,
+            r3: 015TXOnn-Z6AfT1ajcNN4brMD6c8YsRn73kA7RPh,
+            ra1: 8dPQ2blIctM6p7mByuoL0EnTlg5no0TxEJtoACbt,
+            rb1: JbWdguqn24m9-XathFYdhhMRBDvWFQVktmxj7gWL,
+            ra2: 8dPQ2blIctM6p7mByuoL0EnTlg5no0TxEJtoACbt,
+            rb2: JbWdguqn24m9-XathFYdhhMRBDvWFQVktmxj7gWL,
+            zz1: mQUu0IxSblJEAplB0yVRVN-rY6bv06spvVH8krlt,
+            ww1: 7J8PIEG1QPZMBDimMibqHaJPFg6pHG8mQGvDM9Pf,
+            zz2: sHib6xdxGc8tQ6CzacEANreEUZH.sjkZhIa6ZJRc,
+            ww2: FO-4MA-2R.Hp40Fa1cOnY70x.vFfraTBMvYDCTa7,
+            zzzz: GCskxsxNUipp-aSntVX1tASXmXbTqCEJ46YonXVu,
+            f: Some.arbitrary.identifier.with.length.40,
+            zzz1: Oq-jsn9xtOoG1PvtuUo99Ha-nhgow1Wwbje4TdSd,
+            www1: lUCDq9mlpw-qZEx6DRlM5BSq.xj-mOtv.L38Yuti,
+            zzz2: ivhVbLM3q-CE9M4.MFf29k3FDj8fU.8GMfZZwKh3,
+            www2: fFEl3XJdY9-tX.iVWY2FevFv5SS85e.FDrjZm2NN
+        }
+    }
+    &gt;&gt;&gt; d[&#34;p1&#34;]
+    243
+    &gt;&gt;&gt; from hdict import value
+    &gt;&gt;&gt; d.evaluate()
+    &gt;&gt;&gt; d = hdict(x=2)
+    &gt;&gt;&gt; g = lambda x, y: [x + y, x / y]
+    &gt;&gt;&gt; d[&#34;z&#34;] = apply(f, 2, y=3)
+    &gt;&gt;&gt; d[&#34;w&#34;, &#34;v&#34;] = apply(f, field(&#34;x&#34;), y=33)
+    &gt;&gt;&gt; d[&#34;f&#34;] = f
+    &gt;&gt;&gt; cache = {}
+    &gt;&gt;&gt; d = d &gt;&gt; apply(field(&#34;f&#34;), field(&#34;x&#34;), y=default(3), nonexistent_parameter=7)(&#34;w3&#34;, &#34;v3&#34;) # TODO: nonexistent parameter should raise an exception
+    &gt;&gt;&gt; d &gt;&gt;= apply(field(&#34;f&#34;), field(&#34;x&#34;), y=default(3))(&#34;w&#34;, &#34;v&#34;)
+    &gt;&gt;&gt; d[&#34;w2&#34;, &#34;v2&#34;] = apply(field(&#34;f&#34;), field(&#34;x&#34;), y=default(3))
+    &gt;&gt;&gt; d &gt;&gt;= {&#34;z&#34;: apply(f, field(&#34;x&#34;), y=3), (&#34;w&#34;, &#34;v&#34;): apply(g, y=7)}
+    &gt;&gt;&gt; d &gt;&gt;= apply(f, field(&#34;x&#34;), y=3)(&#34;z9&#34;) * apply(g, y=7)(&#34;w9&#34;, &#34;v9&#34;)
+    &gt;&gt;&gt; pp = apply(f, field(&#34;x&#34;), y=3)(&#34;z&#34;) &gt;&gt; apply(g, y=7)(&#34;w&#34;, &#34;v&#34;)
+    &gt;&gt;&gt; type(pp)
+    &lt;class &#39;hdict.expr.Expr&#39;&gt;
+    &gt;&gt;&gt; d &gt;&gt;= {&#34;x&#34;: 3} &gt;&gt; pp &gt;&gt; apply(g, y=7)(&#34;w&#34;, &#34;v&#34;)
+    &gt;&gt;&gt; from hdict import _
+    &gt;&gt;&gt; a1 = apply(f, y=_[1, 2, 4, ..., 128])
+    &gt;&gt;&gt; a2 = apply(f, _[0, 3, 6, ..., 9], y=_[0, 3, 6, ..., 9])
+    &gt;&gt;&gt; ppp = hdict() &gt;&gt; a2.sample()(&#34;k&#34;, &#34;t&#34;)
+    &gt;&gt;&gt; ppp.show(colored=False)
+    {
+        k: λ(9 9)→0,
+        t: λ(9 9)→1,
+        _id: eeMrAInYUG2lzUrGqgY0vSZd4KpYpc5vu.bV9bbP,
+        _ids: {
+            k: UgmJcTz6qQgNFiwe.S40EC69Ab6drWQ5JCw8ON3q,
+            t: MCyEzFX.viNxTiRwTio0j7dA9LDf-TwFRNKA0JhY
+        }
+    }
+    &gt;&gt;&gt; ppp.k
+    387420489
+    &gt;&gt;&gt; a1(&#34;z&#34;)
+    z=λ(x y=~[1 2 .*. 128])
+    &gt;&gt;&gt; a2(w=&#34;a&#34;, v=&#34;b&#34;)
+    ((&#39;w&#39;, &#39;a&#39;), (&#39;v&#39;, &#39;b&#39;))=λ(x=~[0 3 .+. 9] y=~[0 3 .+. 9])
+    &gt;&gt;&gt; p = a1(&#34;z&#34;) &gt;&gt; a2(w=&#34;a&#34;, v=&#34;b&#34;)
+    &gt;&gt;&gt; h = lambda a, b=4: 5
+    &gt;&gt;&gt; app = apply(h, a=_[0, 3, 6, ..., 9])
+    &gt;&gt;&gt; app
+    λ(a=~[0 3 .+. 9] b=default(4))
+    &gt;&gt;&gt; app.c
+    c=λ(a=~[0 3 .+. 9] b=default(4))
+    &gt;&gt;&gt; sampled = app.sample(0).c
+    &gt;&gt;&gt; sampled
+    c=λ(9 b=default(4))
+    &gt;&gt;&gt; r = hdict() &gt;&gt; sampled
+    &gt;&gt;&gt; r.show(colored=False)
+    {
+        c: λ(9 b=4),
+        _id: -3fKdfaAaTp.4XwUm1FzlzM81PYZSgsIZEuRRCD4,
+        _ids: {
+            c: Ht.fDdFk9WOHzT27dOKLvaoHY0YB7Nx.Q2MNXTzJ
+        }
+    }
+    &gt;&gt;&gt; r.evaluated.show(colored=False)
+    {
+        c: 5,
+        _id: -3fKdfaAaTp.4XwUm1FzlzM81PYZSgsIZEuRRCD4,
+        _ids: {
+            c: Ht.fDdFk9WOHzT27dOKLvaoHY0YB7Nx.Q2MNXTzJ
+        }
+    }
+    &gt;&gt;&gt; from random import Random
+    &gt;&gt;&gt; rnd = Random(0)
+    &gt;&gt;&gt; p1 = p.sample(rnd)
+    &gt;&gt;&gt; d[&#34;w&#34;]
+    10
+    &gt;&gt;&gt; d &gt;&gt;= p1
+    &gt;&gt;&gt; d[&#34;z&#34;] = apply(f, 2, y=3)
+    &gt;&gt;&gt; d[&#34;w&#34;, &#34;v&#34;] = apply(f, _.x, y=_.x)
+    &gt;&gt;&gt; d[&#34;w&#34;, &#34;v&#34;] = apply(_.f, _.x, y=default(3))
+    &gt;&gt;&gt; d = hdict() &gt;&gt; {&#34;z&#34;: apply(f, 7, y=3), (&#34;w&#34;, &#34;v&#34;): apply(g, default(6), y=7)}
+    &gt;&gt;&gt; d = hdict(w=6) &gt;&gt; (apply(f, _.w, y=3)(z=&#34;z&#34;) &gt;&gt; apply(g, x=_[1,2,3,...,5], y=7)(&#34;ww&#34;, &#34;v&#34;)).sample(0)
+    &gt;&gt;&gt; p = apply(f, y=_[1, 2, 4, ..., 128])(&#34;z&#34;) &gt;&gt; apply(f, y=_[0, 3, 6, ..., 9])(w=&#34;a&#34;, v=&#34;b&#34;)
+    &gt;&gt;&gt; d.show(colored=False)
+    {
+        w: 6,
+        z: λ(x=w 3)→z,
+        ww: λ(4 7)→0,
+        v: λ(4 7)→1,
+        _id: Hu.P9nMRy97xUe7prRc3k-Uwvz2p5emCpSyVSdIC,
+        _ids: {
+            w: CZ7Jm5fQMZ3fZJ3kAVOi0FYK-exFqPqgoYLsGxGl,
+            z: 3eItvrVzHQPDEYbQRbksBHiCaQbe2Ia2m7Z2P1lw,
+            ww: VdHav0HHdJC6gfOF8Fqw7AFX9IYQyrIUOZc8G.Pp,
+            v: KtYqDG5UPyrYEv-5V5RaUQasieAwAjF1bYf3Tvyy
+        }
+    }
+    &gt;&gt;&gt; d = hdict(x=3) &gt;&gt; p.sample(rnd)
+    &gt;&gt;&gt; d.show(colored=False)
+    {
+        x: 3,
+        z: λ(x 16),
+        w: λ(x 9)→a,
+        v: λ(x 9)→b,
+        _id: OIVFm0IdYK3jtOApTVCwdLTVXXNGarxDkUCwB0Iv,
+        _ids: {
+            x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+            z: -F83hM-wE8ykmcEM1XvuG.XBpo7rzkuHfNKzTVMz,
+            w: G7CpHeVpUD5KfNpJmRaMC2Rt4rTeQjIuAeGuZXSa,
+            v: glVBFsjtDi7RrpvqrV.5vh.dp.RgASp25V-qlClj
+        }
+    }
+    &gt;&gt;&gt; d1 = hdict(x=52, y=13)
+    &gt;&gt;&gt; d2 = hdict(x=value(52, hosh=&#34;1234567890123456789012345678901234567890&#34;))
+    &gt;&gt;&gt; d1.show(colored=False)
+    {
+        x: 52,
+        y: 13,
+        _id: 5pwGP0LxQRbQaDEk9ztQ4V4qz.A-IIhVNTrcyt8U,
+        _ids: {
+            x: c.llz05T6ZXw5AlsU4xfmMxcvvHZhLl60LckZis9,
+            y: zplslThZYha4haD2VmGxZqrFSw5RJcFJd2E-Ku6s
+        }
+    }
+    &gt;&gt;&gt; d2.show(colored=False)
+    {
+        x: 52,
+        _id: kYzgpPdRgQSYSEpp1qt4EHQLQJXuyb2WDQS-iNPh,
+        _ids: {
+            x: 1234567890123456789012345678901234567890
+        }
+    }
+    &gt;&gt;&gt; d3 = d1 &gt;&gt; d2
+    &gt;&gt;&gt; d3.show(colored=False)
+    {
+        x: 52,
+        y: 13,
+        _id: -EFuy5NAeK.LIALpBiZKK-fYQmc9AZYQQck-HiRK,
+        _ids: {
+            x: 1234567890123456789012345678901234567890,
+            y: zplslThZYha4haD2VmGxZqrFSw5RJcFJd2E-Ku6s
+        }
+    }
+    &gt;&gt;&gt; (d3 &gt;&gt; d1.frozen).show(colored=False)
+    {
+        x: 52,
+        y: 13,
+        _id: 5pwGP0LxQRbQaDEk9ztQ4V4qz.A-IIhVNTrcyt8U,
+        _ids: {
+            x: c.llz05T6ZXw5AlsU4xfmMxcvvHZhLl60LckZis9,
+            y: zplslThZYha4haD2VmGxZqrFSw5RJcFJd2E-Ku6s
+        }
+    }
+
+    &gt;&gt;&gt; d = hdict(x=2, y=4)
+    &gt;&gt;&gt; {&#34;x&#34;: 2, &#34;y&#34;: 4} == d.frozen
+    True
+    &gt;&gt;&gt; {&#34;x&#34;: 2, &#34;y&#34;: 4} == d
+    True
+    &gt;&gt;&gt; d == {&#34;x&#34;: 2, &#34;y&#34;: 4}
+    True
+    &gt;&gt;&gt; dict(d)
+    {&#39;x&#39;: 2, &#39;y&#39;: 4}
+    &gt;&gt;&gt; hdict() &gt;&gt; {&#34;x&#34;: 3} == {&#34;x&#34;: 3}
+    True
+    &gt;&gt;&gt; {&#34;x&#34;: 3, &#34;d&#34;: {&#34;x&#34;: 7}} == hdict(x=3, d=hdict(x=7))
+    True
+    &gt;&gt;&gt; hdict(x=3, d=hdict(x=7)) == {&#34;x&#34;: 3, &#34;d&#34;: {&#34;x&#34;: 7}}
+    True
+    &gt;&gt;&gt; {&#34;x&#34;: 3, &#34;_id&#34;: hdict(x=3).id} == hdict(x=3)
+    True
+    &gt;&gt;&gt; hdict(x=3) == {&#34;x&#34;: 3, &#34;_id&#34;: hdict(x=3).id}
+    True
+    &gt;&gt;&gt; hdict(x=3) == hdict(x=3)
+    True
+    &gt;&gt;&gt; hdict(x=3).frozen == hdict(x=3)
+    True
+    &gt;&gt;&gt; hdict(x=3) != {&#34;x&#34;: 4}
+    True
+    &gt;&gt;&gt; hdict(x=3) != hdict(x=4)
+    True
+    &gt;&gt;&gt; hdict(x=3).frozen != hdict(x=4)
+    True
+    &gt;&gt;&gt; hdict(x=3) != {&#34;y&#34;: 3}
+    True
+    &gt;&gt;&gt; hdict(x=3) != {&#34;x&#34;: 3, &#34;_id&#34;: (~hdict(x=3).hosh).id}
+    True
+    &gt;&gt;&gt; hdict(x=3) != hdict(y=3)
+    True
+    &gt;&gt;&gt; del d[&#34;x&#34;]
+    &gt;&gt;&gt; list(d)
+    [&#39;y&#39;]
+    &gt;&gt;&gt; e = d &gt;&gt; apply(lambda y: y*7)(&#34;y&#34;)
+    &gt;&gt;&gt; from hdict.hoshfication import f2hosh
+    &gt;&gt;&gt; print(f2hosh(lambda y: y*7))
+    54YCMDJIlsIvMQ.KJtT-vFyjg83Zgfj2xSHOgCj8
+    &gt;&gt;&gt; print(e)
+    {y: &#34;λ(4)&#34;}
+    &gt;&gt;&gt; e.evaluate()
+    &gt;&gt;&gt; print(e)
+    {y: 28}
+    &gt;&gt;&gt; d = d &gt;&gt; apply(lambda y=1: y*7, fhosh=&#34;54YCMDJIlsIvMQ.KJtT-vFyjg83Zgfj2xSHOgCj8&#34;)(&#34;y&#34;)
+    &gt;&gt;&gt; print(d)
+    {y: &#34;λ(4)&#34;}
+    &gt;&gt;&gt; d.evaluate()
+    &gt;&gt;&gt; print(d)
+    {y: 28}
+    &gt;&gt;&gt; hash(e.frozen) == hash(d.frozen)
+    True
+    &gt;&gt;&gt; d = hdict(a=5) &gt;&gt; hdict(y=28)
+    &gt;&gt;&gt; d.show(colored=False)
+    {
+        a: 5,
+        y: 28,
+        _id: C-xKyWCyBL6g32KIuxoANoF9czLaJTh-emPsMqOg,
+        _ids: {
+            a: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+            y: -2A0hTRBN1wtIKQxLzRcYDBkhv1hu-dMY-24Jye9
+        }
+    }
+    &gt;&gt;&gt; d &gt;&gt;= apply(lambda a: a)(&#34;x&#34;)
+    &gt;&gt;&gt; d.show(colored=False)
+    {
+        a: 5,
+        y: 28,
+        x: λ(a),
+        _id: q5J7ZUr3gs0bKrG4AxVEY2q0-XH3Suvw5X8-j6do,
+        _ids: {
+            a: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+            y: -2A0hTRBN1wtIKQxLzRcYDBkhv1hu-dMY-24Jye9,
+            x: gak9o6ZS9plw9l63f0WtAFnr52.1HycGhc3En2MR
+        }
+    }
+    &gt;&gt;&gt; {&#34;_id&#34;: &#34;q5J7ZUr3gs0bKrG4AxVEY2q0-XH3Suvw5X8-j6do&#34;} == d
+    True
+    &gt;&gt;&gt; d.show(colored=False)
+    {
+        a: 5,
+        y: 28,
+        x: λ(a),
+        _id: q5J7ZUr3gs0bKrG4AxVEY2q0-XH3Suvw5X8-j6do,
+        _ids: {
+            a: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+            y: -2A0hTRBN1wtIKQxLzRcYDBkhv1hu-dMY-24Jye9,
+            x: gak9o6ZS9plw9l63f0WtAFnr52.1HycGhc3En2MR
+        }
+    }
+    &#34;&#34;&#34;</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="hdict.hdict_.hdict_" href="hdict_.html#hdict.hdict_.hdict_">hdict_</a></li>
+<li>builtins.dict</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="hdict.hdict_.hdict_" href="hdict_.html#hdict.hdict_.hdict_">hdict_</a></b></code>:
+<ul class="hlist">
+<li><code><a title="hdict.hdict_.hdict_.asdict" href="hdict_.html#hdict.hdict_.hdict_.asdict">asdict</a></code></li>
+<li><code><a title="hdict.hdict_.hdict_.asdicts" href="hdict_.html#hdict.hdict_.hdict_.asdicts">asdicts</a></code></li>
+<li><code><a title="hdict.hdict_.hdict_.astext" href="hdict_.html#hdict.hdict_.hdict_.astext">astext</a></code></li>
+<li><code><a title="hdict.hdict_.hdict_.evaluate" href="hdict_.html#hdict.hdict_.hdict_.evaluate">evaluate</a></code></li>
+<li><code><a title="hdict.hdict_.hdict_.fetch" href="hdict_.html#hdict.hdict_.hdict_.fetch">fetch</a></code></li>
+<li><code><a title="hdict.hdict_.hdict_.fromdict" href="hdict_.html#hdict.hdict_.hdict_.fromdict">fromdict</a></code></li>
+<li><code><a title="hdict.hdict_.hdict_.fromfile" href="hdict_.html#hdict.hdict_.hdict_.fromfile">fromfile</a></code></li>
+<li><code><a title="hdict.hdict_.hdict_.id" href="hdict_.html#hdict.hdict_.hdict_.id">id</a></code></li>
+<li><code><a title="hdict.hdict_.hdict_.ids" href="hdict_.html#hdict.hdict_.hdict_.ids">ids</a></code></li>
+<li><code><a title="hdict.hdict_.hdict_.items" href="hdict_.html#hdict.hdict_.hdict_.items">items</a></code></li>
+<li><code><a title="hdict.hdict_.hdict_.keys" href="hdict_.html#hdict.hdict_.hdict_.keys">keys</a></code></li>
+<li><code><a title="hdict.hdict_.hdict_.load" href="hdict_.html#hdict.hdict_.hdict_.load">load</a></code></li>
+<li><code><a title="hdict.hdict_.hdict_.save" href="hdict_.html#hdict.hdict_.hdict_.save">save</a></code></li>
+<li><code><a title="hdict.hdict_.hdict_.show" href="hdict_.html#hdict.hdict_.hdict_.show">show</a></code></li>
+<li><code><a title="hdict.hdict_.hdict_.values" href="hdict_.html#hdict.hdict_.hdict_.values">values</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="hdict.sample"><code class="flex name class">
+<span>class <span class="ident">sample</span></span>
+<span>(</span><span>*values: list[int | float], rnd: int | random.Random = 0, maxdigits=28)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>A lazily evaluated list of values</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; (s := sample(1, 2, 3, ..., 9).values)
+[1 2 .+. 9]
+&gt;&gt;&gt; (s := sample(2, 4, 8, ..., 1024).values)
+[2 4 .*. 1024]
+&gt;&gt;&gt; (s := sample(2, -4, 8, ..., 12).values)
+[2 -4 8]
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class sample(AbsMetaArgument):
+    &#34;&#34;&#34;
+    A lazily evaluated list of values
+
+    &gt;&gt;&gt; (s := sample(1, 2, 3, ..., 9).values)
+    [1 2 .+. 9]
+    &gt;&gt;&gt; (s := sample(2, 4, 8, ..., 1024).values)
+    [2 4 .*. 1024]
+    &gt;&gt;&gt; (s := sample(2, -4, 8, ..., 12).values)
+    [2 -4 8]
+    &#34;&#34;&#34;
+
+    sampleable = True
+
+    def __init__(self, *values: list[int | float], rnd: int | Random = 0, maxdigits=28):
+        self.rnd = rnd
+        # TODO: accept list of non numeric types (categoric)?
+        prog = list2progression(values, maxdigits=maxdigits)
+        if prog.n.is_infinite():  # pragma: no cover
+            raise Exception(f&#34;Cannot sample from an infinite list: {prog}&#34;)
+        self.values = prog
+
+    def sample(self, rnd: int | Random = None):
+        if rnd is None:
+            rnd = self.rnd
+        if isinstance(rnd, int):
+            rnd = Random(rnd)
+        if not isinstance(rnd, Random):  # pragma: no cover
+            raise Exception(f&#34;Sampling needs an integer seed or a Random object.&#34;)
+        idx = rnd.randint(0, self.values.n - 1)
+        return value(self.values[idx])
+
+    def __repr__(self):
+        return f&#34;~{self.values}&#34;</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="hdict.content.argument.AbsMetaArgument" href="content/argument/index.html#hdict.content.argument.AbsMetaArgument">AbsMetaArgument</a></li>
+<li><a title="hdict.content.argument.AbsArgument" href="content/argument/index.html#hdict.content.argument.AbsArgument">AbsArgument</a></li>
+<li><a title="hdict.abs.AbsAny" href="abs/index.html#hdict.abs.AbsAny">AbsAny</a></li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="hdict.sample.sampleable"><code class="name">var <span class="ident">sampleable</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="hdict.sample.sample"><code class="name flex">
+<span>def <span class="ident">sample</span></span>(<span>self, rnd: int | random.Random = None)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sample(self, rnd: int | Random = None):
+    if rnd is None:
+        rnd = self.rnd
+    if isinstance(rnd, int):
+        rnd = Random(rnd)
+    if not isinstance(rnd, Random):  # pragma: no cover
+        raise Exception(f&#34;Sampling needs an integer seed or a Random object.&#34;)
+    idx = rnd.randint(0, self.values.n - 1)
+    return value(self.values[idx])</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="hdict.value"><code class="flex name class">
+<span>class <span class="ident">value</span></span>
+<span>(</span><span>val: object, hosh: hosh.hosh_.Hosh | str = None, hdict=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Wrapper for any Python object except AbsAny instances</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; x = 5
+&gt;&gt;&gt; from hdict.content.value import value
+&gt;&gt;&gt; v = value(x, &quot;1234567890123456789012345678901234567890&quot;)
+&gt;&gt;&gt; v
+5
+&gt;&gt;&gt; v.hosh.id
+'1234567890123456789012345678901234567890'
+</code></pre>
+<h2 id="args">Args</h2>
+<dl>
+<dt>val:</dt>
+<dt>hosh:</dt>
+<dt><strong><code>hdict</code></strong></dt>
+<dd>optional reference to the object if it has a hdict counterpart (e.g.: pandas DF)</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class value(AbsBaseArgument, AbsEntry):
+    &#34;&#34;&#34;
+    Wrapper for any Python object except AbsAny instances
+
+    &gt;&gt;&gt; x = 5
+    &gt;&gt;&gt; from hdict.content.value import value
+    &gt;&gt;&gt; v = value(x, &#34;1234567890123456789012345678901234567890&#34;)
+    &gt;&gt;&gt; v
+    5
+    &gt;&gt;&gt; v.hosh.id
+    &#39;1234567890123456789012345678901234567890&#39;
+
+    &#34;&#34;&#34;
+
+    isevaluated = True
+
+    def __init__(self, val: object, hosh: Hosh | str = None, hdict=None):
+        &#34;&#34;&#34;
+
+        Args:
+            val:
+            hosh:
+            hdict:  optional reference to the object if it has a hdict counterpart (e.g.: pandas DF)
+        &#34;&#34;&#34;
+        from hdict.abs import AbsAny
+
+        if isinstance(val, AbsAny):  # pragma: no cover
+            raise Exception(f&#34;Cannot handle objects of type &#39;{type(val).__name__}&#39; as raw values for hdict.&#34;)
+        self.value = self._value = val
+        if isinstance(hosh, str):
+            hosh = Hosh.fromid(hosh)
+        self.hosh = v2hosh(self.value) if hosh is None else hosh
+        self.hdict = hdict
+
+    def __repr__(self):
+        return repr(self.value)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="hdict.content.argument.AbsBaseArgument" href="content/argument/index.html#hdict.content.argument.AbsBaseArgument">AbsBaseArgument</a></li>
+<li><a title="hdict.content.argument.AbsArgument" href="content/argument/index.html#hdict.content.argument.AbsArgument">AbsArgument</a></li>
+<li><a title="hdict.content.entry.AbsEntry" href="content/entry/index.html#hdict.content.entry.AbsEntry">AbsEntry</a></li>
+<li><a title="hdict.abs.AbsAny" href="abs/index.html#hdict.abs.AbsAny">AbsAny</a></li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="hdict.content.entry.AbsEntry" href="content/entry/index.html#hdict.content.entry.AbsEntry">AbsEntry</a></b></code>:
+<ul class="hlist">
+<li><code><a title="hdict.content.entry.AbsEntry.isevaluated" href="content/entry/index.html#hdict.content.entry.AbsEntry.isevaluated">isevaluated</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3><a href="#header-submodules">Sub-modules</a></h3>
+<ul>
+<li><code><a title="hdict.abs" href="abs/index.html">hdict.abs</a></code></li>
+<li><code><a title="hdict.applyout" href="applyout.html">hdict.applyout</a></code></li>
+<li><code><a title="hdict.aux_frozendict" href="aux_frozendict.html">hdict.aux_frozendict</a></code></li>
+<li><code><a title="hdict.content" href="content/index.html">hdict.content</a></code></li>
+<li><code><a title="hdict.customjson" href="customjson.html">hdict.customjson</a></code></li>
+<li><code><a title="hdict.data" href="data/index.html">hdict.data</a></code></li>
+<li><code><a title="hdict.empty_" href="empty_.html">hdict.empty_</a></code></li>
+<li><code><a title="hdict.expr" href="expr.html">hdict.expr</a></code></li>
+<li><code><a title="hdict.hdict_" href="hdict_.html">hdict.hdict_</a></code></li>
+<li><code><a title="hdict.hoshfication" href="hoshfication.html">hdict.hoshfication</a></code></li>
+<li><code><a title="hdict.indexeddict" href="indexeddict.html">hdict.indexeddict</a></code></li>
+<li><code><a title="hdict.multioutput" href="multioutput.html">hdict.multioutput</a></code></li>
+<li><code><a title="hdict.pandas_handling" href="pandas_handling.html">hdict.pandas_handling</a></code></li>
+<li><code><a title="hdict.persistence" href="persistence/index.html">hdict.persistence</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="hdict.apply" href="#hdict.apply">apply</a></code></h4>
+<ul class="two-column">
+<li><code><a title="hdict.apply.ahosh" href="#hdict.apply.ahosh">ahosh</a></code></li>
+<li><code><a title="hdict.apply.clone" href="#hdict.apply.clone">clone</a></code></li>
+<li><code><a title="hdict.apply.enclosure" href="#hdict.apply.enclosure">enclosure</a></code></li>
+<li><code><a title="hdict.apply.isfield" href="#hdict.apply.isfield">isfield</a></code></li>
+<li><code><a title="hdict.apply.requirements" href="#hdict.apply.requirements">requirements</a></code></li>
+<li><code><a title="hdict.apply.sample" href="#hdict.apply.sample">sample</a></code></li>
+<li><code><a title="hdict.apply.sampleable" href="#hdict.apply.sampleable">sampleable</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="hdict.field" href="#hdict.field">field</a></code></h4>
+<ul class="">
+<li><code><a title="hdict.field.name" href="#hdict.field.name">name</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="hdict.frozenhdict" href="#hdict.frozenhdict">frozenhdict</a></code></h4>
+<ul class="">
+<li><code><a title="hdict.frozenhdict.asdict" href="#hdict.frozenhdict.asdict">asdict</a></code></li>
+<li><code><a title="hdict.frozenhdict.asdicts" href="#hdict.frozenhdict.asdicts">asdicts</a></code></li>
+<li><code><a title="hdict.frozenhdict.asdicts_hoshes_noneval" href="#hdict.frozenhdict.asdicts_hoshes_noneval">asdicts_hoshes_noneval</a></code></li>
+<li><code><a title="hdict.frozenhdict.asdicts_noid" href="#hdict.frozenhdict.asdicts_noid">asdicts_noid</a></code></li>
+<li><code><a title="hdict.frozenhdict.astext" href="#hdict.frozenhdict.astext">astext</a></code></li>
+<li><code><a title="hdict.frozenhdict.copy" href="#hdict.frozenhdict.copy">copy</a></code></li>
+<li><code><a title="hdict.frozenhdict.evaluate" href="#hdict.frozenhdict.evaluate">evaluate</a></code></li>
+<li><code><a title="hdict.frozenhdict.evaluated" href="#hdict.frozenhdict.evaluated">evaluated</a></code></li>
+<li><code><a title="hdict.frozenhdict.fetch" href="#hdict.frozenhdict.fetch">fetch</a></code></li>
+<li><code><a title="hdict.frozenhdict.fromdict" href="#hdict.frozenhdict.fromdict">fromdict</a></code></li>
+<li><code><a title="hdict.frozenhdict.items" href="#hdict.frozenhdict.items">items</a></code></li>
+<li><code><a title="hdict.frozenhdict.keys" href="#hdict.frozenhdict.keys">keys</a></code></li>
+<li><code><a title="hdict.frozenhdict.load" href="#hdict.frozenhdict.load">load</a></code></li>
+<li><code><a title="hdict.frozenhdict.save" href="#hdict.frozenhdict.save">save</a></code></li>
+<li><code><a title="hdict.frozenhdict.show" href="#hdict.frozenhdict.show">show</a></code></li>
+<li><code><a title="hdict.frozenhdict.unfrozen" href="#hdict.frozenhdict.unfrozen">unfrozen</a></code></li>
+<li><code><a title="hdict.frozenhdict.values" href="#hdict.frozenhdict.values">values</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="hdict.hdict" href="#hdict.hdict">hdict</a></code></h4>
+</li>
+<li>
+<h4><code><a title="hdict.sample" href="#hdict.sample">sample</a></code></h4>
+<ul class="">
+<li><code><a title="hdict.sample.sample" href="#hdict.sample.sample">sample</a></code></li>
+<li><code><a title="hdict.sample.sampleable" href="#hdict.sample.sampleable">sampleable</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="hdict.value" href="#hdict.value">value</a></code></h4>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>

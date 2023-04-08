@@ -1,0 +1,515 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.10.0" />
+<title>hdict.data.dataset API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>hdict.data.dataset</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">#  Copyright (c) 2021. Davi Pereira dos Santos
+#  This file is part of the hdict project.
+#  Please respect the license - more about this in the section (*) below.
+#
+#  hdict is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  hdict is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with hdict.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+#
+#  (*) Removing authorship by any means, e.g. by distribution of derived
+#  works or verbatim, obfuscated, compiled or rewritten versions of any
+#  part of this work is illegal and it is unethical regarding the effort and
+#  time spent here.
+#
+
+# library arff2pandas simply disappeared...
+import re
+
+
+def isplit(source, sep=None, regex=False):
+    &#34;&#34;&#34;
+    https://stackoverflow.com/a/9773142/9681577
+
+    generator version of str.split()
+
+    :param source:
+        source string (unicode or bytes)
+
+    :param sep:
+        separator to split on.
+
+    :param regex:
+        if True, will treat sep as regular expression.
+
+    :returns:
+        generator yielding elements of string.
+    &#34;&#34;&#34;
+    if sep is None:
+        # mimic default python behavior
+        source = source.strip()
+        sep = &#34;\\s+&#34;
+        if isinstance(source, bytes):
+            sep = sep.encode(&#34;ascii&#34;)
+        regex = True
+    if regex:
+        # version using re.finditer()
+        if not hasattr(sep, &#34;finditer&#34;):
+            sep = re.compile(sep)
+        start = 0
+        for m in sep.finditer(source):
+            idx = m.start()
+            assert idx &gt;= start
+            yield source[start:idx]
+            start = m.end()
+        yield source[start:]
+    else:
+        # version using str.find(), less overhead than re.finditer()
+        sepsize = len(sep)
+        start = 0
+        while True:
+            idx = source.find(sep, start)
+            if idx == -1:
+                yield source[start:]
+                return
+            yield source[start:idx]
+            start = idx + sepsize
+
+
+def liac2pandas(arff):
+    import pandas as pd
+
+    attrs = arff[&#34;attributes&#34;]
+    attrs_t = []
+    for attr in attrs:
+        if isinstance(attr[1], list):
+            attrs_t.append(&#34;%s@{%s}&#34; % (attr[0], &#34;,&#34;.join(attr[1])))
+        else:
+            attrs_t.append(&#34;%s@%s&#34; % (attr[0], attr[1]))
+
+    df = pd.DataFrame(data=arff[&#34;data&#34;], columns=attrs_t)
+    return df
+
+
+def load(fp):
+    import arff as liacarff
+
+    data = liacarff.load(fp)
+    return liac2pandas(data)
+
+
+def loads(s):
+    import arff as liacarff
+
+    data = liacarff.loads(s)
+    return liac2pandas(data)
+
+
+def df2liac(df, relation=&#34;data&#34;, description=&#34;&#34;):
+    attrs = []
+    for col in df.columns:
+        attr = col.split(&#34;@&#34;)
+        if attr[1].count(&#34;{&#34;) &gt; 0 and attr[1].count(&#34;}&#34;) &gt; 0:
+            vals = attr[1].replace(&#34;{&#34;, &#34;&#34;).replace(&#34;}&#34;, &#34;&#34;).split(&#34;,&#34;)
+            attrs.append((attr[0], vals))
+        else:
+            attrs.append((attr[0], attr[1]))
+
+    data = list(df.values)
+    result = {&#34;attributes&#34;: attrs, &#34;data&#34;: data, &#34;description&#34;: description, &#34;relation&#34;: relation}
+    return result
+
+
+def dump(df, fp):
+    import arff as liacarff
+
+    arff = df2liac(df)
+    liacarff.dump(arff, fp)
+
+
+def dumps(df):
+    import arff as liacarff
+
+    arff = df2liac(df)
+    return liacarff.dumps(arff)
+
+
+def df2Xy(input=&#34;df&#34;, Xout=&#34;X&#34;, yout=&#34;y&#34;, **kwargs):
+    from sklearn.preprocessing import LabelEncoder
+
+    le = LabelEncoder()
+    df = kwargs[input]
+    X_ = df.drop(df.columns[[-1]], axis=1)
+    y_ = le.fit_transform(df[df.columns[-1]])
+    return {Xout: X_, yout: y_, &#34;_history&#34;: ...}
+
+
+#
+#
+# def df2arff(input=&#34;df&#34;, output=&#34;arff&#34;, **kwargs):
+#     &#34;&#34;&#34;
+#     &gt;&gt;&gt; from idict import let, idict
+#     &gt;&gt;&gt; d = idict.fromminiarff()
+#     &gt;&gt;&gt; d &gt;&gt;= let(df2arff, output=&#34;a&#34;)
+#     &gt;&gt;&gt; d.show(colored=False)
+#     {
+#         &#34;a&#34;: &#34;→(input output df)&#34;,
+#         &#34;_history&#34;: &#34;idict---------arff2pandas-1.0.1--df2arff&#34;,
+#         &#34;df&#34;: &#34;«{&#39;attr1@REAL&#39;: {0: 5.1, 1: 3.1}, &#39;attr2@REAL&#39;: {0: 3.5, 1: 4.5}, &#39;class@{0,1}&#39;: {0: &#39;0&#39;, 1: &#39;1&#39;}}»&#34;,
+#         &#34;_id&#34;: &#34;Ojq9k7ZSbVjwLGlZ7uuqIyhoJPo.p36mAmav2Wul&#34;,
+#         &#34;_ids&#34;: {
+#             &#34;a&#34;: &#34;wVPgESiPwobfFLLm591BKw6i2Zn.p36mAmav2Wul&#34;,
+#             &#34;_history&#34;: &#34;D2NpAYrhyJW-.nOhh91ttSjrbGw.nZ8qxps9giws&#34;,
+#             &#34;df&#34;: &#34;q3_b71eb05c4be05eba7b6ae5a9245d5dd70b81b (content: 6X_dc8ccea3b2e46f1c78967fae98b692701dc99)&#34;
+#         }
+#     }
+#     &gt;&gt;&gt; d.a
+#     &#39;@RELATION data\\n\\n@ATTRIBUTE attr1 REAL\\n@ATTRIBUTE attr2 REAL\\n@ATTRIBUTE class {0, 1}\\n\\n@DATA\\n5.1,3.5,0\\n3.1,4.5,1\\n&#39;
+#     &#34;&#34;&#34;
+#     return {output: dumps(kwargs[input]), &#34;_history&#34;: ...}
+#
+#
+# def openml(Xout=&#34;X&#34;, yout=&#34;y&#34;, name=&#34;iris&#34;, version=1):
+#     &#34;&#34;&#34;
+#     #&gt;&gt;&gt; from idict import Ø
+#     #&gt;&gt;&gt; (Ø &gt;&gt; openml).show(colored=False)
+#     #{
+#         #&#34;X&#34;: &#34;→(Xout yout name version)&#34;,
+#         #&#34;y&#34;: &#34;→(Xout yout name version)&#34;,
+#         #&#34;_history&#34;: &#34;idict--------------sklearn-1.0.1--openml&#34;,
+#         #&#34;_id&#34;: &#34;idict--------------sklearn-1.0.1--openml&#34;,
+#         #&#34;_ids&#34;: {
+#             #&#34;X&#34;: &#34;KkSoAvgPmGq52PvPBqGFCEp9cSUCfb7eht9VpUdr&#34;,
+#             #&#34;y&#34;: &#34;HOE9E-HnFYen6JNRC9cHgAamJlOWGYTPIVKvQu8W&#34;,
+#             #&#34;_history&#34;: &#34;Efw0ebrPTxTiuJ.ZpVt-MvB62ja.kmrOYzrn-ljf&#34;
+#         #}
+#     #}
+#     #&gt;&gt;&gt; (Ø &gt;&gt; openml).X.head()
+#        #sepallength  sepalwidth  petallength  petalwidth
+#     #0          5.1         3.5          1.4         0.2
+#     #1          4.9         3.0          1.4         0.2
+#     #2          4.7         3.2          1.3         0.2
+#     #3          4.6         3.1          1.5         0.2
+#     #4          5.0         3.6          1.4         0.2
+#     #&gt;&gt;&gt; (Ø &gt;&gt; openml).y.head()
+#     #0    Iris-setosa
+#     #1    Iris-setosa
+#     #2    Iris-setosa
+#     #3    Iris-setosa
+#     #4    Iris-setosa
+#     #Name: class, dtype: category
+#     #Categories (3, object): [&#39;Iris-setosa&#39;, &#39;Iris-versicolor&#39;, &#39;Iris-virginica&#39;]
+#     &#34;&#34;&#34;
+#     from sklearn.datasets import fetch_openml
+#
+#     X, y = fetch_openml(name=name, version=version, as_frame=True, return_X_y=True)
+#     return {Xout: X, yout: y, &#34;_history&#34;: ...}
+#
+#
+# def arff2df(input=&#34;arff&#34;, output=&#34;df&#34;, **kwargs):
+#     r&#34;&#34;&#34;
+#     &gt;&gt;&gt; from idict import let, idict
+#     &gt;&gt;&gt; d = idict.fromminiarff(output=[&#34;arff&#34;], output_format=&#34;arff&#34;)
+#     &gt;&gt;&gt; d.arff
+#     &#39;@RELATION mini\n@ATTRIBUTE attr1\tREAL\n@ATTRIBUTE attr2 \tREAL\n@ATTRIBUTE class \t{0,1}\n@DATA\n5.1,3.5,0\n3.1,4.5,1&#39;
+#     &gt;&gt;&gt; d &gt;&gt;= arff2df  # doctest: +SKIP
+#     &gt;&gt;&gt; d.show(colored=False)    # doctest: +SKIP +ELLIPSIS
+#     {
+#         &#34;df&#34;: &#34;→(input output arff)&#34;,
+#         &#34;_name&#34;: &#34;→(input output arff)&#34;,
+#         &#34;_history&#34;: &#34;idict---------arff2pandas-1.0.1--arff2df&#34;,
+#         &#34;arff&#34;: &#34;@RELATION mini\n@ATTRIBUTE attr1\tREAL\n@ATTRIBUTE attr2 \tREAL\n@ATTRIBUTE class \t{0,1}\n@DATA\n5.1,3.5,0\n3.1,4.5,1&#34;,
+#         &#34;_id&#34;: &#34;XraBH1sOCC.9ohqV3hfIRTE5FV3.0.1--arff2df&#34;,
+#         &#34;_ids&#34;: {
+#             &#34;df&#34;: &#34;VNy1otmyPSLXWCKAYbZRtNqMdW3.0.1--arff2df&#34;,
+#             &#34;_name&#34;: &#34;K4gZ2YDXBHOHwPzYufHChxkfhSz7ZAr--YbuHM-o&#34;,
+#             &#34;_history&#34;: &#34;VaU.REn8zFBQtEWngL.FYvWCowT0aeZPmXg35hCs&#34;,
+#             &#34;arff&#34;: &#34;Z._c3e2b235b697e9734b9ec13084129dc30e45b (content: Ev_8bb973161e5ae900c5743b3c332b4a64d1955)&#34;
+#         }
+#     }
+#     &gt;&gt;&gt; d.df   # doctest: +SKIP
+#        attr1@REAL  attr2@REAL class@{0,1}
+#     0         5.1         3.5           0
+#     1         3.1         4.5           1
+#     &#34;&#34;&#34;
+#     relation = &#34;&lt;Unnamed&gt;&#34;
+#     with StringIO() as f:
+#         f.write(kwargs[input])
+#         text = f.getvalue()
+#         df = loads(text)
+#         for line in isplit(text, &#34;\n&#34;):
+#             if line[:9].upper() == &#34;@RELATION&#34;:
+#                 relation = line[9:].strip()
+#                 break
+#
+#     return {output: df, &#34;_name&#34;: relation, &#34;_history&#34;: ...}
+#</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="hdict.data.dataset.df2Xy"><code class="name flex">
+<span>def <span class="ident">df2Xy</span></span>(<span>input='df', Xout='X', yout='y', **kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def df2Xy(input=&#34;df&#34;, Xout=&#34;X&#34;, yout=&#34;y&#34;, **kwargs):
+    from sklearn.preprocessing import LabelEncoder
+
+    le = LabelEncoder()
+    df = kwargs[input]
+    X_ = df.drop(df.columns[[-1]], axis=1)
+    y_ = le.fit_transform(df[df.columns[-1]])
+    return {Xout: X_, yout: y_, &#34;_history&#34;: ...}</code></pre>
+</details>
+</dd>
+<dt id="hdict.data.dataset.df2liac"><code class="name flex">
+<span>def <span class="ident">df2liac</span></span>(<span>df, relation='data', description='')</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def df2liac(df, relation=&#34;data&#34;, description=&#34;&#34;):
+    attrs = []
+    for col in df.columns:
+        attr = col.split(&#34;@&#34;)
+        if attr[1].count(&#34;{&#34;) &gt; 0 and attr[1].count(&#34;}&#34;) &gt; 0:
+            vals = attr[1].replace(&#34;{&#34;, &#34;&#34;).replace(&#34;}&#34;, &#34;&#34;).split(&#34;,&#34;)
+            attrs.append((attr[0], vals))
+        else:
+            attrs.append((attr[0], attr[1]))
+
+    data = list(df.values)
+    result = {&#34;attributes&#34;: attrs, &#34;data&#34;: data, &#34;description&#34;: description, &#34;relation&#34;: relation}
+    return result</code></pre>
+</details>
+</dd>
+<dt id="hdict.data.dataset.dump"><code class="name flex">
+<span>def <span class="ident">dump</span></span>(<span>df, fp)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def dump(df, fp):
+    import arff as liacarff
+
+    arff = df2liac(df)
+    liacarff.dump(arff, fp)</code></pre>
+</details>
+</dd>
+<dt id="hdict.data.dataset.dumps"><code class="name flex">
+<span>def <span class="ident">dumps</span></span>(<span>df)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def dumps(df):
+    import arff as liacarff
+
+    arff = df2liac(df)
+    return liacarff.dumps(arff)</code></pre>
+</details>
+</dd>
+<dt id="hdict.data.dataset.isplit"><code class="name flex">
+<span>def <span class="ident">isplit</span></span>(<span>source, sep=None, regex=False)</span>
+</code></dt>
+<dd>
+<div class="desc"><p><a href="https://stackoverflow.com/a/9773142/9681577">https://stackoverflow.com/a/9773142/9681577</a></p>
+<p>generator version of str.split()</p>
+<p>:param source:
+source string (unicode or bytes)</p>
+<p>:param sep:
+separator to split on.</p>
+<p>:param regex:
+if True, will treat sep as regular expression.</p>
+<p>:returns:
+generator yielding elements of string.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def isplit(source, sep=None, regex=False):
+    &#34;&#34;&#34;
+    https://stackoverflow.com/a/9773142/9681577
+
+    generator version of str.split()
+
+    :param source:
+        source string (unicode or bytes)
+
+    :param sep:
+        separator to split on.
+
+    :param regex:
+        if True, will treat sep as regular expression.
+
+    :returns:
+        generator yielding elements of string.
+    &#34;&#34;&#34;
+    if sep is None:
+        # mimic default python behavior
+        source = source.strip()
+        sep = &#34;\\s+&#34;
+        if isinstance(source, bytes):
+            sep = sep.encode(&#34;ascii&#34;)
+        regex = True
+    if regex:
+        # version using re.finditer()
+        if not hasattr(sep, &#34;finditer&#34;):
+            sep = re.compile(sep)
+        start = 0
+        for m in sep.finditer(source):
+            idx = m.start()
+            assert idx &gt;= start
+            yield source[start:idx]
+            start = m.end()
+        yield source[start:]
+    else:
+        # version using str.find(), less overhead than re.finditer()
+        sepsize = len(sep)
+        start = 0
+        while True:
+            idx = source.find(sep, start)
+            if idx == -1:
+                yield source[start:]
+                return
+            yield source[start:idx]
+            start = idx + sepsize</code></pre>
+</details>
+</dd>
+<dt id="hdict.data.dataset.liac2pandas"><code class="name flex">
+<span>def <span class="ident">liac2pandas</span></span>(<span>arff)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def liac2pandas(arff):
+    import pandas as pd
+
+    attrs = arff[&#34;attributes&#34;]
+    attrs_t = []
+    for attr in attrs:
+        if isinstance(attr[1], list):
+            attrs_t.append(&#34;%s@{%s}&#34; % (attr[0], &#34;,&#34;.join(attr[1])))
+        else:
+            attrs_t.append(&#34;%s@%s&#34; % (attr[0], attr[1]))
+
+    df = pd.DataFrame(data=arff[&#34;data&#34;], columns=attrs_t)
+    return df</code></pre>
+</details>
+</dd>
+<dt id="hdict.data.dataset.load"><code class="name flex">
+<span>def <span class="ident">load</span></span>(<span>fp)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def load(fp):
+    import arff as liacarff
+
+    data = liacarff.load(fp)
+    return liac2pandas(data)</code></pre>
+</details>
+</dd>
+<dt id="hdict.data.dataset.loads"><code class="name flex">
+<span>def <span class="ident">loads</span></span>(<span>s)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def loads(s):
+    import arff as liacarff
+
+    data = liacarff.loads(s)
+    return liac2pandas(data)</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="hdict.data" href="index.html">hdict.data</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="two-column">
+<li><code><a title="hdict.data.dataset.df2Xy" href="#hdict.data.dataset.df2Xy">df2Xy</a></code></li>
+<li><code><a title="hdict.data.dataset.df2liac" href="#hdict.data.dataset.df2liac">df2liac</a></code></li>
+<li><code><a title="hdict.data.dataset.dump" href="#hdict.data.dataset.dump">dump</a></code></li>
+<li><code><a title="hdict.data.dataset.dumps" href="#hdict.data.dataset.dumps">dumps</a></code></li>
+<li><code><a title="hdict.data.dataset.isplit" href="#hdict.data.dataset.isplit">isplit</a></code></li>
+<li><code><a title="hdict.data.dataset.liac2pandas" href="#hdict.data.dataset.liac2pandas">liac2pandas</a></code></li>
+<li><code><a title="hdict.data.dataset.load" href="#hdict.data.dataset.load">load</a></code></li>
+<li><code><a title="hdict.data.dataset.loads" href="#hdict.data.dataset.loads">loads</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>
