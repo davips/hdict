@@ -24,7 +24,7 @@
 import json
 import re
 from collections import UserDict
-from typing import TypeVar
+from typing import TypeVar, Union
 
 from hdict.content.entry import AbsEntry
 from hdict.customjson import CustomJSONEncoder, stringfy
@@ -315,7 +315,7 @@ class frozenhdict(UserDict, dict[str, VT]):
         txt = re.sub(r'(": )"(λ.+?)"(?=,\n)', '": \\2', txt)
         if not key_quotes:
             txt = re.sub(r'(?<!: )"([\-a-zA-Z0-9_ ]+?)"(?=: )', "\\1", txt)
-        return txt
+        return txt.replace('"§«§lazy', '').replace('lazy§«§"', '')
 
     def show(self, colored=True, key_quotes=False):
         r"""Print textual representation of a frozenidict object"""
@@ -357,37 +357,53 @@ class frozenhdict(UserDict, dict[str, VT]):
             # if not k.startswith("_"):
             yield k, (val.value if evaluate else val)
 
-    # @cached_property
-    # def aslist(self):
-    #     return list(self.values())
-    #
-    # @staticmethod
-    # def fromid(id, cache) -> Union["frozenhdict", None]:
-    #     return frozenhdict.fetch(id, cache, isidict=True)
-    #
-    # @staticmethod
-    # def fetch(id, cache, isidict=False) -> Union["frozenhdict", None]:
-    #     caches = cache if isinstance(cache, list) else [cache]
-    #     while id not in (cache := caches.pop(0)):
-    #         if not caches:
-    #             raise Exception(f"id '{id}' not found in the provided cache {cache.keys()}.")
-    #
-    #     obj = cache[id]
-    #     if isinstance(obj, dict):
-    #         if "_ids" not in obj:
-    #             raise Exception(f"Wrong content for idict under id {id}: missing '_ids' fields ({obj.keys()}).")
-    #         isidict = True
-    #     elif isidict:
-    #         raise Exception(f"Wrong content for idict expected under id {id}: {type(obj)}.")
-    #
-    #     # TODO: adopt lazy fetch: CacheableiVal as 'return' value
-    #     if isidict:
-    #         ids = obj["_ids"]
-    #         data = {}
-    #         for k, v in ids.items():
-    #             data[k] = frozenhdict.fetch(v, cache)
-    #         return frozenhdict.fromdict(data, ids)
-    #     return obj
+    def save(self, cache: dict):
+        """
+        Store an entire frozenidict
+        """
+        data = {self.id: self.ids}
+        for field, fid in self.ids.items():
+            value = self[field]
+            if isinstance(value, frozenhdict):
+                value.save(cache)
+            else:
+                data[fid] = value
+        cache.update(data)
+
+    @staticmethod
+    def load(id, cache: dict | list, lazy=True) -> Union["frozenhdict", None]:
+        """
+        Fetch an entire frozenidict
+        """
+        if len(id) != 40:  # pragma: no cover
+            raise Exception(f"id should have lenght of 40, not {len(id)}")
+        return frozenhdict.fetch(id, cache, lazy, ishdict=True)
+
+    @staticmethod
+    def fetch(id, cache, lazy=True, ishdict=False) -> Union["frozenhdict", None]:
+        """
+        Fetch a single entry
+
+        When cache is a list, traverse it from the end (right item to the left item).
+        """
+        from hdict.content.entry.lazy import Lazy
+        caches = cache if isinstance(cache, list) else [cache]
+        while id not in (cache := caches.pop()):
+            if not caches:
+                raise Exception(f"id '{id}' not found in the provided cache {cache.keys()}.")
+        obj = cache[id]
+        if isinstance(obj, dict):
+            ishdict = True  # Set to True, because now we have a nested frozenhdict
+        elif ishdict:
+            raise Exception(f"Wrong content for idict expected under id {id}: {type(obj)}.")
+
+        if ishdict:
+            ids = obj
+            data = {}
+            for field, fid in ids.items():
+                data[field] = Lazy(fid, cache) if lazy else frozenhdict.fetch(fid, cache, lazy, False)
+            return frozenhdict.fromdict(data, ids)
+        return obj
 
     def __eq__(self, other):
         if isinstance(other, dict):
@@ -404,13 +420,6 @@ class frozenhdict(UserDict, dict[str, VT]):
 
     def __ne__(self, other):
         return not (self == other)
-
-    # def __reduce__(self):
-    #     # TODO: pickling idicts shouldn't be necessary after cache[id]=DFiVal is implemented
-    #     dic = self.data.copy()
-    #     ids = dic.pop("_ids").copy()
-    #     del dic["_id"]
-    #     return self.fromdict, (dic, ids)
 
     def __repr__(self):
         return self.astext()

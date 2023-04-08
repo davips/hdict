@@ -28,6 +28,8 @@ from hdict.frozenhdict import frozenhdict
 VT = TypeVar("VT")
 
 
+# TODO: finish all '*' combinations and check all '>>' to see when to generate hdict and when to generate Expr.
+
 class hdict_(dict[str, VT]):
     """
     This class was created only due to slowness of IDE created by excessive doctests in the main file.
@@ -253,25 +255,95 @@ class hdict_(dict[str, VT]):
     def __hash__(self):  # pragma: no cover
         raise Exception(f"hdict is not hashble. Please use hdict.frozen instead.")
 
-    def fromid(self, id, cache) -> Union["hdict", None]:
+    def save(self, cache: dict):
         """
+        Store an entire hdict
+
+        >>> from hdict import hdict, apply
+        >>> from shelchemy import Cache
+        >>> cache = Cache("sqlite+pysqlite:////tmp/a78tyusd")
+        >>> d = hdict(x=3, y=7, z=hdict(z=9)) >> apply(lambda x, y: x/y).w
+        >>> d.show(colored=False)
+        {
+            x: 3,
+            y: 7,
+            z: {
+                z: 9,
+                _id: izn67XbX0tQNF6E5qkwniN2jxZg5MT6f7z5AJzPM,
+                _ids: {
+                    z: GuwIQCrendfKXZr5jGfrUwoP-8TWMhmLHYrja2yj
+                }
+            },
+            w: λ(x y),
+            _id: s3aPQRspwLR81It8zlXsD3Da1Gg76DGSDe841d0b,
+            _ids: {
+                x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+                y: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf,
+                z: izn67XbX0tQNF6E5qkwniN2jxZg5MT6f7z5AJzPM,
+                w: vo3qMHk3Ef-O065cO-sb4MLHq69x6bKSU694sREJ
+            }
+        }
+        >>> d.save(cache)
+        >>> cache
+        {'izn67XbX0tQNF6E5qkwniN2jxZg5MT6f7z5AJzPM': {'z': 'GuwIQCrendfKXZr5jGfrUwoP-8TWMhmLHYrja2yj'}, 'GuwIQCrendfKXZr5jGfrUwoP-8TWMhmLHYrja2yj': 9, 's3aPQRspwLR81It8zlXsD3Da1Gg76DGSDe841d0b': {'x': 'KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr', 'y': 'eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf', 'z': 'izn67XbX0tQNF6E5qkwniN2jxZg5MT6f7z5AJzPM', 'w': 'vo3qMHk3Ef-O065cO-sb4MLHq69x6bKSU694sREJ'}, 'KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr': 3, 'eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf': 7, 'vo3qMHk3Ef-O065cO-sb4MLHq69x6bKSU694sREJ': 0.42857142857142855}
+        >>> e = hdict.load(d.id, cache)
+        >>> e.show(colored=False)
+        {
+            x: «lazy value at cache `Cache`»,
+            y: «lazy value at cache `Cache`»,
+            z: «lazy value at cache `Cache`»,
+            w: «lazy value at cache `Cache`»,
+            _id: s3aPQRspwLR81It8zlXsD3Da1Gg76DGSDe841d0b,
+            _ids: {
+                x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+                y: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf,
+                z: izn67XbX0tQNF6E5qkwniN2jxZg5MT6f7z5AJzPM,
+                w: vo3qMHk3Ef-O065cO-sb4MLHq69x6bKSU694sREJ
+            }
+        }
+        >>> d.w
+        0.42857142857142855
+        >>> e.w
+        0.42857142857142855
+        >>> e.evaluate()
+        >>> e.show(colored=False)
+        {
+            x: 3,
+            y: 7,
+            z: {
+                z: "GuwIQCrendfKXZr5jGfrUwoP-8TWMhmLHYrja2yj"
+            },
+            w: 0.42857142857142855,
+            _id: s3aPQRspwLR81It8zlXsD3Da1Gg76DGSDe841d0b,
+            _ids: {
+                x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+                y: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf,
+                z: izn67XbX0tQNF6E5qkwniN2jxZg5MT6f7z5AJzPM,
+                w: vo3qMHk3Ef-O065cO-sb4MLHq69x6bKSU694sREJ
+            }
+        }
+        """
+        self.frozen.save(cache)
+
+    @staticmethod
+    def fetch(id, cache, lazy=True, ishdict=False) -> Union["frozenhdict", None]:
+        """
+        Fetch a single entry
+
+        When cache is a list, traverse it from the end (right item to the left item).
+        """
+        return frozenhdict.fetch(id, cache, lazy, ishdict).unfrozen
+
+    @staticmethod
+    def load(id, cache) -> Union["hdict", None]:
+        """
+        Fetch an entire hdict
+
         >>> from hdict import _
-        >>> cache = {}
+        >>> cache = {"1234567890123456789012345678901234567890": }
         >>> _.fromid()
         """
-        if len(id) != 40:  # pragma: no cover
-            raise Exception(f"id should have lenght of 40, not {len(id)}")
-        # if isinstance(id, Hosh):
-        #     id = Hosh.id
-
-        raise NotImplementedError
-        # TODO: checar for other types like Cache?
-        # cache_lst = ["<class 'shelchemy.core.Cache'>"]
-        # if not isinstance(_frozen__cache, (dict, Shelf, list)) and str(_frozen__cache.__class__) not in cache_lst:  # pragma: no cover
-        #     raise Exception("An id argument was provided, but a dict-like cache (or list of caches) is missing as the second argument.")
-        # if kwargs:  # pragma: no cover
-        #     raise Exception("Cannot pass more arguments when loading from cache (i.e., first argument is an id and the second argument is a dict-like cache).")
-        # self.frozen = frozenhdict.fromid(_dictionary__id, _frozen__cache)
+        return frozenhdict.load(id, cache).unfrozen
 
     @staticmethod
     def fromfile(name, fields=None, format="df", include_name=False):

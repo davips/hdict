@@ -16,9 +16,12 @@ lange = "^1.230203.2"
 # Optional dependencies.
 pandas = { version = "^1.5.2", optional = true }
 hosh = "^2.230205.2"
+shelchemy = { version = "^0.220906.3", optional = true }
+safeserializer = { version = "^0.230202.1", optional = true }
+lz4 = { version = "^4.3.2", optional = true }
 
 [tool.poetry.extras]    #[tool.poetry.group.extras.dependencies]
-full = ["pandas"]
+full = ["pandas", "shelchemy", "safeserializer", "lz4"]
 
 [tool.poetry.group.dev.dependencies]
 autoreadme = "^0.2102.20"
@@ -30,6 +33,9 @@ pylint = "^2.7.4"
 ipython = "^8.9.0"
 pandas = "^1.5.3"
 arff = "^0.9"
+shelchemy = "^0.220906.3"
+safeserializer = "^0.230202.1"
+lz4 = "^4.3.2"
 
 [build-system]
 requires = ["poetry-core"]
