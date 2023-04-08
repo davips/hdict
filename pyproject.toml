@@ -33,7 +33,7 @@ pylint = "^2.7.4"
 ipython = "^8.9.0"
 pandas = "^1.5.3"
 arff = "^0.9"
-shelchemy = "^0.220906.3"
+shelchemy = "^0.220906.5"
 safeserializer = "^0.230202.1"
 lz4 = "^4.3.2"
 

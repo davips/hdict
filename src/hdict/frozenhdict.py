@@ -202,13 +202,13 @@ class frozenhdict(UserDict, dict[str, VT]):
     @property
     def evaluated(self):
         if self._evaluated is None:
-            self._evaluated = self.evaluate()
+            for k, val in self.data.items():
+                val.evaluate()
+            self._evaluated = self
         return self
 
     def evaluate(self):
-        for k, val in self.data.items():
-            val.evaluate()
-        return self
+        _ = self.evaluated
 
     @property
     def asdict(self):

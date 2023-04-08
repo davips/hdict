@@ -253,7 +253,7 @@ class hdict_(dict[str, VT]):
         return self.frozen.items(evaluate)
 
     def __hash__(self):  # pragma: no cover
-        raise Exception(f"hdict is not hashble. Please use hdict.frozen instead.")
+        raise Exception(f"hdict is not hashable. Please use hdict.frozen instead.")
 
     def save(self, cache: dict):
         """
@@ -340,8 +340,27 @@ class hdict_(dict[str, VT]):
         Fetch an entire hdict
 
         >>> from hdict import _
-        >>> cache = {"1234567890123456789012345678901234567890": }
-        >>> _.fromid()
+        >>> fid = "1234567890123456789012345678901234567890"
+        >>> did = "0000567890123456789012345678901234567890"
+        >>> cache = {did: {"x": fid}, fid: 5}
+        >>> d = _.load(did, cache)
+        >>> d.show(colored=False)
+        {
+            x: «lazy value at cache `dict`»,
+            _id: kYzgpPdRgQSYSEpp1qt4EHQLQJXuyb2WDQS-iNPh,
+            _ids: {
+                x: 1234567890123456789012345678901234567890
+            }
+        }
+        >>> d.evaluate()
+        >>> d.show(colored=False)
+        {
+            x: 5,
+            _id: kYzgpPdRgQSYSEpp1qt4EHQLQJXuyb2WDQS-iNPh,
+            _ids: {
+                x: 1234567890123456789012345678901234567890
+            }
+        }
         """
         return frozenhdict.load(id, cache).unfrozen
 

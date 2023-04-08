@@ -1373,19 +1373,22 @@ full = ["dill (>=0.3.6,<0.4.0)", "lz4 (>=4.0.2,<5.0.0)", "pandas (>=1.4.3,<2.0.0
 
 [[package]]
 name = "shelchemy"
-version = "0.220906.3"
+version = "0.220906.5"
 description = "Shelve-like dict using sqlachemy as backend, and lazy scheduler for resuming tasks"
 category = "main"
 optional = false
 python-versions = ">=3.10,<4.0"
 files = [
-    {file = "shelchemy-0.220906.3-py3-none-any.whl", hash = "sha256:f6d289947a74ed4104d2faa74cad717035f411bba4cbb15e82de7d638d64dc2c"},
-    {file = "shelchemy-0.220906.3.tar.gz", hash = "sha256:9fd2a3abd264aa39bfc2fdd369c73017ff9e32d0486e73d5a783c0a5f86df7a8"},
+    {file = "shelchemy-0.220906.5-py3-none-any.whl", hash = "sha256:5a3d4900067dbe39ecb4979b923ddd0072bcf168d161d89219db7e5a55b04eb4"},
+    {file = "shelchemy-0.220906.5.tar.gz", hash = "sha256:e4ed1de8b764692d8a1c48ebff1ebab41e728003e3b262fba6dc161d6347fa27"},
 ]
 
 [package.dependencies]
 SQLAlchemy = ">=1.4.39,<2.0.0"
 temporenc = ">=0.1.0,<0.2.0"
+
+[package.extras]
+full = ["lz4 (>=4.0.2,<5.0.0)", "safeserializer (>=0.230202.1,<0.230203.0)"]
 
 [[package]]
 name = "six"
@@ -1687,4 +1690,4 @@ full = ["pandas", "shelchemy", "safeserializer", "lz4"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "2bd9708124c01756955bf30b4f3117024917ed5a94271616a49c8843a34a64fe"
+content-hash = "7ad9ddf9653c02116d6cc181bc5373b631150559db5e3044f3e9a6c5d0d1e08c"
