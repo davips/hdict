@@ -2,27 +2,37 @@ echo
 echo "----------------- updating poetry... -----------------------"
 poetry update
 poetry install --no-root --extras full
+
+#################################################################################
+#################################################################################
+echo ">>>>>>   install project package for IDE class hierarchy <<<<<<<<" 
+echo "          (to remove duplicates from IDE class hierarchy)"
+source /home/davi/.cache/pypoetry/virtualenvs/hdict-ZUd5y1Rg-py3.10/bin/activate
+pip install .
+#################################################################################
+#################################################################################
+
+
 echo "----------------- updated -----------------------"
 echo; echo
 
 echo
 echo "----------------- testing... -----------------------"
-read -p "press enter"
 poetry run pytest src tests --cov=src --doctest-modules  --cov-report term-missing
 echo "----------------- tested -----------------------"
 echo; echo
 
-echo
-echo "----------------- gh workflow testing... -----------------------"
-read -p "press enter"
+#echo
+#echo "----------------- gh workflow testing... -----------------------"
+#read -p "press enter"
 # sudo systemctl enable docker
 # sudo systemctl start docker
 # coverage xml
 # act -j build
 # sudo systemctl stop docker
 # sudo systemctl disable docker
-echo "----------------- gh workflow -----------------------"
-echo; echo
+#echo "----------------- gh workflow -----------------------"
+#echo; echo
 
 
 echo
@@ -38,12 +48,21 @@ echo "----------------- docs/black done -----------------------"
 echo; echo
 
 echo "---------------- readme ----------------"
-read -p "press enter"
 poetry run autoreadme -i README-edit.md -s examples/ -o README.md
 echo "---------------- readme done ----------------"
 echo; echo
 
-echo "--------------- version bump --------------"
+#################################################################################
+#################################################################################
+echo ">>>>>>   uninstall project package for IDE class hierarchy <<<<<<<<" 
+pip uninstall hdict -y
+deactivate
+#################################################################################
+#################################################################################
+
+
+
+echo "×××××××××××××××× version bump ××××××××××××××××"
 read -p "press enter"
 poetry version patch
 echo "--------------- version bumped --------------"
