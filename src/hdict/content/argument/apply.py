@@ -101,10 +101,12 @@ class apply(AbsBaseArgument):
     >>> apply(f,b=77,x=5).requirements
     {'a': field(a), 'b': 77, 'c': default(1), 'd': default(2), 'e': default(13), 'x': 5}
     """
+
     _sampleable, isfield, _requirements = None, False, None
 
     def __init__(self, appliable: callable | apply | field, *applied_args, fhosh: Hosh = None, _sampleable=None, **applied_kwargs):
         from hdict.content.argument.aux_apply import handle_args
+
         self.appliable = appliable
         if isinstance(fhosh, str):  # pragma: no cover
             fhosh = Hosh.fromid(fhosh)
@@ -168,6 +170,7 @@ class apply(AbsBaseArgument):
 
     def enclosure(self, data, key):
         from hdict.content.entry.closure import Closure
+
         return Closure(self, data, [key])
 
     def __call__(self, *out, **kwout):

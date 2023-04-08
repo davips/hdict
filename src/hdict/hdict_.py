@@ -20,7 +20,6 @@
 #  part of this work is illegal and it is unethical regarding the effort and
 #  time spent here.
 #
-from random import Random
 from typing import TypeVar, Union
 
 from hdict.frozenhdict import frozenhdict
@@ -29,6 +28,7 @@ VT = TypeVar("VT")
 
 
 # TODO: finish all '*' combinations and check all '>>' to see when to generate hdict and when to generate Expr.
+
 
 class hdict_(dict[str, VT]):
     """
@@ -64,9 +64,9 @@ class hdict_(dict[str, VT]):
     def __rshift__(self, other):
         from hdict.content.argument import AbsArgument
         from hdict.applyout import ApplyOut
+
         if isinstance(other, AbsArgument):  # pragma: no cover
-            raise Exception(f"Cannot pipe {type(other).__name__} without specifying output.\n"
-                            "Hint: d >> {'field name': object}")
+            raise Exception(f"Cannot pipe {type(other).__name__} without specifying output.\n" "Hint: d >> {'field name': object}")
         # REMINDER: dict includes hdict/frozenhdict.
         if isinstance(other, (dict, ApplyOut)):
             return (self.frozen >> other).unfrozen
@@ -260,8 +260,7 @@ class hdict_(dict[str, VT]):
         Store an entire hdict
 
         >>> from hdict import hdict, apply
-        >>> from shelchemy import Cache
-        >>> cache = Cache("sqlite+pysqlite:////tmp/a78tyusd")
+        >>> cache = {}
         >>> d = hdict(x=3, y=7, z=hdict(z=9)) >> apply(lambda x, y: x/y).w
         >>> d.show(colored=False)
         {
@@ -289,10 +288,10 @@ class hdict_(dict[str, VT]):
         >>> e = hdict.load(d.id, cache)
         >>> e.show(colored=False)
         {
-            x: «lazy value at cache `Cache`»,
-            y: «lazy value at cache `Cache`»,
-            z: «lazy value at cache `Cache`»,
-            w: «lazy value at cache `Cache`»,
+            x: «lazy value at cache `dict`»,
+            y: «lazy value at cache `dict`»,
+            z: «lazy value at cache `dict`»,
+            w: «lazy value at cache `dict`»,
             _id: s3aPQRspwLR81It8zlXsD3Da1Gg76DGSDe841d0b,
             _ids: {
                 x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
@@ -335,7 +334,7 @@ class hdict_(dict[str, VT]):
         return frozenhdict.fetch(id, cache, lazy, ishdict).unfrozen
 
     @staticmethod
-    def load(id, cache) -> Union["hdict", None]:
+    def load(id, cache):
         """
         Fetch an entire hdict
 
@@ -366,10 +365,10 @@ class hdict_(dict[str, VT]):
 
     @staticmethod
     def fromfile(name, fields=None, format="df", include_name=False):
-        """Input format is defined by file extension: .arff, .csv
-        """
+        """Input format is defined by file extension: .arff, .csv"""
         from hdict.data.load import file2df
         from hdict.data.dataset import df2Xy
+
         if fields is None:
             fields = ["df"]
         df, name = file2df(name)
@@ -396,4 +395,5 @@ class hdict_(dict[str, VT]):
 
     def __mul__(self, other):
         from hdict.expr import Expr
+
         return Expr(self, other)

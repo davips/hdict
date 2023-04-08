@@ -42,6 +42,7 @@ class SubValue(AbsEntry):
     @property
     def value(self):
         from hdict.content.entry import Unevaluated
+
         if self._value is Unevaluated:
             value = self.parent.value
             if isinstance(value, (list, tuple)):

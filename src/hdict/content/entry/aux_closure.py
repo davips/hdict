@@ -10,6 +10,7 @@ def handle_arg(key, val, data, discarded_defaults, out, torepr):
     from hdict.content.value import value
     from hdict.aux_frozendict import handle_item
     from hdict import field
+
     match val:
         case default(value=v):
             if key in data:

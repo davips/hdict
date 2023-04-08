@@ -19,6 +19,7 @@ class Expr(AbsAny):
     def sample(self, rnd: int | Random = None, solve=True):
         from hdict.content.argument import AbsArgument
         from hdict.applyout import ApplyOut
+
         lst = []
         for step in self:
             match step:
@@ -51,6 +52,7 @@ class Expr(AbsAny):
 
     def roperate(self, left, solve):
         from hdict import hdict, frozenhdict
+
         match left:
             case hdict() | frozenhdict():
                 expr = Expr(left, self)

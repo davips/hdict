@@ -76,53 +76,58 @@ def isplit(source, sep=None, regex=False):
 
 def liac2pandas(arff):
     import pandas as pd
-    attrs = arff['attributes']
+
+    attrs = arff["attributes"]
     attrs_t = []
     for attr in attrs:
         if isinstance(attr[1], list):
-            attrs_t.append("%s@{%s}" % (attr[0], ','.join(attr[1])))
+            attrs_t.append("%s@{%s}" % (attr[0], ",".join(attr[1])))
         else:
             attrs_t.append("%s@%s" % (attr[0], attr[1]))
 
-    df = pd.DataFrame(data=arff['data'], columns=attrs_t)
+    df = pd.DataFrame(data=arff["data"], columns=attrs_t)
     return df
 
 
 def load(fp):
     import arff as liacarff
+
     data = liacarff.load(fp)
     return liac2pandas(data)
 
 
 def loads(s):
     import arff as liacarff
+
     data = liacarff.loads(s)
     return liac2pandas(data)
 
 
-def df2liac(df, relation='data', description=''):
+def df2liac(df, relation="data", description=""):
     attrs = []
     for col in df.columns:
-        attr = col.split('@')
-        if attr[1].count('{') > 0 and attr[1].count('}') > 0:
-            vals = attr[1].replace('{', '').replace('}', '').split(',')
+        attr = col.split("@")
+        if attr[1].count("{") > 0 and attr[1].count("}") > 0:
+            vals = attr[1].replace("{", "").replace("}", "").split(",")
             attrs.append((attr[0], vals))
         else:
             attrs.append((attr[0], attr[1]))
 
     data = list(df.values)
-    result = {'attributes': attrs, 'data': data, 'description': description, 'relation': relation}
+    result = {"attributes": attrs, "data": data, "description": description, "relation": relation}
     return result
 
 
 def dump(df, fp):
     import arff as liacarff
+
     arff = df2liac(df)
     liacarff.dump(arff, fp)
 
 
 def dumps(df):
     import arff as liacarff
+
     arff = df2liac(df)
     return liacarff.dumps(arff)
 
@@ -135,6 +140,8 @@ def df2Xy(input="df", Xout="X", yout="y", **kwargs):
     X_ = df.drop(df.columns[[-1]], axis=1)
     y_ = le.fit_transform(df[df.columns[-1]])
     return {Xout: X_, yout: y_, "_history": ...}
+
+
 #
 #
 # def df2arff(input="df", output="arff", **kwargs):

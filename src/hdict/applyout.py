@@ -31,6 +31,7 @@ from hdict.content.argument.apply import apply
 @dataclass
 class ApplyOut(AbsAny):
     """Wrapper for 'apply' to append the output field(s)"""
+
     nested: apply
     out: [str | tuple[str, str]]
 

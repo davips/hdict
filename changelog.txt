@@ -1,3 +1,5 @@
+Mostly rewritten for simplicity and reliability
+
 Refactor and adopt sane syntax with mandatory 'apply'
 Fix eq
 Remove _id / _ids from 'd.data'

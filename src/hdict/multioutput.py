@@ -42,6 +42,7 @@ def handle_multioutput(previous, field_names: tuple, entry: AbsEntry | apply):
     from hdict import value
     from hdict.content.entry.subvalue import SubValue
     from hdict.aux_frozendict import handle_item
+
     data = {}
     match entry:
         case value(value=list() as lst):

@@ -124,6 +124,7 @@ class frozenhdict(UserDict, dict[str, VT]):
         from hdict.content.entry import AbsEntry
         from hdict.aux_frozendict import handle_identity
         from hdict.aux_frozendict import handle_items
+
         if _previous is None:
             _previous = {}
 
@@ -249,6 +250,7 @@ class frozenhdict(UserDict, dict[str, VT]):
         """
         if self._asdicts is None:
             from hdict import hdict
+
             dic = {}
             for k, v in self.items():
                 dic[k] = v.asdicts if isinstance(v, (hdict, frozenhdict)) else v
@@ -276,6 +278,7 @@ class frozenhdict(UserDict, dict[str, VT]):
         """
         if self._asdicts_noid is None:
             from hdict import hdict
+
             dic = {}
             for k, v in self.items():
                 dic[k] = v.asdicts_noid if isinstance(v, (hdict, frozenhdict)) else v
@@ -285,6 +288,7 @@ class frozenhdict(UserDict, dict[str, VT]):
     @property
     def asdicts_hoshes_noneval(self):
         from hdict import value
+
         hoshes = set()
         dic = {}
         for k, val in self.data.items():
@@ -315,7 +319,7 @@ class frozenhdict(UserDict, dict[str, VT]):
         txt = re.sub(r'(": )"(λ.+?)"(?=,\n)', '": \\2', txt)
         if not key_quotes:
             txt = re.sub(r'(?<!: )"([\-a-zA-Z0-9_ ]+?)"(?=: )', "\\1", txt)
-        return txt.replace('"§«§lazy', '').replace('lazy§«§"', '')
+        return txt.replace('"§«§lazy', "").replace('lazy§«§"', "")
 
     def show(self, colored=True, key_quotes=False):
         r"""Print textual representation of a frozenidict object"""
@@ -387,6 +391,7 @@ class frozenhdict(UserDict, dict[str, VT]):
         When cache is a list, traverse it from the end (right item to the left item).
         """
         from hdict.content.entry.lazy import Lazy
+
         caches = cache if isinstance(cache, list) else [cache]
         while id not in (cache := caches.pop()):
             if not caches:
@@ -437,6 +442,7 @@ class frozenhdict(UserDict, dict[str, VT]):
 
     def __mul__(self, other):
         from hdict.expr import Expr
+
         return Expr(self, other)
 
     # def metakeys(self):

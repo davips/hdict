@@ -15,6 +15,7 @@ from hdict.customjson import truncate
 class Closure(AbsEntry):
     def __init__(self, application: apply, data: dict[str, AbsEntry], out: list):
         from hdict.aux_frozendict import handle_item
+
         self.application = application
         self.out = out
         self.torepr = {}
@@ -41,6 +42,7 @@ class Closure(AbsEntry):
                 args = (x.value for x in fargs.values())
                 kwargs = {k: v.value for k, v in fkwargs.items()}
                 return appliable_entry.value(*args, **kwargs)
+
         else:
             hosh *= application.ahosh
             appliable_function = application.appliable
@@ -49,6 +51,7 @@ class Closure(AbsEntry):
                 args = (x.value for x in fargs.values())
                 kwargs = {k: v.value for k, v in fkwargs.items()}
                 return appliable_function(*args, **kwargs)
+
         self.f = f
         self.hosh = hosh
         self.discarded_defaults = discarded_defaults

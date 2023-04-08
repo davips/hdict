@@ -38,6 +38,7 @@ def handle_items(*datas: [Dict[str, object]], previous: [Dict[str, AbsEntry]]):
 def handle_item(key, item, previous):
     if isinstance(key, tuple):
         from hdict.multioutput import handle_multioutput
+
         return handle_multioutput(previous, key, item)
     elif not isinstance(key, str):  # pragma: no cover
         raise Exception(f"Invalid type for input field specification: {type(key).__name__}")

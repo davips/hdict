@@ -40,6 +40,7 @@ class sample(AbsMetaArgument):
     >>> (s := sample(2, -4, 8, ..., 12).values)
     [2 -4 8]
     """
+
     sampleable = True
 
     def __init__(self, *values: list[int | float], rnd: int | Random = 0, maxdigits=28):

@@ -9,6 +9,7 @@ class AbsArgument(AbsAny):
 
     For classes where sampling makes no sense, return the object itself.
     """
+
     sampleable = False
 
     def sample(self, rnd: int | Random = None):

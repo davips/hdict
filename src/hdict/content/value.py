@@ -40,6 +40,7 @@ class value(AbsBaseArgument, AbsEntry):
     '1234567890123456789012345678901234567890'
 
     """
+
     isevaluated = True
 
     def __init__(self, val: object, hosh: Hosh | str = None, hdict=None):
@@ -51,6 +52,7 @@ class value(AbsBaseArgument, AbsEntry):
             hdict:  optional reference to the object if it has a hdict counterpart (e.g.: pandas DF)
         """
         from hdict.abs import AbsAny
+
         if isinstance(val, AbsAny):  # pragma: no cover
             raise Exception(f"Cannot handle objects of type '{type(val).__name__}' as raw values for hdict.")
         self.value = self._value = val

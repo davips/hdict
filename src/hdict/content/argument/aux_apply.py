@@ -45,6 +45,7 @@ def handle_args(signature, applied_args, applied_kwargs):
                 fargs[name] = field(name)
             else:
                 from hdict.content.argument.default import default
+
                 fkwargs[name] = default(v)
             params.append(name)
 

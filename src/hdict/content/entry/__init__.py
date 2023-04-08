@@ -42,6 +42,7 @@ class AbsEntry(AbsAny):
 
     *value also inherits AbsBaseArgument because 'value' objects have a meaning outside of hdict (external level)
     """
+
     value: object | Callable  # REMINDER: 'callable' is here for appliable contents, like storing a raw lambda
     hosh: Hosh
     _value = Unevaluated
