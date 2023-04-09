@@ -64,7 +64,7 @@ class hdict_(dict[str, VT]):
 
     def __rshift__(self, other):
         from hdict.content.argument import AbsArgument
-        from hdict.applyout import ApplyOut
+        from hdict.abs.step import AbsStep
 
         from hdict.content.argument.apply import apply
         if isinstance(other, apply):  # pragma: no cover
@@ -75,7 +75,7 @@ class hdict_(dict[str, VT]):
                             f"Hint: d >> {'field name': object}\n"
                             f"Hint: d['field name'] = object")
         # REMINDER: dict includes hdict/frozenhdict.
-        if isinstance(other, (dict, ApplyOut)):
+        if isinstance(other, (dict, AbsStep)):
             return (self.frozen >> other).unfrozen
         return NotImplemented  # pragma: no cover
 
@@ -164,6 +164,11 @@ class hdict_(dict[str, VT]):
     @property
     def asdict(self):
         """
+        Convert to 'dict', including ids.
+
+        This evaluates all fields.
+        HINT: Use 'dict(d)' to convert 'hdict' to 'dict' excluding ids.
+
         >>> from hdict import hdict
         >>> hdict(x=3, y=5).asdict
         {'x': 3, 'y': 5, '_id': 'r5A2Mh6vRRO5rxi5nfXv1myeguGSTmqHuHev38qM', '_ids': {'x': 'KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr', 'y': 'ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2'}}
@@ -262,7 +267,7 @@ class hdict_(dict[str, VT]):
     def __hash__(self):  # pragma: no cover
         raise Exception(f"hdict is not hashable. Please use hdict.frozen instead.")
 
-    def save(self, cache: dict):
+    def save(self, storage: dict):
         """
         Store an entire hdict
 
@@ -329,19 +334,19 @@ class hdict_(dict[str, VT]):
             }
         }
         """
-        self.frozen.save(cache)
+        self.frozen.save(storage)
 
     @staticmethod
-    def fetch(id, cache, lazy=True, ishdict=False) -> Union["frozenhdict", None]:
+    def fetch(id, storage: dict, lazy=True, ishdict=False) -> Union["frozenhdict", None]:
         """
         Fetch a single entry
 
         When cache is a list, traverse it from the end (right item to the left item).
         """
-        return frozenhdict.fetch(id, cache, lazy, ishdict).unfrozen
+        return frozenhdict.fetch(id, storage, lazy, ishdict).unfrozen
 
     @staticmethod
-    def load(id, cache):
+    def load(id, storage: dict):
         """
         Fetch an entire hdict
 
@@ -368,7 +373,7 @@ class hdict_(dict[str, VT]):
             }
         }
         """
-        return frozenhdict.load(id, cache).unfrozen
+        return frozenhdict.load(id, storage).unfrozen
 
     @staticmethod
     def fromfile(name, fields=None, format="df", include_name=False):
@@ -397,8 +402,20 @@ class hdict_(dict[str, VT]):
         else:  # pragma: no cover
             raise Exception(f"Unknown {format=}.")
 
-    # def __reduce__(self):
-    #     return self.frozen.__reduce__()
+    @property
+    def asdf(self):
+        """
+        Represent hdict as a DataFrame if possible
+
+        >>> from hdict import hdict
+        >>> d = hdict({"x": [1,2,3], "y": [5,6,7], "index": ["a", "b", "c"]})
+        >>> d.asdf
+           x  y
+        a  1  5
+        b  2  6
+        c  3  7
+        """
+        return self.frozen.asdf
 
     def __mul__(self, other):
         from hdict.expr import Expr

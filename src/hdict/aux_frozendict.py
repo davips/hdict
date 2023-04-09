@@ -11,7 +11,6 @@ from hdict.content.argument.apply import apply
 from hdict.content.argument.field import field
 from hdict.content.argument.sample import sample
 from hdict.content.entry import AbsEntry
-from hdict.pandas_handling import explode_df
 
 VT = TypeVar("VT")
 
@@ -71,6 +70,7 @@ def handle_item(key, item, previous):
         case AbsAny():
             raise Exception(f"Cannot handle instance of type '{type(item).__name__}'.")
         case _ if str(type(item)) == "<class 'pandas.core.frame.DataFrame'>":
+            from hdict.pandas_handling import explode_df
             return explode_df(item)
         case _:
             return value(item)
@@ -92,3 +92,13 @@ def handle_identity(data):
             # PAPER REMINDER: state in the paper that hash(identifier) must be different from hash(value), for any identifier and value. E.g.: hash(X) != hash("X")    #   Here the difference always happen because values are pickled, while identifiers are just encoded().
             ids[k] = data[k].hosh.id
     return hosh, ids
+
+
+def handle_mirror(stored):
+    match stored.kind:
+        case "<class 'pandas.core.frame.DataFrame'>":
+            return stored.content.asdf
+        case None:
+            pass
+        case _:
+            raise Exception(f"Unknown mirror field kind.")

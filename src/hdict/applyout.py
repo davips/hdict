@@ -59,16 +59,16 @@ class ApplyOut(AbsStep):
             return Expr(left, self)
         return NotImplemented  # pragma: no cover
 
-    def __rshift__(self, right):
+    def __rshift__(self, other):
         from hdict.expr import Expr
 
         # REMINDER: dict includes hdict/frozenhdict.
-        if isinstance(right, (dict, ApplyOut)):
-            return Expr(self, right)
+        if isinstance(other, (dict, ApplyOut)):
+            return Expr(self, other)
         return NotImplemented  # pragma: no cover
 
-    def __mul__(self, right):
-        return self.__rshift__(right)
+    def __mul__(self, other):
+        return self.__rshift__(other)
 
     def __repr__(self):
         return f"{self.out}={repr(self.nested)}"

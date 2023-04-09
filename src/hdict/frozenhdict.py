@@ -362,56 +362,72 @@ class frozenhdict(UserDict, dict[str, VT]):
             # if not k.startswith("_"):
             yield k, (val.value if evaluate else val)
 
-    def save(self, cache: dict):
+    def save(self, storage: dict):
         """
         Store an entire frozenidict
         """
-        from hdict.persistence.cache import Cached
+        from hdict.persistence.stored import Stored
         data = {self.id: self.ids}
         for field, fid in self.ids.items():
             value = self[field]
             if isinstance(value, frozenhdict):
-                value.save(cache)
+                value.save(storage)
             else:
-                data[fid] = Cached(value)
-        cache.update(data)
+                data[fid] = Stored(value, kind=type(value))
+        storage.update(data)
 
     @staticmethod
-    def load(id, cache: dict | list, lazy=True) -> Union["frozenhdict", None]:
+    def load(id, storage: dict | list, lazy=True) -> Union["frozenhdict", None]:
         """
         Fetch an entire frozenidict
         """
         if len(id) != 40:  # pragma: no cover
             raise Exception(f"id should have lenght of 40, not {len(id)}")
-        return frozenhdict.fetch(id, cache, lazy, ishdict=True)
+        return frozenhdict.fetch(id, storage, lazy, ishdict=True)
 
     @staticmethod
-    def fetch(id, cache, lazy=True, ishdict=False) -> Union["frozenhdict", None]:
+    def fetch(id: str, storage: dict, lazy=True, ishdict=False) -> Union["frozenhdict", None]:
         """
         Fetch a single entry
 
         When cache is a list, traverse it from the end (right item to the left item).
         """
-        from hdict.content.entry.lazy import Lazy
-        from hdict.persistence.cache import Cached
-
-        caches = cache if isinstance(cache, list) else [cache]
-        while id not in (cache := caches.pop()):
+        from hdict.content.entry.cached import Cached
+        from hdict.aux_frozendict import handle_mirror
+        from hdict.persistence.stored import Stored
+        caches = storage if isinstance(storage, list) else [storage]
+        while id not in (storage := caches.pop()):
             if not caches:
-                raise Exception(f"id '{id}' not found in the provided cache {cache.keys()}.")
-        obj = cache[id]
+                raise Exception(f"id '{id}' not found in the provided cache {storage.keys()}.")
+        obj = storage[id]
         if isinstance(obj, dict):
             ishdict = True  # Set to True, because now we have a nested frozenhdict
-        elif ishdict or not isinstance(obj, Cached):
-            raise Exception(f"Wrong content for idict expected under id {id}: {type(obj)}.")
+        elif ishdict or not isinstance(obj, Stored):
+            raise Exception(f"Wrong content for hdict expected under id {id}: {type(obj)}.")
 
         if ishdict:
             ids = obj
             data = {}
             for field, fid in ids.items():
-                data[field] = Lazy(fid, cache) if lazy else frozenhdict.fetch(fid, cache, lazy, False)
+                if lazy:
+                    data[field] = Cached(fid, storage)
+                else:
+                    stored = frozenhdict.fetch(fid, storage, lazy=False, ishdict=False)
+                    data[field] = stored
+                    if field.endswith("_"):
+                        data[field[:-1]] = handle_mirror(stored)
             return frozenhdict.fromdict(data, ids)
-        return obj
+        return obj.content
+
+    @property
+    def asdf(self):
+        """
+        Represent hdict as a DataFrame if possible
+        """
+        from pandas import DataFrame
+        data = dict(self)
+        index = data.pop("index")
+        return DataFrame(data, index=index)
 
     def __eq__(self, other):
         if isinstance(other, dict):

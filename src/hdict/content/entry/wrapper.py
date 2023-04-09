@@ -5,6 +5,11 @@ from hdict.content.entry import AbsEntry, Unevaluated
 
 @dataclass
 class Wrapper(AbsEntry):
+    """
+    The only entry that can nest and return another entry as a value
+
+    For advanced usage only
+    """
     entry: AbsEntry
 
     def __post_init__(self):

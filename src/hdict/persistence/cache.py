@@ -20,25 +20,11 @@
 #  part of this work is illegal and it is unethical regarding the effort and
 #  time spent here.
 #
-from dataclasses import dataclass
 
-from hdict.abs import AbsAny
-
-
-@dataclass
-class Cache(AbsAny):
-    storage: dict
-
-    def __rrshift__(self, left):
-        from hdict import hdict, frozenhdict
-        match left:
-            case hdict() | frozenhdict():
-                fields = (field for field, entry in left.raw.items() if not entry.isevaluated)
-                return left >> cache(self.storage, *fields)
-        return NotImplemented
+from hdict.abs.step import AbsStep
 
 
-def cache(storage: dict, /, *fields):
+class cache(AbsStep):
     """
     >>> from hdict import _, hdict, cache, apply
     >>> storage = {}
@@ -72,16 +58,7 @@ def cache(storage: dict, /, *fields):
     }
     >>>
     """
-    if not fields:
-        return Cache(storage)
-    from hdict.content.argument.apply import apply
-    from hdict.content.argument.entry import entry
-    def f(**kwargs):
-        return [storage[key] if key in storage else entry.value for key, entry in kwargs.items()]
 
-    return {fields: apply(f, **{k: entry(k) for k in fields})}
-
-
-@dataclass
-class Cached(AbsAny):
-    content: object
+    def __init__(self, storage: dict, *fields):
+        self.storage = storage
+        self.fields = fields
