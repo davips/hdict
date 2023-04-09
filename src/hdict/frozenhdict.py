@@ -26,13 +26,13 @@ import re
 from collections import UserDict
 from typing import TypeVar, Union
 
-from hdict.content.entry import AbsEntry
+from hdict import AbsExpr
 from hdict.customjson import CustomJSONEncoder, stringfy
 
 VT = TypeVar("VT")
 
 
-class frozenhdict(UserDict, dict[str, VT]):
+class frozenhdict(UserDict, dict[str, VT], AbsExpr):
     """
     Immutable hdict.
 
@@ -114,6 +114,10 @@ class frozenhdict(UserDict, dict[str, VT]):
             z: .beBfajsUjKto9qdBCKsLmBgsaNPpJiyz24P9.qg
         }
     }
+    >>> from hdict.content.entry import AbsEntry, Unevaluated
+    >>> from hdict import frozenhdict
+    >>> Unevaluated != frozenhdict()
+    True
     """
 
     _evaluated = None
@@ -145,20 +149,27 @@ class frozenhdict(UserDict, dict[str, VT]):
         return NotImplemented  # pragma: no cover
 
     def __rshift__(self, other):
+        # If merging, keep ids.
         from hdict import hdict
         from hdict.applyout import ApplyOut
+        from hdict.persistence.cache import cache
+        from hdict.content.entry.cached import Cached
 
-        # Merge keeping ids.
-        if isinstance(other, hdict):
-            other = other.frozen
-        if isinstance(other, frozenhdict):
-            other = other.data
-        if isinstance(other, ApplyOut):
-            other = {other.out: other.nested}
+        match other:
+            case hdict() | frozenhdict():
+                dct = other.raw
+            case ApplyOut(nested, out):
+                dct = {out: nested}
+            case cache(storage=storage, fields=fields):
+                if not fields:
+                    fields = (k for k, v in self.raw.items() if not v.isevaluated)
+                dct = {k: Cached(self.ids[k], storage, self.raw[k]) for k in fields}
+            case dict():
+                dct = other
+            case _:
+                return NotImplemented  # pragma: no cover
 
-        if isinstance(other, dict):
-            return frozenhdict(other, _previous=self.data)
-        return NotImplemented  # pragma: no cover
+        return frozenhdict(dct, _previous=self.data)
 
     def __getitem__(self, item):  # pragma: no cover
         return self.data[item].value
@@ -190,6 +201,7 @@ class frozenhdict(UserDict, dict[str, VT]):
         }
         """
         from hdict.content.value import value
+        from hdict.content.entry import AbsEntry
 
         data = {}
         for k, v in dictionary.items():
@@ -289,6 +301,7 @@ class frozenhdict(UserDict, dict[str, VT]):
     @property
     def asdicts_hoshes_noneval(self):
         from hdict import value
+        from hdict.content.entry import AbsEntry
 
         hoshes = set()
         dic = {}
@@ -317,10 +330,14 @@ class frozenhdict(UserDict, dict[str, VT]):
         # Put colors after json, to avoid escaping ansi codes.  TODO: check how HTML behaves here
         for h in hoshes:
             txt = txt.replace(f'"{h.id}"', repr(h)) if colored else txt.replace(f'"{h.id}"', h.id)
+
+        # Remove quotes.
         txt = re.sub(r'(": )"(λ.+?)"(?=,\n)', '": \\2', txt)
+        txt = re.sub(r'(": )"(↑↓ cached at `.+?·)"(?=,\n)', '": \\2', txt)
         if not key_quotes:
             txt = re.sub(r'(?<!: )"([\-a-zA-Z0-9_ ]+?)"(?=: )', "\\1", txt)
-        return txt.replace('"§«§lazy', "").replace('lazy§«§"', "")
+
+        return txt
 
     def show(self, colored=True, key_quotes=False):
         r"""Print textual representation of a frozenidict object"""
@@ -373,11 +390,11 @@ class frozenhdict(UserDict, dict[str, VT]):
             if isinstance(value, frozenhdict):
                 value.save(storage)
             else:
-                data[fid] = Stored(value, kind=type(value))
+                data[fid] = Stored(value)
         storage.update(data)
 
     @staticmethod
-    def load(id, storage: dict | list, lazy=True) -> Union["frozenhdict", None]:
+    def load(id, storage: dict, lazy=True) -> Union["frozenhdict", None]:
         """
         Fetch an entire frozenidict
         """
@@ -395,10 +412,8 @@ class frozenhdict(UserDict, dict[str, VT]):
         from hdict.content.entry.cached import Cached
         from hdict.aux_frozendict import handle_mirror
         from hdict.persistence.stored import Stored
-        caches = storage if isinstance(storage, list) else [storage]
-        while id not in (storage := caches.pop()):
-            if not caches:
-                raise Exception(f"id '{id}' not found in the provided cache {storage.keys()}.")
+        if id not in storage:
+            return None
         obj = storage[id]
         if isinstance(obj, dict):
             ishdict = True  # Set to True, because now we have a nested frozenhdict
@@ -413,6 +428,9 @@ class frozenhdict(UserDict, dict[str, VT]):
                     data[field] = Cached(fid, storage)
                 else:
                     stored = frozenhdict.fetch(fid, storage, lazy=False, ishdict=False)
+                    if stored is None:
+                        print(storage.keys())
+                        raise Exception(f"Incomplete hdict: id '{id}' not found in the provided cache.")
                     data[field] = stored
                     if field.endswith("_"):
                         data[field[:-1]] = handle_mirror(stored)
@@ -440,7 +458,7 @@ class frozenhdict(UserDict, dict[str, VT]):
             if isinstance(other, (frozenhdict, hdict)):
                 return self.id == other.id
             return dict(self) == other
-        raise TypeError(f"Cannot compare {type(self).__name__} and {type(other).__name__}")  # pragma: no cover
+        return NotImplemented
 
     def __ne__(self, other):
         return not (self == other)
@@ -463,31 +481,3 @@ class frozenhdict(UserDict, dict[str, VT]):
         from hdict.expr import Expr
 
         return Expr(self, other)
-
-    # def metakeys(self):
-    #     """Generator of keys which start with '_'"""
-    #     return (k for k in self.data if k.startswith("_") and k not in ["_id", "_ids"])
-    #
-    # def metavalues(self, evaluate=True):
-    #     """Generator of field values (keys don't start with '_')"""
-    #     return ((v.value if evaluate else v) for k, v in self.data.items() if k.startswith("_") and k not in ["_id", "_ids"])
-    #
-    # def metaitems(self, evaluate=True):
-    #     """Generator over field-value pairs"""
-    #     for k, ival in self.data.items():
-    #         if k.startswith("_") and k not in ["_id", "_ids"]:
-    #             yield k, (ival.value if evaluate else ival)
-    #
-    # def entries(self, evaluate=True):
-    #     """Iterator over all items"""
-    #     yield from self.items(evaluate)
-    #     yield from self.metaitems(evaluate)
-    #
-    # @cached_property
-    # def fields(self):
-    #     return list(self.keys())
-    #
-    # @cached_property
-    # def metafields(self):
-    #     """List of keys which start with '_'"""
-    #     return [k for k in self.data if k.startswith("_") and k not in ["_id", "_ids"]]

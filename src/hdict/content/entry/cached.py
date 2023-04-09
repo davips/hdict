@@ -13,18 +13,19 @@ class Cached(AbsEntry):
 
     @property
     def value(self):
+        from hdict import frozenhdict
         if self._value is Unevaluated:
-            if self.entry.isevaluated:
+            if self.entry and self.entry.isevaluated:
                 self._value = self.entry.value
-            elif self.id in self.storage:
-                from hdict import frozenhdict
-                self._value = frozenhdict.fetch(self.id, self.storage).content
+            elif ret := frozenhdict.fetch(self.id, self.storage):
+                self._value = ret
             elif self.entry is None:
                 raise Exception(f"id `{self.id}` not found.")
             else:
+                from hdict.persistence.stored import Stored
                 self._value = self.entry.value
-                self.storage[self.id] = self._value
+                self.storage[self.id] = Stored(self._value)
         return self._value
 
     def __repr__(self):
-        return f"§«§lazy«lazy value at cache `{type(self.storage).__name__}`»lazy§«§"  # TODO: solve the unquotation by regex
+        return f"↑↓ cached at `{type(self.storage).__name__}`·"

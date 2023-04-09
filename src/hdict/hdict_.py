@@ -272,7 +272,7 @@ class hdict_(dict[str, VT]):
         Store an entire hdict
 
         >>> from hdict import hdict, apply
-        >>> cache = {}
+        >>> storage = {}
         >>> d = hdict(x=3, y=7, z=hdict(z=9)) >> apply(lambda x, y: x/y).w
         >>> d.show(colored=False)
         {
@@ -294,16 +294,16 @@ class hdict_(dict[str, VT]):
                 w: vo3qMHk3Ef-O065cO-sb4MLHq69x6bKSU694sREJ
             }
         }
-        >>> d.save(cache)
-        >>> cache
-        {'izn67XbX0tQNF6E5qkwniN2jxZg5MT6f7z5AJzPM': {'z': 'GuwIQCrendfKXZr5jGfrUwoP-8TWMhmLHYrja2yj'}, 'GuwIQCrendfKXZr5jGfrUwoP-8TWMhmLHYrja2yj': 9, 's3aPQRspwLR81It8zlXsD3Da1Gg76DGSDe841d0b': {'x': 'KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr', 'y': 'eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf', 'z': 'izn67XbX0tQNF6E5qkwniN2jxZg5MT6f7z5AJzPM', 'w': 'vo3qMHk3Ef-O065cO-sb4MLHq69x6bKSU694sREJ'}, 'KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr': 3, 'eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf': 7, 'vo3qMHk3Ef-O065cO-sb4MLHq69x6bKSU694sREJ': 0.42857142857142855}
-        >>> e = hdict.load(d.id, cache)
+        >>> d.save(storage)
+        >>> storage
+        {'izn67XbX0tQNF6E5qkwniN2jxZg5MT6f7z5AJzPM': {'z': 'GuwIQCrendfKXZr5jGfrUwoP-8TWMhmLHYrja2yj'}, 'GuwIQCrendfKXZr5jGfrUwoP-8TWMhmLHYrja2yj': Stored(content=9), 's3aPQRspwLR81It8zlXsD3Da1Gg76DGSDe841d0b': {'x': 'KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr', 'y': 'eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf', 'z': 'izn67XbX0tQNF6E5qkwniN2jxZg5MT6f7z5AJzPM', 'w': 'vo3qMHk3Ef-O065cO-sb4MLHq69x6bKSU694sREJ'}, 'KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr': Stored(content=3), 'eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf': Stored(content=7), 'vo3qMHk3Ef-O065cO-sb4MLHq69x6bKSU694sREJ': Stored(content=0.42857142857142855)}
+        >>> e = hdict.load(d.id, storage)
         >>> e.show(colored=False)
         {
-            x: «lazy value at cache `dict`»,
-            y: «lazy value at cache `dict`»,
-            z: «lazy value at cache `dict`»,
-            w: «lazy value at cache `dict`»,
+            x: ↑↓ cached at `dict`·,
+            y: ↑↓ cached at `dict`·,
+            z: ↑↓ cached at `dict`·,
+            w: ↑↓ cached at `dict`·,
             _id: s3aPQRspwLR81It8zlXsD3Da1Gg76DGSDe841d0b,
             _ids: {
                 x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
@@ -322,7 +322,7 @@ class hdict_(dict[str, VT]):
             x: 3,
             y: 7,
             z: {
-                z: "GuwIQCrendfKXZr5jGfrUwoP-8TWMhmLHYrja2yj"
+                z: 9
             },
             w: 0.42857142857142855,
             _id: s3aPQRspwLR81It8zlXsD3Da1Gg76DGSDe841d0b,
@@ -351,13 +351,14 @@ class hdict_(dict[str, VT]):
         Fetch an entire hdict
 
         >>> from hdict import _
+        >>> from hdict.persistence.stored import Stored
         >>> fid = "1234567890123456789012345678901234567890"
         >>> did = "0000567890123456789012345678901234567890"
-        >>> cache = {did: {"x": fid}, fid: 5}
-        >>> d = _.load(did, cache)
+        >>> storage = {did: {"x": fid}, fid: Stored(5)}
+        >>> d = _.load(did, storage)
         >>> d.show(colored=False)
         {
-            x: «lazy value at cache `dict`»,
+            x: ↑↓ cached at `dict`·,
             _id: kYzgpPdRgQSYSEpp1qt4EHQLQJXuyb2WDQS-iNPh,
             _ids: {
                 x: 1234567890123456789012345678901234567890

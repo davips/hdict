@@ -28,4 +28,6 @@ from hdict.abs import AbsAny
 @dataclass
 class Stored(AbsAny):
     content: object
-    kind: str
+
+    def __post_init__(self):
+        self.kind = type(self.content)

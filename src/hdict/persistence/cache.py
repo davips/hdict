@@ -43,20 +43,30 @@ class cache(AbsStep):
     }
     >>> d >>= cache(storage)
     >>> d.show(colored=False)
+    {
+        x: 3,
+        y: 5,
+        z: ↑↓ cached at `dict`·,
+        _id: UB8No.x9HiKWeFqpmTv1lWn0lEsTJS16lPNCojcK,
+        _ids: {
+            x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+            y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+            z: cszQVZnzMQSS3.2tdWWQL-wGCv.lO0TWqVoSNFww
+        }
+    }
     >>> d.evaluate()
     >>> d.show(colored=False)
     {
         x: 3,
         y: 5,
         z: 0.6,
-        _id: bSXTaET8cR-V6f9Zaf1K3fIS6yYIWJhF6DgQ.At7,
+        _id: UB8No.x9HiKWeFqpmTv1lWn0lEsTJS16lPNCojcK,
         _ids: {
             x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
             y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
-            z: XFTNm3npQiPmV4uZ4-lX8IIUWgbHW-6uc5n3pXNV
+            z: cszQVZnzMQSS3.2tdWWQL-wGCv.lO0TWqVoSNFww
         }
     }
-    >>>
     """
 
     def __init__(self, storage: dict, *fields):

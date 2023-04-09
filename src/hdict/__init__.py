@@ -166,7 +166,6 @@ class hdict(hdict_):
     >>> d["z"] = apply(f, 2, y=3)
     >>> d["w", "v"] = apply(f, field("x"), y=33)
     >>> d["f"] = f
-    >>> cache = {}
     >>> d = d >> apply(field("f"), field("x"), y=default(3), nonexistent_parameter=7)("w3", "v3") # TODO: nonexistent parameter should raise an exception
     >>> d >>= apply(field("f"), field("x"), y=default(3))("w", "v")
     >>> d["w2", "v2"] = apply(field("f"), field("x"), y=default(3))
@@ -397,6 +396,54 @@ class hdict(hdict_):
             a: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
             y: -2A0hTRBN1wtIKQxLzRcYDBkhv1hu-dMY-24Jye9,
             x: gak9o6ZS9plw9l63f0WtAFnr52.1HycGhc3En2MR
+        }
+    }
+    >>> def f():
+    ...     print("busy")
+    ...     return 23
+    >>> storage = {}
+    >>> d >>= apply(f).o >> cache(storage, "x")
+    >>> d.show(colored=False)
+    {
+        a: 5,
+        y: 28,
+        x: ↑↓ cached at `dict`·,
+        o: λ(),
+        _id: Lvc0oqaeG42YNbEHLovwwDD7u3kMV0QTN6EXCmh1,
+        _ids: {
+            a: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+            y: -2A0hTRBN1wtIKQxLzRcYDBkhv1hu-dMY-24Jye9,
+            x: gak9o6ZS9plw9l63f0WtAFnr52.1HycGhc3En2MR,
+            o: tvj9HwT9g5Ud9SKoUqDJI1zw5ut7VRRTrSEe9fUt
+        }
+    }
+    >>> d.evaluated.show(colored=False)
+    busy
+    {
+        a: 5,
+        y: 28,
+        x: 5,
+        o: 23,
+        _id: Lvc0oqaeG42YNbEHLovwwDD7u3kMV0QTN6EXCmh1,
+        _ids: {
+            a: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+            y: -2A0hTRBN1wtIKQxLzRcYDBkhv1hu-dMY-24Jye9,
+            x: gak9o6ZS9plw9l63f0WtAFnr52.1HycGhc3En2MR,
+            o: tvj9HwT9g5Ud9SKoUqDJI1zw5ut7VRRTrSEe9fUt
+        }
+    }
+    >>> d.evaluated.show(colored=False)
+    {
+        a: 5,
+        y: 28,
+        x: 5,
+        o: 23,
+        _id: Lvc0oqaeG42YNbEHLovwwDD7u3kMV0QTN6EXCmh1,
+        _ids: {
+            a: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+            y: -2A0hTRBN1wtIKQxLzRcYDBkhv1hu-dMY-24Jye9,
+            x: gak9o6ZS9plw9l63f0WtAFnr52.1HycGhc3En2MR,
+            o: tvj9HwT9g5Ud9SKoUqDJI1zw5ut7VRRTrSEe9fUt
         }
     }
     """
