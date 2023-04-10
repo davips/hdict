@@ -24,7 +24,7 @@ from hosh import Hosh
 
 from hdict.content.argument import AbsBaseArgument
 from hdict.content.entry import AbsEntry
-from hdict.hoshfication import v2hosh
+from hdict.content.aux_value import v2hosh
 
 
 class value(AbsBaseArgument, AbsEntry):

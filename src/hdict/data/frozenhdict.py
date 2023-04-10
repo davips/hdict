@@ -26,19 +26,18 @@ import re
 from collections import UserDict
 from typing import TypeVar, Union
 
-from hdict import AbsExpr
-from hdict.customjson import CustomJSONEncoder, stringfy
+from hdict.text.customjson import CustomJSONEncoder, stringfy
 
 VT = TypeVar("VT")
 
 
-class frozenhdict(UserDict, dict[str, VT], AbsExpr):
+class frozenhdict(UserDict, dict[str, VT]):
     """
     Immutable hdict.
 
     Any nested 'hdict' value will be frozen to avoid inconsistency between the hdict id (inner id) and the frozenhdict id (outer id).
 
-    >>> from hdict.frozenhdict import frozenhdict
+    >>> from hdict import frozenhdict
     >>> d = frozenhdict({"x": 3}, y=5)
     >>> from hosh._internals_appearance import decolorize
     >>> print(decolorize(repr(d)))  # This is equivalent to just 'd', without colors.
@@ -56,9 +55,9 @@ class frozenhdict(UserDict, dict[str, VT], AbsExpr):
     >>> from hdict import _, apply
     >>> d *= apply(lambda v, x: v - x).z
     >>> str(d)
-    '{x: 3, y: 5} » z=λ(v x)'
+    '⦑{x: 3, y: 5} » z=λ(v x)⦒'
     >>> d.show(colored=False)
-    {
+    ⦑{
         x: 3,
         y: 5,
         _id: r5A2Mh6vRRO5rxi5nfXv1myeguGSTmqHuHev38qM,
@@ -66,7 +65,7 @@ class frozenhdict(UserDict, dict[str, VT], AbsExpr):
             x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
             y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2
         }
-    } » z=λ(v x)
+    } » z=λ(v x)⦒
     >>> d = {"v": 7} * d
     >>> d.solve().show(colored=False)
     {
@@ -126,8 +125,8 @@ class frozenhdict(UserDict, dict[str, VT], AbsExpr):
     # noinspection PyMissingConstructor
     def __init__(self, /, _dictionary=None, _previous=None, **kwargs):
         from hdict.content.entry import AbsEntry
-        from hdict.aux_frozendict import handle_identity
-        from hdict.aux_frozendict import handle_items
+        from hdict.data.aux_frozendict import handle_identity
+        from hdict.data.aux_frozendict import handle_items
 
         if _previous is None:
             _previous = {}
@@ -141,20 +140,55 @@ class frozenhdict(UserDict, dict[str, VT], AbsExpr):
         self.id = self.hosh.id
         self.raw = self.data
 
-    def __rrshift__(self, other):
+    def __rmul__(self, left):
+        from hdict import frozenhdict
+        from hdict.expression.step.edict import EDict
+        from hdict.expression.expr import Expr
+
         from hdict import hdict
 
-        if isinstance(other, dict) and not isinstance(other, (hdict, frozenhdict)):
-            return frozenhdict(other) >> self
+        if isinstance(left, dict) and not isinstance(left, (hdict, frozenhdict)):
+            return Expr(EDict(left), self)
+        return NotImplemented  # pragma: no cover
+
+    def __mul__(self, other):
+        from hdict import hdict, frozenhdict
+        from hdict.expression.step.edict import EDict
+        from hdict.expression.expr import Expr
+        from hdict.expression.step.step import AbsStep
+        match other:
+            case AbsStep() | hdict() | frozenhdict():
+                return Expr(self, other)
+            case dict():
+                return Expr(self, EDict(other))
+            case _:
+                return NotImplemented  # pragma: no cover
+
+    def __rrshift__(self, left):
+        from hdict import hdict
+
+        if isinstance(left, dict) and not isinstance(left, (hdict, frozenhdict)):
+            return frozenhdict(left) >> self
         return NotImplemented  # pragma: no cover
 
     def __rshift__(self, other):
         # If merging, keep ids.
         from hdict import hdict
-        from hdict.applyout import ApplyOut
-        from hdict.persistence.cache import cache
+        from hdict.expression.step.applyout import ApplyOut
+        from hdict.expression.step.cache import cache
         from hdict.content.entry.cached import Cached
 
+        from hdict.content.argument.apply import apply
+        if isinstance(other, apply):  # pragma: no cover
+            raise Exception(f"Cannot apply without specifying output(s).\n"
+                            f"Hint: d >> apply(f)('output_field1', 'output_field2')")
+        from hdict.content.argument import AbsArgument
+        if isinstance(other, AbsArgument):  # pragma: no cover
+            raise Exception(f"Cannot pipe {type(other).__name__} without specifying output.\n"
+                            f"Hint: d >> {'field name': object}\n"
+                            f"Hint: d['field name'] = object")
+
+        from hdict.expression.expr import Expr
         match other:
             case hdict() | frozenhdict():
                 dct = other.raw
@@ -166,6 +200,8 @@ class frozenhdict(UserDict, dict[str, VT], AbsExpr):
                 dct = {k: Cached(self.ids[k], storage, self.raw[k]) for k in fields}
             case dict():
                 dct = other
+            case Expr():
+                return Expr(self, other).solve()
             case _:
                 return NotImplemented  # pragma: no cover
 
@@ -410,7 +446,7 @@ class frozenhdict(UserDict, dict[str, VT], AbsExpr):
         When cache is a list, traverse it from the end (right item to the left item).
         """
         from hdict.content.entry.cached import Cached
-        from hdict.aux_frozendict import handle_mirror
+        from hdict.data.aux_frozendict import handle_mirror
         from hdict.persistence.stored import Stored
         if id not in storage:
             return None
@@ -476,8 +512,3 @@ class frozenhdict(UserDict, dict[str, VT], AbsExpr):
 
     def __hash__(self):
         return hash(self.hosh)
-
-    def __mul__(self, other):
-        from hdict.expr import Expr
-
-        return Expr(self, other)

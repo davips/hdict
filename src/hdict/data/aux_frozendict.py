@@ -6,11 +6,12 @@ from hosh import ø
 
 from hdict import hdict, value, frozenhdict
 from hdict.abs import AbsAny
-from hdict.applyout import ApplyOut
 from hdict.content.argument.apply import apply
 from hdict.content.argument.field import field
 from hdict.content.argument.sample import sample
 from hdict.content.entry import AbsEntry
+from hdict.content.entry.closure import Closure
+from hdict.expression.step.applyout import ApplyOut
 
 VT = TypeVar("VT")
 
@@ -37,7 +38,6 @@ def handle_items(*datas: [Dict[str, object]], previous: [Dict[str, AbsEntry]]):
 def handle_item(key, item, previous):
     from hdict.content.argument.entry import entry
     if isinstance(key, tuple):
-        from hdict.multioutput import handle_multioutput
 
         return handle_multioutput(previous, key, item)
     elif not isinstance(key, str):  # pragma: no cover
@@ -70,7 +70,7 @@ def handle_item(key, item, previous):
         case AbsAny():
             raise Exception(f"Cannot handle instance of type '{type(item).__name__}'.")
         case _ if str(type(item)) == "<class 'pandas.core.frame.DataFrame'>":
-            from hdict.pandas_handling import explode_df
+            from hdict.dataset.pandas_handling import explode_df
             return explode_df(item)
         case _:
             return value(item)
@@ -92,6 +92,60 @@ def handle_identity(data):
             # PAPER REMINDER: state in the paper that hash(identifier) must be different from hash(value), for any identifier and value. E.g.: hash(X) != hash("X")    #   Here the difference always happen because values are pickled, while identifiers are just encoded().
             ids[k] = data[k].hosh.id
     return hosh, ids
+
+
+def handle_multioutput(previous, field_names: tuple, entry: AbsEntry | apply):
+    """Fields and hoshes are assigned to each output according to the alphabetical order of the original keys.
+
+    >>> from hdict import field, value
+    >>> d = {"a": field("b"), "b": field("c"), "c": 5}
+    >>> d
+    {'a': field(b), 'b': field(c), 'c': 5}
+    >>> handle_multioutput(d, ("x","y"), value([0,1]))
+    {'x': 0, 'y': 1}
+    >>> handle_multioutput(d, ("x","y"), value({1:"a", 0:"b"}))
+    {'x': 'b', 'y': 'a'}
+    """
+    from hdict import value
+    from hdict.content.entry.subvalue import SubValue
+
+    data = {}
+    match entry:
+        case value(value=list() as lst):
+            if len(field_names) != len(lst):  # pragma: no cover
+                raise Exception(f"Number of output fields ('{len(field_names)}') should match number of list elements ('{len(lst)}').")
+            for field_name, val in zip(field_names, lst):
+                data[field_name] = handle_item(field_name, val, previous)
+        case value(value=dict() as dct):
+            if len(field_names) != len(dct):  # pragma: no cover
+                raise Exception(f"Number of output fields ('{len(field_names)}') should match number of dict entries ('{len(dct)}').")
+            for field_name, (_, val) in zip(field_names, sorted(dct.items())):
+                data[field_name] = handle_item(field_name, val, previous)
+        case AbsEntry() | apply():
+            keys = []  # For repr().
+            parent = Closure(entry, previous, keys) if isinstance(entry, apply) else entry
+            n = len(field_names)
+            for key, i, source in loop_field_names(field_names):
+                keys.append(key)
+                data[key] = SubValue(parent, i, n, source)
+        case _:  # pragma: no cover
+            raise Exception(f"Cannot handle multioutput for key '{field_names}' and type '{type(entry).__name__}'.")
+    return data
+
+
+def loop_field_names(field_names):
+    if all(isinstance(x, tuple) for x in field_names):
+        source_target = sorted((sour, targ) for targ, sour in field_names)
+        for i, sour_targ in enumerate(source_target):
+            if len(sour_targ) != 2:  # pragma: no cover
+                raise Exception(f"Output tuples should be string pairs 'target=source', not a sequence of length '{len(sour_targ)}'.", sour_targ)
+            source, target = sour_targ
+            yield target, i, source
+    elif any(isinstance(x, tuple) for x in field_names):  # pragma: no cover
+        raise Exception(f"Cannot mix translated and non translated outputs.", field_names)
+    else:
+        for i, field_name in enumerate(field_names):
+            yield field_name, i, None
 
 
 def handle_mirror(stored):

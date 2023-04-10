@@ -9,12 +9,12 @@ from hdict.content.argument.apply import apply
 from hdict.content.argument.default import default
 from hdict.content.entry import AbsEntry, Unevaluated
 from hdict.content.entry.aux_closure import handle_arg
-from hdict.customjson import truncate
+from hdict.text.customjson import truncate
 
 
 class Closure(AbsEntry):
     def __init__(self, application: apply, data: dict[str, AbsEntry], out: list):
-        from hdict.aux_frozendict import handle_item
+        from hdict.data.aux_frozendict import handle_item
 
         self.application = application
         self.out = out

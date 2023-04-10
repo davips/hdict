@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from hdict.aux_frozendict import MissingFieldException
 from hdict.content.argument import AbsBaseArgument
 
 
@@ -8,8 +7,9 @@ def handle_arg(key, val, data, discarded_defaults, out, torepr):
     """Return handled arg and value of pseudocircular entry"""
     from hdict.content.argument.default import default
     from hdict.content.value import value
-    from hdict.aux_frozendict import handle_item
+    from hdict.data.aux_frozendict import handle_item
     from hdict import field
+    from hdict.data.aux_frozendict import MissingFieldException
 
     from hdict.content.argument.entry import entry
     match val:
@@ -24,14 +24,14 @@ def handle_arg(key, val, data, discarded_defaults, out, torepr):
                 torepr[key] = arg
                 return arg
         case field(name=name) if name in out:  # Override case of handle_item if pseudocircular reference.
-            if name not in data:
+            if name not in data:  # pragma: no cover
                 raise MissingFieldException(f"Missing pseudocircular field `{name}`")
             arg = handle_item(str(key), data[name], data)  # key passed for no purpose here AFAIR
             torepr[key] = arg
             return arg
         case entry(name=name):
             from hdict.content.entry.wrapper import Wrapper
-            if name not in data:
+            if name not in data:  # pragma: no cover
                 raise MissingFieldException(f"Missing pseudocircular field `{name}`")
             content = handle_item(str(key), data[name], data)
             arg = Wrapper(content)

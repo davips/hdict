@@ -1,5 +1,18 @@
+from indexed import IndexedOrderedDict
+
 from hdict.content.argument import AbsArgument
-from hdict.indexeddict import IndexedDict
+
+
+class IndexedDict(IndexedOrderedDict):
+    """
+    Wrapper with a cleaner repr(esentation) of IndexedOrderedDict.
+
+    >>> IndexedDict([('a', 'a'), ('b', 'b')])
+    {'a': 'a', 'b': 'b'}
+    """
+
+    def __repr__(self):
+        return repr(dict(self.items()))
 
 
 class Arg:

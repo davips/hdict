@@ -31,8 +31,8 @@ from hosh import Hosh
 
 from hdict.content.argument import AbsBaseArgument, AbsArgument
 from hdict.content.argument.field import field
-from hdict.customjson import truncate
-from hdict.hoshfication import f2hosh
+from hdict.text.customjson import truncate
+from hdict.content.aux_value import f2hosh
 
 
 class apply(AbsBaseArgument):
@@ -76,7 +76,7 @@ class apply(AbsBaseArgument):
     >>> d = {"f": ap, "b": 5, "d": 1, "e": field("b")}
     >>> d
     {'f': λ(3 b c=default(1) d=default(2) e=default(13)), 'b': 5, 'd': 1, 'e': field(b)}
-    >>> from hdict.aux_frozendict import handle_items
+    >>> from hdict.data.aux_frozendict import handle_items
     >>> handle_items(d, previous={"b": 5})
     {'b': 5, 'f': λ(3 b c=1 d=2 e=13), 'd': 1, 'e': 5}
     >>> d
@@ -100,6 +100,18 @@ class apply(AbsBaseArgument):
     {'a': 3, 'b': field(b), 'c': 77, 'd': default(2), 'e': default(13), 'x': 5}
     >>> apply(f,b=77,x=5).requirements
     {'a': field(a), 'b': 77, 'c': default(1), 'd': default(2), 'e': default(13), 'x': 5}
+    >>> from hdict.content.argument.entry import entry
+    >>> a = apply(lambda x: x.value * 7, x=entry("x"))
+    >>> b = a.x.sample()
+    >>> b
+    x=λ(·x)
+    >>> d = {"x": 3} >> b
+    >>> d.x
+    21
+    >>> a.sampleable
+    False
+    >>> a.sample()
+    λ(·x)
     """
 
     _sampleable, isfield, _requirements = None, False, None
@@ -174,8 +186,8 @@ class apply(AbsBaseArgument):
         return Closure(self, data, [key])
 
     def __call__(self, *out, **kwout):
-        from hdict.applyout import ApplyOut
-        if not (out or kwout):
+        from hdict.expression.step.applyout import ApplyOut
+        if not (out or kwout):  # pragma: no cover
             raise Exception(f"At least one output field must be specified to apply.")
 
         if out and kwout:  # pragma: no cover
@@ -187,7 +199,7 @@ class apply(AbsBaseArgument):
     def __getattr__(self, item):
         # REMINDER: Work around getattribute missing all properties.
         if item not in ["ahosh", "requirements", "hosh"]:
-            from hdict.applyout import ApplyOut
+            from hdict.expression.step.applyout import ApplyOut
 
             return ApplyOut(self, item)
         return self.__getattribute__(item)  # pragma: no cover
@@ -196,6 +208,12 @@ class apply(AbsBaseArgument):
         raise Exception(f"Cannot pipeline an application before specifying the output field.")
 
     def __rrshift__(self, other):  # pragma: no cover
+        raise Exception(f"Cannot apply before specifying the output field.")
+
+    def __mul__(self, other):  # pragma: no cover
+        raise Exception(f"Cannot pipeline an application before specifying the output field.")
+
+    def __rmul__(self, other):  # pragma: no cover
         raise Exception(f"Cannot apply before specifying the output field.")
 
     def __repr__(self):
@@ -213,8 +231,8 @@ class apply(AbsBaseArgument):
                     lst.append(truncate(repr(content), width=7))
                 case AbsArgument():
                     lst.append(f"{param}={repr(content)}")
-                case _:
-                    raise Exception(f"")
+                case _:  # pragma: no cover
+                    raise Exception(f"Canoot repr `{type(content)}")
         return f"λ({' '.join(lst)})"
 
     @property

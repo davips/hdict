@@ -1,17 +1,28 @@
 from functools import reduce
-from itertools import chain
 from operator import rshift
 from random import Random
 
 from hdict.abs import AbsAny
-from hdict.abs.step import AbsExpr
+from hdict.expression.step.step import AbsStep
 
 
-class Expr(AbsExpr):
+class Expr(AbsStep):
     """
-    Expressions enable the creation of pipelines of steps
+    Expressions enable the creation of pipelines of steps (or nested expressions)
 
     Pipelines should be sampled or fed a hdict to become a resulting hdict.
+
+    >>> from hdict import hdict
+    >>> from hdict.expression.expr import Expr
+    >>> e = Expr() >> hdict()
+    >>> e.show(colored=False)
+    ⦑{
+        _id: 0000000000000000000000000000000000000000,
+        _ids: {}
+    }⦒
+    >>> e = Expr() >> dict()
+    >>> e.show(colored=False)
+    ⦑{}⦒
     """
 
     def __init__(self, *steps):
@@ -19,22 +30,26 @@ class Expr(AbsExpr):
 
     def sample(self, rnd: int | Random = None, solve=True):
         from hdict.content.argument import AbsArgument
-        from hdict.applyout import ApplyOut
+        from hdict.expression.step.applyout import ApplyOut
+        from hdict import cache, hdict
+        from hdict.expression.step.edict import EDict
 
         lst = []
         for step in self:
             match step:
                 case AbsArgument() | ApplyOut():
                     lst.append(step.sample(rnd))
-                case AbsAny():
-                    raise Exception(f"{type(step)}")
-                case dict():
-                    dct = step.copy()
+                case cache():
+                    lst.append(step)
+                case EDict():
+                    dct = step.dct.copy()
                     for k, v in dct.items():
                         if isinstance(v, AbsArgument):
                             dct[k] = dct[k].sample(rnd)
-                    lst.append(dct)
-                case _:
+                    lst.append(EDict(dct))
+                case AbsAny():  # pragma: no cover
+                    raise Exception(f"{type(step)}")
+                case _:  # pragma: no cover
                     raise Exception(f"")
         expr = Expr.fromiter(lst)
         return expr.solve() if solve else expr
@@ -49,25 +64,9 @@ class Expr(AbsExpr):
         return new
 
     def solve(self):
-        return reduce(rshift, self)
-
-    def roperate(self, left, solve):
-        from hdict import hdict, frozenhdict
-
-        match left:
-            case hdict() | frozenhdict():
-                expr = Expr(left, self)
-            case dict():
-                expr = Expr(hdict(left), self)
-            case _:
-                return NotImplemented  # pragma: no cover
-        return expr.solve() if solve else expr
-
-    def __rrshift__(self, left):
-        return self.roperate(left, True)
-
-    def __rmul__(self, left):
-        return self.roperate(left, False)
+        from hdict.expression.step.edict import EDict
+        gen = (step.dct if isinstance(step, EDict) else step for step in self)
+        return reduce(rshift, gen)
 
     def __iter__(self):
         for step in self.steps:
@@ -75,15 +74,6 @@ class Expr(AbsExpr):
                 yield from step
             else:
                 yield step
-
-    def __repr__(self):
-        return " » ".join(repr(step) for step in self)
-
-    def __str__(self):
-        out = []
-        for step in self:
-            out.append(str(step))
-        return " » ".join(out)
 
     def show(self, colored=True, key_quotes=False):
         r"""Print textual representation of an expression"""
@@ -95,11 +85,11 @@ class Expr(AbsExpr):
 
         >>> p = Expr({"b":2}, {"a":1})
         >>> p
-        {'b': 2} » {'a': 1}
+        ⦑{'b': 2} » {'a': 1}⦒
         >>> p.show()
-        {'b': 2} » {'a': 1}
+        ⦑{'b': 2} » {'a': 1}⦒
         """
-        from hdict.frozenhdict import frozenhdict
+        from hdict.data.frozenhdict import frozenhdict
         from hdict import hdict
 
         out = []
@@ -108,4 +98,13 @@ class Expr(AbsExpr):
                 out.append(step.astext(colored=colored, key_quotes=key_quotes))
             else:
                 out.append(repr(step))
-        return " » ".join(out)
+        return "⦑" + " » ".join(out) + "⦒"
+
+    def __repr__(self):
+        return "⦑" + " » ".join(repr(step) for step in self) + "⦒"
+
+    def __str__(self):
+        out = []
+        for step in self:
+            out.append(str(step))
+        return "⦑" + " » ".join(out) + "⦒"

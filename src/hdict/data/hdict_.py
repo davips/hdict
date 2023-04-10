@@ -22,7 +22,8 @@
 #
 from typing import TypeVar, Union
 
-from hdict.frozenhdict import frozenhdict
+from hdict.data.frozenhdict import frozenhdict
+from hdict.dataset.pandas_handling import file2df
 
 VT = TypeVar("VT")
 
@@ -33,6 +34,13 @@ VT = TypeVar("VT")
 class hdict_(dict[str, VT]):
     """
     This class was created only due to slowness of IDE created by excessive doctests in the main file.
+
+    >>> e = hdict_() * dict() * hdict_()
+    >>> e.show(colored=False)
+    ⦑{
+        _id: 0000000000000000000000000000000000000000,
+        _ids: {}
+    } » {} » {}⦒
     """
 
     # noinspection PyMissingConstructor
@@ -59,25 +67,17 @@ class hdict_(dict[str, VT]):
             return self.frozen[item]
         return self.__getattribute__(item)  # pragma: no cover
 
+    def __rmul__(self, other):
+        return other * self.frozen
+
+    def __mul__(self, other):
+        return self.frozen * other
+
     def __rrshift__(self, other):
         return (other >> self.frozen).unfrozen
 
     def __rshift__(self, other):
-        from hdict.content.argument import AbsArgument
-        from hdict.abs.step import AbsStep
-
-        from hdict.content.argument.apply import apply
-        if isinstance(other, apply):  # pragma: no cover
-            raise Exception(f"Cannot apply without specifying output(s).\n"
-                            f"Hint: d >> apply(f)('output_field1', 'output_field2')")
-        if isinstance(other, AbsArgument):  # pragma: no cover
-            raise Exception(f"Cannot pipe {type(other).__name__} without specifying output.\n"
-                            f"Hint: d >> {'field name': object}\n"
-                            f"Hint: d['field name'] = object")
-        # REMINDER: dict includes hdict/frozenhdict.
-        if isinstance(other, (dict, AbsStep)):
-            return (self.frozen >> other).unfrozen
-        return NotImplemented  # pragma: no cover
+        return (self.frozen >> other).unfrozen
 
     @property
     def evaluated(self):
@@ -157,7 +157,7 @@ class hdict_(dict[str, VT]):
             }
         }
         """
-        from hdict.frozenhdict import frozenhdict
+        from hdict.data.frozenhdict import frozenhdict
 
         return frozenhdict.fromdict(dictionary, ids).unfrozen
 
@@ -379,8 +379,7 @@ class hdict_(dict[str, VT]):
     @staticmethod
     def fromfile(name, fields=None, format="df", include_name=False):
         """Input format is defined by file extension: .arff, .csv"""
-        from hdict.data.load import file2df
-        from hdict.data.dataset import df2Xy
+        from hdict.dataset.dataset import df2Xy
 
         if fields is None:
             fields = ["df"]
@@ -417,8 +416,3 @@ class hdict_(dict[str, VT]):
         c  3  7
         """
         return self.frozen.asdf
-
-    def __mul__(self, other):
-        from hdict.expr import Expr
-
-        return Expr(self, other)

@@ -23,7 +23,7 @@
 
 from hdict.content.argument.field import field
 from hdict.content.argument.sample import sample
-from hdict.frozenhdict import frozenhdict
+from hdict.data.frozenhdict import frozenhdict
 
 
 class Empty_(frozenhdict):
@@ -52,6 +52,14 @@ class Empty_(frozenhdict):
 
     def __rshift__(self, other):
         res = super().__rshift__(other)
+        if res is NotImplemented:
+            return res
+        if isinstance(res, frozenhdict):
+            res = res.unfrozen
+        return res
+
+    def __mul__(self, other):
+        res = super().__mul__(other)
         if res is NotImplemented:
             return res
         return res.unfrozen

@@ -21,7 +21,7 @@
 #  time spent here.
 #
 
-from hdict.abs.step import AbsStep
+from hdict.expression.step.step import AbsStep
 
 
 class cache(AbsStep):
@@ -72,3 +72,6 @@ class cache(AbsStep):
     def __init__(self, storage: dict, *fields):
         self.storage = storage
         self.fields = fields
+
+    def __repr__(self):
+        return f"↑↓`{type(self.storage).__name__}`"

@@ -24,13 +24,32 @@
 from dataclasses import dataclass
 from random import Random
 
-from hdict.abs.step import AbsStep
 from hdict.content.argument.apply import apply
+from hdict.expression.step.step import AbsStep
 
 
 @dataclass
 class ApplyOut(AbsStep):
-    """Wrapper for 'apply' to append the output field(s)"""
+    """
+    Wrapper for 'apply' to append the output field(s)
+
+    >>> from hdict import cache, apply, sample
+    >>> e = dict() * apply(lambda x: x*2, x=sample(1,2,3,...,9)).a * (cache({}) >> dict(s=sample(1,2,3,...,9)))
+    >>> e.show(colored=False)
+    ⦑{} » a=λ(x=~[1 2 .+. 9]) » ↑↓`dict` » {s: "~[1 2 .+. 9]"}⦒
+    >>> e.steps[0].steps[1].sampleable
+    True
+    >>> (~e).show(colored=False)
+    {
+        a: ↑↓ cached at `dict`·,
+        s: 7,
+        _id: J2CPNGfxvEaLcJSy1sA2WAlmGyFDjXkor.DkEGpl,
+        _ids: {
+            a: 8v.MUDWXtCirIrM97YgzEDDrmIAbmlWqkrhZMWPS,
+            s: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf
+        }
+    }
+    """
 
     nested: apply
     out: [str | tuple[str, str]]
@@ -43,32 +62,6 @@ class ApplyOut(AbsStep):
     @property
     def sampleable(self):
         return self.nested.sampleable
-
-    def __rrshift__(self, left):
-        from hdict import hdict, frozenhdict
-
-        if isinstance(left, dict) and not isinstance(left, (hdict, frozenhdict)):
-            return hdict(left) >> self
-        return NotImplemented  # pragma: no cover
-
-    def __rmul__(self, left):
-        from hdict import hdict, frozenhdict
-        from hdict.expr import Expr
-
-        if isinstance(left, dict) and not isinstance(left, (hdict, frozenhdict)):
-            return Expr(left, self)
-        return NotImplemented  # pragma: no cover
-
-    def __rshift__(self, other):
-        from hdict.expr import Expr
-
-        # REMINDER: dict includes hdict/frozenhdict.
-        if isinstance(other, (dict, ApplyOut)):
-            return Expr(self, other)
-        return NotImplemented  # pragma: no cover
-
-    def __mul__(self, other):
-        return self.__rshift__(other)
 
     def __repr__(self):
         return f"{self.out}={repr(self.nested)}"

@@ -25,11 +25,11 @@ from typing import TypeVar
 from hdict.content.argument.apply import apply
 from hdict.content.argument.field import field
 from hdict.content.argument.sample import sample
-from hdict.empty_ import Empty_
+from hdict.data.empty_ import Empty_
 from hdict.content.value import value
-from hdict.frozenhdict import frozenhdict
-from hdict.hdict_ import hdict_
-from hdict.persistence.cache import cache
+from hdict.data.frozenhdict import frozenhdict
+from hdict.data.hdict_ import hdict_
+from hdict.expression.step.cache import cache
 
 __all__ = ["hdict", "_", "Ø", "apply", "field", "sample", "frozenhdict", "value", "cache"]
 
@@ -172,8 +172,6 @@ class hdict(hdict_):
     >>> d >>= {"z": apply(f, field("x"), y=3), ("w", "v"): apply(g, y=7)}
     >>> d >>= apply(f, field("x"), y=3)("z9") * apply(g, y=7)("w9", "v9")
     >>> pp = apply(f, field("x"), y=3)("z") >> apply(g, y=7)("w", "v")
-    >>> type(pp)
-    <class 'hdict.expr.Expr'>
     >>> d >>= {"x": 3} >> pp >> apply(g, y=7)("w", "v")
     >>> from hdict import _
     >>> a1 = apply(f, y=_[1, 2, 4, ..., 128])
@@ -344,7 +342,7 @@ class hdict(hdict_):
     >>> list(d)
     ['y']
     >>> e = d >> apply(lambda y: y*7)("y")
-    >>> from hdict.hoshfication import f2hosh
+    >>> from hdict.content.aux_value import f2hosh
     >>> print(f2hosh(lambda y: y*7))
     54YCMDJIlsIvMQ.KJtT-vFyjg83Zgfj2xSHOgCj8
     >>> print(e)

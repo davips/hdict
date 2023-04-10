@@ -29,7 +29,7 @@ from hdict.content.argument import AbsMetaArgument
 class default(AbsMetaArgument):
     def __init__(self, value: object | Callable):
         self.value = value
-        if isinstance(value, AbsAny):
+        if isinstance(value, AbsAny):  # pragma: no cover
             raise Exception(f"Cannot use a `{type(value).__name__}` as a default function value.")
 
     def __repr__(self):
