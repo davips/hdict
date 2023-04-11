@@ -20,9 +20,12 @@
 #  part of this work is illegal and it is unethical regarding the effort and
 #  time spent here.
 #
+from dataclasses import dataclass
+
 from hdict.content.entry import AbsEntry
 
 
+@dataclass
 class SubValue(AbsEntry):
     """
     A field containing part of other field
@@ -37,9 +40,14 @@ class SubValue(AbsEntry):
     3
     """
 
-    def __init__(self, parent: AbsEntry, index: int, n: int, source: str = None):
-        self.parent, self.index, self.n, self.source = parent, index, n, source
-        self.hosh = parent.hosh[index:n]
+    parent: AbsEntry
+    index: int
+    n: int
+    source: str = None
+    # target: str = None
+
+    def __post_init__(self):
+        self.hosh = self.parent.hosh[self.index:self.n]
 
     @property
     def value(self):
@@ -64,4 +72,5 @@ class SubValue(AbsEntry):
     def __repr__(self):
         if self.isevaluated:
             return repr(self._value)
+        # t = self.parent if self.target is None else self.target
         return f"{self.parent}→{str(self.index if self.source is None else self.source)}"

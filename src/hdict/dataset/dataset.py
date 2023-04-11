@@ -43,7 +43,7 @@ def isplit(source, sep=None, regex=False):
     :returns:
         generator yielding elements of string.
     """
-    if sep is None:
+    if sep is None:  # pragma: no cover
         # mimic default python behavior
         source = source.strip()
         sep = "\\s+"

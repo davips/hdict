@@ -38,43 +38,44 @@ def handle_items(*datas: [Dict[str, object]], previous: [Dict[str, AbsEntry]]):
 
 def handle_item(key, item, previous):
     from hdict.content.argument.entry import entry
-    if isinstance(key, tuple):
-
-        return handle_multioutput(previous, key, item)
-    elif not isinstance(key, str):  # pragma: no cover
-        raise Exception(f"Invalid type for input field specification: {type(key).__name__}")
-    elif key.startswith("_"):  # pragma: no cover
-        raise Exception(f"Field names cannot start with '_': {key}")
-
     match item:
         case AbsEntry():
-            return item
+            res = item
         case field(name=name):
             if name not in previous:  # pragma: no cover
                 raise MissingFieldException(f"Missing field `{name}`")
-            return handle_item(name, previous[name], previous)
+            res = handle_item(name, previous[name], previous)
         case entry(name=name):
             from hdict.content.entry.wrapper import Wrapper
             if name not in previous:  # pragma: no cover
                 raise MissingFieldException(f"Missing entry `{name}`")
-            return Wrapper(handle_item(name, previous[name], previous))
+            res = Wrapper(handle_item(name, previous[name], previous))
         case apply():
-            return item.enclosure(previous, key)
+            res = item.enclosure(previous, key)
         case sample():  # pragma: no cover
             raise Exception(f"Unsampled variable or argument `{key}`")
         case frozenhdict():
-            return value(item, item.hosh)
+            res = value(item, item.hosh)
         case hdict():
-            return value(item.frozen, item.hosh)
+            res = value(item.frozen, item.hosh)
         case ApplyOut():  # pragma: no cover
             raise Exception("Cannot assign output through both apply and dict-key: '>> {out: apply(...)(out)}'.")
         case AbsAny():  # pragma: no cover
             raise Exception(f"Cannot handle instance of type '{type(item).__name__}'.")
         case _ if str(type(item)) == "<class 'pandas.core.frame.DataFrame'>":
             from hdict.dataset.pandas_handling import explode_df
-            return explode_df(item)
+            res = explode_df(item)
         case _:
-            return value(item)
+            res = value(item)
+
+    if isinstance(key, tuple):
+        return handle_multioutput(key, res, previous)
+    elif not isinstance(key, str):  # pragma: no cover
+        raise Exception(f"Invalid type for input field specification: {type(key).__name__}")
+    elif key.startswith("_"):  # pragma: no cover
+        raise Exception(f"Field names cannot start with '_': {key}")
+
+    return res
 
 
 def handle_identity(data):
@@ -96,16 +97,16 @@ def handle_identity(data):
     return hosh, ids
 
 
-def handle_multioutput(previous, field_names: tuple, entry: AbsEntry | apply):
+def handle_multioutput(field_names: tuple, entry: AbsEntry | apply, previous):
     """Fields and hoshes are assigned to each output according to the alphabetical order of the original keys.
 
     >>> from hdict import field, value
     >>> d = {"a": field("b"), "b": field("c"), "c": 5}
     >>> d
     {'a': field(b), 'b': field(c), 'c': 5}
-    >>> handle_multioutput(d, ("x","y"), value([0,1]))
+    >>> handle_multioutput(("x","y"), value([0, 1]), d)
     {'x': 0, 'y': 1}
-    >>> handle_multioutput(d, ("x","y"), value({1:"a", 0:"b"}))
+    >>> handle_multioutput(("x","y"), value({1: "a", 0: "b"}), d)
     {'x': 'b', 'y': 'a'}
     """
     from hdict import value

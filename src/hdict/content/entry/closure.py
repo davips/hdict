@@ -71,10 +71,14 @@ class Closure(AbsEntry):
             # del self.application  # TODO: delete clasure.application inside each subvalue?
         return self._value
 
-    def __repr__(self):
+    def __repr__(self, out=None):
         from hdict import value
         from hdict import field
         from hdict.content.entry.wrapper import Wrapper
+        from hdict.content.argument.entry import entry
+        if out is None:
+            out = []
+        out = out + self.out
         lst = []
         for param, content in self.torepr.items():
             pre = "" if isinstance(param, int) else f"{param}="
@@ -88,17 +92,24 @@ class Closure(AbsEntry):
                 case default(value=v):
                     lst.append(f"{param}={v}")
 
-                case field(name) if name in self.out:
-                    lst.append(repr(content))
+                # case field(name) if name in out:
+                #     lst.append(repr(content))
                 case field(name) if name == param:
                     lst.append(f"{param}")
                 case field(name):
                     lst.append(f"{pre}{name}")
 
+                case Wrapper(entry_):
+                    if isinstance(entry_, Closure):
+                        lst.append(entry_.__repr__(out))
+                    else:
+                        lst.append(param)
+                case Closure():
+                    lst.append(f"{pre}{content.value if content.isevaluated else content.__repr__(out)}")
                 case AbsArgument():
                     lst.append(f"{pre}{repr(content)}")
-                case Wrapper(entry):
-                    lst.append(repr(entry))
-                case _:
+                case AbsEntry():
+                    lst.append(f"{pre}{repr(content)}")
+                case _:  # pragma: no cover
                     raise Exception(type(content))
         return f"λ({' '.join(lst)})"

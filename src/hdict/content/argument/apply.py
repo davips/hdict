@@ -42,7 +42,7 @@ class apply(AbsBaseArgument):
     Single output application is defined by attribute: 'apply(f).my_output_field'.
     Multioutput application is defined by a call: 'apply(f)("output_field1", "output_field2")'.
 
-    >>> from hdict import apply, value, frozenhdict
+    >>> from hdict import apply, value, frozenhdict, _
     >>> f = lambda a, b: a**b
     >>> v = apply(f, 5, b=7)
     >>> v
@@ -106,8 +106,8 @@ class apply(AbsBaseArgument):
     >>> c.show(colored=False)
     {
         x: 3,
-        y: "3",
-        r: λ(3),
+        y: ·3,
+        r: λ(·x),
         _id: drMRkK24R01dlyw0ye-Rx8Gzac7zxmZUS.toA1gi,
         _ids: {
             x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
@@ -140,6 +140,101 @@ class apply(AbsBaseArgument):
         _ids: {
             x: .PtYLSxMYqVXNTh-mnqsQygl4goFXoRrXCtQrTYP,
             h: GfMhwM5bo6OzIpngAf8Ruro6.QgOv2kb0nbj0mgd
+        }
+    }
+    >>> a = apply(lambda x: x.value * 7).x
+    >>> d >>= a
+    >>> d.show(colored=False)
+    {
+        x: λ(x=21),
+        h: {
+            a: 2,
+            _id: GfMhwM5bo6OzIpngAf8Ruro6.QgOv2kb0nbj0mgd,
+            _ids: {
+                a: k3PWYRxIEc0lEvD1f6rbnk.36RAD5AyfROy1aT29
+            }
+        },
+        _id: 5fUCSwb7D633jeGv.xMb006XT8Ulr18os.KxyeTH,
+        _ids: {
+            x: -89UidPh6BgYdYYTx4nxewuDpdilgWzm4O6adFwc,
+            h: GfMhwM5bo6OzIpngAf8Ruro6.QgOv2kb0nbj0mgd
+        }
+    }
+    >>> a = apply(lambda x: x.value * 7, entry("x")).x
+    >>> d >>= a
+    >>> d.show(colored=False)
+    {
+        x: λ(λ(x=21)),
+        h: {
+            a: 2,
+            _id: GfMhwM5bo6OzIpngAf8Ruro6.QgOv2kb0nbj0mgd,
+            _ids: {
+                a: k3PWYRxIEc0lEvD1f6rbnk.36RAD5AyfROy1aT29
+            }
+        },
+        _id: pEhqOs9sPjot-eiGgJbKQ5j7aTL1MySiBaoTj0r4,
+        _ids: {
+            x: mmdYysfo0-rbXPLWBaqHKdxGkR9xwyihdlfv-q4B,
+            h: GfMhwM5bo6OzIpngAf8Ruro6.QgOv2kb0nbj0mgd
+        }
+    }
+    >>> d >>= {"b" : 2, "c": entry("b")}
+    >>> d.show(colored=False)
+    {
+        x: λ(λ(x=21)),
+        h: {
+            a: 2,
+            _id: GfMhwM5bo6OzIpngAf8Ruro6.QgOv2kb0nbj0mgd,
+            _ids: {
+                a: k3PWYRxIEc0lEvD1f6rbnk.36RAD5AyfROy1aT29
+            }
+        },
+        b: 2,
+        c: ·2,
+        _id: WoI36oD8iHnd81y0q-VTpbFoN2rhdAbRGOk1yBK5,
+        _ids: {
+            x: mmdYysfo0-rbXPLWBaqHKdxGkR9xwyihdlfv-q4B,
+            h: GfMhwM5bo6OzIpngAf8Ruro6.QgOv2kb0nbj0mgd,
+            b: k3PWYRxIEc0lEvD1f6rbnk.36RAD5AyfROy1aT29,
+            c: k3PWYRxIEc0lEvD1f6rbnk.36RAD5AyfROy1aT29
+        }
+    }
+    >>> d >>= {"b" : (2, 3), ("a1", "b1"): [0, 1]}
+    >>> d >>= {("a2", "b2"): _.b}
+    >>> d >>= {("a3", "b3"): entry("b")}
+    >>> d.show(colored=False)  # TODO: improve output for subvalues (and backtracking in general for pointer-like entries)
+    {
+        x: λ(λ(x=21)),
+        h: {
+            a: 2,
+            _id: GfMhwM5bo6OzIpngAf8Ruro6.QgOv2kb0nbj0mgd,
+            _ids: {
+                a: k3PWYRxIEc0lEvD1f6rbnk.36RAD5AyfROy1aT29
+            }
+        },
+        b: [
+            2,
+            3
+        ],
+        c: ·2,
+        a1: 0,
+        b1: 1,
+        a2: "(2, 3)→0",
+        b2: "(2, 3)→1",
+        a3: ·(2, 3)→0,
+        b3: ·(2, 3)→1,
+        _id: jY2TGGf9ZSvPk7k3Mu4bgeJJXZ45Gwwye.wPVBgX,
+        _ids: {
+            x: mmdYysfo0-rbXPLWBaqHKdxGkR9xwyihdlfv-q4B,
+            h: GfMhwM5bo6OzIpngAf8Ruro6.QgOv2kb0nbj0mgd,
+            b: -a.WUGANQp6aVgbRCtUljlgs12HNtJ-dJOAgSZWk,
+            c: k3PWYRxIEc0lEvD1f6rbnk.36RAD5AyfROy1aT29,
+            a1: M7HyZUgSF.ZSmBEMFcDkiZBQz00wU9pGF3DoRiDu,
+            b1: DYu5bfVvb6FOhBCWNsss4wsEWHZYTbKnsVgoWFvl,
+            a2: GfnITQ6RdDtm4F-F0UuU8fOJX1DZIBZG5RWBM8wm,
+            b2: QznFPbiCaMRZKUoFhdLxMKYQf3ujIe1zDl9G5Rq-,
+            a3: GfnITQ6RdDtm4F-F0UuU8fOJX1DZIBZG5RWBM8wm,
+            b3: QznFPbiCaMRZKUoFhdLxMKYQf3ujIe1zDl9G5Rq-
         }
     }
     """

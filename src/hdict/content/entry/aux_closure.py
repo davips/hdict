@@ -12,6 +12,7 @@ def handle_arg(key, val, data, discarded_defaults, out, torepr):
     from hdict.data.aux_frozendict import MissingFieldException
 
     from hdict.content.argument.entry import entry
+    from hdict.content.entry.subvalue import SubValue
     match val:
         case default(value=v):
             if key in data:
@@ -35,7 +36,7 @@ def handle_arg(key, val, data, discarded_defaults, out, torepr):
                 raise MissingFieldException(f"Missing pseudocircular field `{name}`")
             content = handle_item(str(key), data[name], data)
             arg = Wrapper(content)
-            torepr[key] = arg
+            torepr[f"·{name}"] = arg
             return arg
         case AbsBaseArgument():
             arg = handle_item(str(key), val, data)

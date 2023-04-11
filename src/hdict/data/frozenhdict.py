@@ -371,10 +371,11 @@ class frozenhdict(UserDict, dict[str, VT]):
             txt = txt.replace(f'"{h.id}"', repr(h)) if colored else txt.replace(f'"{h.id}"', h.id)
 
         # Remove quotes.
-        txt = re.sub(r'(": )"(λ.+?)"(?=,\n)', '": \\2', txt)
-        txt = re.sub(r'(": )"(↑↓ cached at `.+?·)"(?=,\n)', '": \\2', txt)
+        txt = re.sub(r'(": )"(λ.+?)"(?=,\n)', '": \\2', txt)  # Closure
+        txt = re.sub(r'(": )"(·.+?)"(?=,\n)', '": \\2', txt)  # Wrapper
+        txt = re.sub(r'(": )"(↑↓ cached at `.+?·)"(?=,\n)', '": \\2', txt)  # cache
         if not key_quotes:
-            txt = re.sub(r'(?<!: )"([\-a-zA-Z0-9_ ]+?)"(?=: )', "\\1", txt)
+            txt = re.sub(r'(?<!: )"([\-a-zA-Z0-9_ ]+?)"(?=: )', "\\1", txt)  # keys
 
         return txt
 

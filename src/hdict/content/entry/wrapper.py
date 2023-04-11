@@ -22,4 +22,4 @@ class Wrapper(AbsEntry):
         return self._value
 
     def __repr__(self):
-        return repr(self.entry)
+        return "·" + repr(self.entry)
