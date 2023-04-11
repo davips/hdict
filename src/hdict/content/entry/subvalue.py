@@ -33,6 +33,8 @@ class SubValue(AbsEntry):
     [3]→0
     >>> v.value
     3
+    >>> v
+    3
     """
 
     def __init__(self, parent: AbsEntry, index: int, n: int, source: str = None):
@@ -43,7 +45,7 @@ class SubValue(AbsEntry):
     def value(self):
         from hdict.content.entry import Unevaluated
 
-        if self._value is Unevaluated:
+        if self._value == Unevaluated:
             value = self.parent.value
             if isinstance(value, (list, tuple)):
                 if len(value) < self.n:  # pragma: no cover

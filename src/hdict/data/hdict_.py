@@ -35,12 +35,36 @@ class hdict_(dict[str, VT]):
     """
     This class was created only due to slowness of IDE created by excessive doctests in the main file.
 
+    >>> from hdict import _, apply
     >>> e = hdict_() * dict() * hdict_()
     >>> e.show(colored=False)
     ⦑{
         _id: 0000000000000000000000000000000000000000,
         _ids: {}
     } » {} » {}⦒
+    >>> d = {"x": 3, "f": lambda x: x+1} >> e >> apply(_.f, _.x).x
+    >>> d.show(colored=False)  # doctest:+ELLIPSIS
+    {
+        x: λ(3),
+        f: "<function <lambda> at 0x...>",
+        _id: KLOoEeCH2RuCEsOqTVVWLH1JR69eozXUF0xgvVJM,
+        _ids: {
+            x: k0mNmg8iUh4smoL5cs9Xf5HqZY6O6CLHwTFU.UVa,
+            f: LwPloQfKaEYl7z9kNJqrw46sQMASaNgCtBmICRp7
+        }
+    }
+    >>> d.x
+    4
+    >>> d.show(colored=False)  # doctest:+ELLIPSIS
+    {
+        x: 4,
+        f: "<function <lambda> at 0x...>",
+        _id: KLOoEeCH2RuCEsOqTVVWLH1JR69eozXUF0xgvVJM,
+        _ids: {
+            x: k0mNmg8iUh4smoL5cs9Xf5HqZY6O6CLHwTFU.UVa,
+            f: LwPloQfKaEYl7z9kNJqrw46sQMASaNgCtBmICRp7
+        }
+    }
     """
 
     # noinspection PyMissingConstructor

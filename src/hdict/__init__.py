@@ -400,7 +400,9 @@ class hdict(hdict_):
     ...     print("busy")
     ...     return 23
     >>> storage = {}
-    >>> d >>= apply(f).o >> cache(storage, "x")
+    >>> d >>= apply(f).o >> cache(storage, "x", "y")
+    >>> d.y
+    28
     >>> d.show(colored=False)
     {
         a: 5,

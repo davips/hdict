@@ -507,7 +507,6 @@ class frozenhdict(UserDict, dict[str, VT]):
 
     def __iter__(self):
         for k in self.data:
-            # if not k.startswith("_"):
             yield k
 
     def __hash__(self):

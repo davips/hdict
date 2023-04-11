@@ -82,7 +82,8 @@ class CustomJSONEncoder(JSONEncoder):
             d: fBb9FHVYpHC7vyM-B8UrXuN4oCcQ4Y7pnQ6oSK3J,
             y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
             ell: P1oPe-8hTjTdV6gKov4oIQnmTUXyD2fU6E7C8MS6,
-            df: Zrz1JpxxZz7HIZDWPjdZEvMsqClGQnH7qcIqzhOb
+            df: Zrz1JpxxZz7HIZDWPjdZEvMsqClGQnH7qcIqzhOb,
+            df_: Zrz1JpxxZz7HIZDWPjdZEvMsqClGQnH7qcIqzhOb
         }
     }
     >>> from numpy import array
@@ -115,7 +116,8 @@ class CustomJSONEncoder(JSONEncoder):
                 d: fBb9FHVYpHC7vyM-B8UrXuN4oCcQ4Y7pnQ6oSK3J,
                 y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
                 ell: P1oPe-8hTjTdV6gKov4oIQnmTUXyD2fU6E7C8MS6,
-                df: Zrz1JpxxZz7HIZDWPjdZEvMsqClGQnH7qcIqzhOb
+                df: Zrz1JpxxZz7HIZDWPjdZEvMsqClGQnH7qcIqzhOb,
+                df_: Zrz1JpxxZz7HIZDWPjdZEvMsqClGQnH7qcIqzhOb
             }
         },
         z: 9,

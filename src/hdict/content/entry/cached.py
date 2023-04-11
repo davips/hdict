@@ -14,12 +14,12 @@ class Cached(AbsEntry):
     @property
     def value(self):
         from hdict import frozenhdict
-        if self._value is Unevaluated:
+        if self._value == Unevaluated:
             if self.entry and self.entry.isevaluated:
                 self._value = self.entry.value
             elif ret := frozenhdict.fetch(self.id, self.storage):
                 self._value = ret
-            elif self.entry is None:
+            elif self.entry is None:  # pragma: no cover
                 raise Exception(f"id `{self.id}` not found.")
             else:
                 from hdict.persistence.stored import Stored

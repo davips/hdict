@@ -11,6 +11,7 @@ from hdict.content.argument.field import field
 from hdict.content.argument.sample import sample
 from hdict.content.entry import AbsEntry
 from hdict.content.entry.closure import Closure
+from hdict.dataset.dataset import df2Xy
 from hdict.expression.step.applyout import ApplyOut
 
 VT = TypeVar("VT")
@@ -49,25 +50,25 @@ def handle_item(key, item, previous):
         case AbsEntry():
             return item
         case field(name=name):
-            if name not in previous:
+            if name not in previous:  # pragma: no cover
                 raise MissingFieldException(f"Missing field `{name}`")
             return handle_item(name, previous[name], previous)
         case entry(name=name):
             from hdict.content.entry.wrapper import Wrapper
-            if name not in previous:
+            if name not in previous:  # pragma: no cover
                 raise MissingFieldException(f"Missing entry `{name}`")
             return Wrapper(handle_item(name, previous[name], previous))
         case apply():
             return item.enclosure(previous, key)
-        case sample():
+        case sample():  # pragma: no cover
             raise Exception(f"Unsampled variable or argument `{key}`")
         case frozenhdict():
             return value(item, item.hosh)
         case hdict():
             return value(item.frozen, item.hosh)
-        case ApplyOut():
+        case ApplyOut():  # pragma: no cover
             raise Exception("Cannot assign output through both apply and dict-key: '>> {out: apply(...)(out)}'.")
-        case AbsAny():
+        case AbsAny():  # pragma: no cover
             raise Exception(f"Cannot handle instance of type '{type(item).__name__}'.")
         case _ if str(type(item)) == "<class 'pandas.core.frame.DataFrame'>":
             from hdict.dataset.pandas_handling import explode_df
@@ -78,7 +79,7 @@ def handle_item(key, item, previous):
 
 def handle_identity(data):
     hosh = ø
-    ids = {}
+    ids, later = {}, {}
     for k, v in data.items():
         # Handle meta. mirror, and field ids differently.
         if k.startswith("_"):  # pragma: no cover
@@ -86,11 +87,12 @@ def handle_identity(data):
             # self.mhosh += self.data[k].hosh * k.encode()                # self.mids[k] = self.data[k].hosh.id
         elif k.endswith("_"):
             # mirrorfield, e.g.: 'df_' is a mirror/derived from 'df'
-            pass
+            later[k] = v.id
         else:
-            hosh += data[k].hosh * k.encode()
+            hosh += v.hosh * k.encode()
             # PAPER REMINDER: state in the paper that hash(identifier) must be different from hash(value), for any identifier and value. E.g.: hash(X) != hash("X")    #   Here the difference always happen because values are pickled, while identifiers are just encoded().
-            ids[k] = data[k].hosh.id
+            ids[k] = v.hosh.id
+    ids.update(later)
     return hosh, ids
 
 

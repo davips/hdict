@@ -41,7 +41,15 @@ class Closure(AbsEntry):
             def f():
                 args = (x.value for x in fargs.values())
                 kwargs = {k: v.value for k, v in fkwargs.items()}
-                return appliable_entry.value(*args, **kwargs)
+                try:
+                    return appliable_entry.value(*args, **kwargs)
+                except TypeError as e:  # pragma: no cover
+                    if "required positional argument" in str(e):
+                        raise Exception(
+                            f"{str(e)}\n"
+                            f"HINT: If you are applying a field, "
+                            f"you should make the function parameters explicit, e.g.: `apply(f, parameter1, parameter2)`."
+                        )
 
         else:
             hosh *= application.ahosh

@@ -42,7 +42,7 @@ class apply(AbsBaseArgument):
     Single output application is defined by attribute: 'apply(f).my_output_field'.
     Multioutput application is defined by a call: 'apply(f)("output_field1", "output_field2")'.
 
-    >>> from hdict import apply, value
+    >>> from hdict import apply, value, frozenhdict
     >>> f = lambda a, b: a**b
     >>> v = apply(f, 5, b=7)
     >>> v
@@ -102,6 +102,19 @@ class apply(AbsBaseArgument):
     {'a': field(a), 'b': 77, 'c': default(1), 'd': default(2), 'e': default(13), 'x': 5}
     >>> from hdict.content.argument.entry import entry
     >>> a = apply(lambda x: x.value * 7, x=entry("x"))
+    >>> c = {"x": 3, "y": entry("x")} >> a.r
+    >>> c.show(colored=False)
+    {
+        x: 3,
+        y: "3",
+        r: λ(3),
+        _id: drMRkK24R01dlyw0ye-Rx8Gzac7zxmZUS.toA1gi,
+        _ids: {
+            x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+            y: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+            r: .PtYLSxMYqVXNTh-mnqsQygl4goFXoRrXCtQrTYP
+        }
+    }
     >>> b = a.x.sample()
     >>> b
     x=λ(·x)
@@ -112,6 +125,23 @@ class apply(AbsBaseArgument):
     False
     >>> a.sample()
     λ(·x)
+    >>> d["h"] = frozenhdict(a=2)
+    >>> d.show(colored=False)
+    {
+        x: 21,
+        h: {
+            a: 2,
+            _id: GfMhwM5bo6OzIpngAf8Ruro6.QgOv2kb0nbj0mgd,
+            _ids: {
+                a: k3PWYRxIEc0lEvD1f6rbnk.36RAD5AyfROy1aT29
+            }
+        },
+        _id: Wjqo4.Qw7KBK6NbppnlKT2W3d5KScpptjoCcNsjj,
+        _ids: {
+            x: .PtYLSxMYqVXNTh-mnqsQygl4goFXoRrXCtQrTYP,
+            h: GfMhwM5bo6OzIpngAf8Ruro6.QgOv2kb0nbj0mgd
+        }
+    }
     """
 
     _sampleable, isfield, _requirements = None, False, None

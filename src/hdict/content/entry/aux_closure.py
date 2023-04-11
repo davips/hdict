@@ -39,15 +39,7 @@ def handle_arg(key, val, data, discarded_defaults, out, torepr):
             return arg
         case AbsBaseArgument():
             arg = handle_item(str(key), val, data)
-        case _:
+        case _:  # pragma: no cover
             raise Exception(f"Cannot handle argument of type `{type(val).__name__}`")
     torepr[key] = val
     return arg
-
-
-def isint(s):
-    try:
-        int(s)
-        return True
-    except ValueError:
-        return False

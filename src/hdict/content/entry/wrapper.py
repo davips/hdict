@@ -17,7 +17,7 @@ class Wrapper(AbsEntry):
 
     @property
     def value(self):
-        if self._value is Unevaluated:
+        if self._value == Unevaluated:
             self._value = self.entry
         return self._value
 
