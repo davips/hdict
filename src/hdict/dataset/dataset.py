@@ -132,15 +132,13 @@ def dumps(df):
     return liacarff.dumps(arff)
 
 
-def df2Xy(input="df", Xout="X", yout="y", **kwargs):
+def df2Xy(df):
     from sklearn.preprocessing import LabelEncoder
 
     le = LabelEncoder()
-    df = kwargs[input]
     X_ = df.drop(df.columns[[-1]], axis=1)
     y_ = le.fit_transform(df[df.columns[-1]])
-    return {Xout: X_, yout: y_, "_history": ...}
-
+    return {"X": X_, "y": y_}
 
 #
 #

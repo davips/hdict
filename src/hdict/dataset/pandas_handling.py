@@ -26,7 +26,7 @@ from hdict.content.value import value
 def explode_df(df) -> value:
     """
     >>> from pandas import DataFrame
-    >>> from hdict import hdict
+    >>> from hdict import hdict, cache
     >>> df = DataFrame({"x": [1,2,3], "y": [5,6,7]}, index=["a", "b", "c"])
     >>> d = hdict(df_=df)
     >>> d.show(colored=False)
@@ -45,7 +45,8 @@ def explode_df(df) -> value:
         },
         _id: qMP.-f8p3zIrmTuOOqBLCVurT6uIIfihnR3rZne4,
         _ids: {
-            df: CO3m4w1vqM.etZXkoHQoNxA.PS.kQI-LomW.H6VC
+            df: CO3m4w1vqM.etZXkoHQoNxA.PS.kQI-LomW.H6VC,
+            df_: CO3m4w1vqM.etZXkoHQoNxA.PS.kQI-LomW.H6VC
         }
     }
     >>> d.df_
@@ -53,6 +54,40 @@ def explode_df(df) -> value:
     a  1  5
     b  2  6
     c  3  7
+    >>> c = {}
+    >>> d >>= cache(c)
+    >>> d.show(colored=False)
+    {
+        df_: "‹{'x': {'a': 1, 'b': 2, 'c': 3}, 'y': {'a': 5, 'b': 6, 'c': 7}}›",
+        df: {
+            index: "‹{'a': 'a', 'b': 'b', 'c': 'c'}›",
+            x: "‹{'a': 1, 'b': 2, 'c': 3}›",
+            y: "‹{'a': 5, 'b': 6, 'c': 7}›",
+            _id: CO3m4w1vqM.etZXkoHQoNxA.PS.kQI-LomW.H6VC,
+            _ids: {
+                index: HBNoEs58wCDhsdWWisp0sjMwsWmNMXuwaGFE9UAt,
+                x: 3F.7UkfLr2tpB-FxATaRJYIpbYpg9oa1r5M31M0j,
+                y: bqYjHGDn-brebdANtxtNo4OkpOXfDwwVYejlzo4t
+            }
+        },
+        _id: qMP.-f8p3zIrmTuOOqBLCVurT6uIIfihnR3rZne4,
+        _ids: {
+            df: CO3m4w1vqM.etZXkoHQoNxA.PS.kQI-LomW.H6VC,
+            df_: CO3m4w1vqM.etZXkoHQoNxA.PS.kQI-LomW.H6VC
+        }
+    }
+    >>> d.df.show(colored=False)
+    {
+        index: "‹{'a': 'a', 'b': 'b', 'c': 'c'}›",
+        x: "‹{'a': 1, 'b': 2, 'c': 3}›",
+        y: "‹{'a': 5, 'b': 6, 'c': 7}›",
+        _id: CO3m4w1vqM.etZXkoHQoNxA.PS.kQI-LomW.H6VC,
+        _ids: {
+            index: HBNoEs58wCDhsdWWisp0sjMwsWmNMXuwaGFE9UAt,
+            x: 3F.7UkfLr2tpB-FxATaRJYIpbYpg9oa1r5M31M0j,
+            y: bqYjHGDn-brebdANtxtNo4OkpOXfDwwVYejlzo4t
+        }
+    }
     """
     from hdict.data.frozenhdict import frozenhdict
     from hdict import value
@@ -65,7 +100,7 @@ def explode_df(df) -> value:
 
 
 def file2df(name):
-    from hdict.data.dataset import load
+    from hdict.dataset.dataset import load
     if name.endswith(".arff"):
         relation = None
         with open(name) as f:

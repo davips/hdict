@@ -20,9 +20,11 @@
 #  part of this work is illegal and it is unethical regarding the effort and
 #  time spent here.
 #
+from io import StringIO
 from typing import TypeVar, Union
 
 from hdict.data.frozenhdict import frozenhdict
+from hdict.dataset.dataset import loads, isplit
 from hdict.dataset.pandas_handling import file2df
 
 VT = TypeVar("VT")
@@ -401,30 +403,69 @@ class hdict_(dict[str, VT]):
         return frozenhdict.load(id, storage).unfrozen
 
     @staticmethod
-    def fromfile(name, fields=None, format="df", include_name=False):
-        """Input format is defined by file extension: .arff, .csv"""
-        from hdict.dataset.dataset import df2Xy
+    def fromfile(name, fields=None, format="df", named=None):
+        r"""
+        Input format is defined by file extension: .arff, .csv
 
-        if fields is None:
-            fields = ["df"]
-        df, name = file2df(name)
-        # if include_name
-        if format == "df":
-            if fields == ["X", "y"]:
-                fields = ["df"]
-            if len(fields) != 1:  # pragma: no cover
-                raise Exception(f"Wrong number of fields {len(fields)}. Expected: 1.", fields)
-            return frozenhdict({fields[0]: df})
-        elif format == "Xy":
-            if fields == ["df"]:
-                fields = ["X", "y"]
-            if len(fields) != 2:  # pragma: no cover
-                raise Exception(f"Wrong number of fields {len(fields)}. Expected: 2.", fields)
-            dic = df2Xy(df=df)
-            del dic["_history"]
-            return frozenhdict({fields[0]: dic["X"], fields[1]: dic["y"]})
-        else:  # pragma: no cover
-            raise Exception(f"Unknown {format=}.")
+        >>> from hdict import hdict
+        >>> from testfixtures import TempDirectory
+        >>> arff = "@RELATION mini\n@ATTRIBUTE attr1	REAL\n@ATTRIBUTE attr2 	REAL\n@ATTRIBUTE class 	{0,1}\n@DATA\n5.1,3.5,0\n3.1,4.5,1"
+        >>> with TempDirectory() as tmp:  # doctest:+ELLIPSIS
+        ...    tmp.write("mini.arff", arff.encode())
+        ...    d = hdict.fromfile(tmp.path + "/mini.arff")
+        '/tmp/.../mini.arff'
+        >>> d.show(colored=False)
+        {
+            df: "‹{'attr1@REAL': {0: 5.1, 1: 3.1}, 'attr2@REAL': {0: 3.5, 1: 4.5}, 'class@{0,1}': {0: '0', 1: '1'}}›",
+            _id: CWkreYbSmrL0DPN9OtoU4Za1dg8.Jjl.fXD6yblb,
+            _ids: {
+                df: cHrG-npBDd2VEB8Foeg.7jQNZtdkTM1uhouHgW.J
+            }
+        }
+        >>> csv = "attr1,attr2,class\n5.1,3.5,0\n3.1,4.5,1"
+        >>> with TempDirectory() as tmp:  # doctest:+ELLIPSIS
+        ...    tmp.write("mini.csv", csv.encode())
+        ...    d = hdict.fromfile(tmp.path + "/mini.csv")
+        '/tmp/.../mini.csv'
+        >>> d.show(colored=False)
+        {
+            df: "‹{'attr1': {0: 5.1, 1: 3.1}, 'attr2': {0: 3.5, 1: 4.5}, 'class': {0: 0, 1: 1}}›",
+            _id: X4CDIwtBn8BiF71hNG5JeISRQcVffsy.7UWv16IX,
+            _ids: {
+                df: Cr4zP7wsqcNFjkkfcGvy7nV4oTh5tOeu9Zh5MQmu
+            }
+        }
+        """
+        return frozenhdict.fromfile(name, fields, format, named).unfrozen
+
+    @staticmethod
+    def fromtext(text: str, fields=None, format="df", named=None):
+        r"""
+        Input format is defined by file extension: .arff, .csv
+
+        >>> from hdict import hdict
+        >>> arff = "@RELATION mini\n@ATTRIBUTE attr1	REAL\n@ATTRIBUTE attr2 	REAL\n@ATTRIBUTE class 	{0,1}\n@DATA\n5.1,3.5,0\n3.1,4.5,1"
+        >>> d = hdict.fromtext(arff)
+        >>> d.show(colored=False)
+        {
+            df: "‹{'attr1@REAL': {0: 5.1, 1: 3.1}, 'attr2@REAL': {0: 3.5, 1: 4.5}, 'class@{0,1}': {0: '0', 1: '1'}}›",
+            _id: CWkreYbSmrL0DPN9OtoU4Za1dg8.Jjl.fXD6yblb,
+            _ids: {
+                df: cHrG-npBDd2VEB8Foeg.7jQNZtdkTM1uhouHgW.J
+            }
+        }
+        >>> csv = "attr1,attr2,class\n5.1,3.5,0\n3.1,4.5,1"
+        >>> d = hdict.fromtext(csv)
+        >>> d.show(colored=False)
+        {
+            df: "‹{'attr1': {0: 5.1, 1: 3.1}, 'attr2': {0: 3.5, 1: 4.5}, 'class': {0: 0, 1: 1}}›",
+            _id: X4CDIwtBn8BiF71hNG5JeISRQcVffsy.7UWv16IX,
+            _ids: {
+                df: Cr4zP7wsqcNFjkkfcGvy7nV4oTh5tOeu9Zh5MQmu
+            }
+        }
+        """
+        return frozenhdict.fromtext(text, fields, format, named).unfrozen
 
     @property
     def asdf(self):

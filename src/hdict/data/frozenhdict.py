@@ -24,8 +24,11 @@
 import json
 import re
 from collections import UserDict
+from io import StringIO
 from typing import TypeVar, Union
 
+from hdict.dataset.dataset import loads, isplit
+from hdict.dataset.pandas_handling import file2df
 from hdict.text.customjson import CustomJSONEncoder, stringfy
 
 VT = TypeVar("VT")
@@ -482,6 +485,43 @@ class frozenhdict(UserDict, dict[str, VT]):
         data = dict(self)
         index = data.pop("index")
         return DataFrame(data, index=index)
+
+    @staticmethod
+    def fromfile(name, fields=None, format="df", named=None):
+        r"""
+        Input format is defined by file extension: .arff, .csv
+        """
+        from hdict.data.aux_frozendict import handle_format
+        df, name = file2df(name)
+        return handle_format(format, fields, df, named and name)
+
+    @staticmethod
+    def fromtext(text: str, fields=None, format="df", named=None):
+        r"""
+        Input format is defined by file extension: .arff, .csv
+        """
+        from hdict import frozenhdict
+        if text.startswith("@"):
+            name = "<Unnamed>"
+            with StringIO() as f:
+                f.write(text)
+                text = f.getvalue()
+                df = loads(text)
+                for line in isplit(text, "\n"):
+                    if line[:9].upper() == "@RELATION":
+                        name = line[9:].strip()
+                        break
+        else:
+            from testfixtures import TempDirectory
+            with TempDirectory() as tmp:
+                tmp.write(
+                    "temp.csv",
+                    text.encode(),
+                )
+                return frozenhdict.fromfile(tmp.path + "/temp.csv", fields, format, named)
+
+        from hdict.data.aux_frozendict import handle_format
+        return handle_format(format, fields, df, named and name)
 
     def __eq__(self, other):
         if isinstance(other, dict):

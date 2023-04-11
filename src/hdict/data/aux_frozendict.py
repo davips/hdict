@@ -158,3 +158,27 @@ def handle_mirror(stored):
             pass
         case _:
             raise Exception(f"Unknown mirror field kind.")
+
+
+def handle_format(format, fields, df, name):
+    if fields is None:
+        fields = ["df"]
+    if format == "df":
+        if fields == ["X", "y"]:
+            fields = ["df"]
+        if len(fields) != 1:  # pragma: no cover
+            raise Exception(f"Wrong number of fields {len(fields)}. Expected: 1.", fields)
+        d = frozenhdict({fields[0]: df})
+    elif format == "Xy":
+        if fields == ["df"]:
+            fields = ["X", "y"]
+        if len(fields) != 2:  # pragma: no cover
+            raise Exception(f"Wrong number of fields {len(fields)}. Expected: 2.", fields)
+        dic = df2Xy(df=df)
+        d = frozenhdict({fields[0]: dic["X"], fields[1]: dic["y"]})
+    else:  # pragma: no cover
+        raise Exception(f"Unknown {format=}.")
+
+    if name is not None:
+        d >>= {"name": name}
+    return d
