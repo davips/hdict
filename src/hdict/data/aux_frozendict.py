@@ -151,18 +151,61 @@ def loop_field_names(field_names):
             yield field_name, i, None
 
 
-def handle_mirror(k, data, id):  # Stored | Cached  TODO: strict mode
-    match data[k].kind:
+def handle_mirror(k, data, id, kind):  # object | Cached
+    from hdict.content.entry.cached import Cached
+    if not isinstance(data[k], (Cached, frozenhdict)): # pragma: no cover
+        raise Exception(f"Cannot handle fetched object of type `{type(data[k])}`")
+    match kind:
         case "<class 'pandas.core.frame.DataFrame'>":
             f = lambda **kwargs: kwargs[k].asdf
             return apply(f, fhosh=ø, **{k: field(k)}).enclosure(data, k)
-        case None:
+        case None:  # pragma: no cover
             pass
-        case _:
-            raise Exception(f"Unknown mirror field kind.")
+        case _:  # pragma: no cover
+            raise Exception(f"Unknown mirror field kind `{kind}`.")
 
 
 def handle_format(format, fields, df, name):
+    """
+    >>> from hdict import hdict
+    >>> df = hdict(index=[1,2], X=[3,4], y=[5,6]).asdf
+    >>> handle_format("Xy", ["X", "y"], df, True).show(colored=False)
+    {
+        X: "‹{'X': {1: 3, 2: 4}}›",
+        y: "‹[0 1]›",
+        name: true,
+        _id: Qbcv80d7nEuKex05ecsNrCyQ4d7OI1XsgTWgcCcd,
+        _ids: {
+            X: oPj-WdtESlEAiUDqGQOUXR-4uwVNfYDl98o042.P,
+            y: cm5S71YBRAlVWV5Yn9pXHzsacyZuEH4ZFDNAw9nu,
+            name: oK8X-7eG1Qp1WH7v6fokBDrQPdngKn.h86tlEnx4
+        }
+    }
+    >>> handle_format("df", ["X", "y"], df, True).show(colored=False)
+    {
+        df: "‹{'X': {1: 3, 2: 4}, 'y': {1: 5, 2: 6}}›",
+        name: true,
+        _id: Y8dS5prSxAflQwA0RvutZ.EMDRcyzeZAZCAAuWtT,
+        _ids: {
+            df: taqqcce8-I2nyIyk8LCm4iec0SVkrnbE6FjEvpiS,
+            name: oK8X-7eG1Qp1WH7v6fokBDrQPdngKn.h86tlEnx4
+        }
+    }
+    >>> handle_format("Xy", None, df, True).show(colored=False)
+    {
+        X: "‹{'X': {1: 3, 2: 4}}›",
+        y: "‹[0 1]›",
+        name: true,
+        _id: Qbcv80d7nEuKex05ecsNrCyQ4d7OI1XsgTWgcCcd,
+        _ids: {
+            X: oPj-WdtESlEAiUDqGQOUXR-4uwVNfYDl98o042.P,
+            y: cm5S71YBRAlVWV5Yn9pXHzsacyZuEH4ZFDNAw9nu,
+            name: oK8X-7eG1Qp1WH7v6fokBDrQPdngKn.h86tlEnx4
+        }
+    }
+    """
+    if fields and not isinstance(fields, list):  # pragma: no cover
+        raise Exception(f"`fields` must be a list.")
     if fields is None:
         fields = ["df"]
     if format == "df":
@@ -181,7 +224,7 @@ def handle_format(format, fields, df, name):
     else:  # pragma: no cover
         raise Exception(f"Unknown {format=}.")
 
-    if name is not None:
+    if name:
         d >>= {"name": name}
     return d
 

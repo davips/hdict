@@ -147,6 +147,8 @@ class CustomJSONEncoder(JSONEncoder):
             v: kDsYXHYuZJ9o7GXZLx6lYu0GpEqyrCmBpt0xoy60
         }
     }
+    >>> str(hdict(s={1,3,2}, t={3,1,2}, u={2,1,3}, v={2,1,3}))
+    '{s: "{1, 2, 3}", t: "{1, 2, 3}", u: "{1, 2, 3}", v: "{1, 2, 3}"}'
     """
 
     width = 200
@@ -161,11 +163,8 @@ class CustomJSONEncoder(JSONEncoder):
             if obj is Ellipsis:
                 return "..."
             if isinstance(obj, AbsEntry) and obj.isevaluated:
-                # from hoshmap import FrozenIdict, Idict
-                # if isinstance(obj.value, Idict):
-                #     return obj.value.frozen.asdicts
-                # if isinstance(obj.value, FrozenIdict):
-                #     return obj.value.asdicts
+                if isinstance(obj.value, dict):
+                    return obj.value.asdicts_noid
                 return obj.value
             # if isinstance(obj, FunctionType):
             #     return str(obj)

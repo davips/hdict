@@ -96,7 +96,7 @@ def explode_df(df) -> value:
     for col in df:
         dic[str(col)] = df[col]
     d = frozenhdict(dic)
-    return value(df, d.hosh, hdict=d)
+    return value(df, d.hosh, hdict=d)  # `value.hdict` points to `d`.
 
 
 def file2df(name):

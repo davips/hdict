@@ -3,6 +3,14 @@ from hosh import Hosh
 from hdict.content.entry import AbsEntry, Unevaluated
 
 
+def kindid(fid):
+    return (fid ** Hosh("»hdict·PREFIX KIND«".encode())).id
+
+
+def getkind(storage, hosh):
+    return storage[kindid(hosh)]
+
+
 class Cached(AbsEntry):
     """Layer to enable delaying fetching from storage"""
 
@@ -13,7 +21,7 @@ class Cached(AbsEntry):
 
     @property
     def kind(self):
-        return self.storage[(self.hosh ** "»hdict·PREFIX KIND«".encode()).id]
+        return getkind(self.storage, self.hosh)
 
     @property
     def value(self):
@@ -33,3 +41,5 @@ class Cached(AbsEntry):
 
     def __repr__(self):
         return f"↑↓ cached at `{type(self.storage).__name__}`·"
+
+    # def __str__(self):

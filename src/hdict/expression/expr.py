@@ -68,6 +68,12 @@ class Expr(AbsStep):
         gen = (step.dct if isinstance(step, EDict) else step for step in self)
         return reduce(rshift, gen)
 
+    @property
+    def unfrozen(self):
+        from hdict import frozenhdict
+        gen = (step.unfrozen if isinstance(step, frozenhdict) else step for step in self)
+        return Expr.fromiter(gen)
+
     def __iter__(self):
         for step in self.steps:
             if isinstance(step, Expr):

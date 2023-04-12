@@ -25,7 +25,7 @@
 import re
 
 
-def isplit(source, sep=None, regex=False):
+def isplit(source, sep=None, regex=False):  # pragma: no cover
     """
     https://stackoverflow.com/a/9773142/9681577
 
@@ -103,7 +103,7 @@ def loads(s):
     return liac2pandas(data)
 
 
-def df2liac(df, relation="data", description=""):
+def df2liac(df, relation="data", description=""):  # pragma: no cover
     attrs = []
     for col in df.columns:
         attr = col.split("@")
@@ -118,18 +118,18 @@ def df2liac(df, relation="data", description=""):
     return result
 
 
-def dump(df, fp):
-    import arff as liacarff
-
-    arff = df2liac(df)
-    liacarff.dump(arff, fp)
-
-
-def dumps(df):
-    import arff as liacarff
-
-    arff = df2liac(df)
-    return liacarff.dumps(arff)
+# def dump(df, fp):  # TODO: save arff/CSV from hdict
+#     import arff as liacarff
+#
+#     arff = df2liac(df)
+#     liacarff.dump(arff, fp)
+#
+#
+# def dumps(df):  # TODO: output arff/CSV from hdict
+#     import arff as liacarff
+#
+#     arff = df2liac(df)
+#     return liacarff.dumps(arff)
 
 
 def df2Xy(df):

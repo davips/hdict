@@ -27,8 +27,6 @@ from collections import UserDict
 from io import StringIO
 from typing import TypeVar, Union
 
-from hosh import Hosh
-
 from hdict.dataset.dataset import loads, isplit
 from hdict.dataset.pandas_handling import file2df
 from hdict.text.customjson import CustomJSONEncoder, stringfy
@@ -164,8 +162,8 @@ class frozenhdict(UserDict, dict[str, VT]):
                 return Expr(self, other)
             case dict():
                 return Expr(self, EDict(other))
-            case _:
-                return NotImplemented  # pragma: no cover
+            case _:  # pragma: no cover
+                return NotImplemented
 
     def __rrshift__(self, left):
         from hdict import hdict
@@ -205,8 +203,8 @@ class frozenhdict(UserDict, dict[str, VT]):
                 dct = other
             case Expr():
                 return Expr(self, other).solve()
-            case _:
-                return NotImplemented  # pragma: no cover
+            case _:  # pragma: no cover
+                return NotImplemented
 
         return frozenhdict(dct, _previous=self.data)
 
@@ -423,13 +421,14 @@ class frozenhdict(UserDict, dict[str, VT]):
         """
         Store an entire frozenidict
         """
+        from hdict.content.entry.cached import kindid
         from hdict.persistence.stored import Stored
         data = {self.id: self.ids}
         for field, fid in self.ids.items():
             value = self[field]
             if field.endswith("_"):
                 # TODO check existence of the counterpart
-                data[(fid ** Hosh("»hdict·PREFIX KIND«".encode())).id] = str(type(value))
+                data[kindid(fid)] = str(type(value))
             elif isinstance(value, frozenhdict):
                 value.save(storage)
             else:
@@ -453,6 +452,7 @@ class frozenhdict(UserDict, dict[str, VT]):
         When cache is a list, traverse it from the end (right item to the left item).
         """
         from hdict.content.entry.cached import Cached
+        from hdict.content.entry.cached import getkind
         from hdict.data.aux_frozendict import handle_mirror
         from hdict.persistence.stored import Stored
         if id not in storage:
@@ -460,7 +460,7 @@ class frozenhdict(UserDict, dict[str, VT]):
         obj = storage[id]
         if isinstance(obj, dict):
             ishdict = True  # Set to True, because now we have a nested frozenhdict
-        elif ishdict or not isinstance(obj, Stored):
+        elif ishdict or not isinstance(obj, Stored):  # pragma: no cover
             raise Exception(f"Wrong content for hdict expected under id {id}: {type(obj)}.")
 
         if ishdict:
@@ -474,14 +474,17 @@ class frozenhdict(UserDict, dict[str, VT]):
                 if lazy:
                     data[field] = Cached(fid, storage)
                 else:
-                    stored = frozenhdict.fetch(fid, storage, lazy=False, ishdict=False)
-                    if stored is None:
+                    obj = frozenhdict.fetch(fid, storage, lazy=False, ishdict=False)
+                    if obj is None:  # pragma: no cover
                         print(storage.keys())
                         raise Exception(f"Incomplete hdict: id '{id}' not found in the provided cache.")
-                    data[field] = stored
+                    data[field] = obj
             for field in mirrored:
-                data[field + "_"] = handle_mirror(field, data, ids[field])
+                obj = data[field]
+                kind = obj.kind if isinstance(obj, Cached) else getkind(storage, obj.hosh)
+                data[field + "_"] = handle_mirror(field, data, ids[field], kind)
             return frozenhdict.fromdict(data, ids)
+
         return obj.content
 
     @property
@@ -542,7 +545,7 @@ class frozenhdict(UserDict, dict[str, VT]):
             if isinstance(other, (frozenhdict, hdict)):
                 return self.id == other.id
             return dict(self) == other
-        return NotImplemented
+        return NotImplemented  # pragma: no cover
 
     def __ne__(self, other):
         return not (self == other)

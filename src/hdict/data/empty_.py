@@ -42,6 +42,8 @@ class Empty_(frozenhdict):
             y: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf
         }
     }
+    >>> str(_ * {})
+    '⦑{} » {}⦒'
     """
 
     def __getattr__(self, item):
@@ -52,7 +54,7 @@ class Empty_(frozenhdict):
 
     def __rshift__(self, other):
         res = super().__rshift__(other)
-        if res is NotImplemented:
+        if res is NotImplemented:  # pragma: no cover
             return res
         if isinstance(res, frozenhdict):
             res = res.unfrozen
@@ -60,6 +62,6 @@ class Empty_(frozenhdict):
 
     def __mul__(self, other):
         res = super().__mul__(other)
-        if res is NotImplemented:
+        if res is NotImplemented:  # pragma: no cover
             return res
         return res.unfrozen

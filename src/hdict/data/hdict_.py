@@ -64,6 +64,8 @@ class hdict_(dict[str, VT]):
             f: LwPloQfKaEYl7z9kNJqrw46sQMASaNgCtBmICRp7
         }
     }
+    >>> str({"a": 2} * d)  # doctest:+ELLIPSIS
+    '⦑{a: 2} » {x: 4, f: "<function <lambda> at 0x...>"}⦒'
     """
 
     # noinspection PyMissingConstructor
@@ -426,6 +428,74 @@ class hdict_(dict[str, VT]):
                 "class@{0,1}": b.kJy3SrU-JQ1oeh1d.uWLO7Pqh-eW6zwK78nTY4
             }
         }
+        >>> d = hdict.fetch(d.id, storage, lazy=False)
+        >>> d.show(colored=False)
+        {
+            df: {
+                index: "‹{0: 0, 1: 1}›",
+                "attr1@REAL": "‹{0: 5.1, 1: 3.1}›",
+                "attr2@REAL": "‹{0: 3.5, 1: 4.5}›",
+                "class@{0,1}": "‹{0: '0', 1: '1'}›",
+                _id: cHrG-npBDd2VEB8Foeg.7jQNZtdkTM1uhouHgW.J,
+                _ids: {
+                    index: DQa5yWRkGo-9FLqmaST8pbElYdUEgqF8xPvip6-3,
+                    "attr1@REAL": wsy0JDrZO04O0RVwr64jpawX62WmCKtddYdvZlwm,
+                    "attr2@REAL": LvEgUazJoB1-.A3kABbskN-.iauWmWLTTo1iC51n,
+                    "class@{0,1}": b.kJy3SrU-JQ1oeh1d.uWLO7Pqh-eW6zwK78nTY4
+                }
+            },
+            df_: λ({    i···),
+            _id: CWkreYbSmrL0DPN9OtoU4Za1dg8.Jjl.fXD6yblb,
+            _ids: {
+                df: cHrG-npBDd2VEB8Foeg.7jQNZtdkTM1uhouHgW.J,
+                df_: cHrG-npBDd2VEB8Foeg.7jQNZtdkTM1uhouHgW.J
+            }
+        }
+        >>> del d["df_"]
+        >>> d.show(colored=False)
+        {
+            df: {
+                index: "‹{0: 0, 1: 1}›",
+                "attr1@REAL": "‹{0: 5.1, 1: 3.1}›",
+                "attr2@REAL": "‹{0: 3.5, 1: 4.5}›",
+                "class@{0,1}": "‹{0: '0', 1: '1'}›",
+                _id: cHrG-npBDd2VEB8Foeg.7jQNZtdkTM1uhouHgW.J,
+                _ids: {
+                    index: DQa5yWRkGo-9FLqmaST8pbElYdUEgqF8xPvip6-3,
+                    "attr1@REAL": wsy0JDrZO04O0RVwr64jpawX62WmCKtddYdvZlwm,
+                    "attr2@REAL": LvEgUazJoB1-.A3kABbskN-.iauWmWLTTo1iC51n,
+                    "class@{0,1}": b.kJy3SrU-JQ1oeh1d.uWLO7Pqh-eW6zwK78nTY4
+                }
+            },
+            _id: CWkreYbSmrL0DPN9OtoU4Za1dg8.Jjl.fXD6yblb,
+            _ids: {
+                df: cHrG-npBDd2VEB8Foeg.7jQNZtdkTM1uhouHgW.J
+            }
+        }
+        >>> d.save(storage)
+        >>> d = hdict.fetch(d.id, storage, lazy=False)
+        >>> d.show(colored=False)
+        {
+            df: {
+                index: "‹{0: 0, 1: 1}›",
+                "attr1@REAL": "‹{0: 5.1, 1: 3.1}›",
+                "attr2@REAL": "‹{0: 3.5, 1: 4.5}›",
+                "class@{0,1}": "‹{0: '0', 1: '1'}›",
+                _id: cHrG-npBDd2VEB8Foeg.7jQNZtdkTM1uhouHgW.J,
+                _ids: {
+                    index: DQa5yWRkGo-9FLqmaST8pbElYdUEgqF8xPvip6-3,
+                    "attr1@REAL": wsy0JDrZO04O0RVwr64jpawX62WmCKtddYdvZlwm,
+                    "attr2@REAL": LvEgUazJoB1-.A3kABbskN-.iauWmWLTTo1iC51n,
+                    "class@{0,1}": b.kJy3SrU-JQ1oeh1d.uWLO7Pqh-eW6zwK78nTY4
+                }
+            },
+            _id: CWkreYbSmrL0DPN9OtoU4Za1dg8.Jjl.fXD6yblb,
+            _ids: {
+                df: cHrG-npBDd2VEB8Foeg.7jQNZtdkTM1uhouHgW.J
+            }
+        }
+        >>> str(d)
+        '{df: {index: "‹{0: 0, 1: 1}›", attr1@REAL: "‹{0: 5.1, 1: 3.1}›", attr2@REAL: "‹{0: 3.5, 1: 4.5}›", class@{0,1}: "‹{0: \'0\', 1: \'1\'}›"}}'
         """
         return frozenhdict.fetch(id, storage, lazy, ishdict).unfrozen
 
