@@ -26,6 +26,7 @@ class Cached(AbsEntry):
     @property
     def value(self):
         from hdict import frozenhdict
+
         if isinstance(self._value, Unevaluated):
             if self.entry and self.entry.isevaluated:
                 self._value = self.entry.value
@@ -35,6 +36,7 @@ class Cached(AbsEntry):
                 raise Exception(f"id `{self.id}` not found.")
             else:
                 from hdict.persistence.stored import Stored
+
                 self._value = self.entry.value
                 self.storage[self.id] = Stored(self._value)
         return self._value

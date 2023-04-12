@@ -312,6 +312,7 @@ class apply(AbsBaseArgument):
 
     def __call__(self, *out, **kwout):
         from hdict.expression.step.applyout import ApplyOut
+
         if not (out or kwout):  # pragma: no cover
             raise Exception(f"At least one output field must be specified to apply.")
 

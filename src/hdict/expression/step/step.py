@@ -41,17 +41,19 @@ class AbsStep(AbsAny):
         from hdict import hdict, frozenhdict
         from hdict.expression.step.edict import EDict
         from hdict.expression.expr import Expr
+
         match other:
             case AbsStep() | hdict() | frozenhdict():
                 return Expr(self, other)
             case dict():
                 return Expr(self, EDict(other))
-            case _: # pragma: no cover
+            case _:  # pragma: no cover
                 return NotImplemented
 
     def __rrshift__(self, left):
         from hdict import hdict
         from hdict import frozenhdict
+
         if isinstance(left, dict) and not isinstance(left, (hdict, frozenhdict)):
             return hdict(left) >> self
         return NotImplemented  # pragma: no cover

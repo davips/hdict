@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
-<title>hdict.applyout API documentation</title>
+<title>hdict.content.entry.wrapper API documentation</title>
 <meta name="description" content="" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
@@ -19,87 +19,39 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>hdict.applyout</code></h1>
+<h1 class="title">Module <code>hdict.content.entry.wrapper</code></h1>
 </header>
 <section id="section-intro">
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">#  Copyright (c) 2023. Davi Pereira dos Santos
-#  This file is part of the hdict project.
-#  Please respect the license - more about this in the section (*) below.
-#
-#  hdict is free software: you can redistribute it and/or modify
-#  it under the terms of the GNU General Public License as published by
-#  the Free Software Foundation, either version 3 of the License, or
-#  (at your option) any later version.
-#
-#  hdict is distributed in the hope that it will be useful,
-#  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#  GNU General Public License for more details.
-#
-#  You should have received a copy of the GNU General Public License
-#  along with hdict.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
-#
-#  (*) Removing authorship by any means, e.g. by distribution of derived
-#  works or verbatim, obfuscated, compiled or rewritten versions of any
-#  part of this work is illegal and it is unethical regarding the effort and
-#  time spent here.
-#
+<pre><code class="python">from dataclasses import dataclass
 
-from dataclasses import dataclass
-from random import Random
-
-from hdict.abs.step import AbsStep
-from hdict.content.argument.apply import apply
+from hdict.content.entry import AbsEntry, Unevaluated
 
 
 @dataclass
-class ApplyOut(AbsStep):
-    &#34;&#34;&#34;Wrapper for &#39;apply&#39; to append the output field(s)&#34;&#34;&#34;
+class Wrapper(AbsEntry):
+    &#34;&#34;&#34;
+    The only entry that can nest and return another entry as a value
 
-    nested: apply
-    out: [str | tuple[str, str]]
+    For advanced usage only
+    &#34;&#34;&#34;
 
-    def sample(self, rnd: int | Random = None):
-        if not self.nested.sampleable:
-            return self
-        return ApplyOut(self.nested.sample(rnd), self.out)
+    entry: AbsEntry
+
+    def __post_init__(self):
+        self.hosh = self.entry.hosh
 
     @property
-    def sampleable(self):
-        return self.nested.sampleable
-
-    def __rrshift__(self, left):
-        from hdict import hdict, frozenhdict
-
-        if isinstance(left, dict) and not isinstance(left, (hdict, frozenhdict)):
-            return hdict(left) &gt;&gt; self
-        return NotImplemented  # pragma: no cover
-
-    def __rmul__(self, left):
-        from hdict import hdict, frozenhdict
-        from hdict.expr import Expr
-
-        if isinstance(left, dict) and not isinstance(left, (hdict, frozenhdict)):
-            return Expr(left, self)
-        return NotImplemented  # pragma: no cover
-
-    def __rshift__(self, right):
-        from hdict.expr import Expr
-
-        # REMINDER: dict includes hdict/frozenhdict.
-        if isinstance(right, (dict, ApplyOut)):
-            return Expr(self, right)
-        return NotImplemented  # pragma: no cover
-
-    def __mul__(self, right):
-        return self.__rshift__(right)
+    def value(self):
+        if isinstance(self._value, Unevaluated):
+            self._value = self.entry
+        return self._value
 
     def __repr__(self):
-        return f&#34;{self.out}={repr(self.nested)}&#34;</code></pre>
+        return &#34;·&#34; + repr(self.entry)</code></pre>
 </details>
 </section>
 <section>
@@ -111,81 +63,54 @@ class ApplyOut(AbsStep):
 <section>
 <h2 class="section-title" id="header-classes">Classes</h2>
 <dl>
-<dt id="hdict.applyout.ApplyOut"><code class="flex name class">
-<span>class <span class="ident">ApplyOut</span></span>
-<span>(</span><span>nested: <a title="hdict.content.argument.apply.apply" href="content/argument/apply.html#hdict.content.argument.apply.apply">apply</a>, out: [str | tuple[str, str]])</span>
+<dt id="hdict.content.entry.wrapper.Wrapper"><code class="flex name class">
+<span>class <span class="ident">Wrapper</span></span>
+<span>(</span><span>entry: <a title="hdict.content.entry.AbsEntry" href="index.html#hdict.content.entry.AbsEntry">AbsEntry</a>)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Wrapper for 'apply' to append the output field(s)</p></div>
+<div class="desc"><p>The only entry that can nest and return another entry as a value</p>
+<p>For advanced usage only</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@dataclass
-class ApplyOut(AbsStep):
-    &#34;&#34;&#34;Wrapper for &#39;apply&#39; to append the output field(s)&#34;&#34;&#34;
+class Wrapper(AbsEntry):
+    &#34;&#34;&#34;
+    The only entry that can nest and return another entry as a value
 
-    nested: apply
-    out: [str | tuple[str, str]]
+    For advanced usage only
+    &#34;&#34;&#34;
 
-    def sample(self, rnd: int | Random = None):
-        if not self.nested.sampleable:
-            return self
-        return ApplyOut(self.nested.sample(rnd), self.out)
+    entry: AbsEntry
+
+    def __post_init__(self):
+        self.hosh = self.entry.hosh
 
     @property
-    def sampleable(self):
-        return self.nested.sampleable
-
-    def __rrshift__(self, left):
-        from hdict import hdict, frozenhdict
-
-        if isinstance(left, dict) and not isinstance(left, (hdict, frozenhdict)):
-            return hdict(left) &gt;&gt; self
-        return NotImplemented  # pragma: no cover
-
-    def __rmul__(self, left):
-        from hdict import hdict, frozenhdict
-        from hdict.expr import Expr
-
-        if isinstance(left, dict) and not isinstance(left, (hdict, frozenhdict)):
-            return Expr(left, self)
-        return NotImplemented  # pragma: no cover
-
-    def __rshift__(self, right):
-        from hdict.expr import Expr
-
-        # REMINDER: dict includes hdict/frozenhdict.
-        if isinstance(right, (dict, ApplyOut)):
-            return Expr(self, right)
-        return NotImplemented  # pragma: no cover
-
-    def __mul__(self, right):
-        return self.__rshift__(right)
+    def value(self):
+        if isinstance(self._value, Unevaluated):
+            self._value = self.entry
+        return self._value
 
     def __repr__(self):
-        return f&#34;{self.out}={repr(self.nested)}&#34;</code></pre>
+        return &#34;·&#34; + repr(self.entry)</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
-<li><a title="hdict.abs.step.AbsStep" href="abs/step.html#hdict.abs.step.AbsStep">AbsStep</a></li>
-<li><a title="hdict.abs.expr.AbsExpr" href="abs/expr.html#hdict.abs.expr.AbsExpr">AbsExpr</a></li>
-<li><a title="hdict.abs.AbsAny" href="abs/index.html#hdict.abs.AbsAny">AbsAny</a></li>
+<li><a title="hdict.content.entry.AbsEntry" href="index.html#hdict.content.entry.AbsEntry">AbsEntry</a></li>
+<li><a title="hdict.abs.AbsAny" href="../../abs/index.html#hdict.abs.AbsAny">AbsAny</a></li>
 </ul>
 <h3>Class variables</h3>
 <dl>
-<dt id="hdict.applyout.ApplyOut.nested"><code class="name">var <span class="ident">nested</span> : <a title="hdict.content.argument.apply.apply" href="content/argument/apply.html#hdict.content.argument.apply.apply">apply</a></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="hdict.applyout.ApplyOut.out"><code class="name">var <span class="ident">out</span> : [str | tuple[str, str]]</code></dt>
+<dt id="hdict.content.entry.wrapper.Wrapper.entry"><code class="name">var <span class="ident">entry</span> : <a title="hdict.content.entry.AbsEntry" href="index.html#hdict.content.entry.AbsEntry">AbsEntry</a></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 </dl>
 <h3>Instance variables</h3>
 <dl>
-<dt id="hdict.applyout.ApplyOut.sampleable"><code class="name">var <span class="ident">sampleable</span></code></dt>
+<dt id="hdict.content.entry.wrapper.Wrapper.value"><code class="name">var <span class="ident">value</span> : Union[object, Callable]</code></dt>
 <dd>
 <div class="desc"></div>
 <details class="source">
@@ -193,29 +118,21 @@ class ApplyOut(AbsStep):
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@property
-def sampleable(self):
-    return self.nested.sampleable</code></pre>
+def value(self):
+    if isinstance(self._value, Unevaluated):
+        self._value = self.entry
+    return self._value</code></pre>
 </details>
 </dd>
 </dl>
-<h3>Methods</h3>
-<dl>
-<dt id="hdict.applyout.ApplyOut.sample"><code class="name flex">
-<span>def <span class="ident">sample</span></span>(<span>self, rnd: int | random.Random = None)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def sample(self, rnd: int | Random = None):
-    if not self.nested.sampleable:
-        return self
-    return ApplyOut(self.nested.sample(rnd), self.out)</code></pre>
-</details>
-</dd>
-</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="hdict.content.entry.AbsEntry" href="index.html#hdict.content.entry.AbsEntry">AbsEntry</a></b></code>:
+<ul class="hlist">
+<li><code><a title="hdict.content.entry.AbsEntry.isevaluated" href="index.html#hdict.content.entry.AbsEntry.isevaluated">isevaluated</a></code></li>
+</ul>
+</li>
+</ul>
 </dd>
 </dl>
 </section>
@@ -228,18 +145,16 @@ def sampleable(self):
 <ul id="index">
 <li><h3>Super-module</h3>
 <ul>
-<li><code><a title="hdict" href="index.html">hdict</a></code></li>
+<li><code><a title="hdict.content.entry" href="index.html">hdict.content.entry</a></code></li>
 </ul>
 </li>
 <li><h3><a href="#header-classes">Classes</a></h3>
 <ul>
 <li>
-<h4><code><a title="hdict.applyout.ApplyOut" href="#hdict.applyout.ApplyOut">ApplyOut</a></code></h4>
+<h4><code><a title="hdict.content.entry.wrapper.Wrapper" href="#hdict.content.entry.wrapper.Wrapper">Wrapper</a></code></h4>
 <ul class="">
-<li><code><a title="hdict.applyout.ApplyOut.nested" href="#hdict.applyout.ApplyOut.nested">nested</a></code></li>
-<li><code><a title="hdict.applyout.ApplyOut.out" href="#hdict.applyout.ApplyOut.out">out</a></code></li>
-<li><code><a title="hdict.applyout.ApplyOut.sample" href="#hdict.applyout.ApplyOut.sample">sample</a></code></li>
-<li><code><a title="hdict.applyout.ApplyOut.sampleable" href="#hdict.applyout.ApplyOut.sampleable">sampleable</a></code></li>
+<li><code><a title="hdict.content.entry.wrapper.Wrapper.entry" href="#hdict.content.entry.wrapper.Wrapper.entry">entry</a></code></li>
+<li><code><a title="hdict.content.entry.wrapper.Wrapper.value" href="#hdict.content.entry.wrapper.Wrapper.value">value</a></code></li>
 </ul>
 </li>
 </ul>

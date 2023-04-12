@@ -157,6 +157,7 @@ class frozenhdict(UserDict, dict[str, VT]):
         from hdict.expression.step.edict import EDict
         from hdict.expression.expr import Expr
         from hdict.expression.step.step import AbsStep
+
         match other:
             case AbsStep() | hdict() | frozenhdict():
                 return Expr(self, other)
@@ -180,16 +181,16 @@ class frozenhdict(UserDict, dict[str, VT]):
         from hdict.content.entry.cached import Cached
 
         from hdict.content.argument.apply import apply
+
         if isinstance(other, apply):  # pragma: no cover
-            raise Exception(f"Cannot apply without specifying output(s).\n"
-                            f"Hint: d >> apply(f)('output_field1', 'output_field2')")
+            raise Exception(f"Cannot apply without specifying output(s).\n" f"Hint: d >> apply(f)('output_field1', 'output_field2')")
         from hdict.content.argument import AbsArgument
+
         if isinstance(other, AbsArgument):  # pragma: no cover
-            raise Exception(f"Cannot pipe {type(other).__name__} without specifying output.\n"
-                            f"Hint: d >> {'field name': object}\n"
-                            f"Hint: d['field name'] = object")
+            raise Exception(f"Cannot pipe {type(other).__name__} without specifying output.\n" f"Hint: d >> {'field name': object}\n" f"Hint: d['field name'] = object")
 
         from hdict.expression.expr import Expr
+
         match other:
             case hdict() | frozenhdict():
                 dct = other.raw
@@ -423,6 +424,7 @@ class frozenhdict(UserDict, dict[str, VT]):
         """
         from hdict.content.entry.cached import kindid
         from hdict.persistence.stored import Stored
+
         data = {self.id: self.ids}
         for field, fid in self.ids.items():
             value = self[field]
@@ -455,6 +457,7 @@ class frozenhdict(UserDict, dict[str, VT]):
         from hdict.content.entry.cached import getkind
         from hdict.data.aux_frozendict import handle_mirror
         from hdict.persistence.stored import Stored
+
         if id not in storage:
             return None
         obj = storage[id]
@@ -493,6 +496,7 @@ class frozenhdict(UserDict, dict[str, VT]):
         Represent hdict as a DataFrame if possible
         """
         from pandas import DataFrame
+
         data = dict(self)
         index = data.pop("index")
         return DataFrame(data, index=index)
@@ -503,6 +507,7 @@ class frozenhdict(UserDict, dict[str, VT]):
         Input format is defined by file extension: .arff, .csv
         """
         from hdict.data.aux_frozendict import handle_format
+
         df, name = file2df(name)
         return handle_format(format, fields, df, named and name)
 
@@ -512,6 +517,7 @@ class frozenhdict(UserDict, dict[str, VT]):
         Input format is defined by file extension: .arff, .csv
         """
         from hdict import frozenhdict
+
         if text.startswith("@"):
             name = "<Unnamed>"
             with StringIO() as f:
@@ -524,6 +530,7 @@ class frozenhdict(UserDict, dict[str, VT]):
                         break
         else:
             from testfixtures import TempDirectory
+
             with TempDirectory() as tmp:
                 tmp.write(
                     "temp.csv",
@@ -532,6 +539,7 @@ class frozenhdict(UserDict, dict[str, VT]):
                 return frozenhdict.fromfile(tmp.path + "/temp.csv", fields, format, named)
 
         from hdict.data.aux_frozendict import handle_format
+
         return handle_format(format, fields, df, named and name)
 
     def __eq__(self, other):

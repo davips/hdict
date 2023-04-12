@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
-<title>hdict.expr API documentation</title>
+<title>hdict.expression.expr API documentation</title>
 <meta name="description" content="" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
@@ -19,7 +19,7 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>hdict.expr</code></h1>
+<h1 class="title">Module <code>hdict.expression.expr</code></h1>
 </header>
 <section id="section-intro">
 <details class="source">
@@ -27,19 +27,30 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">from functools import reduce
-from itertools import chain
 from operator import rshift
 from random import Random
 
 from hdict.abs import AbsAny
-from hdict.abs.step import AbsExpr
+from hdict.expression.step.step import AbsStep
 
 
-class Expr(AbsExpr):
+class Expr(AbsStep):
     &#34;&#34;&#34;
-    Expressions enable the creation of pipelines of steps
+    Expressions enable the creation of pipelines of steps (or nested expressions)
 
     Pipelines should be sampled or fed a hdict to become a resulting hdict.
+
+    &gt;&gt;&gt; from hdict import hdict
+    &gt;&gt;&gt; from hdict.expression.expr import Expr
+    &gt;&gt;&gt; e = Expr() &gt;&gt; hdict()
+    &gt;&gt;&gt; e.show(colored=False)
+    ⦑{
+        _id: 0000000000000000000000000000000000000000,
+        _ids: {}
+    }⦒
+    &gt;&gt;&gt; e = Expr() &gt;&gt; dict()
+    &gt;&gt;&gt; e.show(colored=False)
+    ⦑{}⦒
     &#34;&#34;&#34;
 
     def __init__(self, *steps):
@@ -47,22 +58,26 @@ class Expr(AbsExpr):
 
     def sample(self, rnd: int | Random = None, solve=True):
         from hdict.content.argument import AbsArgument
-        from hdict.applyout import ApplyOut
+        from hdict.expression.step.applyout import ApplyOut
+        from hdict import cache, hdict
+        from hdict.expression.step.edict import EDict
 
         lst = []
         for step in self:
             match step:
                 case AbsArgument() | ApplyOut():
                     lst.append(step.sample(rnd))
-                case AbsAny():
-                    raise Exception(f&#34;{type(step)}&#34;)
-                case dict():
-                    dct = step.copy()
+                case cache():
+                    lst.append(step)
+                case EDict():
+                    dct = step.dct.copy()
                     for k, v in dct.items():
                         if isinstance(v, AbsArgument):
                             dct[k] = dct[k].sample(rnd)
-                    lst.append(dct)
-                case _:
+                    lst.append(EDict(dct))
+                case AbsAny():  # pragma: no cover
+                    raise Exception(f&#34;{type(step)}&#34;)
+                case _:  # pragma: no cover
                     raise Exception(f&#34;&#34;)
         expr = Expr.fromiter(lst)
         return expr.solve() if solve else expr
@@ -77,25 +92,17 @@ class Expr(AbsExpr):
         return new
 
     def solve(self):
-        return reduce(rshift, self)
+        from hdict.expression.step.edict import EDict
 
-    def roperate(self, left, solve):
-        from hdict import hdict, frozenhdict
+        gen = (step.dct if isinstance(step, EDict) else step for step in self)
+        return reduce(rshift, gen)
 
-        match left:
-            case hdict() | frozenhdict():
-                expr = Expr(left, self)
-            case dict():
-                expr = Expr(hdict(left), self)
-            case _:
-                return NotImplemented  # pragma: no cover
-        return expr.solve() if solve else expr
+    @property
+    def unfrozen(self):
+        from hdict import frozenhdict
 
-    def __rrshift__(self, left):
-        return self.roperate(left, True)
-
-    def __rmul__(self, left):
-        return self.roperate(left, False)
+        gen = (step.unfrozen if isinstance(step, frozenhdict) else step for step in self)
+        return Expr.fromiter(gen)
 
     def __iter__(self):
         for step in self.steps:
@@ -103,15 +110,6 @@ class Expr(AbsExpr):
                 yield from step
             else:
                 yield step
-
-    def __repr__(self):
-        return &#34; » &#34;.join(repr(step) for step in self)
-
-    def __str__(self):
-        out = []
-        for step in self:
-            out.append(str(step))
-        return &#34; » &#34;.join(out)
 
     def show(self, colored=True, key_quotes=False):
         r&#34;&#34;&#34;Print textual representation of an expression&#34;&#34;&#34;
@@ -123,11 +121,11 @@ class Expr(AbsExpr):
 
         &gt;&gt;&gt; p = Expr({&#34;b&#34;:2}, {&#34;a&#34;:1})
         &gt;&gt;&gt; p
-        {&#39;b&#39;: 2} » {&#39;a&#39;: 1}
+        ⦑{&#39;b&#39;: 2} » {&#39;a&#39;: 1}⦒
         &gt;&gt;&gt; p.show()
-        {&#39;b&#39;: 2} » {&#39;a&#39;: 1}
+        ⦑{&#39;b&#39;: 2} » {&#39;a&#39;: 1}⦒
         &#34;&#34;&#34;
-        from hdict.frozenhdict import frozenhdict
+        from hdict.data.frozenhdict import frozenhdict
         from hdict import hdict
 
         out = []
@@ -136,7 +134,16 @@ class Expr(AbsExpr):
                 out.append(step.astext(colored=colored, key_quotes=key_quotes))
             else:
                 out.append(repr(step))
-        return &#34; » &#34;.join(out)</code></pre>
+        return &#34;⦑&#34; + &#34; » &#34;.join(out) + &#34;⦒&#34;
+
+    def __repr__(self):
+        return &#34;⦑&#34; + &#34; » &#34;.join(repr(step) for step in self) + &#34;⦒&#34;
+
+    def __str__(self):
+        out = []
+        for step in self:
+            out.append(str(step))
+        return &#34;⦑&#34; + &#34; » &#34;.join(out) + &#34;⦒&#34;</code></pre>
 </details>
 </section>
 <section>
@@ -148,22 +155,46 @@ class Expr(AbsExpr):
 <section>
 <h2 class="section-title" id="header-classes">Classes</h2>
 <dl>
-<dt id="hdict.expr.Expr"><code class="flex name class">
+<dt id="hdict.expression.expr.Expr"><code class="flex name class">
 <span>class <span class="ident">Expr</span></span>
 <span>(</span><span>*steps)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Expressions enable the creation of pipelines of steps</p>
-<p>Pipelines should be sampled or fed a hdict to become a resulting hdict.</p></div>
+<div class="desc"><p>Expressions enable the creation of pipelines of steps (or nested expressions)</p>
+<p>Pipelines should be sampled or fed a hdict to become a resulting hdict.</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; from hdict import hdict
+&gt;&gt;&gt; from hdict.expression.expr import Expr
+&gt;&gt;&gt; e = Expr() &gt;&gt; hdict()
+&gt;&gt;&gt; e.show(colored=False)
+⦑{
+    _id: 0000000000000000000000000000000000000000,
+    _ids: {}
+}⦒
+&gt;&gt;&gt; e = Expr() &gt;&gt; dict()
+&gt;&gt;&gt; e.show(colored=False)
+⦑{}⦒
+</code></pre></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class Expr(AbsExpr):
+<pre><code class="python">class Expr(AbsStep):
     &#34;&#34;&#34;
-    Expressions enable the creation of pipelines of steps
+    Expressions enable the creation of pipelines of steps (or nested expressions)
 
     Pipelines should be sampled or fed a hdict to become a resulting hdict.
+
+    &gt;&gt;&gt; from hdict import hdict
+    &gt;&gt;&gt; from hdict.expression.expr import Expr
+    &gt;&gt;&gt; e = Expr() &gt;&gt; hdict()
+    &gt;&gt;&gt; e.show(colored=False)
+    ⦑{
+        _id: 0000000000000000000000000000000000000000,
+        _ids: {}
+    }⦒
+    &gt;&gt;&gt; e = Expr() &gt;&gt; dict()
+    &gt;&gt;&gt; e.show(colored=False)
+    ⦑{}⦒
     &#34;&#34;&#34;
 
     def __init__(self, *steps):
@@ -171,22 +202,26 @@ class Expr(AbsExpr):
 
     def sample(self, rnd: int | Random = None, solve=True):
         from hdict.content.argument import AbsArgument
-        from hdict.applyout import ApplyOut
+        from hdict.expression.step.applyout import ApplyOut
+        from hdict import cache, hdict
+        from hdict.expression.step.edict import EDict
 
         lst = []
         for step in self:
             match step:
                 case AbsArgument() | ApplyOut():
                     lst.append(step.sample(rnd))
-                case AbsAny():
-                    raise Exception(f&#34;{type(step)}&#34;)
-                case dict():
-                    dct = step.copy()
+                case cache():
+                    lst.append(step)
+                case EDict():
+                    dct = step.dct.copy()
                     for k, v in dct.items():
                         if isinstance(v, AbsArgument):
                             dct[k] = dct[k].sample(rnd)
-                    lst.append(dct)
-                case _:
+                    lst.append(EDict(dct))
+                case AbsAny():  # pragma: no cover
+                    raise Exception(f&#34;{type(step)}&#34;)
+                case _:  # pragma: no cover
                     raise Exception(f&#34;&#34;)
         expr = Expr.fromiter(lst)
         return expr.solve() if solve else expr
@@ -201,25 +236,17 @@ class Expr(AbsExpr):
         return new
 
     def solve(self):
-        return reduce(rshift, self)
+        from hdict.expression.step.edict import EDict
 
-    def roperate(self, left, solve):
-        from hdict import hdict, frozenhdict
+        gen = (step.dct if isinstance(step, EDict) else step for step in self)
+        return reduce(rshift, gen)
 
-        match left:
-            case hdict() | frozenhdict():
-                expr = Expr(left, self)
-            case dict():
-                expr = Expr(hdict(left), self)
-            case _:
-                return NotImplemented  # pragma: no cover
-        return expr.solve() if solve else expr
+    @property
+    def unfrozen(self):
+        from hdict import frozenhdict
 
-    def __rrshift__(self, left):
-        return self.roperate(left, True)
-
-    def __rmul__(self, left):
-        return self.roperate(left, False)
+        gen = (step.unfrozen if isinstance(step, frozenhdict) else step for step in self)
+        return Expr.fromiter(gen)
 
     def __iter__(self):
         for step in self.steps:
@@ -227,15 +254,6 @@ class Expr(AbsExpr):
                 yield from step
             else:
                 yield step
-
-    def __repr__(self):
-        return &#34; » &#34;.join(repr(step) for step in self)
-
-    def __str__(self):
-        out = []
-        for step in self:
-            out.append(str(step))
-        return &#34; » &#34;.join(out)
 
     def show(self, colored=True, key_quotes=False):
         r&#34;&#34;&#34;Print textual representation of an expression&#34;&#34;&#34;
@@ -247,11 +265,11 @@ class Expr(AbsExpr):
 
         &gt;&gt;&gt; p = Expr({&#34;b&#34;:2}, {&#34;a&#34;:1})
         &gt;&gt;&gt; p
-        {&#39;b&#39;: 2} » {&#39;a&#39;: 1}
+        ⦑{&#39;b&#39;: 2} » {&#39;a&#39;: 1}⦒
         &gt;&gt;&gt; p.show()
-        {&#39;b&#39;: 2} » {&#39;a&#39;: 1}
+        ⦑{&#39;b&#39;: 2} » {&#39;a&#39;: 1}⦒
         &#34;&#34;&#34;
-        from hdict.frozenhdict import frozenhdict
+        from hdict.data.frozenhdict import frozenhdict
         from hdict import hdict
 
         out = []
@@ -260,16 +278,25 @@ class Expr(AbsExpr):
                 out.append(step.astext(colored=colored, key_quotes=key_quotes))
             else:
                 out.append(repr(step))
-        return &#34; » &#34;.join(out)</code></pre>
+        return &#34;⦑&#34; + &#34; » &#34;.join(out) + &#34;⦒&#34;
+
+    def __repr__(self):
+        return &#34;⦑&#34; + &#34; » &#34;.join(repr(step) for step in self) + &#34;⦒&#34;
+
+    def __str__(self):
+        out = []
+        for step in self:
+            out.append(str(step))
+        return &#34;⦑&#34; + &#34; » &#34;.join(out) + &#34;⦒&#34;</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
-<li><a title="hdict.abs.expr.AbsExpr" href="abs/expr.html#hdict.abs.expr.AbsExpr">AbsExpr</a></li>
-<li><a title="hdict.abs.AbsAny" href="abs/index.html#hdict.abs.AbsAny">AbsAny</a></li>
+<li><a title="hdict.expression.step.step.AbsStep" href="step/step.html#hdict.expression.step.step.AbsStep">AbsStep</a></li>
+<li><a title="hdict.abs.AbsAny" href="../abs/index.html#hdict.abs.AbsAny">AbsAny</a></li>
 </ul>
 <h3>Static methods</h3>
 <dl>
-<dt id="hdict.expr.Expr.fromiter"><code class="name flex">
+<dt id="hdict.expression.expr.Expr.fromiter"><code class="name flex">
 <span>def <span class="ident">fromiter</span></span>(<span>lst)</span>
 </code></dt>
 <dd>
@@ -286,18 +313,36 @@ def fromiter(lst):
 </details>
 </dd>
 </dl>
+<h3>Instance variables</h3>
+<dl>
+<dt id="hdict.expression.expr.Expr.unfrozen"><code class="name">var <span class="ident">unfrozen</span></code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def unfrozen(self):
+    from hdict import frozenhdict
+
+    gen = (step.unfrozen if isinstance(step, frozenhdict) else step for step in self)
+    return Expr.fromiter(gen)</code></pre>
+</details>
+</dd>
+</dl>
 <h3>Methods</h3>
 <dl>
-<dt id="hdict.expr.Expr.astext"><code class="name flex">
+<dt id="hdict.expression.expr.Expr.astext"><code class="name flex">
 <span>def <span class="ident">astext</span></span>(<span>self, colored=True, key_quotes=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Textual representation of an expression</p>
 <pre><code class="language-python-repl">&gt;&gt;&gt; p = Expr({&quot;b&quot;:2}, {&quot;a&quot;:1})
 &gt;&gt;&gt; p
-{'b': 2} » {'a': 1}
+⦑{'b': 2} » {'a': 1}⦒
 &gt;&gt;&gt; p.show()
-{'b': 2} » {'a': 1}
+⦑{'b': 2} » {'a': 1}⦒
 </code></pre></div>
 <details class="source">
 <summary>
@@ -309,11 +354,11 @@ def fromiter(lst):
 
     &gt;&gt;&gt; p = Expr({&#34;b&#34;:2}, {&#34;a&#34;:1})
     &gt;&gt;&gt; p
-    {&#39;b&#39;: 2} » {&#39;a&#39;: 1}
+    ⦑{&#39;b&#39;: 2} » {&#39;a&#39;: 1}⦒
     &gt;&gt;&gt; p.show()
-    {&#39;b&#39;: 2} » {&#39;a&#39;: 1}
+    ⦑{&#39;b&#39;: 2} » {&#39;a&#39;: 1}⦒
     &#34;&#34;&#34;
-    from hdict.frozenhdict import frozenhdict
+    from hdict.data.frozenhdict import frozenhdict
     from hdict import hdict
 
     out = []
@@ -322,32 +367,10 @@ def fromiter(lst):
             out.append(step.astext(colored=colored, key_quotes=key_quotes))
         else:
             out.append(repr(step))
-    return &#34; » &#34;.join(out)</code></pre>
+    return &#34;⦑&#34; + &#34; » &#34;.join(out) + &#34;⦒&#34;</code></pre>
 </details>
 </dd>
-<dt id="hdict.expr.Expr.roperate"><code class="name flex">
-<span>def <span class="ident">roperate</span></span>(<span>self, left, solve)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def roperate(self, left, solve):
-    from hdict import hdict, frozenhdict
-
-    match left:
-        case hdict() | frozenhdict():
-            expr = Expr(left, self)
-        case dict():
-            expr = Expr(hdict(left), self)
-        case _:
-            return NotImplemented  # pragma: no cover
-    return expr.solve() if solve else expr</code></pre>
-</details>
-</dd>
-<dt id="hdict.expr.Expr.sample"><code class="name flex">
+<dt id="hdict.expression.expr.Expr.sample"><code class="name flex">
 <span>def <span class="ident">sample</span></span>(<span>self, rnd: int | random.Random = None, solve=True)</span>
 </code></dt>
 <dd>
@@ -358,28 +381,32 @@ def fromiter(lst):
 </summary>
 <pre><code class="python">def sample(self, rnd: int | Random = None, solve=True):
     from hdict.content.argument import AbsArgument
-    from hdict.applyout import ApplyOut
+    from hdict.expression.step.applyout import ApplyOut
+    from hdict import cache, hdict
+    from hdict.expression.step.edict import EDict
 
     lst = []
     for step in self:
         match step:
             case AbsArgument() | ApplyOut():
                 lst.append(step.sample(rnd))
-            case AbsAny():
-                raise Exception(f&#34;{type(step)}&#34;)
-            case dict():
-                dct = step.copy()
+            case cache():
+                lst.append(step)
+            case EDict():
+                dct = step.dct.copy()
                 for k, v in dct.items():
                     if isinstance(v, AbsArgument):
                         dct[k] = dct[k].sample(rnd)
-                lst.append(dct)
-            case _:
+                lst.append(EDict(dct))
+            case AbsAny():  # pragma: no cover
+                raise Exception(f&#34;{type(step)}&#34;)
+            case _:  # pragma: no cover
                 raise Exception(f&#34;&#34;)
     expr = Expr.fromiter(lst)
     return expr.solve() if solve else expr</code></pre>
 </details>
 </dd>
-<dt id="hdict.expr.Expr.show"><code class="name flex">
+<dt id="hdict.expression.expr.Expr.show"><code class="name flex">
 <span>def <span class="ident">show</span></span>(<span>self, colored=True, key_quotes=False)</span>
 </code></dt>
 <dd>
@@ -393,7 +420,7 @@ def fromiter(lst):
     print(self.astext(colored, key_quotes))</code></pre>
 </details>
 </dd>
-<dt id="hdict.expr.Expr.solve"><code class="name flex">
+<dt id="hdict.expression.expr.Expr.solve"><code class="name flex">
 <span>def <span class="ident">solve</span></span>(<span>self)</span>
 </code></dt>
 <dd>
@@ -403,7 +430,10 @@ def fromiter(lst):
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def solve(self):
-    return reduce(rshift, self)</code></pre>
+    from hdict.expression.step.edict import EDict
+
+    gen = (step.dct if isinstance(step, EDict) else step for step in self)
+    return reduce(rshift, gen)</code></pre>
 </details>
 </dd>
 </dl>
@@ -419,20 +449,20 @@ def fromiter(lst):
 <ul id="index">
 <li><h3>Super-module</h3>
 <ul>
-<li><code><a title="hdict" href="index.html">hdict</a></code></li>
+<li><code><a title="hdict.expression" href="index.html">hdict.expression</a></code></li>
 </ul>
 </li>
 <li><h3><a href="#header-classes">Classes</a></h3>
 <ul>
 <li>
-<h4><code><a title="hdict.expr.Expr" href="#hdict.expr.Expr">Expr</a></code></h4>
+<h4><code><a title="hdict.expression.expr.Expr" href="#hdict.expression.expr.Expr">Expr</a></code></h4>
 <ul class="two-column">
-<li><code><a title="hdict.expr.Expr.astext" href="#hdict.expr.Expr.astext">astext</a></code></li>
-<li><code><a title="hdict.expr.Expr.fromiter" href="#hdict.expr.Expr.fromiter">fromiter</a></code></li>
-<li><code><a title="hdict.expr.Expr.roperate" href="#hdict.expr.Expr.roperate">roperate</a></code></li>
-<li><code><a title="hdict.expr.Expr.sample" href="#hdict.expr.Expr.sample">sample</a></code></li>
-<li><code><a title="hdict.expr.Expr.show" href="#hdict.expr.Expr.show">show</a></code></li>
-<li><code><a title="hdict.expr.Expr.solve" href="#hdict.expr.Expr.solve">solve</a></code></li>
+<li><code><a title="hdict.expression.expr.Expr.astext" href="#hdict.expression.expr.Expr.astext">astext</a></code></li>
+<li><code><a title="hdict.expression.expr.Expr.fromiter" href="#hdict.expression.expr.Expr.fromiter">fromiter</a></code></li>
+<li><code><a title="hdict.expression.expr.Expr.sample" href="#hdict.expression.expr.Expr.sample">sample</a></code></li>
+<li><code><a title="hdict.expression.expr.Expr.show" href="#hdict.expression.expr.Expr.show">show</a></code></li>
+<li><code><a title="hdict.expression.expr.Expr.solve" href="#hdict.expression.expr.Expr.solve">solve</a></code></li>
+<li><code><a title="hdict.expression.expr.Expr.unfrozen" href="#hdict.expression.expr.Expr.unfrozen">unfrozen</a></code></li>
 </ul>
 </li>
 </ul>

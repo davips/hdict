@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
-<title>hdict.data.dataset API documentation</title>
+<title>hdict.dataset.dataset API documentation</title>
 <meta name="description" content="" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
@@ -19,7 +19,7 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>hdict.data.dataset</code></h1>
+<h1 class="title">Module <code>hdict.dataset.dataset</code></h1>
 </header>
 <section id="section-intro">
 <details class="source">
@@ -53,7 +53,7 @@
 import re
 
 
-def isplit(source, sep=None, regex=False):
+def isplit(source, sep=None, regex=False):  # pragma: no cover
     &#34;&#34;&#34;
     https://stackoverflow.com/a/9773142/9681577
 
@@ -71,7 +71,7 @@ def isplit(source, sep=None, regex=False):
     :returns:
         generator yielding elements of string.
     &#34;&#34;&#34;
-    if sep is None:
+    if sep is None:  # pragma: no cover
         # mimic default python behavior
         source = source.strip()
         sep = &#34;\\s+&#34;
@@ -131,7 +131,7 @@ def loads(s):
     return liac2pandas(data)
 
 
-def df2liac(df, relation=&#34;data&#34;, description=&#34;&#34;):
+def df2liac(df, relation=&#34;data&#34;, description=&#34;&#34;):  # pragma: no cover
     attrs = []
     for col in df.columns:
         attr = col.split(&#34;@&#34;)
@@ -146,28 +146,27 @@ def df2liac(df, relation=&#34;data&#34;, description=&#34;&#34;):
     return result
 
 
-def dump(df, fp):
-    import arff as liacarff
+# def dump(df, fp):  # TODO: save arff/CSV from hdict
+#     import arff as liacarff
+#
+#     arff = df2liac(df)
+#     liacarff.dump(arff, fp)
+#
+#
+# def dumps(df):  # TODO: output arff/CSV from hdict
+#     import arff as liacarff
+#
+#     arff = df2liac(df)
+#     return liacarff.dumps(arff)
 
-    arff = df2liac(df)
-    liacarff.dump(arff, fp)
 
-
-def dumps(df):
-    import arff as liacarff
-
-    arff = df2liac(df)
-    return liacarff.dumps(arff)
-
-
-def df2Xy(input=&#34;df&#34;, Xout=&#34;X&#34;, yout=&#34;y&#34;, **kwargs):
+def df2Xy(df):
     from sklearn.preprocessing import LabelEncoder
 
     le = LabelEncoder()
-    df = kwargs[input]
     X_ = df.drop(df.columns[[-1]], axis=1)
     y_ = le.fit_transform(df[df.columns[-1]])
-    return {Xout: X_, yout: y_, &#34;_history&#34;: ...}
+    return {&#34;X&#34;: X_, &#34;y&#34;: y_}
 
 
 #
@@ -231,44 +230,6 @@ def df2Xy(input=&#34;df&#34;, Xout=&#34;X&#34;, yout=&#34;y&#34;, **kwargs):
 #     X, y = fetch_openml(name=name, version=version, as_frame=True, return_X_y=True)
 #     return {Xout: X, yout: y, &#34;_history&#34;: ...}
 #
-#
-# def arff2df(input=&#34;arff&#34;, output=&#34;df&#34;, **kwargs):
-#     r&#34;&#34;&#34;
-#     &gt;&gt;&gt; from idict import let, idict
-#     &gt;&gt;&gt; d = idict.fromminiarff(output=[&#34;arff&#34;], output_format=&#34;arff&#34;)
-#     &gt;&gt;&gt; d.arff
-#     &#39;@RELATION mini\n@ATTRIBUTE attr1\tREAL\n@ATTRIBUTE attr2 \tREAL\n@ATTRIBUTE class \t{0,1}\n@DATA\n5.1,3.5,0\n3.1,4.5,1&#39;
-#     &gt;&gt;&gt; d &gt;&gt;= arff2df  # doctest: +SKIP
-#     &gt;&gt;&gt; d.show(colored=False)    # doctest: +SKIP +ELLIPSIS
-#     {
-#         &#34;df&#34;: &#34;→(input output arff)&#34;,
-#         &#34;_name&#34;: &#34;→(input output arff)&#34;,
-#         &#34;_history&#34;: &#34;idict---------arff2pandas-1.0.1--arff2df&#34;,
-#         &#34;arff&#34;: &#34;@RELATION mini\n@ATTRIBUTE attr1\tREAL\n@ATTRIBUTE attr2 \tREAL\n@ATTRIBUTE class \t{0,1}\n@DATA\n5.1,3.5,0\n3.1,4.5,1&#34;,
-#         &#34;_id&#34;: &#34;XraBH1sOCC.9ohqV3hfIRTE5FV3.0.1--arff2df&#34;,
-#         &#34;_ids&#34;: {
-#             &#34;df&#34;: &#34;VNy1otmyPSLXWCKAYbZRtNqMdW3.0.1--arff2df&#34;,
-#             &#34;_name&#34;: &#34;K4gZ2YDXBHOHwPzYufHChxkfhSz7ZAr--YbuHM-o&#34;,
-#             &#34;_history&#34;: &#34;VaU.REn8zFBQtEWngL.FYvWCowT0aeZPmXg35hCs&#34;,
-#             &#34;arff&#34;: &#34;Z._c3e2b235b697e9734b9ec13084129dc30e45b (content: Ev_8bb973161e5ae900c5743b3c332b4a64d1955)&#34;
-#         }
-#     }
-#     &gt;&gt;&gt; d.df   # doctest: +SKIP
-#        attr1@REAL  attr2@REAL class@{0,1}
-#     0         5.1         3.5           0
-#     1         3.1         4.5           1
-#     &#34;&#34;&#34;
-#     relation = &#34;&lt;Unnamed&gt;&#34;
-#     with StringIO() as f:
-#         f.write(kwargs[input])
-#         text = f.getvalue()
-#         df = loads(text)
-#         for line in isplit(text, &#34;\n&#34;):
-#             if line[:9].upper() == &#34;@RELATION&#34;:
-#                 relation = line[9:].strip()
-#                 break
-#
-#     return {output: df, &#34;_name&#34;: relation, &#34;_history&#34;: ...}
 #</code></pre>
 </details>
 </section>
@@ -279,8 +240,8 @@ def df2Xy(input=&#34;df&#34;, Xout=&#34;X&#34;, yout=&#34;y&#34;, **kwargs):
 <section>
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
-<dt id="hdict.data.dataset.df2Xy"><code class="name flex">
-<span>def <span class="ident">df2Xy</span></span>(<span>input='df', Xout='X', yout='y', **kwargs)</span>
+<dt id="hdict.dataset.dataset.df2Xy"><code class="name flex">
+<span>def <span class="ident">df2Xy</span></span>(<span>df)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -288,17 +249,16 @@ def df2Xy(input=&#34;df&#34;, Xout=&#34;X&#34;, yout=&#34;y&#34;, **kwargs):
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def df2Xy(input=&#34;df&#34;, Xout=&#34;X&#34;, yout=&#34;y&#34;, **kwargs):
+<pre><code class="python">def df2Xy(df):
     from sklearn.preprocessing import LabelEncoder
 
     le = LabelEncoder()
-    df = kwargs[input]
     X_ = df.drop(df.columns[[-1]], axis=1)
     y_ = le.fit_transform(df[df.columns[-1]])
-    return {Xout: X_, yout: y_, &#34;_history&#34;: ...}</code></pre>
+    return {&#34;X&#34;: X_, &#34;y&#34;: y_}</code></pre>
 </details>
 </dd>
-<dt id="hdict.data.dataset.df2liac"><code class="name flex">
+<dt id="hdict.dataset.dataset.df2liac"><code class="name flex">
 <span>def <span class="ident">df2liac</span></span>(<span>df, relation='data', description='')</span>
 </code></dt>
 <dd>
@@ -307,7 +267,7 @@ def df2Xy(input=&#34;df&#34;, Xout=&#34;X&#34;, yout=&#34;y&#34;, **kwargs):
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def df2liac(df, relation=&#34;data&#34;, description=&#34;&#34;):
+<pre><code class="python">def df2liac(df, relation=&#34;data&#34;, description=&#34;&#34;):  # pragma: no cover
     attrs = []
     for col in df.columns:
         attr = col.split(&#34;@&#34;)
@@ -322,39 +282,7 @@ def df2Xy(input=&#34;df&#34;, Xout=&#34;X&#34;, yout=&#34;y&#34;, **kwargs):
     return result</code></pre>
 </details>
 </dd>
-<dt id="hdict.data.dataset.dump"><code class="name flex">
-<span>def <span class="ident">dump</span></span>(<span>df, fp)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def dump(df, fp):
-    import arff as liacarff
-
-    arff = df2liac(df)
-    liacarff.dump(arff, fp)</code></pre>
-</details>
-</dd>
-<dt id="hdict.data.dataset.dumps"><code class="name flex">
-<span>def <span class="ident">dumps</span></span>(<span>df)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def dumps(df):
-    import arff as liacarff
-
-    arff = df2liac(df)
-    return liacarff.dumps(arff)</code></pre>
-</details>
-</dd>
-<dt id="hdict.data.dataset.isplit"><code class="name flex">
+<dt id="hdict.dataset.dataset.isplit"><code class="name flex">
 <span>def <span class="ident">isplit</span></span>(<span>source, sep=None, regex=False)</span>
 </code></dt>
 <dd>
@@ -372,7 +300,7 @@ generator yielding elements of string.</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def isplit(source, sep=None, regex=False):
+<pre><code class="python">def isplit(source, sep=None, regex=False):  # pragma: no cover
     &#34;&#34;&#34;
     https://stackoverflow.com/a/9773142/9681577
 
@@ -390,7 +318,7 @@ generator yielding elements of string.</p></div>
     :returns:
         generator yielding elements of string.
     &#34;&#34;&#34;
-    if sep is None:
+    if sep is None:  # pragma: no cover
         # mimic default python behavior
         source = source.strip()
         sep = &#34;\\s+&#34;
@@ -421,7 +349,7 @@ generator yielding elements of string.</p></div>
             start = idx + sepsize</code></pre>
 </details>
 </dd>
-<dt id="hdict.data.dataset.liac2pandas"><code class="name flex">
+<dt id="hdict.dataset.dataset.liac2pandas"><code class="name flex">
 <span>def <span class="ident">liac2pandas</span></span>(<span>arff)</span>
 </code></dt>
 <dd>
@@ -445,7 +373,7 @@ generator yielding elements of string.</p></div>
     return df</code></pre>
 </details>
 </dd>
-<dt id="hdict.data.dataset.load"><code class="name flex">
+<dt id="hdict.dataset.dataset.load"><code class="name flex">
 <span>def <span class="ident">load</span></span>(<span>fp)</span>
 </code></dt>
 <dd>
@@ -461,7 +389,7 @@ generator yielding elements of string.</p></div>
     return liac2pandas(data)</code></pre>
 </details>
 </dd>
-<dt id="hdict.data.dataset.loads"><code class="name flex">
+<dt id="hdict.dataset.dataset.loads"><code class="name flex">
 <span>def <span class="ident">loads</span></span>(<span>s)</span>
 </code></dt>
 <dd>
@@ -490,19 +418,17 @@ generator yielding elements of string.</p></div>
 <ul id="index">
 <li><h3>Super-module</h3>
 <ul>
-<li><code><a title="hdict.data" href="index.html">hdict.data</a></code></li>
+<li><code><a title="hdict.dataset" href="index.html">hdict.dataset</a></code></li>
 </ul>
 </li>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="two-column">
-<li><code><a title="hdict.data.dataset.df2Xy" href="#hdict.data.dataset.df2Xy">df2Xy</a></code></li>
-<li><code><a title="hdict.data.dataset.df2liac" href="#hdict.data.dataset.df2liac">df2liac</a></code></li>
-<li><code><a title="hdict.data.dataset.dump" href="#hdict.data.dataset.dump">dump</a></code></li>
-<li><code><a title="hdict.data.dataset.dumps" href="#hdict.data.dataset.dumps">dumps</a></code></li>
-<li><code><a title="hdict.data.dataset.isplit" href="#hdict.data.dataset.isplit">isplit</a></code></li>
-<li><code><a title="hdict.data.dataset.liac2pandas" href="#hdict.data.dataset.liac2pandas">liac2pandas</a></code></li>
-<li><code><a title="hdict.data.dataset.load" href="#hdict.data.dataset.load">load</a></code></li>
-<li><code><a title="hdict.data.dataset.loads" href="#hdict.data.dataset.loads">loads</a></code></li>
+<li><code><a title="hdict.dataset.dataset.df2Xy" href="#hdict.dataset.dataset.df2Xy">df2Xy</a></code></li>
+<li><code><a title="hdict.dataset.dataset.df2liac" href="#hdict.dataset.dataset.df2liac">df2liac</a></code></li>
+<li><code><a title="hdict.dataset.dataset.isplit" href="#hdict.dataset.dataset.isplit">isplit</a></code></li>
+<li><code><a title="hdict.dataset.dataset.liac2pandas" href="#hdict.dataset.dataset.liac2pandas">liac2pandas</a></code></li>
+<li><code><a title="hdict.dataset.dataset.load" href="#hdict.dataset.dataset.load">load</a></code></li>
+<li><code><a title="hdict.dataset.dataset.loads" href="#hdict.dataset.dataset.loads">loads</a></code></li>
 </ul>
 </li>
 </ul>

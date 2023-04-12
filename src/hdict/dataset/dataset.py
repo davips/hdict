@@ -140,6 +140,7 @@ def df2Xy(df):
     y_ = le.fit_transform(df[df.columns[-1]])
     return {"X": X_, "y": y_}
 
+
 #
 #
 # def df2arff(input="df", output="arff", **kwargs):

@@ -59,8 +59,8 @@ from hosh import Hosh
 
 from hdict.content.argument import AbsBaseArgument, AbsArgument
 from hdict.content.argument.field import field
-from hdict.customjson import truncate
-from hdict.hoshfication import f2hosh
+from hdict.text.customjson import truncate
+from hdict.content.aux_value import f2hosh
 
 
 class apply(AbsBaseArgument):
@@ -70,7 +70,7 @@ class apply(AbsBaseArgument):
     Single output application is defined by attribute: &#39;apply(f).my_output_field&#39;.
     Multioutput application is defined by a call: &#39;apply(f)(&#34;output_field1&#34;, &#34;output_field2&#34;)&#39;.
 
-    &gt;&gt;&gt; from hdict import apply, value
+    &gt;&gt;&gt; from hdict import apply, value, frozenhdict, _
     &gt;&gt;&gt; f = lambda a, b: a**b
     &gt;&gt;&gt; v = apply(f, 5, b=7)
     &gt;&gt;&gt; v
@@ -104,7 +104,7 @@ class apply(AbsBaseArgument):
     &gt;&gt;&gt; d = {&#34;f&#34;: ap, &#34;b&#34;: 5, &#34;d&#34;: 1, &#34;e&#34;: field(&#34;b&#34;)}
     &gt;&gt;&gt; d
     {&#39;f&#39;: λ(3 b c=default(1) d=default(2) e=default(13)), &#39;b&#39;: 5, &#39;d&#39;: 1, &#39;e&#39;: field(b)}
-    &gt;&gt;&gt; from hdict.aux_frozendict import handle_items
+    &gt;&gt;&gt; from hdict.data.aux_frozendict import handle_items
     &gt;&gt;&gt; handle_items(d, previous={&#34;b&#34;: 5})
     {&#39;b&#39;: 5, &#39;f&#39;: λ(3 b c=1 d=2 e=13), &#39;d&#39;: 1, &#39;e&#39;: 5}
     &gt;&gt;&gt; d
@@ -128,6 +128,143 @@ class apply(AbsBaseArgument):
     {&#39;a&#39;: 3, &#39;b&#39;: field(b), &#39;c&#39;: 77, &#39;d&#39;: default(2), &#39;e&#39;: default(13), &#39;x&#39;: 5}
     &gt;&gt;&gt; apply(f,b=77,x=5).requirements
     {&#39;a&#39;: field(a), &#39;b&#39;: 77, &#39;c&#39;: default(1), &#39;d&#39;: default(2), &#39;e&#39;: default(13), &#39;x&#39;: 5}
+    &gt;&gt;&gt; from hdict.content.argument.entry import entry
+    &gt;&gt;&gt; a = apply(lambda x: x.value * 7, x=entry(&#34;x&#34;))
+    &gt;&gt;&gt; c = {&#34;x&#34;: 3, &#34;y&#34;: entry(&#34;x&#34;)} &gt;&gt; a.r
+    &gt;&gt;&gt; c.show(colored=False)
+    {
+        x: 3,
+        y: ·3,
+        r: λ(·x),
+        _id: drMRkK24R01dlyw0ye-Rx8Gzac7zxmZUS.toA1gi,
+        _ids: {
+            x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+            y: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+            r: .PtYLSxMYqVXNTh-mnqsQygl4goFXoRrXCtQrTYP
+        }
+    }
+    &gt;&gt;&gt; b = a.x.sample()
+    &gt;&gt;&gt; b
+    x=λ(·x)
+    &gt;&gt;&gt; d = {&#34;x&#34;: 3} &gt;&gt; b
+    &gt;&gt;&gt; d.x
+    21
+    &gt;&gt;&gt; a.sampleable
+    False
+    &gt;&gt;&gt; a.sample()
+    λ(·x)
+    &gt;&gt;&gt; d[&#34;h&#34;] = frozenhdict(a=2)
+    &gt;&gt;&gt; d.show(colored=False)
+    {
+        x: 21,
+        h: {
+            a: 2,
+            _id: GfMhwM5bo6OzIpngAf8Ruro6.QgOv2kb0nbj0mgd,
+            _ids: {
+                a: k3PWYRxIEc0lEvD1f6rbnk.36RAD5AyfROy1aT29
+            }
+        },
+        _id: Wjqo4.Qw7KBK6NbppnlKT2W3d5KScpptjoCcNsjj,
+        _ids: {
+            x: .PtYLSxMYqVXNTh-mnqsQygl4goFXoRrXCtQrTYP,
+            h: GfMhwM5bo6OzIpngAf8Ruro6.QgOv2kb0nbj0mgd
+        }
+    }
+    &gt;&gt;&gt; a = apply(lambda x: x.value * 7).x
+    &gt;&gt;&gt; d &gt;&gt;= a
+    &gt;&gt;&gt; d.show(colored=False)
+    {
+        x: λ(x=21),
+        h: {
+            a: 2,
+            _id: GfMhwM5bo6OzIpngAf8Ruro6.QgOv2kb0nbj0mgd,
+            _ids: {
+                a: k3PWYRxIEc0lEvD1f6rbnk.36RAD5AyfROy1aT29
+            }
+        },
+        _id: 5fUCSwb7D633jeGv.xMb006XT8Ulr18os.KxyeTH,
+        _ids: {
+            x: -89UidPh6BgYdYYTx4nxewuDpdilgWzm4O6adFwc,
+            h: GfMhwM5bo6OzIpngAf8Ruro6.QgOv2kb0nbj0mgd
+        }
+    }
+    &gt;&gt;&gt; a = apply(lambda x: x.value * 7, entry(&#34;x&#34;)).x
+    &gt;&gt;&gt; d &gt;&gt;= a
+    &gt;&gt;&gt; d.show(colored=False)
+    {
+        x: λ(λ(x=21)),
+        h: {
+            a: 2,
+            _id: GfMhwM5bo6OzIpngAf8Ruro6.QgOv2kb0nbj0mgd,
+            _ids: {
+                a: k3PWYRxIEc0lEvD1f6rbnk.36RAD5AyfROy1aT29
+            }
+        },
+        _id: pEhqOs9sPjot-eiGgJbKQ5j7aTL1MySiBaoTj0r4,
+        _ids: {
+            x: mmdYysfo0-rbXPLWBaqHKdxGkR9xwyihdlfv-q4B,
+            h: GfMhwM5bo6OzIpngAf8Ruro6.QgOv2kb0nbj0mgd
+        }
+    }
+    &gt;&gt;&gt; d &gt;&gt;= {&#34;b&#34; : 2, &#34;c&#34;: entry(&#34;b&#34;)}
+    &gt;&gt;&gt; d.show(colored=False)
+    {
+        x: λ(λ(x=21)),
+        h: {
+            a: 2,
+            _id: GfMhwM5bo6OzIpngAf8Ruro6.QgOv2kb0nbj0mgd,
+            _ids: {
+                a: k3PWYRxIEc0lEvD1f6rbnk.36RAD5AyfROy1aT29
+            }
+        },
+        b: 2,
+        c: ·2,
+        _id: WoI36oD8iHnd81y0q-VTpbFoN2rhdAbRGOk1yBK5,
+        _ids: {
+            x: mmdYysfo0-rbXPLWBaqHKdxGkR9xwyihdlfv-q4B,
+            h: GfMhwM5bo6OzIpngAf8Ruro6.QgOv2kb0nbj0mgd,
+            b: k3PWYRxIEc0lEvD1f6rbnk.36RAD5AyfROy1aT29,
+            c: k3PWYRxIEc0lEvD1f6rbnk.36RAD5AyfROy1aT29
+        }
+    }
+    &gt;&gt;&gt; d &gt;&gt;= {&#34;b&#34; : (2, 3), (&#34;a1&#34;, &#34;b1&#34;): [0, 1]}
+    &gt;&gt;&gt; d &gt;&gt;= {(&#34;a2&#34;, &#34;b2&#34;): _.b}
+    &gt;&gt;&gt; d &gt;&gt;= {(&#34;a3&#34;, &#34;b3&#34;): entry(&#34;b&#34;)}
+    &gt;&gt;&gt; d.show(colored=False)  # TODO: improve output for subvalues (and backtracking in general for pointer-like entries)
+    {
+        x: λ(λ(x=21)),
+        h: {
+            a: 2,
+            _id: GfMhwM5bo6OzIpngAf8Ruro6.QgOv2kb0nbj0mgd,
+            _ids: {
+                a: k3PWYRxIEc0lEvD1f6rbnk.36RAD5AyfROy1aT29
+            }
+        },
+        b: [
+            2,
+            3
+        ],
+        c: ·2,
+        a1: 0,
+        b1: 1,
+        a2: &#34;(2, 3)→0&#34;,
+        b2: &#34;(2, 3)→1&#34;,
+        a3: ·(2, 3)→0,
+        b3: ·(2, 3)→1,
+        _id: jY2TGGf9ZSvPk7k3Mu4bgeJJXZ45Gwwye.wPVBgX,
+        _ids: {
+            x: mmdYysfo0-rbXPLWBaqHKdxGkR9xwyihdlfv-q4B,
+            h: GfMhwM5bo6OzIpngAf8Ruro6.QgOv2kb0nbj0mgd,
+            b: -a.WUGANQp6aVgbRCtUljlgs12HNtJ-dJOAgSZWk,
+            c: k3PWYRxIEc0lEvD1f6rbnk.36RAD5AyfROy1aT29,
+            a1: M7HyZUgSF.ZSmBEMFcDkiZBQz00wU9pGF3DoRiDu,
+            b1: DYu5bfVvb6FOhBCWNsss4wsEWHZYTbKnsVgoWFvl,
+            a2: GfnITQ6RdDtm4F-F0UuU8fOJX1DZIBZG5RWBM8wm,
+            b2: QznFPbiCaMRZKUoFhdLxMKYQf3ujIe1zDl9G5Rq-,
+            a3: GfnITQ6RdDtm4F-F0UuU8fOJX1DZIBZG5RWBM8wm,
+            b3: QznFPbiCaMRZKUoFhdLxMKYQf3ujIe1zDl9G5Rq-
+        }
+    }
     &#34;&#34;&#34;
 
     _sampleable, isfield, _requirements = None, False, None
@@ -202,7 +339,10 @@ class apply(AbsBaseArgument):
         return Closure(self, data, [key])
 
     def __call__(self, *out, **kwout):
-        from hdict.applyout import ApplyOut
+        from hdict.expression.step.applyout import ApplyOut
+
+        if not (out or kwout):  # pragma: no cover
+            raise Exception(f&#34;At least one output field must be specified to apply.&#34;)
 
         if out and kwout:  # pragma: no cover
             raise Exception(f&#34;Cannot mix translated (**kwargs) and non translated (*args) outputs.&#34;)
@@ -213,7 +353,7 @@ class apply(AbsBaseArgument):
     def __getattr__(self, item):
         # REMINDER: Work around getattribute missing all properties.
         if item not in [&#34;ahosh&#34;, &#34;requirements&#34;, &#34;hosh&#34;]:
-            from hdict.applyout import ApplyOut
+            from hdict.expression.step.applyout import ApplyOut
 
             return ApplyOut(self, item)
         return self.__getattribute__(item)  # pragma: no cover
@@ -224,20 +364,29 @@ class apply(AbsBaseArgument):
     def __rrshift__(self, other):  # pragma: no cover
         raise Exception(f&#34;Cannot apply before specifying the output field.&#34;)
 
+    def __mul__(self, other):  # pragma: no cover
+        raise Exception(f&#34;Cannot pipeline an application before specifying the output field.&#34;)
+
+    def __rmul__(self, other):  # pragma: no cover
+        raise Exception(f&#34;Cannot apply before specifying the output field.&#34;)
+
     def __repr__(self):
-        from hdict import value
+        from hdict.content.value import value
+        from hdict.content.argument.entry import entry
 
         lst = []
         for param, content in sorted(chain(self.fargs.items(), self.fkwargs.items())):
             match content:
                 case field(name=param):
                     lst.append(f&#34;{param}&#34;)
+                case entry(name=param):
+                    lst.append(repr(content))
                 case value():
                     lst.append(truncate(repr(content), width=7))
                 case AbsArgument():
                     lst.append(f&#34;{param}={repr(content)}&#34;)
-                case _:
-                    raise Exception(f&#34;&#34;)
+                case _:  # pragma: no cover
+                    raise Exception(f&#34;Canoot repr `{type(content)}&#34;)
         return f&#34;λ({&#39; &#39;.join(lst)})&#34;
 
     @property
@@ -264,7 +413,7 @@ class apply(AbsBaseArgument):
 <div class="desc"><p>Function application</p>
 <p>Single output application is defined by attribute: 'apply(f).my_output_field'.
 Multioutput application is defined by a call: 'apply(f)("output_field1", "output_field2")'.</p>
-<pre><code class="language-python-repl">&gt;&gt;&gt; from hdict import apply, value
+<pre><code class="language-python-repl">&gt;&gt;&gt; from hdict import apply, value, frozenhdict, _
 &gt;&gt;&gt; f = lambda a, b: a**b
 &gt;&gt;&gt; v = apply(f, 5, b=7)
 &gt;&gt;&gt; v
@@ -298,7 +447,7 @@ Multioutput application is defined by a call: 'apply(f)("output_field1", "output
 &gt;&gt;&gt; d = {&quot;f&quot;: ap, &quot;b&quot;: 5, &quot;d&quot;: 1, &quot;e&quot;: field(&quot;b&quot;)}
 &gt;&gt;&gt; d
 {'f': λ(3 b c=default(1) d=default(2) e=default(13)), 'b': 5, 'd': 1, 'e': field(b)}
-&gt;&gt;&gt; from hdict.aux_frozendict import handle_items
+&gt;&gt;&gt; from hdict.data.aux_frozendict import handle_items
 &gt;&gt;&gt; handle_items(d, previous={&quot;b&quot;: 5})
 {'b': 5, 'f': λ(3 b c=1 d=2 e=13), 'd': 1, 'e': 5}
 &gt;&gt;&gt; d
@@ -322,6 +471,143 @@ Multioutput application is defined by a call: 'apply(f)("output_field1", "output
 {'a': 3, 'b': field(b), 'c': 77, 'd': default(2), 'e': default(13), 'x': 5}
 &gt;&gt;&gt; apply(f,b=77,x=5).requirements
 {'a': field(a), 'b': 77, 'c': default(1), 'd': default(2), 'e': default(13), 'x': 5}
+&gt;&gt;&gt; from hdict.content.argument.entry import entry
+&gt;&gt;&gt; a = apply(lambda x: x.value * 7, x=entry(&quot;x&quot;))
+&gt;&gt;&gt; c = {&quot;x&quot;: 3, &quot;y&quot;: entry(&quot;x&quot;)} &gt;&gt; a.r
+&gt;&gt;&gt; c.show(colored=False)
+{
+    x: 3,
+    y: ·3,
+    r: λ(·x),
+    _id: drMRkK24R01dlyw0ye-Rx8Gzac7zxmZUS.toA1gi,
+    _ids: {
+        x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+        y: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+        r: .PtYLSxMYqVXNTh-mnqsQygl4goFXoRrXCtQrTYP
+    }
+}
+&gt;&gt;&gt; b = a.x.sample()
+&gt;&gt;&gt; b
+x=λ(·x)
+&gt;&gt;&gt; d = {&quot;x&quot;: 3} &gt;&gt; b
+&gt;&gt;&gt; d.x
+21
+&gt;&gt;&gt; a.sampleable
+False
+&gt;&gt;&gt; a.sample()
+λ(·x)
+&gt;&gt;&gt; d[&quot;h&quot;] = frozenhdict(a=2)
+&gt;&gt;&gt; d.show(colored=False)
+{
+    x: 21,
+    h: {
+        a: 2,
+        _id: GfMhwM5bo6OzIpngAf8Ruro6.QgOv2kb0nbj0mgd,
+        _ids: {
+            a: k3PWYRxIEc0lEvD1f6rbnk.36RAD5AyfROy1aT29
+        }
+    },
+    _id: Wjqo4.Qw7KBK6NbppnlKT2W3d5KScpptjoCcNsjj,
+    _ids: {
+        x: .PtYLSxMYqVXNTh-mnqsQygl4goFXoRrXCtQrTYP,
+        h: GfMhwM5bo6OzIpngAf8Ruro6.QgOv2kb0nbj0mgd
+    }
+}
+&gt;&gt;&gt; a = apply(lambda x: x.value * 7).x
+&gt;&gt;&gt; d &gt;&gt;= a
+&gt;&gt;&gt; d.show(colored=False)
+{
+    x: λ(x=21),
+    h: {
+        a: 2,
+        _id: GfMhwM5bo6OzIpngAf8Ruro6.QgOv2kb0nbj0mgd,
+        _ids: {
+            a: k3PWYRxIEc0lEvD1f6rbnk.36RAD5AyfROy1aT29
+        }
+    },
+    _id: 5fUCSwb7D633jeGv.xMb006XT8Ulr18os.KxyeTH,
+    _ids: {
+        x: -89UidPh6BgYdYYTx4nxewuDpdilgWzm4O6adFwc,
+        h: GfMhwM5bo6OzIpngAf8Ruro6.QgOv2kb0nbj0mgd
+    }
+}
+&gt;&gt;&gt; a = apply(lambda x: x.value * 7, entry(&quot;x&quot;)).x
+&gt;&gt;&gt; d &gt;&gt;= a
+&gt;&gt;&gt; d.show(colored=False)
+{
+    x: λ(λ(x=21)),
+    h: {
+        a: 2,
+        _id: GfMhwM5bo6OzIpngAf8Ruro6.QgOv2kb0nbj0mgd,
+        _ids: {
+            a: k3PWYRxIEc0lEvD1f6rbnk.36RAD5AyfROy1aT29
+        }
+    },
+    _id: pEhqOs9sPjot-eiGgJbKQ5j7aTL1MySiBaoTj0r4,
+    _ids: {
+        x: mmdYysfo0-rbXPLWBaqHKdxGkR9xwyihdlfv-q4B,
+        h: GfMhwM5bo6OzIpngAf8Ruro6.QgOv2kb0nbj0mgd
+    }
+}
+&gt;&gt;&gt; d &gt;&gt;= {&quot;b&quot; : 2, &quot;c&quot;: entry(&quot;b&quot;)}
+&gt;&gt;&gt; d.show(colored=False)
+{
+    x: λ(λ(x=21)),
+    h: {
+        a: 2,
+        _id: GfMhwM5bo6OzIpngAf8Ruro6.QgOv2kb0nbj0mgd,
+        _ids: {
+            a: k3PWYRxIEc0lEvD1f6rbnk.36RAD5AyfROy1aT29
+        }
+    },
+    b: 2,
+    c: ·2,
+    _id: WoI36oD8iHnd81y0q-VTpbFoN2rhdAbRGOk1yBK5,
+    _ids: {
+        x: mmdYysfo0-rbXPLWBaqHKdxGkR9xwyihdlfv-q4B,
+        h: GfMhwM5bo6OzIpngAf8Ruro6.QgOv2kb0nbj0mgd,
+        b: k3PWYRxIEc0lEvD1f6rbnk.36RAD5AyfROy1aT29,
+        c: k3PWYRxIEc0lEvD1f6rbnk.36RAD5AyfROy1aT29
+    }
+}
+&gt;&gt;&gt; d &gt;&gt;= {&quot;b&quot; : (2, 3), (&quot;a1&quot;, &quot;b1&quot;): [0, 1]}
+&gt;&gt;&gt; d &gt;&gt;= {(&quot;a2&quot;, &quot;b2&quot;): _.b}
+&gt;&gt;&gt; d &gt;&gt;= {(&quot;a3&quot;, &quot;b3&quot;): entry(&quot;b&quot;)}
+&gt;&gt;&gt; d.show(colored=False)  # TODO: improve output for subvalues (and backtracking in general for pointer-like entries)
+{
+    x: λ(λ(x=21)),
+    h: {
+        a: 2,
+        _id: GfMhwM5bo6OzIpngAf8Ruro6.QgOv2kb0nbj0mgd,
+        _ids: {
+            a: k3PWYRxIEc0lEvD1f6rbnk.36RAD5AyfROy1aT29
+        }
+    },
+    b: [
+        2,
+        3
+    ],
+    c: ·2,
+    a1: 0,
+    b1: 1,
+    a2: &quot;(2, 3)→0&quot;,
+    b2: &quot;(2, 3)→1&quot;,
+    a3: ·(2, 3)→0,
+    b3: ·(2, 3)→1,
+    _id: jY2TGGf9ZSvPk7k3Mu4bgeJJXZ45Gwwye.wPVBgX,
+    _ids: {
+        x: mmdYysfo0-rbXPLWBaqHKdxGkR9xwyihdlfv-q4B,
+        h: GfMhwM5bo6OzIpngAf8Ruro6.QgOv2kb0nbj0mgd,
+        b: -a.WUGANQp6aVgbRCtUljlgs12HNtJ-dJOAgSZWk,
+        c: k3PWYRxIEc0lEvD1f6rbnk.36RAD5AyfROy1aT29,
+        a1: M7HyZUgSF.ZSmBEMFcDkiZBQz00wU9pGF3DoRiDu,
+        b1: DYu5bfVvb6FOhBCWNsss4wsEWHZYTbKnsVgoWFvl,
+        a2: GfnITQ6RdDtm4F-F0UuU8fOJX1DZIBZG5RWBM8wm,
+        b2: QznFPbiCaMRZKUoFhdLxMKYQf3ujIe1zDl9G5Rq-,
+        a3: GfnITQ6RdDtm4F-F0UuU8fOJX1DZIBZG5RWBM8wm,
+        b3: QznFPbiCaMRZKUoFhdLxMKYQf3ujIe1zDl9G5Rq-
+    }
+}
 </code></pre></div>
 <details class="source">
 <summary>
@@ -334,7 +620,7 @@ Multioutput application is defined by a call: 'apply(f)("output_field1", "output
     Single output application is defined by attribute: &#39;apply(f).my_output_field&#39;.
     Multioutput application is defined by a call: &#39;apply(f)(&#34;output_field1&#34;, &#34;output_field2&#34;)&#39;.
 
-    &gt;&gt;&gt; from hdict import apply, value
+    &gt;&gt;&gt; from hdict import apply, value, frozenhdict, _
     &gt;&gt;&gt; f = lambda a, b: a**b
     &gt;&gt;&gt; v = apply(f, 5, b=7)
     &gt;&gt;&gt; v
@@ -368,7 +654,7 @@ Multioutput application is defined by a call: 'apply(f)("output_field1", "output
     &gt;&gt;&gt; d = {&#34;f&#34;: ap, &#34;b&#34;: 5, &#34;d&#34;: 1, &#34;e&#34;: field(&#34;b&#34;)}
     &gt;&gt;&gt; d
     {&#39;f&#39;: λ(3 b c=default(1) d=default(2) e=default(13)), &#39;b&#39;: 5, &#39;d&#39;: 1, &#39;e&#39;: field(b)}
-    &gt;&gt;&gt; from hdict.aux_frozendict import handle_items
+    &gt;&gt;&gt; from hdict.data.aux_frozendict import handle_items
     &gt;&gt;&gt; handle_items(d, previous={&#34;b&#34;: 5})
     {&#39;b&#39;: 5, &#39;f&#39;: λ(3 b c=1 d=2 e=13), &#39;d&#39;: 1, &#39;e&#39;: 5}
     &gt;&gt;&gt; d
@@ -392,6 +678,143 @@ Multioutput application is defined by a call: 'apply(f)("output_field1", "output
     {&#39;a&#39;: 3, &#39;b&#39;: field(b), &#39;c&#39;: 77, &#39;d&#39;: default(2), &#39;e&#39;: default(13), &#39;x&#39;: 5}
     &gt;&gt;&gt; apply(f,b=77,x=5).requirements
     {&#39;a&#39;: field(a), &#39;b&#39;: 77, &#39;c&#39;: default(1), &#39;d&#39;: default(2), &#39;e&#39;: default(13), &#39;x&#39;: 5}
+    &gt;&gt;&gt; from hdict.content.argument.entry import entry
+    &gt;&gt;&gt; a = apply(lambda x: x.value * 7, x=entry(&#34;x&#34;))
+    &gt;&gt;&gt; c = {&#34;x&#34;: 3, &#34;y&#34;: entry(&#34;x&#34;)} &gt;&gt; a.r
+    &gt;&gt;&gt; c.show(colored=False)
+    {
+        x: 3,
+        y: ·3,
+        r: λ(·x),
+        _id: drMRkK24R01dlyw0ye-Rx8Gzac7zxmZUS.toA1gi,
+        _ids: {
+            x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+            y: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+            r: .PtYLSxMYqVXNTh-mnqsQygl4goFXoRrXCtQrTYP
+        }
+    }
+    &gt;&gt;&gt; b = a.x.sample()
+    &gt;&gt;&gt; b
+    x=λ(·x)
+    &gt;&gt;&gt; d = {&#34;x&#34;: 3} &gt;&gt; b
+    &gt;&gt;&gt; d.x
+    21
+    &gt;&gt;&gt; a.sampleable
+    False
+    &gt;&gt;&gt; a.sample()
+    λ(·x)
+    &gt;&gt;&gt; d[&#34;h&#34;] = frozenhdict(a=2)
+    &gt;&gt;&gt; d.show(colored=False)
+    {
+        x: 21,
+        h: {
+            a: 2,
+            _id: GfMhwM5bo6OzIpngAf8Ruro6.QgOv2kb0nbj0mgd,
+            _ids: {
+                a: k3PWYRxIEc0lEvD1f6rbnk.36RAD5AyfROy1aT29
+            }
+        },
+        _id: Wjqo4.Qw7KBK6NbppnlKT2W3d5KScpptjoCcNsjj,
+        _ids: {
+            x: .PtYLSxMYqVXNTh-mnqsQygl4goFXoRrXCtQrTYP,
+            h: GfMhwM5bo6OzIpngAf8Ruro6.QgOv2kb0nbj0mgd
+        }
+    }
+    &gt;&gt;&gt; a = apply(lambda x: x.value * 7).x
+    &gt;&gt;&gt; d &gt;&gt;= a
+    &gt;&gt;&gt; d.show(colored=False)
+    {
+        x: λ(x=21),
+        h: {
+            a: 2,
+            _id: GfMhwM5bo6OzIpngAf8Ruro6.QgOv2kb0nbj0mgd,
+            _ids: {
+                a: k3PWYRxIEc0lEvD1f6rbnk.36RAD5AyfROy1aT29
+            }
+        },
+        _id: 5fUCSwb7D633jeGv.xMb006XT8Ulr18os.KxyeTH,
+        _ids: {
+            x: -89UidPh6BgYdYYTx4nxewuDpdilgWzm4O6adFwc,
+            h: GfMhwM5bo6OzIpngAf8Ruro6.QgOv2kb0nbj0mgd
+        }
+    }
+    &gt;&gt;&gt; a = apply(lambda x: x.value * 7, entry(&#34;x&#34;)).x
+    &gt;&gt;&gt; d &gt;&gt;= a
+    &gt;&gt;&gt; d.show(colored=False)
+    {
+        x: λ(λ(x=21)),
+        h: {
+            a: 2,
+            _id: GfMhwM5bo6OzIpngAf8Ruro6.QgOv2kb0nbj0mgd,
+            _ids: {
+                a: k3PWYRxIEc0lEvD1f6rbnk.36RAD5AyfROy1aT29
+            }
+        },
+        _id: pEhqOs9sPjot-eiGgJbKQ5j7aTL1MySiBaoTj0r4,
+        _ids: {
+            x: mmdYysfo0-rbXPLWBaqHKdxGkR9xwyihdlfv-q4B,
+            h: GfMhwM5bo6OzIpngAf8Ruro6.QgOv2kb0nbj0mgd
+        }
+    }
+    &gt;&gt;&gt; d &gt;&gt;= {&#34;b&#34; : 2, &#34;c&#34;: entry(&#34;b&#34;)}
+    &gt;&gt;&gt; d.show(colored=False)
+    {
+        x: λ(λ(x=21)),
+        h: {
+            a: 2,
+            _id: GfMhwM5bo6OzIpngAf8Ruro6.QgOv2kb0nbj0mgd,
+            _ids: {
+                a: k3PWYRxIEc0lEvD1f6rbnk.36RAD5AyfROy1aT29
+            }
+        },
+        b: 2,
+        c: ·2,
+        _id: WoI36oD8iHnd81y0q-VTpbFoN2rhdAbRGOk1yBK5,
+        _ids: {
+            x: mmdYysfo0-rbXPLWBaqHKdxGkR9xwyihdlfv-q4B,
+            h: GfMhwM5bo6OzIpngAf8Ruro6.QgOv2kb0nbj0mgd,
+            b: k3PWYRxIEc0lEvD1f6rbnk.36RAD5AyfROy1aT29,
+            c: k3PWYRxIEc0lEvD1f6rbnk.36RAD5AyfROy1aT29
+        }
+    }
+    &gt;&gt;&gt; d &gt;&gt;= {&#34;b&#34; : (2, 3), (&#34;a1&#34;, &#34;b1&#34;): [0, 1]}
+    &gt;&gt;&gt; d &gt;&gt;= {(&#34;a2&#34;, &#34;b2&#34;): _.b}
+    &gt;&gt;&gt; d &gt;&gt;= {(&#34;a3&#34;, &#34;b3&#34;): entry(&#34;b&#34;)}
+    &gt;&gt;&gt; d.show(colored=False)  # TODO: improve output for subvalues (and backtracking in general for pointer-like entries)
+    {
+        x: λ(λ(x=21)),
+        h: {
+            a: 2,
+            _id: GfMhwM5bo6OzIpngAf8Ruro6.QgOv2kb0nbj0mgd,
+            _ids: {
+                a: k3PWYRxIEc0lEvD1f6rbnk.36RAD5AyfROy1aT29
+            }
+        },
+        b: [
+            2,
+            3
+        ],
+        c: ·2,
+        a1: 0,
+        b1: 1,
+        a2: &#34;(2, 3)→0&#34;,
+        b2: &#34;(2, 3)→1&#34;,
+        a3: ·(2, 3)→0,
+        b3: ·(2, 3)→1,
+        _id: jY2TGGf9ZSvPk7k3Mu4bgeJJXZ45Gwwye.wPVBgX,
+        _ids: {
+            x: mmdYysfo0-rbXPLWBaqHKdxGkR9xwyihdlfv-q4B,
+            h: GfMhwM5bo6OzIpngAf8Ruro6.QgOv2kb0nbj0mgd,
+            b: -a.WUGANQp6aVgbRCtUljlgs12HNtJ-dJOAgSZWk,
+            c: k3PWYRxIEc0lEvD1f6rbnk.36RAD5AyfROy1aT29,
+            a1: M7HyZUgSF.ZSmBEMFcDkiZBQz00wU9pGF3DoRiDu,
+            b1: DYu5bfVvb6FOhBCWNsss4wsEWHZYTbKnsVgoWFvl,
+            a2: GfnITQ6RdDtm4F-F0UuU8fOJX1DZIBZG5RWBM8wm,
+            b2: QznFPbiCaMRZKUoFhdLxMKYQf3ujIe1zDl9G5Rq-,
+            a3: GfnITQ6RdDtm4F-F0UuU8fOJX1DZIBZG5RWBM8wm,
+            b3: QznFPbiCaMRZKUoFhdLxMKYQf3ujIe1zDl9G5Rq-
+        }
+    }
     &#34;&#34;&#34;
 
     _sampleable, isfield, _requirements = None, False, None
@@ -466,7 +889,10 @@ Multioutput application is defined by a call: 'apply(f)("output_field1", "output
         return Closure(self, data, [key])
 
     def __call__(self, *out, **kwout):
-        from hdict.applyout import ApplyOut
+        from hdict.expression.step.applyout import ApplyOut
+
+        if not (out or kwout):  # pragma: no cover
+            raise Exception(f&#34;At least one output field must be specified to apply.&#34;)
 
         if out and kwout:  # pragma: no cover
             raise Exception(f&#34;Cannot mix translated (**kwargs) and non translated (*args) outputs.&#34;)
@@ -477,7 +903,7 @@ Multioutput application is defined by a call: 'apply(f)("output_field1", "output
     def __getattr__(self, item):
         # REMINDER: Work around getattribute missing all properties.
         if item not in [&#34;ahosh&#34;, &#34;requirements&#34;, &#34;hosh&#34;]:
-            from hdict.applyout import ApplyOut
+            from hdict.expression.step.applyout import ApplyOut
 
             return ApplyOut(self, item)
         return self.__getattribute__(item)  # pragma: no cover
@@ -488,20 +914,29 @@ Multioutput application is defined by a call: 'apply(f)("output_field1", "output
     def __rrshift__(self, other):  # pragma: no cover
         raise Exception(f&#34;Cannot apply before specifying the output field.&#34;)
 
+    def __mul__(self, other):  # pragma: no cover
+        raise Exception(f&#34;Cannot pipeline an application before specifying the output field.&#34;)
+
+    def __rmul__(self, other):  # pragma: no cover
+        raise Exception(f&#34;Cannot apply before specifying the output field.&#34;)
+
     def __repr__(self):
-        from hdict import value
+        from hdict.content.value import value
+        from hdict.content.argument.entry import entry
 
         lst = []
         for param, content in sorted(chain(self.fargs.items(), self.fkwargs.items())):
             match content:
                 case field(name=param):
                     lst.append(f&#34;{param}&#34;)
+                case entry(name=param):
+                    lst.append(repr(content))
                 case value():
                     lst.append(truncate(repr(content), width=7))
                 case AbsArgument():
                     lst.append(f&#34;{param}={repr(content)}&#34;)
-                case _:
-                    raise Exception(f&#34;&#34;)
+                case _:  # pragma: no cover
+                    raise Exception(f&#34;Canoot repr `{type(content)}&#34;)
         return f&#34;λ({&#39; &#39;.join(lst)})&#34;
 
     @property

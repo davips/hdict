@@ -38,6 +38,7 @@ def handle_items(*datas: [Dict[str, object]], previous: [Dict[str, AbsEntry]]):
 
 def handle_item(key, item, previous):
     from hdict.content.argument.entry import entry
+
     match item:
         case AbsEntry():
             res = item
@@ -47,6 +48,7 @@ def handle_item(key, item, previous):
             res = handle_item(name, previous[name], previous)
         case entry(name=name):
             from hdict.content.entry.wrapper import Wrapper
+
             if name not in previous:  # pragma: no cover
                 raise MissingFieldException(f"Missing entry `{name}`")
             res = Wrapper(handle_item(name, previous[name], previous))
@@ -64,6 +66,7 @@ def handle_item(key, item, previous):
             raise Exception(f"Cannot handle instance of type '{type(item).__name__}'.")
         case _ if str(type(item)) == "<class 'pandas.core.frame.DataFrame'>":
             from hdict.dataset.pandas_handling import explode_df
+
             res = explode_df(item)
         case _:
             res = value(item)
@@ -153,7 +156,8 @@ def loop_field_names(field_names):
 
 def handle_mirror(k, data, id, kind):  # object | Cached
     from hdict.content.entry.cached import Cached
-    if not isinstance(data[k], (Cached, frozenhdict)): # pragma: no cover
+
+    if not isinstance(data[k], (Cached, frozenhdict)):  # pragma: no cover
         raise Exception(f"Cannot handle fetched object of type `{type(data[k])}`")
     match kind:
         case "<class 'pandas.core.frame.DataFrame'>":

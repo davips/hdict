@@ -13,6 +13,7 @@ def handle_arg(key, val, data, discarded_defaults, out, torepr):
 
     from hdict.content.argument.entry import entry
     from hdict.content.entry.subvalue import SubValue
+
     match val:
         case default(value=v):
             if key in data:
@@ -32,6 +33,7 @@ def handle_arg(key, val, data, discarded_defaults, out, torepr):
             return arg
         case entry(name=name):
             from hdict.content.entry.wrapper import Wrapper
+
             if name not in data:  # pragma: no cover
                 raise MissingFieldException(f"Missing pseudocircular field `{name}`")
             content = handle_item(str(key), data[name], data)

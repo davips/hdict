@@ -37,12 +37,12 @@ from hdict.content.argument.apply import apply
 from hdict.content.argument.default import default
 from hdict.content.entry import AbsEntry, Unevaluated
 from hdict.content.entry.aux_closure import handle_arg
-from hdict.customjson import truncate
+from hdict.text.customjson import truncate
 
 
 class Closure(AbsEntry):
     def __init__(self, application: apply, data: dict[str, AbsEntry], out: list):
-        from hdict.aux_frozendict import handle_item
+        from hdict.data.aux_frozendict import handle_item
 
         self.application = application
         self.out = out
@@ -69,7 +69,11 @@ class Closure(AbsEntry):
             def f():
                 args = (x.value for x in fargs.values())
                 kwargs = {k: v.value for k, v in fkwargs.items()}
-                return appliable_entry.value(*args, **kwargs)
+                try:
+                    return appliable_entry.value(*args, **kwargs)
+                except TypeError as e:  # pragma: no cover
+                    if &#34;required positional argument&#34; in str(e):
+                        raise Exception(f&#34;{str(e)}\n&#34; f&#34;HINT: If you are applying a field, &#34; f&#34;you should make the function parameters explicit, e.g.: `apply(f, parameter1, parameter2)`.&#34;)
 
         else:
             hosh *= application.ahosh
@@ -86,34 +90,51 @@ class Closure(AbsEntry):
 
     @property
     def value(self):
-        if self._value == Unevaluated:
+        if isinstance(self._value, Unevaluated):
             self._value = self.f()
             # del self.application  # TODO: delete clasure.application inside each subvalue?
         return self._value
 
-    def __repr__(self):
+    def __repr__(self, out=None):
         from hdict import value
         from hdict import field
+        from hdict.content.entry.wrapper import Wrapper
 
+        if out is None:
+            out = []
+        out = out + self.out
         lst = []
         for param, content in self.torepr.items():
             pre = &#34;&#34; if isinstance(param, int) else f&#34;{param}=&#34;
+
             match content:
                 case value():
                     lst.append(truncate(repr(content), width=7))
+
                 case default() if param in self.discarded_defaults:
                     lst.append(f&#34;{param}&#34;)
                 case default(value=v):
                     lst.append(f&#34;{param}={v}&#34;)
-                case field(name) if name in self.out:
-                    lst.append(f&#34;{repr(content)}&#34;)
+
+                # case field(name) if name in out:
+                #     lst.append(repr(content))
                 case field(name) if name == param:
                     lst.append(f&#34;{param}&#34;)
                 case field(name):
                     lst.append(f&#34;{pre}{name}&#34;)
+
+                case Wrapper(entry_):
+                    if isinstance(entry_, Closure):
+                        lst.append(entry_.__repr__(out))
+                    else:
+                        lst.append(param)
+                case Closure():
+                    lst.append(f&#34;{pre}{content.value if content.isevaluated else content.__repr__(out)}&#34;)
                 case AbsArgument():
                     lst.append(f&#34;{pre}{repr(content)}&#34;)
-                case _:
+                case AbsEntry():
+                    lst.append(f&#34;{pre}{repr(content)}&#34;)
+                case _:  # pragma: no cover
                     raise Exception(type(content))
         return f&#34;λ({&#39; &#39;.join(lst)})&#34;</code></pre>
 </details>
@@ -140,7 +161,7 @@ class Closure(AbsEntry):
 </summary>
 <pre><code class="python">class Closure(AbsEntry):
     def __init__(self, application: apply, data: dict[str, AbsEntry], out: list):
-        from hdict.aux_frozendict import handle_item
+        from hdict.data.aux_frozendict import handle_item
 
         self.application = application
         self.out = out
@@ -167,7 +188,11 @@ class Closure(AbsEntry):
             def f():
                 args = (x.value for x in fargs.values())
                 kwargs = {k: v.value for k, v in fkwargs.items()}
-                return appliable_entry.value(*args, **kwargs)
+                try:
+                    return appliable_entry.value(*args, **kwargs)
+                except TypeError as e:  # pragma: no cover
+                    if &#34;required positional argument&#34; in str(e):
+                        raise Exception(f&#34;{str(e)}\n&#34; f&#34;HINT: If you are applying a field, &#34; f&#34;you should make the function parameters explicit, e.g.: `apply(f, parameter1, parameter2)`.&#34;)
 
         else:
             hosh *= application.ahosh
@@ -184,34 +209,51 @@ class Closure(AbsEntry):
 
     @property
     def value(self):
-        if self._value == Unevaluated:
+        if isinstance(self._value, Unevaluated):
             self._value = self.f()
             # del self.application  # TODO: delete clasure.application inside each subvalue?
         return self._value
 
-    def __repr__(self):
+    def __repr__(self, out=None):
         from hdict import value
         from hdict import field
+        from hdict.content.entry.wrapper import Wrapper
 
+        if out is None:
+            out = []
+        out = out + self.out
         lst = []
         for param, content in self.torepr.items():
             pre = &#34;&#34; if isinstance(param, int) else f&#34;{param}=&#34;
+
             match content:
                 case value():
                     lst.append(truncate(repr(content), width=7))
+
                 case default() if param in self.discarded_defaults:
                     lst.append(f&#34;{param}&#34;)
                 case default(value=v):
                     lst.append(f&#34;{param}={v}&#34;)
-                case field(name) if name in self.out:
-                    lst.append(f&#34;{repr(content)}&#34;)
+
+                # case field(name) if name in out:
+                #     lst.append(repr(content))
                 case field(name) if name == param:
                     lst.append(f&#34;{param}&#34;)
                 case field(name):
                     lst.append(f&#34;{pre}{name}&#34;)
+
+                case Wrapper(entry_):
+                    if isinstance(entry_, Closure):
+                        lst.append(entry_.__repr__(out))
+                    else:
+                        lst.append(param)
+                case Closure():
+                    lst.append(f&#34;{pre}{content.value if content.isevaluated else content.__repr__(out)}&#34;)
                 case AbsArgument():
                     lst.append(f&#34;{pre}{repr(content)}&#34;)
-                case _:
+                case AbsEntry():
+                    lst.append(f&#34;{pre}{repr(content)}&#34;)
+                case _:  # pragma: no cover
                     raise Exception(type(content))
         return f&#34;λ({&#39; &#39;.join(lst)})&#34;</code></pre>
 </details>
@@ -231,7 +273,7 @@ class Closure(AbsEntry):
 </summary>
 <pre><code class="python">@property
 def value(self):
-    if self._value == Unevaluated:
+    if isinstance(self._value, Unevaluated):
         self._value = self.f()
         # del self.application  # TODO: delete clasure.application inside each subvalue?
     return self._value</code></pre>

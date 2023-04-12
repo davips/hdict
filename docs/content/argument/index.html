@@ -46,7 +46,7 @@ class AbsArgument(AbsAny):
 
 class AbsBaseArgument(AbsArgument):
     &#34;&#34;&#34;
-    Normal function argument provided by the user: value*, field, apply
+    Normal function argument provided by the user: `value`*, `field`, `apply`; or from advanced use: `entry`
 
     Exceptionally, &#39;field&#39; is a subclass that can also be piped through &#39;&gt;&gt;&#39;
     *value also inherits AbsReadyEntry
@@ -55,7 +55,7 @@ class AbsBaseArgument(AbsArgument):
 
 class AbsMetaArgument(AbsArgument):
     &#34;&#34;&#34;
-    Special temporary argument-like directive provided by the user: default, sample
+    Special temporary argument-like directive provided by the user: `default`, `sample`
     &#34;&#34;&#34;</code></pre>
 </details>
 </section>
@@ -71,6 +71,10 @@ class AbsMetaArgument(AbsArgument):
 <div class="desc"></div>
 </dd>
 <dt><code class="name"><a title="hdict.content.argument.default" href="default.html">hdict.content.argument.default</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="hdict.content.argument.entry" href="entry.html">hdict.content.argument.entry</a></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -150,7 +154,7 @@ class AbsMetaArgument(AbsArgument):
 <span>class <span class="ident">AbsBaseArgument</span></span>
 </code></dt>
 <dd>
-<div class="desc"><p>Normal function argument provided by the user: value*, field, apply</p>
+<div class="desc"><p>Normal function argument provided by the user: <code>value</code>*, <code><a title="hdict.content.argument.field" href="field.html">hdict.content.argument.field</a></code>, <code><a title="hdict.content.argument.apply" href="apply.html">hdict.content.argument.apply</a></code>; or from advanced use: <code><a title="hdict.content.argument.entry" href="entry.html">hdict.content.argument.entry</a></code></p>
 <p>Exceptionally, 'field' is a subclass that can also be piped through '&gt;&gt;'
 *value also inherits AbsReadyEntry</p></div>
 <details class="source">
@@ -159,7 +163,7 @@ class AbsMetaArgument(AbsArgument):
 </summary>
 <pre><code class="python">class AbsBaseArgument(AbsArgument):
     &#34;&#34;&#34;
-    Normal function argument provided by the user: value*, field, apply
+    Normal function argument provided by the user: `value`*, `field`, `apply`; or from advanced use: `entry`
 
     Exceptionally, &#39;field&#39; is a subclass that can also be piped through &#39;&gt;&gt;&#39;
     *value also inherits AbsReadyEntry
@@ -173,6 +177,7 @@ class AbsMetaArgument(AbsArgument):
 <h3>Subclasses</h3>
 <ul class="hlist">
 <li><a title="hdict.content.argument.apply.apply" href="apply.html#hdict.content.argument.apply.apply">apply</a></li>
+<li><a title="hdict.content.argument.entry.entry" href="entry.html#hdict.content.argument.entry.entry">entry</a></li>
 <li><a title="hdict.content.argument.field.field" href="field.html#hdict.content.argument.field.field">field</a></li>
 <li><a title="hdict.content.value.value" href="../value.html#hdict.content.value.value">value</a></li>
 </ul>
@@ -181,14 +186,14 @@ class AbsMetaArgument(AbsArgument):
 <span>class <span class="ident">AbsMetaArgument</span></span>
 </code></dt>
 <dd>
-<div class="desc"><p>Special temporary argument-like directive provided by the user: default, sample</p></div>
+<div class="desc"><p>Special temporary argument-like directive provided by the user: <code><a title="hdict.content.argument.default" href="default.html">hdict.content.argument.default</a></code>, <code><a title="hdict.content.argument.sample" href="sample.html">hdict.content.argument.sample</a></code></p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class AbsMetaArgument(AbsArgument):
     &#34;&#34;&#34;
-    Special temporary argument-like directive provided by the user: default, sample
+    Special temporary argument-like directive provided by the user: `default`, `sample`
     &#34;&#34;&#34;</code></pre>
 </details>
 <h3>Ancestors</h3>
@@ -221,6 +226,7 @@ class AbsMetaArgument(AbsArgument):
 <li><code><a title="hdict.content.argument.apply" href="apply.html">hdict.content.argument.apply</a></code></li>
 <li><code><a title="hdict.content.argument.aux_apply" href="aux_apply.html">hdict.content.argument.aux_apply</a></code></li>
 <li><code><a title="hdict.content.argument.default" href="default.html">hdict.content.argument.default</a></code></li>
+<li><code><a title="hdict.content.argument.entry" href="entry.html">hdict.content.argument.entry</a></code></li>
 <li><code><a title="hdict.content.argument.field" href="field.html">hdict.content.argument.field</a></code></li>
 <li><code><a title="hdict.content.argument.sample" href="sample.html">hdict.content.argument.sample</a></code></li>
 </ul>

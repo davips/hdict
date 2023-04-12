@@ -48,9 +48,12 @@
 #  part of this work is illegal and it is unethical regarding the effort and
 #  time spent here.
 #
+from dataclasses import dataclass
+
 from hdict.content.entry import AbsEntry
 
 
+@dataclass
 class SubValue(AbsEntry):
     &#34;&#34;&#34;
     A field containing part of other field
@@ -61,17 +64,25 @@ class SubValue(AbsEntry):
     [3]→0
     &gt;&gt;&gt; v.value
     3
+    &gt;&gt;&gt; v
+    3
     &#34;&#34;&#34;
 
-    def __init__(self, parent: AbsEntry, index: int, n: int, source: str = None):
-        self.parent, self.index, self.n, self.source = parent, index, n, source
-        self.hosh = parent.hosh[index:n]
+    parent: AbsEntry
+    index: int
+    n: int
+    source: str = None
+
+    # target: str = None
+
+    def __post_init__(self):
+        self.hosh = self.parent.hosh[self.index : self.n]
 
     @property
     def value(self):
         from hdict.content.entry import Unevaluated
 
-        if self._value is Unevaluated:
+        if isinstance(self._value, Unevaluated):
             value = self.parent.value
             if isinstance(value, (list, tuple)):
                 if len(value) &lt; self.n:  # pragma: no cover
@@ -90,6 +101,7 @@ class SubValue(AbsEntry):
     def __repr__(self):
         if self.isevaluated:
             return repr(self._value)
+        # t = self.parent if self.target is None else self.target
         return f&#34;{self.parent}→{str(self.index if self.source is None else self.source)}&#34;</code></pre>
 </details>
 </section>
@@ -114,12 +126,15 @@ class SubValue(AbsEntry):
 [3]→0
 &gt;&gt;&gt; v.value
 3
+&gt;&gt;&gt; v
+3
 </code></pre></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class SubValue(AbsEntry):
+<pre><code class="python">@dataclass
+class SubValue(AbsEntry):
     &#34;&#34;&#34;
     A field containing part of other field
 
@@ -129,17 +144,25 @@ class SubValue(AbsEntry):
     [3]→0
     &gt;&gt;&gt; v.value
     3
+    &gt;&gt;&gt; v
+    3
     &#34;&#34;&#34;
 
-    def __init__(self, parent: AbsEntry, index: int, n: int, source: str = None):
-        self.parent, self.index, self.n, self.source = parent, index, n, source
-        self.hosh = parent.hosh[index:n]
+    parent: AbsEntry
+    index: int
+    n: int
+    source: str = None
+
+    # target: str = None
+
+    def __post_init__(self):
+        self.hosh = self.parent.hosh[self.index : self.n]
 
     @property
     def value(self):
         from hdict.content.entry import Unevaluated
 
-        if self._value is Unevaluated:
+        if isinstance(self._value, Unevaluated):
             value = self.parent.value
             if isinstance(value, (list, tuple)):
                 if len(value) &lt; self.n:  # pragma: no cover
@@ -158,6 +181,7 @@ class SubValue(AbsEntry):
     def __repr__(self):
         if self.isevaluated:
             return repr(self._value)
+        # t = self.parent if self.target is None else self.target
         return f&#34;{self.parent}→{str(self.index if self.source is None else self.source)}&#34;</code></pre>
 </details>
 <h3>Ancestors</h3>
@@ -165,6 +189,25 @@ class SubValue(AbsEntry):
 <li><a title="hdict.content.entry.AbsEntry" href="index.html#hdict.content.entry.AbsEntry">AbsEntry</a></li>
 <li><a title="hdict.abs.AbsAny" href="../../abs/index.html#hdict.abs.AbsAny">AbsAny</a></li>
 </ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="hdict.content.entry.subvalue.SubValue.index"><code class="name">var <span class="ident">index</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="hdict.content.entry.subvalue.SubValue.n"><code class="name">var <span class="ident">n</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="hdict.content.entry.subvalue.SubValue.parent"><code class="name">var <span class="ident">parent</span> : <a title="hdict.content.entry.AbsEntry" href="index.html#hdict.content.entry.AbsEntry">AbsEntry</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="hdict.content.entry.subvalue.SubValue.source"><code class="name">var <span class="ident">source</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
 <h3>Instance variables</h3>
 <dl>
 <dt id="hdict.content.entry.subvalue.SubValue.value"><code class="name">var <span class="ident">value</span> : Union[object, Callable]</code></dt>
@@ -178,7 +221,7 @@ class SubValue(AbsEntry):
 def value(self):
     from hdict.content.entry import Unevaluated
 
-    if self._value is Unevaluated:
+    if isinstance(self._value, Unevaluated):
         value = self.parent.value
         if isinstance(value, (list, tuple)):
             if len(value) &lt; self.n:  # pragma: no cover
@@ -224,6 +267,10 @@ def value(self):
 <li>
 <h4><code><a title="hdict.content.entry.subvalue.SubValue" href="#hdict.content.entry.subvalue.SubValue">SubValue</a></code></h4>
 <ul class="">
+<li><code><a title="hdict.content.entry.subvalue.SubValue.index" href="#hdict.content.entry.subvalue.SubValue.index">index</a></code></li>
+<li><code><a title="hdict.content.entry.subvalue.SubValue.n" href="#hdict.content.entry.subvalue.SubValue.n">n</a></code></li>
+<li><code><a title="hdict.content.entry.subvalue.SubValue.parent" href="#hdict.content.entry.subvalue.SubValue.parent">parent</a></code></li>
+<li><code><a title="hdict.content.entry.subvalue.SubValue.source" href="#hdict.content.entry.subvalue.SubValue.source">source</a></code></li>
 <li><code><a title="hdict.content.entry.subvalue.SubValue.value" href="#hdict.content.entry.subvalue.SubValue.value">value</a></code></li>
 </ul>
 </li>

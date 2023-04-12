@@ -28,7 +28,6 @@
 </summary>
 <pre><code class="python">from __future__ import annotations
 
-from hdict.aux_frozendict import MissingFieldException
 from hdict.content.argument import AbsBaseArgument
 
 
@@ -36,8 +35,12 @@ def handle_arg(key, val, data, discarded_defaults, out, torepr):
     &#34;&#34;&#34;Return handled arg and value of pseudocircular entry&#34;&#34;&#34;
     from hdict.content.argument.default import default
     from hdict.content.value import value
-    from hdict.aux_frozendict import handle_item
+    from hdict.data.aux_frozendict import handle_item
     from hdict import field
+    from hdict.data.aux_frozendict import MissingFieldException
+
+    from hdict.content.argument.entry import entry
+    from hdict.content.entry.subvalue import SubValue
 
     match val:
         case default(value=v):
@@ -51,25 +54,26 @@ def handle_arg(key, val, data, discarded_defaults, out, torepr):
                 torepr[key] = arg
                 return arg
         case field(name=name) if name in out:  # Override case of handle_item if pseudocircular reference.
-            if name not in data:
+            if name not in data:  # pragma: no cover
                 raise MissingFieldException(f&#34;Missing pseudocircular field `{name}`&#34;)
-            arg = handle_item(str(key), val, data)
+            arg = handle_item(str(key), data[name], data)  # key passed for no purpose here AFAIR
             torepr[key] = arg
+            return arg
+        case entry(name=name):
+            from hdict.content.entry.wrapper import Wrapper
+
+            if name not in data:  # pragma: no cover
+                raise MissingFieldException(f&#34;Missing pseudocircular field `{name}`&#34;)
+            content = handle_item(str(key), data[name], data)
+            arg = Wrapper(content)
+            torepr[f&#34;·{name}&#34;] = arg
             return arg
         case AbsBaseArgument():
             arg = handle_item(str(key), val, data)
-        case _:
+        case _:  # pragma: no cover
             raise Exception(f&#34;Cannot handle argument of type `{type(val).__name__}`&#34;)
     torepr[key] = val
-    return arg
-
-
-def isint(s):
-    try:
-        int(s)
-        return True
-    except ValueError:
-        return False</code></pre>
+    return arg</code></pre>
 </details>
 </section>
 <section>
@@ -92,8 +96,12 @@ def isint(s):
     &#34;&#34;&#34;Return handled arg and value of pseudocircular entry&#34;&#34;&#34;
     from hdict.content.argument.default import default
     from hdict.content.value import value
-    from hdict.aux_frozendict import handle_item
+    from hdict.data.aux_frozendict import handle_item
     from hdict import field
+    from hdict.data.aux_frozendict import MissingFieldException
+
+    from hdict.content.argument.entry import entry
+    from hdict.content.entry.subvalue import SubValue
 
     match val:
         case default(value=v):
@@ -107,34 +115,26 @@ def isint(s):
                 torepr[key] = arg
                 return arg
         case field(name=name) if name in out:  # Override case of handle_item if pseudocircular reference.
-            if name not in data:
+            if name not in data:  # pragma: no cover
                 raise MissingFieldException(f&#34;Missing pseudocircular field `{name}`&#34;)
-            arg = handle_item(str(key), val, data)
+            arg = handle_item(str(key), data[name], data)  # key passed for no purpose here AFAIR
             torepr[key] = arg
+            return arg
+        case entry(name=name):
+            from hdict.content.entry.wrapper import Wrapper
+
+            if name not in data:  # pragma: no cover
+                raise MissingFieldException(f&#34;Missing pseudocircular field `{name}`&#34;)
+            content = handle_item(str(key), data[name], data)
+            arg = Wrapper(content)
+            torepr[f&#34;·{name}&#34;] = arg
             return arg
         case AbsBaseArgument():
             arg = handle_item(str(key), val, data)
-        case _:
+        case _:  # pragma: no cover
             raise Exception(f&#34;Cannot handle argument of type `{type(val).__name__}`&#34;)
     torepr[key] = val
     return arg</code></pre>
-</details>
-</dd>
-<dt id="hdict.content.entry.aux_closure.isint"><code class="name flex">
-<span>def <span class="ident">isint</span></span>(<span>s)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def isint(s):
-    try:
-        int(s)
-        return True
-    except ValueError:
-        return False</code></pre>
 </details>
 </dd>
 </dl>
@@ -156,7 +156,6 @@ def isint(s):
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
 <li><code><a title="hdict.content.entry.aux_closure.handle_arg" href="#hdict.content.entry.aux_closure.handle_arg">handle_arg</a></code></li>
-<li><code><a title="hdict.content.entry.aux_closure.isint" href="#hdict.content.entry.aux_closure.isint">isint</a></code></li>
 </ul>
 </li>
 </ul>

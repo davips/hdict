@@ -101,6 +101,7 @@ def explode_df(df) -> value:
 
 def file2df(name):
     from hdict.dataset.dataset import load
+
     if name.endswith(".arff"):
         relation = None
         with open(name) as f:

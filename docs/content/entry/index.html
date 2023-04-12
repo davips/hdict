@@ -58,10 +58,7 @@ from hdict.abs import AbsAny
 
 @dataclass
 class Unevaluated:
-    n = 0
-
-
-Unevaluated = Unevaluated()
+    pass
 
 
 class AbsEntry(AbsAny):
@@ -73,7 +70,7 @@ class AbsEntry(AbsAny):
 
     value: object | Callable  # REMINDER: &#39;callable&#39; is here for appliable contents, like storing a raw lambda
     hosh: Hosh
-    _value = Unevaluated
+    _value = Unevaluated()
 
     @property
     def id(self):  # pragma: no cover
@@ -90,7 +87,7 @@ class AbsEntry(AbsAny):
         &gt;&gt;&gt; Closure(apply(lambda x, y: x + y), {&#34;x&#34;: 3, &#34;y&#34;: 5}, []).isevaluated
         False
         &#34;&#34;&#34;
-        return self._value != Unevaluated</code></pre>
+        return not isinstance(self._value, Unevaluated)</code></pre>
 </details>
 </section>
 <section>
@@ -100,15 +97,19 @@ class AbsEntry(AbsAny):
 <dd>
 <div class="desc"></div>
 </dd>
+<dt><code class="name"><a title="hdict.content.entry.cached" href="cached.html">hdict.content.entry.cached</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
 <dt><code class="name"><a title="hdict.content.entry.closure" href="closure.html">hdict.content.entry.closure</a></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt><code class="name"><a title="hdict.content.entry.lazy" href="lazy.html">hdict.content.entry.lazy</a></code></dt>
+<dt><code class="name"><a title="hdict.content.entry.subvalue" href="subvalue.html">hdict.content.entry.subvalue</a></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt><code class="name"><a title="hdict.content.entry.subvalue" href="subvalue.html">hdict.content.entry.subvalue</a></code></dt>
+<dt><code class="name"><a title="hdict.content.entry.wrapper" href="wrapper.html">hdict.content.entry.wrapper</a></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -140,7 +141,7 @@ class AbsEntry(AbsAny):
 
     value: object | Callable  # REMINDER: &#39;callable&#39; is here for appliable contents, like storing a raw lambda
     hosh: Hosh
-    _value = Unevaluated
+    _value = Unevaluated()
 
     @property
     def id(self):  # pragma: no cover
@@ -157,7 +158,7 @@ class AbsEntry(AbsAny):
         &gt;&gt;&gt; Closure(apply(lambda x, y: x + y), {&#34;x&#34;: 3, &#34;y&#34;: 5}, []).isevaluated
         False
         &#34;&#34;&#34;
-        return self._value != Unevaluated</code></pre>
+        return not isinstance(self._value, Unevaluated)</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -165,9 +166,10 @@ class AbsEntry(AbsAny):
 </ul>
 <h3>Subclasses</h3>
 <ul class="hlist">
+<li><a title="hdict.content.entry.cached.Cached" href="cached.html#hdict.content.entry.cached.Cached">Cached</a></li>
 <li><a title="hdict.content.entry.closure.Closure" href="closure.html#hdict.content.entry.closure.Closure">Closure</a></li>
-<li><a title="hdict.content.entry.lazy.Lazy" href="lazy.html#hdict.content.entry.lazy.Lazy">Lazy</a></li>
 <li><a title="hdict.content.entry.subvalue.SubValue" href="subvalue.html#hdict.content.entry.subvalue.SubValue">SubValue</a></li>
+<li><a title="hdict.content.entry.wrapper.Wrapper" href="wrapper.html#hdict.content.entry.wrapper.Wrapper">Wrapper</a></li>
 <li><a title="hdict.content.value.value" href="../value.html#hdict.content.value.value">value</a></li>
 </ul>
 <h3>Class variables</h3>
@@ -214,7 +216,7 @@ def isevaluated(self):
     &gt;&gt;&gt; Closure(apply(lambda x, y: x + y), {&#34;x&#34;: 3, &#34;y&#34;: 5}, []).isevaluated
     False
     &#34;&#34;&#34;
-    return self._value != Unevaluated</code></pre>
+    return not isinstance(self._value, Unevaluated)</code></pre>
 </details>
 </dd>
 </dl>
@@ -235,6 +237,20 @@ def isevaluated(self):
 </dd>
 </dl>
 </dd>
+<dt id="hdict.content.entry.Unevaluated"><code class="flex name class">
+<span>class <span class="ident">Unevaluated</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Unevaluated()</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass
+class Unevaluated:
+    pass</code></pre>
+</details>
+</dd>
 </dl>
 </section>
 </article>
@@ -252,9 +268,10 @@ def isevaluated(self):
 <li><h3><a href="#header-submodules">Sub-modules</a></h3>
 <ul>
 <li><code><a title="hdict.content.entry.aux_closure" href="aux_closure.html">hdict.content.entry.aux_closure</a></code></li>
+<li><code><a title="hdict.content.entry.cached" href="cached.html">hdict.content.entry.cached</a></code></li>
 <li><code><a title="hdict.content.entry.closure" href="closure.html">hdict.content.entry.closure</a></code></li>
-<li><code><a title="hdict.content.entry.lazy" href="lazy.html">hdict.content.entry.lazy</a></code></li>
 <li><code><a title="hdict.content.entry.subvalue" href="subvalue.html">hdict.content.entry.subvalue</a></code></li>
+<li><code><a title="hdict.content.entry.wrapper" href="wrapper.html">hdict.content.entry.wrapper</a></code></li>
 </ul>
 </li>
 <li><h3><a href="#header-classes">Classes</a></h3>
@@ -268,6 +285,9 @@ def isevaluated(self):
 <li><code><a title="hdict.content.entry.AbsEntry.isevaluated" href="#hdict.content.entry.AbsEntry.isevaluated">isevaluated</a></code></li>
 <li><code><a title="hdict.content.entry.AbsEntry.value" href="#hdict.content.entry.AbsEntry.value">value</a></code></li>
 </ul>
+</li>
+<li>
+<h4><code><a title="hdict.content.entry.Unevaluated" href="#hdict.content.entry.Unevaluated">Unevaluated</a></code></h4>
 </li>
 </ul>
 </li>

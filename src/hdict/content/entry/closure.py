@@ -45,11 +45,7 @@ class Closure(AbsEntry):
                     return appliable_entry.value(*args, **kwargs)
                 except TypeError as e:  # pragma: no cover
                     if "required positional argument" in str(e):
-                        raise Exception(
-                            f"{str(e)}\n"
-                            f"HINT: If you are applying a field, "
-                            f"you should make the function parameters explicit, e.g.: `apply(f, parameter1, parameter2)`."
-                        )
+                        raise Exception(f"{str(e)}\n" f"HINT: If you are applying a field, " f"you should make the function parameters explicit, e.g.: `apply(f, parameter1, parameter2)`.")
 
         else:
             hosh *= application.ahosh
@@ -75,6 +71,7 @@ class Closure(AbsEntry):
         from hdict import value
         from hdict import field
         from hdict.content.entry.wrapper import Wrapper
+
         if out is None:
             out = []
         out = out + self.out

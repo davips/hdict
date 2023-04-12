@@ -10,6 +10,7 @@ class Wrapper(AbsEntry):
 
     For advanced usage only
     """
+
     entry: AbsEntry
 
     def __post_init__(self):

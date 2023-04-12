@@ -48,7 +48,7 @@ class SubValue(AbsEntry):
     # target: str = None
 
     def __post_init__(self):
-        self.hosh = self.parent.hosh[self.index:self.n]
+        self.hosh = self.parent.hosh[self.index : self.n]
 
     @property
     def value(self):

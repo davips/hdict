@@ -11,6 +11,7 @@ class EDict(AbsStep):
 
     Useful to keep the step as a `dict` as long as possible, specially when printing the expression.
     """
+
     dct: dict
 
     def __repr__(self):

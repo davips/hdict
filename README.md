@@ -21,9 +21,17 @@
 Please see the [website](https://hosh.page) for more detailed usage information.
 
 ## Overview
-**Shortly**: A data structure based on a novel identification paradigm useful for frictionless computing, experiments, distributed data, among others.
+Shortly, `hdict` is a data structure useful for frictionless experiments, distributed data, among others.
+It can be more formally defined as a hosh¹-based cacheable lazy `dict` with predictable/deterministic universally unique² identifiers.
 
-**Formally**: Hosh-based cacheable lazy dict with predictable/deterministic universally (probabilistically guaranteed) unique identifiers.
+This library is stable for the most common scenarios.
+However, we will wait for more use in the wild before reaching the major version 1.
+See the Section Versioning below for more information.
+
+¹ hosh: _Operable HaSH_
+
+² unique: _probabilistically guaranteed_
+
 
 
 ### Context
@@ -167,13 +175,12 @@ Please refer to our [website](https://hosh.page) for examples.
 The initial license choosen is GPL. Please contact the developer for other licensing needs.
 
 ### Versioning
-The version is a has a meaningful calendar component (`minor=yymmdd`), but it is still compatible with semantic versioning.
-For instance, the version `0.230215.1` means `major=0`, `minor=230215`, `micro/patch=1`.
-Notes:
- * While `major=0`, some compatibility breaking changes may occur.
- * From `major=1` onwards, compatibility breaking changes increment it, and update the minor version to reflect the release date.
+While the version scheme has a meaningful calendar component (`minor=yymmdd`), it is still compatible with semantic versioning.
+For instance, the version `0.230215.1` means `major=0`, `minor=230215`, `micro/patch=1`. Notes:
+ * While `major=0`, some compatibility-breaking changes may occur.
+ * From `major=1` onwards, compatibility-breaking changes increment it, and update the minor version to reflect the release date.
  * New (non breaking) features update only the minor version to reflect the release date.
- * Bug fixes (including breaking ones) increment only the micro version.
+ * Bug fixes (including compatibility-breaking ones) increment only the micro version.
 
 ### Contributing
 #### Collaboration

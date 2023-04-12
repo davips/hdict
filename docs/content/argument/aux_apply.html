@@ -26,8 +26,21 @@
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">from hdict.content.argument import AbsArgument
-from hdict.indexeddict import IndexedDict
+<pre><code class="python">from indexed import IndexedOrderedDict
+
+from hdict.content.argument import AbsArgument
+
+
+class IndexedDict(IndexedOrderedDict):
+    &#34;&#34;&#34;
+    Wrapper with a cleaner repr(esentation) of IndexedOrderedDict.
+
+    &gt;&gt;&gt; IndexedDict([(&#39;a&#39;, &#39;a&#39;), (&#39;b&#39;, &#39;b&#39;)])
+    {&#39;a&#39;: &#39;a&#39;, &#39;b&#39;: &#39;b&#39;}
+    &#34;&#34;&#34;
+
+    def __repr__(self):
+        return repr(dict(self.items()))
 
 
 class Arg:
@@ -219,6 +232,40 @@ def handle_args(signature, applied_args, applied_kwargs):
         return f&#34;_{self.position}&#34;</code></pre>
 </details>
 </dd>
+<dt id="hdict.content.argument.aux_apply.IndexedDict"><code class="flex name class">
+<span>class <span class="ident">IndexedDict</span></span>
+<span>(</span><span>*args, **kwds)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Wrapper with a cleaner repr(esentation) of IndexedOrderedDict.</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; IndexedDict([('a', 'a'), ('b', 'b')])
+{'a': 'a', 'b': 'b'}
+</code></pre>
+<p>Initialize an ordered dictionary.
+The signature is the same as
+regular dictionaries.
+Keyword argument order is preserved.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class IndexedDict(IndexedOrderedDict):
+    &#34;&#34;&#34;
+    Wrapper with a cleaner repr(esentation) of IndexedOrderedDict.
+
+    &gt;&gt;&gt; IndexedDict([(&#39;a&#39;, &#39;a&#39;), (&#39;b&#39;, &#39;b&#39;)])
+    {&#39;a&#39;: &#39;a&#39;, &#39;b&#39;: &#39;b&#39;}
+    &#34;&#34;&#34;
+
+    def __repr__(self):
+        return repr(dict(self.items()))</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>indexed.IndexedOrderedDict</li>
+<li>builtins.dict</li>
+</ul>
+</dd>
 </dl>
 </section>
 </article>
@@ -242,6 +289,9 @@ def handle_args(signature, applied_args, applied_kwargs):
 <ul>
 <li>
 <h4><code><a title="hdict.content.argument.aux_apply.Arg" href="#hdict.content.argument.aux_apply.Arg">Arg</a></code></h4>
+</li>
+<li>
+<h4><code><a title="hdict.content.argument.aux_apply.IndexedDict" href="#hdict.content.argument.aux_apply.IndexedDict">IndexedDict</a></code></h4>
 </li>
 </ul>
 </li>
