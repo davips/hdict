@@ -27,6 +27,8 @@ from collections import UserDict
 from io import StringIO
 from typing import TypeVar, Union
 
+from hosh import Hosh
+
 from hdict.dataset.dataset import loads, isplit
 from hdict.dataset.pandas_handling import file2df
 from hdict.text.customjson import CustomJSONEncoder, stringfy
@@ -118,8 +120,6 @@ class frozenhdict(UserDict, dict[str, VT]):
     }
     >>> from hdict.content.entry import AbsEntry, Unevaluated
     >>> from hdict import frozenhdict
-    >>> Unevaluated != frozenhdict()
-    True
     """
 
     _evaluated = None
@@ -427,7 +427,10 @@ class frozenhdict(UserDict, dict[str, VT]):
         data = {self.id: self.ids}
         for field, fid in self.ids.items():
             value = self[field]
-            if isinstance(value, frozenhdict):
+            if field.endswith("_"):
+                # TODO check existence of the counterpart
+                data[(fid ** Hosh("»hdict·PREFIX KIND«".encode())).id] = str(type(value))
+            elif isinstance(value, frozenhdict):
                 value.save(storage)
             else:
                 data[fid] = Stored(value)
@@ -463,7 +466,11 @@ class frozenhdict(UserDict, dict[str, VT]):
         if ishdict:
             ids = obj
             data = {}
+            mirrored = set()
             for field, fid in ids.items():
+                if field.endswith("_"):
+                    mirrored.add(field[:-1])
+                    continue
                 if lazy:
                     data[field] = Cached(fid, storage)
                 else:
@@ -472,8 +479,8 @@ class frozenhdict(UserDict, dict[str, VT]):
                         print(storage.keys())
                         raise Exception(f"Incomplete hdict: id '{id}' not found in the provided cache.")
                     data[field] = stored
-                    if field.endswith("_"):
-                        data[field[:-1]] = handle_mirror(stored)
+            for field in mirrored:
+                data[field + "_"] = handle_mirror(field, data, ids[field])
             return frozenhdict.fromdict(data, ids)
         return obj.content
 

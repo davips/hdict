@@ -66,7 +66,7 @@ class Closure(AbsEntry):
 
     @property
     def value(self):
-        if self._value == Unevaluated:
+        if isinstance(self._value, Unevaluated):
             self._value = self.f()
             # del self.application  # TODO: delete clasure.application inside each subvalue?
         return self._value
@@ -75,7 +75,6 @@ class Closure(AbsEntry):
         from hdict import value
         from hdict import field
         from hdict.content.entry.wrapper import Wrapper
-        from hdict.content.argument.entry import entry
         if out is None:
             out = []
         out = out + self.out

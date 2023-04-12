@@ -20,12 +20,9 @@
 #  part of this work is illegal and it is unethical regarding the effort and
 #  time spent here.
 #
-from io import StringIO
 from typing import TypeVar, Union
 
 from hdict.data.frozenhdict import frozenhdict
-from hdict.dataset.dataset import loads, isplit
-from hdict.dataset.pandas_handling import file2df
 
 VT = TypeVar("VT")
 
@@ -363,11 +360,72 @@ class hdict_(dict[str, VT]):
         self.frozen.save(storage)
 
     @staticmethod
-    def fetch(id, storage: dict, lazy=True, ishdict=False) -> Union["frozenhdict", None]:
-        """
+    def fetch(id: str, storage: dict, lazy=True, ishdict=False) -> Union["hdict_", None]:
+        r"""
         Fetch a single entry
 
         When cache is a list, traverse it from the end (right item to the left item).
+
+        >>> from hdict import hdict, cache
+        >>> from testfixtures import TempDirectory
+        >>> arff = "@RELATION mini\n@ATTRIBUTE attr1	REAL\n@ATTRIBUTE attr2 	REAL\n@ATTRIBUTE class 	{0,1}\n@DATA\n5.1,3.5,0\n3.1,4.5,1"
+        >>> with TempDirectory() as tmp:  # doctest:+ELLIPSIS
+        ...    tmp.write("mini.arff", arff.encode())
+        ...    d = hdict.fromfile(tmp.path + "/mini.arff", fields=["df_"])
+        '/tmp/.../mini.arff'
+        >>> d.show(colored=False)
+        {
+            df_: "‹{'attr1@REAL': {0: 5.1, 1: 3.1}, 'attr2@REAL': {0: 3.5, 1: 4.5}, 'class@{0,1}': {0: '0', 1: '1'}}›",
+            df: {
+                index: "‹{0: 0, 1: 1}›",
+                "attr1@REAL": "‹{0: 5.1, 1: 3.1}›",
+                "attr2@REAL": "‹{0: 3.5, 1: 4.5}›",
+                "class@{0,1}": "‹{0: '0', 1: '1'}›",
+                _id: cHrG-npBDd2VEB8Foeg.7jQNZtdkTM1uhouHgW.J,
+                _ids: {
+                    index: DQa5yWRkGo-9FLqmaST8pbElYdUEgqF8xPvip6-3,
+                    "attr1@REAL": wsy0JDrZO04O0RVwr64jpawX62WmCKtddYdvZlwm,
+                    "attr2@REAL": LvEgUazJoB1-.A3kABbskN-.iauWmWLTTo1iC51n,
+                    "class@{0,1}": b.kJy3SrU-JQ1oeh1d.uWLO7Pqh-eW6zwK78nTY4
+                }
+            },
+            _id: CWkreYbSmrL0DPN9OtoU4Za1dg8.Jjl.fXD6yblb,
+            _ids: {
+                df: cHrG-npBDd2VEB8Foeg.7jQNZtdkTM1uhouHgW.J,
+                df_: cHrG-npBDd2VEB8Foeg.7jQNZtdkTM1uhouHgW.J
+            }
+        }
+        >>> storage = {}
+        >>> d.save(storage)
+        >>> d = hdict.fetch(d.id, storage)
+        >>> d.show(colored=False)
+        {
+            df: ↑↓ cached at `dict`·,
+            df_: λ(df=↑↓ cached at `dict`·),
+            _id: CWkreYbSmrL0DPN9OtoU4Za1dg8.Jjl.fXD6yblb,
+            _ids: {
+                df: cHrG-npBDd2VEB8Foeg.7jQNZtdkTM1uhouHgW.J,
+                df_: cHrG-npBDd2VEB8Foeg.7jQNZtdkTM1uhouHgW.J
+            }
+        }
+        >>> d.df_
+           attr1@REAL  attr2@REAL class@{0,1}
+        0         5.1         3.5           0
+        1         3.1         4.5           1
+        >>> d.df.show(colored=False)
+        {
+            index: "‹{0: 0, 1: 1}›",
+            "attr1@REAL": "‹{0: 5.1, 1: 3.1}›",
+            "attr2@REAL": "‹{0: 3.5, 1: 4.5}›",
+            "class@{0,1}": "‹{0: '0', 1: '1'}›",
+            _id: cHrG-npBDd2VEB8Foeg.7jQNZtdkTM1uhouHgW.J,
+            _ids: {
+                index: DQa5yWRkGo-9FLqmaST8pbElYdUEgqF8xPvip6-3,
+                "attr1@REAL": wsy0JDrZO04O0RVwr64jpawX62WmCKtddYdvZlwm,
+                "attr2@REAL": LvEgUazJoB1-.A3kABbskN-.iauWmWLTTo1iC51n,
+                "class@{0,1}": b.kJy3SrU-JQ1oeh1d.uWLO7Pqh-eW6zwK78nTY4
+            }
+        }
         """
         return frozenhdict.fetch(id, storage, lazy, ishdict).unfrozen
 

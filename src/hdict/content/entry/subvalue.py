@@ -44,6 +44,7 @@ class SubValue(AbsEntry):
     index: int
     n: int
     source: str = None
+
     # target: str = None
 
     def __post_init__(self):
@@ -53,7 +54,7 @@ class SubValue(AbsEntry):
     def value(self):
         from hdict.content.entry import Unevaluated
 
-        if self._value == Unevaluated:
+        if isinstance(self._value, Unevaluated):
             value = self.parent.value
             if isinstance(value, (list, tuple)):
                 if len(value) < self.n:  # pragma: no cover

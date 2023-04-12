@@ -30,10 +30,7 @@ from hdict.abs import AbsAny
 
 @dataclass
 class Unevaluated:
-    n = 0
-
-
-Unevaluated = Unevaluated()
+    pass
 
 
 class AbsEntry(AbsAny):
@@ -45,7 +42,7 @@ class AbsEntry(AbsAny):
 
     value: object | Callable  # REMINDER: 'callable' is here for appliable contents, like storing a raw lambda
     hosh: Hosh
-    _value = Unevaluated
+    _value = Unevaluated()
 
     @property
     def id(self):  # pragma: no cover
@@ -62,4 +59,4 @@ class AbsEntry(AbsAny):
         >>> Closure(apply(lambda x, y: x + y), {"x": 3, "y": 5}, []).isevaluated
         False
         """
-        return self._value != Unevaluated
+        return not isinstance(self._value, Unevaluated)

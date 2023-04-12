@@ -12,12 +12,16 @@ class Cached(AbsEntry):
         self.entry = entry
 
     @property
+    def kind(self):
+        return self.storage[(self.hosh ** "»hdict·PREFIX KIND«".encode()).id]
+
+    @property
     def value(self):
         from hdict import frozenhdict
-        if self._value == Unevaluated:
+        if isinstance(self._value, Unevaluated):
             if self.entry and self.entry.isevaluated:
                 self._value = self.entry.value
-            elif ret := frozenhdict.fetch(self.id, self.storage):
+            elif (ret := frozenhdict.fetch(self.id, self.storage)) is not None:
                 self._value = ret
             elif self.entry is None:  # pragma: no cover
                 raise Exception(f"id `{self.id}` not found.")

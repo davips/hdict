@@ -26,7 +26,7 @@ def handle_items(*datas: [Dict[str, object]], previous: [Dict[str, AbsEntry]]):
     result__mirror_fields = {}
     for key, item in chain(*(data.items() for data in datas)):
         entry = handle_item(key, item, result)
-        if isinstance(key, str) and key.endswith("_"):
+        if isinstance(key, str) and key.endswith("_") and isinstance(entry, value):
             result__mirror_fields[f"{key[:-1]}"] = value(entry.hdict, entry.hosh)
         if isinstance(entry, dict):
             result.update(entry)
@@ -151,10 +151,11 @@ def loop_field_names(field_names):
             yield field_name, i, None
 
 
-def handle_mirror(stored):
-    match stored.kind:
+def handle_mirror(k, data, id):  # Stored | Cached  TODO: strict mode
+    match data[k].kind:
         case "<class 'pandas.core.frame.DataFrame'>":
-            return stored.content.asdf
+            f = lambda **kwargs: kwargs[k].asdf
+            return apply(f, fhosh=ø, **{k: field(k)}).enclosure(data, k)
         case None:
             pass
         case _:
@@ -183,3 +184,23 @@ def handle_format(format, fields, df, name):
     if name is not None:
         d >>= {"name": name}
     return d
+
+
+# TODO:  fix apply() for *args
+#
+"""
+            f = lambda *args: args[0].asdf
+            return apply(f, field(k), fhosh=ø).enclosure(data, k)
+
+        return apply(f, field(k), fhosh=ø).enclosure(data, k)
+      File "/home/davi/git/hdict/src/hdict/content/argument/apply.py", line 311, in enclosure
+        return Closure(self, data, [key])
+      File "/home/davi/git/hdict/src/hdict/content/entry/closure.py", line 29, in __init__
+        arg = handle_arg(key, val, data, discarded_defaults, out, self.torepr)
+      File "/home/davi/git/hdict/src/hdict/content/entry/aux_closure.py", line 30, in handle_arg
+        arg = handle_item(str(key), data[name], data)  # key passed for no purpose here AFAIR
+      File "/home/davi/git/hdict/src/hdict/data/aux_frozendict.py", line 76, in handle_item
+        raise Exception(f"Field names cannot start with '_': {key}")
+    Exception: Field names cannot start with '_': _0
+
+"""
