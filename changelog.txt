@@ -1,9 +1,7 @@
-Finish test coverage
-Finish pandas lazy loading by column
-Improve output
-Improve DF capabilities
-Fix 'is Unevaluated' by "=="
-Keep mirrors in ids list
-Redesign algebra
-Finish cache
-Implementing cache, added mirror fields
+Now all fields are considered when calculating hdict hosh (including _* and *_)
+Fix corner case for positional arg on apply
+Add support for applying getattr() and calculate hosh of builtin functions and classes from str(function).encode()
+Add support for None key, None meaning that the result of apply() is to be discarded.
+Add hoshes property
+Add option to hide types of DataFrame columns
+Improve support for dataset operations: nom2bin, df2Xy

@@ -27,7 +27,7 @@ from hdict.data.frozenhdict import frozenhdict
 VT = TypeVar("VT")
 
 
-# TODO: finish all '*' combinations and check all '>>' to see when to generate hdict and when to generate Expr.
+# todo: : finish all '*' combinations and check all '>>' to see when to generate hdict and when to generate Expr.
 
 
 class hdict_(dict[str, VT]):
@@ -46,10 +46,10 @@ class hdict_(dict[str, VT]):
     {
         x: λ(3),
         f: "<function <lambda> at 0x...>",
-        _id: KLOoEeCH2RuCEsOqTVVWLH1JR69eozXUF0xgvVJM,
+        _id: 1ws77ctcACmwuueXYdeMmCOrl0DzfsgkQabRj4rU,
         _ids: {
-            x: k0mNmg8iUh4smoL5cs9Xf5HqZY6O6CLHwTFU.UVa,
-            f: LwPloQfKaEYl7z9kNJqrw46sQMASaNgCtBmICRp7
+            x: Z4rUsx9xu7UMrE42So534CJY5H7E997AvsKunAYW,
+            f: y7tfW6WBHg-gJNqFxKEUogtXbLSRWde9FyrG3l4v
         }
     }
     >>> d.x
@@ -58,10 +58,10 @@ class hdict_(dict[str, VT]):
     {
         x: 4,
         f: "<function <lambda> at 0x...>",
-        _id: KLOoEeCH2RuCEsOqTVVWLH1JR69eozXUF0xgvVJM,
+        _id: 1ws77ctcACmwuueXYdeMmCOrl0DzfsgkQabRj4rU,
         _ids: {
-            x: k0mNmg8iUh4smoL5cs9Xf5HqZY6O6CLHwTFU.UVa,
-            f: LwPloQfKaEYl7z9kNJqrw46sQMASaNgCtBmICRp7
+            x: Z4rUsx9xu7UMrE42So534CJY5H7E997AvsKunAYW,
+            f: y7tfW6WBHg-gJNqFxKEUogtXbLSRWde9FyrG3l4v
         }
     }
     >>> str({"a": 2} * d)  # doctest:+ELLIPSIS
@@ -115,18 +115,19 @@ class hdict_(dict[str, VT]):
         >>> d.show(colored=False)
         {
             x: λ(),
-            _id: GJC7Qc4lmfpP32nUEG6UAe2fL35KL1wDnubPFgJS,
+            _id: YwRX7paX43aafhz-Jndo9HYnvyMSOtPEbRDjgQ3r,
             _ids: {
-                x: uOjLdXgq4zFpx0Hw7Ofsj1PiXt64oSuLOFpWtD2B
+                x: J746LLRT3gd5glC2ZiaHBgHegmewpiOMC4Sq4bp9
             }
+        }
         }
         >>> d.evaluate()
         >>> d.show(colored=False)
         {
             x: 2,
-            _id: GJC7Qc4lmfpP32nUEG6UAe2fL35KL1wDnubPFgJS,
+            _id: YwRX7paX43aafhz-Jndo9HYnvyMSOtPEbRDjgQ3r,
             _ids: {
-                x: uOjLdXgq4zFpx0Hw7Ofsj1PiXt64oSuLOFpWtD2B
+                x: J746LLRT3gd5glC2ZiaHBgHegmewpiOMC4Sq4bp9
             }
         }
         >>> d.evaluated.show(colored=False)
@@ -321,7 +322,7 @@ class hdict_(dict[str, VT]):
         }
         >>> d.save(storage)
         >>> storage
-        {'izn67XbX0tQNF6E5qkwniN2jxZg5MT6f7z5AJzPM': {'z': 'GuwIQCrendfKXZr5jGfrUwoP-8TWMhmLHYrja2yj'}, 'GuwIQCrendfKXZr5jGfrUwoP-8TWMhmLHYrja2yj': Stored(content=9), 's3aPQRspwLR81It8zlXsD3Da1Gg76DGSDe841d0b': {'x': 'KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr', 'y': 'eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf', 'z': 'izn67XbX0tQNF6E5qkwniN2jxZg5MT6f7z5AJzPM', 'w': 'vo3qMHk3Ef-O065cO-sb4MLHq69x6bKSU694sREJ'}, 'KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr': Stored(content=3), 'eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf': Stored(content=7), 'vo3qMHk3Ef-O065cO-sb4MLHq69x6bKSU694sREJ': Stored(content=0.42857142857142855)}
+        {'izn67XbX0tQNF6E5qkwniN2jxZg5MT6f7z5AJzPM': {'z': 'GuwIQCrendfKXZr5jGfrUwoP-8TWMhmLHYrja2yj'}, 'GuwIQCrendfKXZr5jGfrUwoP-8TWMhmLHYrja2yj': Stored(content=9), 'Jf8QtLAszezNdiqblJCXMuoXocCWZ90QwrxY90Zu': {'x': 'KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr', 'y': 'eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf', 'z': 'izn67XbX0tQNF6E5qkwniN2jxZg5MT6f7z5AJzPM', 'w': 'NjWbIhEnN3s8E-w61pptxBuiYmqQ2D3QNX2ZAEB1'}, 'KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr': Stored(content=3), 'eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf': Stored(content=7), 'NjWbIhEnN3s8E-w61pptxBuiYmqQ2D3QNX2ZAEB1': Stored(content=0.42857142857142855)}
         >>> e = hdict.load(d.id, storage)
         >>> e.show(colored=False)
         {
@@ -329,12 +330,12 @@ class hdict_(dict[str, VT]):
             y: ↑↓ cached at `dict`·,
             z: ↑↓ cached at `dict`·,
             w: ↑↓ cached at `dict`·,
-            _id: s3aPQRspwLR81It8zlXsD3Da1Gg76DGSDe841d0b,
+            _id: Jf8QtLAszezNdiqblJCXMuoXocCWZ90QwrxY90Zu,
             _ids: {
                 x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
                 y: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf,
                 z: izn67XbX0tQNF6E5qkwniN2jxZg5MT6f7z5AJzPM,
-                w: vo3qMHk3Ef-O065cO-sb4MLHq69x6bKSU694sREJ
+                w: NjWbIhEnN3s8E-w61pptxBuiYmqQ2D3QNX2ZAEB1
             }
         }
         >>> d.w
@@ -350,12 +351,12 @@ class hdict_(dict[str, VT]):
                 z: 9
             },
             w: 0.42857142857142855,
-            _id: s3aPQRspwLR81It8zlXsD3Da1Gg76DGSDe841d0b,
+            _id: Jf8QtLAszezNdiqblJCXMuoXocCWZ90QwrxY90Zu,
             _ids: {
                 x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
                 y: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf,
                 z: izn67XbX0tQNF6E5qkwniN2jxZg5MT6f7z5AJzPM,
-                w: vo3qMHk3Ef-O065cO-sb4MLHq69x6bKSU694sREJ
+                w: NjWbIhEnN3s8E-w61pptxBuiYmqQ2D3QNX2ZAEB1
             }
         }
         """
@@ -391,10 +392,10 @@ class hdict_(dict[str, VT]):
                     "class@{0,1}": b.kJy3SrU-JQ1oeh1d.uWLO7Pqh-eW6zwK78nTY4
                 }
             },
-            _id: CWkreYbSmrL0DPN9OtoU4Za1dg8.Jjl.fXD6yblb,
+            _id: 1CkO9AO6rUhrnowQn3rkpXtvPf4xW9VHgJyg5vit,
             _ids: {
                 df: cHrG-npBDd2VEB8Foeg.7jQNZtdkTM1uhouHgW.J,
-                df_: cHrG-npBDd2VEB8Foeg.7jQNZtdkTM1uhouHgW.J
+                df_: J.WgHuohu1MTkdtZNQj7.geoF8BEV2dDBpn-GrHc
             }
         }
         >>> storage = {}
@@ -531,7 +532,7 @@ class hdict_(dict[str, VT]):
         return frozenhdict.load(id, storage).unfrozen
 
     @staticmethod
-    def fromfile(name, fields=None, format="df", named=None):
+    def fromfile(name, fields=None, format="df", named=None, hide_types=True):
         r"""
         Input format is defined by file extension: .arff, .csv
 
@@ -545,9 +546,9 @@ class hdict_(dict[str, VT]):
         >>> d.show(colored=False)
         {
             df: "‹{'attr1@REAL': {0: 5.1, 1: 3.1}, 'attr2@REAL': {0: 3.5, 1: 4.5}, 'class@{0,1}': {0: '0', 1: '1'}}›",
-            _id: CWkreYbSmrL0DPN9OtoU4Za1dg8.Jjl.fXD6yblb,
+            _id: wnqmxW7DhwDdwtUZSku-M8bbSR0PHIw8Ak0pYI0G,
             _ids: {
-                df: cHrG-npBDd2VEB8Foeg.7jQNZtdkTM1uhouHgW.J
+                df: J.WgHuohu1MTkdtZNQj7.geoF8BEV2dDBpn-GrHc
             }
         }
         >>> csv = "attr1,attr2,class\n5.1,3.5,0\n3.1,4.5,1"
@@ -558,13 +559,13 @@ class hdict_(dict[str, VT]):
         >>> d.show(colored=False)
         {
             df: "‹{'attr1': {0: 5.1, 1: 3.1}, 'attr2': {0: 3.5, 1: 4.5}, 'class': {0: 0, 1: 1}}›",
-            _id: X4CDIwtBn8BiF71hNG5JeISRQcVffsy.7UWv16IX,
+            _id: qc0xETP2nDbj6P5MtTo7bIBrsog-vkwXq3heRlM3,
             _ids: {
-                df: Cr4zP7wsqcNFjkkfcGvy7nV4oTh5tOeu9Zh5MQmu
+                df: umQM5hZ9ueOt5hTo4Vn7yvGcfkkjFNcqsw7Pz4rC
             }
         }
         """
-        return frozenhdict.fromfile(name, fields, format, named).unfrozen
+        return frozenhdict.fromfile(name, fields, format, named, hide_types).unfrozen
 
     @staticmethod
     def fromtext(text: str, fields=None, format="df", named=None):
@@ -577,9 +578,9 @@ class hdict_(dict[str, VT]):
         >>> d.show(colored=False)
         {
             df: "‹{'attr1@REAL': {0: 5.1, 1: 3.1}, 'attr2@REAL': {0: 3.5, 1: 4.5}, 'class@{0,1}': {0: '0', 1: '1'}}›",
-            _id: CWkreYbSmrL0DPN9OtoU4Za1dg8.Jjl.fXD6yblb,
+            _id: wnqmxW7DhwDdwtUZSku-M8bbSR0PHIw8Ak0pYI0G,
             _ids: {
-                df: cHrG-npBDd2VEB8Foeg.7jQNZtdkTM1uhouHgW.J
+                df: J.WgHuohu1MTkdtZNQj7.geoF8BEV2dDBpn-GrHc
             }
         }
         >>> csv = "attr1,attr2,class\n5.1,3.5,0\n3.1,4.5,1"
@@ -587,9 +588,9 @@ class hdict_(dict[str, VT]):
         >>> d.show(colored=False)
         {
             df: "‹{'attr1': {0: 5.1, 1: 3.1}, 'attr2': {0: 3.5, 1: 4.5}, 'class': {0: 0, 1: 1}}›",
-            _id: X4CDIwtBn8BiF71hNG5JeISRQcVffsy.7UWv16IX,
+            _id: qc0xETP2nDbj6P5MtTo7bIBrsog-vkwXq3heRlM3,
             _ids: {
-                df: Cr4zP7wsqcNFjkkfcGvy7nV4oTh5tOeu9Zh5MQmu
+                df: umQM5hZ9ueOt5hTo4Vn7yvGcfkkjFNcqsw7Pz4rC
             }
         }
         """
@@ -609,3 +610,7 @@ class hdict_(dict[str, VT]):
         c  3  7
         """
         return self.frozen.asdf
+
+    @property
+    def hoshes(self):
+        return self.frozen.hoshes

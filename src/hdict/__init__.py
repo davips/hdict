@@ -166,7 +166,7 @@ class hdict(hdict_):
     >>> d["z"] = apply(f, 2, y=3)
     >>> d["w", "v"] = apply(f, field("x"), y=33)
     >>> d["f"] = f
-    >>> d = d >> apply(field("f"), field("x"), y=default(3), nonexistent_parameter=7)("w3", "v3") # TODO: nonexistent parameter should raise an exception
+    >>> d = d >> apply(field("f"), field("x"), y=default(3), nonexistent_parameter=7)("w3", "v3") # todo: : nonexistent parameter should raise an exception
     >>> d >>= apply(field("f"), field("x"), y=default(3))("w", "v")
     >>> d["w2", "v2"] = apply(field("f"), field("x"), y=default(3))
     >>> d >>= {"z": apply(f, field("x"), y=3), ("w", "v"): apply(g, y=7)}

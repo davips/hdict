@@ -21,9 +21,9 @@ class Closure(AbsEntry):
         self.torepr = {}
         hosh = ø
         arg = None
-        fargs, fkwargs, discarded_defaults = {}, {}, set()
-        sorted_fargs = zip(map(str, application.fargs), application.fargs.items())
-        for idx, tup in sorted(chain(sorted_fargs, application.fkwargs.items())):  # We sort by keys for a deterministic hosh.
+        fargs, fkwargs, discarded_defaults = application.fargs.copy(), {}, set()  # We copy fargs to keep args order.
+        sortable_fargs = zip(map(str, fargs), fargs.items())
+        for idx, tup in sorted(chain(sortable_fargs, application.fkwargs.items())):  # We sort by keys for a deterministic hosh.
             if isinstance(tup, tuple):
                 key, val = tup
                 arg = handle_arg(key, val, data, discarded_defaults, out, self.torepr)
@@ -64,7 +64,7 @@ class Closure(AbsEntry):
     def value(self):
         if isinstance(self._value, Unevaluated):
             self._value = self.f()
-            # del self.application  # TODO: delete clasure.application inside each subvalue?
+            # del self.application  # todo: : delete clasure.application inside each subvalue?
         return self._value
 
     def __repr__(self, out=None):

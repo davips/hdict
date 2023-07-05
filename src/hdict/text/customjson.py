@@ -163,7 +163,8 @@ class CustomJSONEncoder(JSONEncoder):
             if obj is Ellipsis:
                 return "..."
             if isinstance(obj, AbsEntry) and obj.isevaluated:
-                if isinstance(obj.value, dict):
+                from hdict import hdict, frozenhdict
+                if isinstance(obj.value, (frozenhdict, hdict)):
                     return obj.value.asdicts_noid
                 return obj.value
             # if isinstance(obj, FunctionType):

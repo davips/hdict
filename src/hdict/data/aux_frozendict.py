@@ -26,8 +26,11 @@ def handle_items(*datas: [Dict[str, object]], previous: [Dict[str, AbsEntry]]):
     result__mirror_fields = {}
     for key, item in chain(*(data.items() for data in datas)):
         entry = handle_item(key, item, result)
-        if isinstance(key, str) and key.endswith("_") and isinstance(entry, value):
-            result__mirror_fields[f"{key[:-1]}"] = value(entry.hdict, entry.hosh)
+        if isinstance(key, str) and key.endswith("_"):
+            if isinstance(entry, value):
+                result__mirror_fields[f"{key[:-1]}"] = value(entry.hdict, entry.hdict.hosh)
+            else:
+                raise Exception(f"lazy mirror?")  # todo:
         if isinstance(entry, dict):
             result.update(entry)
         else:
@@ -67,7 +70,11 @@ def handle_item(key, item, previous):
         case _ if str(type(item)) == "<class 'pandas.core.frame.DataFrame'>":
             from hdict.dataset.pandas_handling import explode_df
 
-            res = explode_df(item)
+            # todo: check if this is the best default way of handling DFs.
+            df = item.copy(deep=False)
+            d = explode_df(df)
+            df.__dict__["ashdict"] = d
+            res = value(df, hosh=d.hosh.rev, hdict=d)
         case _:
             res = value(item)
 
@@ -93,9 +100,13 @@ def handle_identity(data):
             # mirrorfield, e.g.: 'df_' is a mirror/derived from 'df'
             later[k] = v.id
         else:
-            hosh += v.hosh * k.encode()
-            # PAPER REMINDER: state in the paper that hash(identifier) must be different from hash(value), for any identifier and value. E.g.: hash(X) != hash("X")    #   Here the difference always happen because values are pickled, while identifiers are just encoded().
             ids[k] = v.hosh.id
+        hosh += v.hosh * k.encode()
+        # todo:  PAPER REMINDER: state in the paper that identifiers are not strings. they are a special type that never appears as a value.
+        #   I.e., hash(identifier) must be different from hash(value), for all identifiers and values.
+        #   E.g.: hash(field name X) != hash(string "X")
+        #   In this impementation, the difference is always* true because values are always pickled (they are never hashed as strings), while identifiers are just str.encoded().
+        #   * → probabilistically
     ids.update(later)
     return hosh, ids
 
@@ -132,8 +143,9 @@ def handle_multioutput(field_names: tuple, entry: AbsEntry | apply, previous):
             parent = Closure(entry, previous, keys) if isinstance(entry, apply) else entry
             n = len(field_names)
             for key, i, source in loop_field_names(field_names):
-                keys.append(key)
-                data[key] = SubValue(parent, i, n, source)
+                if key is not None:
+                    keys.append(key)
+                    data[key] = SubValue(parent, i, n, source)
         case _:  # pragma: no cover
             raise Exception(f"Cannot handle multioutput for key '{field_names}' and type '{type(entry).__name__}'.")
     return data
@@ -231,23 +243,3 @@ def handle_format(format, fields, df, name):
     if name:
         d >>= {"name": name}
     return d
-
-
-# TODO:  fix apply() for *args
-#
-"""
-            f = lambda *args: args[0].asdf
-            return apply(f, field(k), fhosh=ø).enclosure(data, k)
-
-        return apply(f, field(k), fhosh=ø).enclosure(data, k)
-      File "/home/davi/git/hdict/src/hdict/content/argument/apply.py", line 311, in enclosure
-        return Closure(self, data, [key])
-      File "/home/davi/git/hdict/src/hdict/content/entry/closure.py", line 29, in __init__
-        arg = handle_arg(key, val, data, discarded_defaults, out, self.torepr)
-      File "/home/davi/git/hdict/src/hdict/content/entry/aux_closure.py", line 30, in handle_arg
-        arg = handle_item(str(key), data[name], data)  # key passed for no purpose here AFAIR
-      File "/home/davi/git/hdict/src/hdict/data/aux_frozendict.py", line 76, in handle_item
-        raise Exception(f"Field names cannot start with '_': {key}")
-    Exception: Field names cannot start with '_': _0
-
-"""

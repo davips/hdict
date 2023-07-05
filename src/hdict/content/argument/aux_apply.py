@@ -26,7 +26,7 @@ class Arg:
         return f"~{self.position}" < other
 
     def __repr__(self):
-        return f"_{self.position}"
+        return f"arg_{self.position}"
 
 
 def handle_args(signature, applied_args, applied_kwargs):
@@ -73,17 +73,17 @@ def handle_args(signature, applied_args, applied_kwargs):
         else:
             if i >= len(params):
                 if not hasargs:  # pragma: no cover
-                    raise Exception("Too many arguments to apply. No '*contentarg' detected for 'f'.")
+                    raise Exception("Too many arguments to apply. No '*arg' detected for 'f'.")
                 name = Arg(i)  # REMINDER: this is just a unique hash for the nameless argument
             else:
-                name = params[i]
+                name = Arg(i) if hasargs and i >= len(fargs) else params[i]
                 if name in fkwargs:
                     del fkwargs[name]
             fargs[name] = wrap(applied_arg)
 
     for applied_kwarg, v in applied_kwargs.items():
         if applied_kwarg in used:  # pragma: no cover
-            raise Exception(f"Parameter '{applied_kwarg}' cannot appear in both 'contentarg' and 'kwargs' of 'apply()'.")
+            raise Exception(f"Parameter '{applied_kwarg}' cannot appear in both 'arg' and 'kwargs' of 'apply()'.")
         if applied_kwarg in fargs:
             fargs[applied_kwarg] = wrap(v)
         elif applied_kwarg in fkwargs or haskwargs:

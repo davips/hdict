@@ -22,7 +22,7 @@
 #
 from __future__ import annotations
 
-from inspect import isfunction
+from inspect import isfunction, isbuiltin, isclass
 from inspect import signature
 from itertools import chain
 from random import Random
@@ -35,6 +35,11 @@ from hdict.text.customjson import truncate
 from hdict.content.aux_value import f2hosh
 
 
+def getattr_(__o: object, name: str, __default=None):
+    return getattr(__o, name, __default)
+
+
+# todo hide unneeded attrs to avoid poluting namespace for output field
 class apply(AbsBaseArgument):
     """
     Function application
@@ -91,7 +96,7 @@ class apply(AbsBaseArgument):
     {'a': 3, 'b': 4, 'c': 5, 'd': 6, 'e': 7}
     >>> apply(f,d=5).requirements
     {'a': field(a), 'b': field(b), 'c': default(1), 'd': 5, 'e': default(13)}
-    >>> f = lambda a,b, *contentarg, c=1,d=2,e=13, **kwargs: 0
+    >>> f = lambda a,b, *arg, c=1,d=2,e=13, **kwargs: 0
     >>> apply(f,3,4,5,6,7,8).requirements
     {'a': 3, 'b': 4, 'c': 5, 'd': 6, 'e': 7, _5: 8}
     >>> apply(f,x=3,e=4,d=5,c=6,b=7,a=8).requirements
@@ -202,7 +207,7 @@ class apply(AbsBaseArgument):
     >>> d >>= {"b" : (2, 3), ("a1", "b1"): [0, 1]}
     >>> d >>= {("a2", "b2"): _.b}
     >>> d >>= {("a3", "b3"): entry("b")}
-    >>> d.show(colored=False)  # TODO: improve output for subvalues (and backtracking in general for pointer-like entries)
+    >>> d.show(colored=False)  # todo: : improve output for subvalues (and backtracking in general for pointer-like entries)
     {
         x: λ(λ(x=21)),
         h: {
@@ -255,13 +260,13 @@ class apply(AbsBaseArgument):
             self._sampleable = appliable.sampleable if _sampleable is None else _sampleable
             self.appliable = appliable.appliable
         elif isinstance(appliable, field):
-            # TODO: o que era isso mesmo?::  "function will be provided by hdict"-mode constrains 'applied_args'
+            # todo: : o que era isso mesmo?::  "function will be provided by hdict"-mode constrains 'applied_args'
             self.fhosh = fhosh
             self.fargs, self.fkwargs = handle_args(None, applied_args, applied_kwargs)
             self.isfield = True
             self._sampleable = _sampleable
         elif callable(appliable):
-            if not isfunction(appliable):  # "not function" means "custom callable"
+            if not (isfunction(appliable) or isbuiltin(appliable) or isclass(appliable)):  # "not function" means "custom callable"; `builtin_function_or_method` is not a function and does not allow signature extraction.
                 if not hasattr(appliable, "__call__"):  # pragma: no cover
                     raise Exception(f"Cannot infer method to apply non custom callable type '{type(appliable).__name__}'.")
                 if not hasattr(appliable, "hosh"):  # pragma: no cover
@@ -272,6 +277,10 @@ class apply(AbsBaseArgument):
                 self.fhosh = fhosh or appliable.hosh
             else:
                 self.fhosh = f2hosh(appliable) if fhosh is None else fhosh
+                s = str(appliable)
+                if s.startswith("<built-in function"):
+                    if s.endswith("getattr>"):
+                        self.appliable = appliable = getattr_
                 sig = signature(appliable)
 
             # Separate positional parameters from named parameters looking at 'f' signature.

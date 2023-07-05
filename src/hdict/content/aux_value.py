@@ -24,7 +24,7 @@
 import dis
 import re
 from collections import OrderedDict
-from inspect import signature
+from inspect import signature, isbuiltin, isclass
 from pickle import dumps
 
 from hosh import Hosh, ø
@@ -73,6 +73,8 @@ def f2hosh(function: callable):
     """
     if hasattr(function, "hosh"):
         return function.hosh
+    if isbuiltin(function) or isclass(function):
+        return Hosh(str(function).encode())
     fields_and_params = signature(function).parameters.values()
     fields_and_params = {v.name: None if v.default is v.empty else v.default for v in fields_and_params}
 

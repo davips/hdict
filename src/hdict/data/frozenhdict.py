@@ -122,6 +122,7 @@ class frozenhdict(UserDict, dict[str, VT]):
 
     _evaluated = None
     _asdict, _asdicts, _asdicts_noid = None, None, None
+    _hoshes = None
 
     # noinspection PyMissingConstructor
     def __init__(self, /, _dictionary=None, _previous=None, **kwargs):
@@ -132,7 +133,7 @@ class frozenhdict(UserDict, dict[str, VT]):
         if _previous is None:
             _previous = {}
 
-        # TODO: check if _dictionary keys is 'str'; regex to check if k is an identifier;
+        # todo: : check if _dictionary keys is 'str'; regex to check if k is an identifier;
         data = _dictionary or {}
         # REMINDER: Inside data, the only 'dict' entries are "_id" and "_ids", the rest are AbsEntry objects.
         self.data: dict[str, AbsEntry | str | dict[str, str]]
@@ -140,6 +141,12 @@ class frozenhdict(UserDict, dict[str, VT]):
         self.hosh, self.ids = handle_identity(self.data)
         self.id = self.hosh.id
         self.raw = self.data
+
+    @property
+    def hoshes(self):
+        if self._hoshes is None:
+            self._hoshes = {k: v.hosh for k, v in self.data.items()}
+        return self._hoshes
 
     def __rmul__(self, left):
         from hdict import frozenhdict
@@ -365,7 +372,7 @@ class frozenhdict(UserDict, dict[str, VT]):
         dicts, hoshes = self.asdicts_hoshes_noneval
         txt = json.dumps(dicts, indent=4, ensure_ascii=False, cls=CustomJSONEncoder)
 
-        # Put colors after json, to avoid escaping ansi codes.  TODO: check how HTML behaves here
+        # Put colors after json, to avoid escaping ansi codes.  todo: check how HTML behaves here
         for h in hoshes:
             txt = txt.replace(f'"{h.id}"', repr(h)) if colored else txt.replace(f'"{h.id}"', h.id)
 
@@ -429,12 +436,18 @@ class frozenhdict(UserDict, dict[str, VT]):
         for field, fid in self.ids.items():
             value = self[field]
             if field.endswith("_"):
-                # TODO check existence of the counterpart
+                raise Exception(f"Not implemented for mirror fields")
+                # todo:  confirm existence of the counterpart
                 data[kindid(fid)] = str(type(value))
             elif isinstance(value, frozenhdict):
                 value.save(storage)
             else:
                 data[fid] = Stored(value)
+        # todo:  check if frozenhdict is being stored by mistake
+        # todo:  attribute/method as subfield:
+        #       apply(f, _.df.x)            SubField(name="df", attribute="x")
+        #       apply(_.df.drop, "col1")    SubField(name="df", attribute="drop")
+        #
         storage.update(data)
 
     @staticmethod
@@ -472,6 +485,9 @@ class frozenhdict(UserDict, dict[str, VT]):
             mirrored = set()
             for field, fid in ids.items():
                 if field.endswith("_"):
+                    # TODO:  2023-06-23
+                    #  -
+                    raise Exception(f"Not implemented for mirror fields")
                     mirrored.add(field[:-1])
                     continue
                 if lazy:
@@ -502,13 +518,13 @@ class frozenhdict(UserDict, dict[str, VT]):
         return DataFrame(data, index=index)
 
     @staticmethod
-    def fromfile(name, fields=None, format="df", named=None):
+    def fromfile(name, fields=None, format="df", named=None, hide_types=True):
         r"""
         Input format is defined by file extension: .arff, .csv
         """
         from hdict.data.aux_frozendict import handle_format
 
-        df, name = file2df(name)
+        df, name = file2df(name, hide_types)
         return handle_format(format, fields, df, named and name)
 
     @staticmethod

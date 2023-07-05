@@ -20,10 +20,9 @@
 #  part of this work is illegal and it is unethical regarding the effort and
 #  time spent here.
 #
-from hdict.content.value import value
 
 
-def explode_df(df) -> value:
+def explode_df(df):
     """
     >>> from pandas import DataFrame
     >>> from hdict import hdict, cache
@@ -43,10 +42,10 @@ def explode_df(df) -> value:
                 y: bqYjHGDn-brebdANtxtNo4OkpOXfDwwVYejlzo4t
             }
         },
-        _id: qMP.-f8p3zIrmTuOOqBLCVurT6uIIfihnR3rZne4,
+        _id: d4jZ5xH.8gWJeYMuWGAcMJBWoMU3e2qNhf7HbjiM,
         _ids: {
             df: CO3m4w1vqM.etZXkoHQoNxA.PS.kQI-LomW.H6VC,
-            df_: CO3m4w1vqM.etZXkoHQoNxA.PS.kQI-LomW.H6VC
+            df_: CV6H.WmoL-IQk.SP.AxNoQHokXZte.Mqv1w4m3OC
         }
     }
     >>> d.df_
@@ -90,31 +89,38 @@ def explode_df(df) -> value:
     }
     """
     from hdict.data.frozenhdict import frozenhdict
-    from hdict import value
 
     dic = {"index": df.index.to_series()}
     for col in df:
         dic[str(col)] = df[col]
     d = frozenhdict(dic)
-    return value(df, d.hosh, hdict=d)  # `value.hdict` points to `d`.
+    return d
 
 
-def file2df(name):
+def file2df(filename, hide_types=True, return_name=True):
     from hdict.dataset.dataset import load
 
-    if name.endswith(".arff"):
+    if filename.endswith(".arff"):
         relation = None
-        with open(name) as f:
+        with open(filename) as f:
             for line in f:
                 if line[:9].upper() == "@RELATION":
                     relation = line[9:-1]
                     break
-        with open(name) as f:
+        with open(filename) as f:
             df = load(f)
-        return df, relation or name
-    elif name.endswith(".csv"):
+        if hide_types:
+            df.rename(columns={k: k.split("@")[0] for k in df.columns}, inplace=True)
+        if return_name:
+            return df, relation or filename
+        else:
+            return df
+    elif filename.endswith(".csv"):
         from pandas import read_csv
 
-        return read_csv(name), name
+        if return_name:
+            return read_csv(filename), filename
+        else:
+            return read_csv(filename)
     else:  # pragma: no cover
-        raise Exception(f"Unknown extension {name.split('.')[-1]}.")
+        raise Exception(f"Unknown extension {filename.split('.')[-1]}.")
