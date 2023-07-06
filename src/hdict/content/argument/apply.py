@@ -266,7 +266,9 @@ class apply(AbsBaseArgument):
             self.isfield = True
             self._sampleable = _sampleable
         elif callable(appliable):
-            if not (isfunction(appliable) or isbuiltin(appliable) or isclass(appliable)):  # "not function" means "custom callable"; `builtin_function_or_method` is not a function and does not allow signature extraction.
+            if not (
+                isfunction(appliable) or isbuiltin(appliable) or isclass(appliable)
+            ):  # "not function" means "custom callable"; `builtin_function_or_method` is not a function and does not allow signature extraction.
                 if not hasattr(appliable, "__call__"):  # pragma: no cover
                     raise Exception(f"Cannot infer method to apply non custom callable type '{type(appliable).__name__}'.")
                 if not hasattr(appliable, "hosh"):  # pragma: no cover

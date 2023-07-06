@@ -181,10 +181,10 @@ class hdict(hdict_):
     {
         k: λ(9 9)→0,
         t: λ(9 9)→1,
-        _id: eeMrAInYUG2lzUrGqgY0vSZd4KpYpc5vu.bV9bbP,
+        _id: dK-iumb4L5nkFVT9LCkdk3daQtuC.ORk6JwWMhnt,
         _ids: {
-            k: UgmJcTz6qQgNFiwe.S40EC69Ab6drWQ5JCw8ON3q,
-            t: MCyEzFX.viNxTiRwTio0j7dA9LDf-TwFRNKA0JhY
+            k: rHTgwW.w2SsbcvBlSnWWddLH4vgyXlM1Fhxqr48f,
+            t: IldA8m-uSN9lJcE4TBtjTcY-sSiA33mzxQ2k-wpN
         }
     }
     >>> ppp.k
@@ -207,17 +207,17 @@ class hdict(hdict_):
     >>> r.show(colored=False)
     {
         c: λ(9 b=4),
-        _id: -3fKdfaAaTp.4XwUm1FzlzM81PYZSgsIZEuRRCD4,
+        _id: Bbe5mzn0oCuHZ.Y84-jaEnh3jcrgD8av6IZezKEG,
         _ids: {
-            c: Ht.fDdFk9WOHzT27dOKLvaoHY0YB7Nx.Q2MNXTzJ
+            c: 6EehD7OoZe2REI.1YsVLKxSF4hJoYxfOZJLbF.Aj
         }
     }
     >>> r.evaluated.show(colored=False)
     {
         c: 5,
-        _id: -3fKdfaAaTp.4XwUm1FzlzM81PYZSgsIZEuRRCD4,
+        _id: Bbe5mzn0oCuHZ.Y84-jaEnh3jcrgD8av6IZezKEG,
         _ids: {
-            c: Ht.fDdFk9WOHzT27dOKLvaoHY0YB7Nx.Q2MNXTzJ
+            c: 6EehD7OoZe2REI.1YsVLKxSF4hJoYxfOZJLbF.Aj
         }
     }
     >>> from random import Random
@@ -238,12 +238,12 @@ class hdict(hdict_):
         z: λ(x=w 3)→z,
         ww: λ(4 7)→0,
         v: λ(4 7)→1,
-        _id: Hu.P9nMRy97xUe7prRc3k-Uwvz2p5emCpSyVSdIC,
+        _id: x4TxaVuAymsh97Yr.15Oc1ekllvlpECk091124RM,
         _ids: {
             w: CZ7Jm5fQMZ3fZJ3kAVOi0FYK-exFqPqgoYLsGxGl,
-            z: 3eItvrVzHQPDEYbQRbksBHiCaQbe2Ia2m7Z2P1lw,
-            ww: VdHav0HHdJC6gfOF8Fqw7AFX9IYQyrIUOZc8G.Pp,
-            v: KtYqDG5UPyrYEv-5V5RaUQasieAwAjF1bYf3Tvyy
+            z: No1nN40OXnJ.zOyAvoxwCjyD06cUDiXTZQh4q8xa,
+            ww: qZepp.wpXCOYQrwnVIwoZ4kR9pIuMGDQpvRevv80,
+            v: wxkjBSP54cKEfxKE1Zte-2dDll3G9Nd-yDh3CLas
         }
     }
     >>> d = hdict(x=3) >> p.sample(rnd)
@@ -253,12 +253,12 @@ class hdict(hdict_):
         z: λ(x 16),
         w: λ(x 9)→a,
         v: λ(x 9)→b,
-        _id: OIVFm0IdYK3jtOApTVCwdLTVXXNGarxDkUCwB0Iv,
+        _id: 22b-e.CtRGVSoMkektNzHYSVZTouhL2jAHLyPd4Q,
         _ids: {
             x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
-            z: -F83hM-wE8ykmcEM1XvuG.XBpo7rzkuHfNKzTVMz,
-            w: G7CpHeVpUD5KfNpJmRaMC2Rt4rTeQjIuAeGuZXSa,
-            v: glVBFsjtDi7RrpvqrV.5vh.dp.RgASp25V-qlClj
+            z: 64cxw0HmJ0fydH7By6i0HrbuwA759XexTu3Bu0Zd,
+            w: p1Z5umNo12DHCZtKbh2EClW6TZxv.M447HlALWhv,
+            v: HbYbR1RjPdU4jixjW7xSxslRpYx9W6Oiay7maK6F
         }
     }
     >>> d1 = hdict(x=52, y=13)
@@ -375,25 +375,25 @@ class hdict(hdict_):
         a: 5,
         y: 28,
         x: λ(a),
-        _id: q5J7ZUr3gs0bKrG4AxVEY2q0-XH3Suvw5X8-j6do,
+        _id: qI8rmiUzMTSO1pMkCeQJpHTAOw4xuooFqM41iIiY,
         _ids: {
             a: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
             y: -2A0hTRBN1wtIKQxLzRcYDBkhv1hu-dMY-24Jye9,
-            x: gak9o6ZS9plw9l63f0WtAFnr52.1HycGhc3En2MR
+            x: sxkIk6E9l8oScCyoGDlzrqJ9QgpIpl5PCBvHlERp
         }
     }
-    >>> {"_id": "q5J7ZUr3gs0bKrG4AxVEY2q0-XH3Suvw5X8-j6do"} == d
+    >>> {"_id": "qI8rmiUzMTSO1pMkCeQJpHTAOw4xuooFqM41iIiY"} == d
     True
     >>> d.show(colored=False)
     {
         a: 5,
         y: 28,
         x: λ(a),
-        _id: q5J7ZUr3gs0bKrG4AxVEY2q0-XH3Suvw5X8-j6do,
+        _id: qI8rmiUzMTSO1pMkCeQJpHTAOw4xuooFqM41iIiY,
         _ids: {
             a: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
             y: -2A0hTRBN1wtIKQxLzRcYDBkhv1hu-dMY-24Jye9,
-            x: gak9o6ZS9plw9l63f0WtAFnr52.1HycGhc3En2MR
+            x: sxkIk6E9l8oScCyoGDlzrqJ9QgpIpl5PCBvHlERp
         }
     }
     >>> def f():
@@ -409,12 +409,12 @@ class hdict(hdict_):
         y: 28,
         x: ↑↓ cached at `dict`·,
         o: λ(),
-        _id: Lvc0oqaeG42YNbEHLovwwDD7u3kMV0QTN6EXCmh1,
+        _id: 4FdTqXVIMKldUnZgrrp315c78KHD9yu7T.Nr5zGv,
         _ids: {
             a: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
             y: -2A0hTRBN1wtIKQxLzRcYDBkhv1hu-dMY-24Jye9,
-            x: gak9o6ZS9plw9l63f0WtAFnr52.1HycGhc3En2MR,
-            o: tvj9HwT9g5Ud9SKoUqDJI1zw5ut7VRRTrSEe9fUt
+            x: sxkIk6E9l8oScCyoGDlzrqJ9QgpIpl5PCBvHlERp,
+            o: Re1o0YXNebYNezPrVv2dOrFxtgLQutD-b-SHFRbo
         }
     }
     >>> d.evaluated.show(colored=False)
@@ -424,12 +424,12 @@ class hdict(hdict_):
         y: 28,
         x: 5,
         o: 23,
-        _id: Lvc0oqaeG42YNbEHLovwwDD7u3kMV0QTN6EXCmh1,
+        _id: 4FdTqXVIMKldUnZgrrp315c78KHD9yu7T.Nr5zGv,
         _ids: {
             a: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
             y: -2A0hTRBN1wtIKQxLzRcYDBkhv1hu-dMY-24Jye9,
-            x: gak9o6ZS9plw9l63f0WtAFnr52.1HycGhc3En2MR,
-            o: tvj9HwT9g5Ud9SKoUqDJI1zw5ut7VRRTrSEe9fUt
+            x: sxkIk6E9l8oScCyoGDlzrqJ9QgpIpl5PCBvHlERp,
+            o: Re1o0YXNebYNezPrVv2dOrFxtgLQutD-b-SHFRbo
         }
     }
     >>> d.evaluated.show(colored=False)
@@ -438,12 +438,12 @@ class hdict(hdict_):
         y: 28,
         x: 5,
         o: 23,
-        _id: Lvc0oqaeG42YNbEHLovwwDD7u3kMV0QTN6EXCmh1,
+        _id: 4FdTqXVIMKldUnZgrrp315c78KHD9yu7T.Nr5zGv,
         _ids: {
             a: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
             y: -2A0hTRBN1wtIKQxLzRcYDBkhv1hu-dMY-24Jye9,
-            x: gak9o6ZS9plw9l63f0WtAFnr52.1HycGhc3En2MR,
-            o: tvj9HwT9g5Ud9SKoUqDJI1zw5ut7VRRTrSEe9fUt
+            x: sxkIk6E9l8oScCyoGDlzrqJ9QgpIpl5PCBvHlERp,
+            o: Re1o0YXNebYNezPrVv2dOrFxtgLQutD-b-SHFRbo
         }
     }
     """

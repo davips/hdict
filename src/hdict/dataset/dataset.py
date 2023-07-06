@@ -143,18 +143,19 @@ def df2Xy(df, target=None):
     ...    d = hdict.fromfile(tmp.path + "/mini.arff")
     '/tmp/.../mini.arff'
     >>> df2Xy(d.df)
-    {'X':    attr1@REAL  attr2@REAL
-    0         5.1         3.5
-    1         3.1         4.5, 'y': array([0, 1])}
-    >>> df2Xy(d.df, target="attr2@REAL")
-    {'X':    attr1@REAL class@{0,1}
-    0         5.1           0
-    1         3.1           1, 'y': 0    3.5
+    {'X':    attr1  attr2
+    0    5.1    3.5
+    1    3.1    4.5, 'y': array([0, 1])}
+    >>> df2Xy(d.df, target="attr2")
+    {'X':    attr1 class
+    0    5.1     0
+    1    3.1     1, 'y': 0    3.5
     1    4.5
-    Name: attr2@REAL, dtype: float64}
+    Name: attr2, dtype: float64}
     """
     if target is None:
         from sklearn.preprocessing import LabelEncoder
+
         le = LabelEncoder()
         X = df.drop(df.columns[[-1]], axis=1)
         y = le.fit_transform(df[df.columns[-1]])
@@ -174,7 +175,7 @@ def nom2bin(X, nomcols):
     0    0  a  1.6
     1  3.2  b    2
     2    8  c    3
-    >>> nom2bin(X, nomcols=[1])["X"]
+    >>> nom2bin(X, nomcols=[1])
          0    2  1_a  1_b  1_c
     0    0  1.6    1    0    0
     1  3.2    2    0    1    0
@@ -193,6 +194,7 @@ def nom2bin(X, nomcols):
         nom = encoder.fit_transform(X.iloc[:, nomcols] if hasattr(X, "iloc") else X[:, nomcols]).toarray()
         num = numpy.delete(X, nomcols, axis=1).astype(float)
         return numpy.column_stack((nom, num))
+
 
 #
 #

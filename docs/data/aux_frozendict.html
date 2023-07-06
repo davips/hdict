@@ -54,8 +54,11 @@ def handle_items(*datas: [Dict[str, object]], previous: [Dict[str, AbsEntry]]):
     result__mirror_fields = {}
     for key, item in chain(*(data.items() for data in datas)):
         entry = handle_item(key, item, result)
-        if isinstance(key, str) and key.endswith(&#34;_&#34;) and isinstance(entry, value):
-            result__mirror_fields[f&#34;{key[:-1]}&#34;] = value(entry.hdict, entry.hosh)
+        if isinstance(key, str) and key.endswith(&#34;_&#34;):
+            if isinstance(entry, value):
+                result__mirror_fields[f&#34;{key[:-1]}&#34;] = value(entry.hdict, entry.hdict.hosh)
+            else:
+                raise Exception(f&#34;lazy mirror?&#34;)  # todo:
         if isinstance(entry, dict):
             result.update(entry)
         else:
@@ -95,7 +98,11 @@ def handle_item(key, item, previous):
         case _ if str(type(item)) == &#34;&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;&#34;:
             from hdict.dataset.pandas_handling import explode_df
 
-            res = explode_df(item)
+            # todo: check if this is the best default way of handling DFs.
+            df = item.copy(deep=False)
+            d = explode_df(df)
+            df.__dict__[&#34;ashdict&#34;] = d
+            res = value(df, hosh=d.hosh.rev, hdict=d)
         case _:
             res = value(item)
 
@@ -103,8 +110,8 @@ def handle_item(key, item, previous):
         return handle_multioutput(key, res, previous)
     elif not isinstance(key, str):  # pragma: no cover
         raise Exception(f&#34;Invalid type for input field specification: {type(key).__name__}&#34;)
-    elif key.startswith(&#34;_&#34;):  # pragma: no cover
-        raise Exception(f&#34;Field names cannot start with &#39;_&#39;: {key}&#34;)
+    # elif key.startswith(&#34;_&#34;):  # pragma: no cover     # reminder: _* allowed here due to parameter name in getattr(__o)
+    #     raise Exception(f&#34;Field names cannot start with &#39;_&#39;: {key}&#34;)
 
     return res
 
@@ -121,9 +128,13 @@ def handle_identity(data):
             # mirrorfield, e.g.: &#39;df_&#39; is a mirror/derived from &#39;df&#39;
             later[k] = v.id
         else:
-            hosh += v.hosh * k.encode()
-            # PAPER REMINDER: state in the paper that hash(identifier) must be different from hash(value), for any identifier and value. E.g.: hash(X) != hash(&#34;X&#34;)    #   Here the difference always happen because values are pickled, while identifiers are just encoded().
             ids[k] = v.hosh.id
+        hosh += v.hosh * k.encode()
+        # todo:  PAPER REMINDER: state in the paper that identifiers are not strings. they are a special type that never appears as a value.
+        #   I.e., hash(identifier) must be different from hash(value), for all identifiers and values.
+        #   E.g.: hash(field name X) != hash(string &#34;X&#34;)
+        #   In this impementation, the difference is always* true because values are always pickled (they are never hashed as strings), while identifiers are just str.encoded().
+        #   * → probabilistically
     ids.update(later)
     return hosh, ids
 
@@ -160,8 +171,9 @@ def handle_multioutput(field_names: tuple, entry: AbsEntry | apply, previous):
             parent = Closure(entry, previous, keys) if isinstance(entry, apply) else entry
             n = len(field_names)
             for key, i, source in loop_field_names(field_names):
-                keys.append(key)
-                data[key] = SubValue(parent, i, n, source)
+                if key is not None:
+                    keys.append(key)
+                    data[key] = SubValue(parent, i, n, source)
         case _:  # pragma: no cover
             raise Exception(f&#34;Cannot handle multioutput for key &#39;{field_names}&#39; and type &#39;{type(entry).__name__}&#39;.&#34;)
     return data
@@ -206,9 +218,9 @@ def handle_format(format, fields, df, name):
         X: &#34;‹{&#39;X&#39;: {1: 3, 2: 4}}›&#34;,
         y: &#34;‹[0 1]›&#34;,
         name: true,
-        _id: Qbcv80d7nEuKex05ecsNrCyQ4d7OI1XsgTWgcCcd,
+        _id: ekKHL1k.UmrpmE3dyQs4T1-kZTt4YNYxm4ptPcNc,
         _ids: {
-            X: oPj-WdtESlEAiUDqGQOUXR-4uwVNfYDl98o042.P,
+            X: UJPgtENMhTLAyrjuPQFGJZDQ2i94vIFqflScHEzP,
             y: cm5S71YBRAlVWV5Yn9pXHzsacyZuEH4ZFDNAw9nu,
             name: oK8X-7eG1Qp1WH7v6fokBDrQPdngKn.h86tlEnx4
         }
@@ -217,9 +229,9 @@ def handle_format(format, fields, df, name):
     {
         df: &#34;‹{&#39;X&#39;: {1: 3, 2: 4}, &#39;y&#39;: {1: 5, 2: 6}}›&#34;,
         name: true,
-        _id: Y8dS5prSxAflQwA0RvutZ.EMDRcyzeZAZCAAuWtT,
+        _id: h3NlgeKfkuO9mCm2Z3N0dlL-Ad-6tjvQWwGXkuXX,
         _ids: {
-            df: taqqcce8-I2nyIyk8LCm4iec0SVkrnbE6FjEvpiS,
+            df: BrLdigqE7urdheEOU6p1l0-jSKPVksJT3zp.lZLW,
             name: oK8X-7eG1Qp1WH7v6fokBDrQPdngKn.h86tlEnx4
         }
     }
@@ -228,9 +240,9 @@ def handle_format(format, fields, df, name):
         X: &#34;‹{&#39;X&#39;: {1: 3, 2: 4}}›&#34;,
         y: &#34;‹[0 1]›&#34;,
         name: true,
-        _id: Qbcv80d7nEuKex05ecsNrCyQ4d7OI1XsgTWgcCcd,
+        _id: ekKHL1k.UmrpmE3dyQs4T1-kZTt4YNYxm4ptPcNc,
         _ids: {
-            X: oPj-WdtESlEAiUDqGQOUXR-4uwVNfYDl98o042.P,
+            X: UJPgtENMhTLAyrjuPQFGJZDQ2i94vIFqflScHEzP,
             y: cm5S71YBRAlVWV5Yn9pXHzsacyZuEH4ZFDNAw9nu,
             name: oK8X-7eG1Qp1WH7v6fokBDrQPdngKn.h86tlEnx4
         }
@@ -258,27 +270,7 @@ def handle_format(format, fields, df, name):
 
     if name:
         d &gt;&gt;= {&#34;name&#34;: name}
-    return d
-
-
-# TODO:  fix apply() for *args
-#
-&#34;&#34;&#34;
-            f = lambda *args: args[0].asdf
-            return apply(f, field(k), fhosh=ø).enclosure(data, k)
-
-        return apply(f, field(k), fhosh=ø).enclosure(data, k)
-      File &#34;/home/davi/git/hdict/src/hdict/content/argument/apply.py&#34;, line 311, in enclosure
-        return Closure(self, data, [key])
-      File &#34;/home/davi/git/hdict/src/hdict/content/entry/closure.py&#34;, line 29, in __init__
-        arg = handle_arg(key, val, data, discarded_defaults, out, self.torepr)
-      File &#34;/home/davi/git/hdict/src/hdict/content/entry/aux_closure.py&#34;, line 30, in handle_arg
-        arg = handle_item(str(key), data[name], data)  # key passed for no purpose here AFAIR
-      File &#34;/home/davi/git/hdict/src/hdict/data/aux_frozendict.py&#34;, line 76, in handle_item
-        raise Exception(f&#34;Field names cannot start with &#39;_&#39;: {key}&#34;)
-    Exception: Field names cannot start with &#39;_&#39;: _0
-
-&#34;&#34;&#34;</code></pre>
+    return d</code></pre>
 </details>
 </section>
 <section>
@@ -299,9 +291,9 @@ def handle_format(format, fields, df, name):
     X: &quot;‹{'X': {1: 3, 2: 4}}›&quot;,
     y: &quot;‹[0 1]›&quot;,
     name: true,
-    _id: Qbcv80d7nEuKex05ecsNrCyQ4d7OI1XsgTWgcCcd,
+    _id: ekKHL1k.UmrpmE3dyQs4T1-kZTt4YNYxm4ptPcNc,
     _ids: {
-        X: oPj-WdtESlEAiUDqGQOUXR-4uwVNfYDl98o042.P,
+        X: UJPgtENMhTLAyrjuPQFGJZDQ2i94vIFqflScHEzP,
         y: cm5S71YBRAlVWV5Yn9pXHzsacyZuEH4ZFDNAw9nu,
         name: oK8X-7eG1Qp1WH7v6fokBDrQPdngKn.h86tlEnx4
     }
@@ -310,9 +302,9 @@ def handle_format(format, fields, df, name):
 {
     df: &quot;‹{'X': {1: 3, 2: 4}, 'y': {1: 5, 2: 6}}›&quot;,
     name: true,
-    _id: Y8dS5prSxAflQwA0RvutZ.EMDRcyzeZAZCAAuWtT,
+    _id: h3NlgeKfkuO9mCm2Z3N0dlL-Ad-6tjvQWwGXkuXX,
     _ids: {
-        df: taqqcce8-I2nyIyk8LCm4iec0SVkrnbE6FjEvpiS,
+        df: BrLdigqE7urdheEOU6p1l0-jSKPVksJT3zp.lZLW,
         name: oK8X-7eG1Qp1WH7v6fokBDrQPdngKn.h86tlEnx4
     }
 }
@@ -321,9 +313,9 @@ def handle_format(format, fields, df, name):
     X: &quot;‹{'X': {1: 3, 2: 4}}›&quot;,
     y: &quot;‹[0 1]›&quot;,
     name: true,
-    _id: Qbcv80d7nEuKex05ecsNrCyQ4d7OI1XsgTWgcCcd,
+    _id: ekKHL1k.UmrpmE3dyQs4T1-kZTt4YNYxm4ptPcNc,
     _ids: {
-        X: oPj-WdtESlEAiUDqGQOUXR-4uwVNfYDl98o042.P,
+        X: UJPgtENMhTLAyrjuPQFGJZDQ2i94vIFqflScHEzP,
         y: cm5S71YBRAlVWV5Yn9pXHzsacyZuEH4ZFDNAw9nu,
         name: oK8X-7eG1Qp1WH7v6fokBDrQPdngKn.h86tlEnx4
     }
@@ -342,9 +334,9 @@ def handle_format(format, fields, df, name):
         X: &#34;‹{&#39;X&#39;: {1: 3, 2: 4}}›&#34;,
         y: &#34;‹[0 1]›&#34;,
         name: true,
-        _id: Qbcv80d7nEuKex05ecsNrCyQ4d7OI1XsgTWgcCcd,
+        _id: ekKHL1k.UmrpmE3dyQs4T1-kZTt4YNYxm4ptPcNc,
         _ids: {
-            X: oPj-WdtESlEAiUDqGQOUXR-4uwVNfYDl98o042.P,
+            X: UJPgtENMhTLAyrjuPQFGJZDQ2i94vIFqflScHEzP,
             y: cm5S71YBRAlVWV5Yn9pXHzsacyZuEH4ZFDNAw9nu,
             name: oK8X-7eG1Qp1WH7v6fokBDrQPdngKn.h86tlEnx4
         }
@@ -353,9 +345,9 @@ def handle_format(format, fields, df, name):
     {
         df: &#34;‹{&#39;X&#39;: {1: 3, 2: 4}, &#39;y&#39;: {1: 5, 2: 6}}›&#34;,
         name: true,
-        _id: Y8dS5prSxAflQwA0RvutZ.EMDRcyzeZAZCAAuWtT,
+        _id: h3NlgeKfkuO9mCm2Z3N0dlL-Ad-6tjvQWwGXkuXX,
         _ids: {
-            df: taqqcce8-I2nyIyk8LCm4iec0SVkrnbE6FjEvpiS,
+            df: BrLdigqE7urdheEOU6p1l0-jSKPVksJT3zp.lZLW,
             name: oK8X-7eG1Qp1WH7v6fokBDrQPdngKn.h86tlEnx4
         }
     }
@@ -364,9 +356,9 @@ def handle_format(format, fields, df, name):
         X: &#34;‹{&#39;X&#39;: {1: 3, 2: 4}}›&#34;,
         y: &#34;‹[0 1]›&#34;,
         name: true,
-        _id: Qbcv80d7nEuKex05ecsNrCyQ4d7OI1XsgTWgcCcd,
+        _id: ekKHL1k.UmrpmE3dyQs4T1-kZTt4YNYxm4ptPcNc,
         _ids: {
-            X: oPj-WdtESlEAiUDqGQOUXR-4uwVNfYDl98o042.P,
+            X: UJPgtENMhTLAyrjuPQFGJZDQ2i94vIFqflScHEzP,
             y: cm5S71YBRAlVWV5Yn9pXHzsacyZuEH4ZFDNAw9nu,
             name: oK8X-7eG1Qp1WH7v6fokBDrQPdngKn.h86tlEnx4
         }
@@ -418,9 +410,13 @@ def handle_format(format, fields, df, name):
             # mirrorfield, e.g.: &#39;df_&#39; is a mirror/derived from &#39;df&#39;
             later[k] = v.id
         else:
-            hosh += v.hosh * k.encode()
-            # PAPER REMINDER: state in the paper that hash(identifier) must be different from hash(value), for any identifier and value. E.g.: hash(X) != hash(&#34;X&#34;)    #   Here the difference always happen because values are pickled, while identifiers are just encoded().
             ids[k] = v.hosh.id
+        hosh += v.hosh * k.encode()
+        # todo:  PAPER REMINDER: state in the paper that identifiers are not strings. they are a special type that never appears as a value.
+        #   I.e., hash(identifier) must be different from hash(value), for all identifiers and values.
+        #   E.g.: hash(field name X) != hash(string &#34;X&#34;)
+        #   In this impementation, the difference is always* true because values are always pickled (they are never hashed as strings), while identifiers are just str.encoded().
+        #   * → probabilistically
     ids.update(later)
     return hosh, ids</code></pre>
 </details>
@@ -465,7 +461,11 @@ def handle_format(format, fields, df, name):
         case _ if str(type(item)) == &#34;&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;&#34;:
             from hdict.dataset.pandas_handling import explode_df
 
-            res = explode_df(item)
+            # todo: check if this is the best default way of handling DFs.
+            df = item.copy(deep=False)
+            d = explode_df(df)
+            df.__dict__[&#34;ashdict&#34;] = d
+            res = value(df, hosh=d.hosh.rev, hdict=d)
         case _:
             res = value(item)
 
@@ -473,8 +473,8 @@ def handle_format(format, fields, df, name):
         return handle_multioutput(key, res, previous)
     elif not isinstance(key, str):  # pragma: no cover
         raise Exception(f&#34;Invalid type for input field specification: {type(key).__name__}&#34;)
-    elif key.startswith(&#34;_&#34;):  # pragma: no cover
-        raise Exception(f&#34;Field names cannot start with &#39;_&#39;: {key}&#34;)
+    # elif key.startswith(&#34;_&#34;):  # pragma: no cover     # reminder: _* allowed here due to parameter name in getattr(__o)
+    #     raise Exception(f&#34;Field names cannot start with &#39;_&#39;: {key}&#34;)
 
     return res</code></pre>
 </details>
@@ -493,8 +493,11 @@ def handle_format(format, fields, df, name):
     result__mirror_fields = {}
     for key, item in chain(*(data.items() for data in datas)):
         entry = handle_item(key, item, result)
-        if isinstance(key, str) and key.endswith(&#34;_&#34;) and isinstance(entry, value):
-            result__mirror_fields[f&#34;{key[:-1]}&#34;] = value(entry.hdict, entry.hosh)
+        if isinstance(key, str) and key.endswith(&#34;_&#34;):
+            if isinstance(entry, value):
+                result__mirror_fields[f&#34;{key[:-1]}&#34;] = value(entry.hdict, entry.hdict.hosh)
+            else:
+                raise Exception(f&#34;lazy mirror?&#34;)  # todo:
         if isinstance(entry, dict):
             result.update(entry)
         else:
@@ -577,8 +580,9 @@ def handle_format(format, fields, df, name):
             parent = Closure(entry, previous, keys) if isinstance(entry, apply) else entry
             n = len(field_names)
             for key, i, source in loop_field_names(field_names):
-                keys.append(key)
-                data[key] = SubValue(parent, i, n, source)
+                if key is not None:
+                    keys.append(key)
+                    data[key] = SubValue(parent, i, n, source)
         case _:  # pragma: no cover
             raise Exception(f&#34;Cannot handle multioutput for key &#39;{field_names}&#39; and type &#39;{type(entry).__name__}&#39;.&#34;)
     return data</code></pre>

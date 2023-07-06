@@ -46,10 +46,10 @@ class hdict_(dict[str, VT]):
     {
         x: λ(3),
         f: "<function <lambda> at 0x...>",
-        _id: 1ws77ctcACmwuueXYdeMmCOrl0DzfsgkQabRj4rU,
+        _id: KxAogdPlPbTXATJzW7E8C.4j.82ZIDrVpTbVRxiZ,
         _ids: {
-            x: Z4rUsx9xu7UMrE42So534CJY5H7E997AvsKunAYW,
-            f: y7tfW6WBHg-gJNqFxKEUogtXbLSRWde9FyrG3l4v
+            x: KeU-dCTjUgnSYGRNrrMMr4i.hg64Dkkfb3c14eh3,
+            f: p-nM7oHlOFr6iHSF9ZISWXc9zqi017c3zcvcV8Dr
         }
     }
     >>> d.x
@@ -58,10 +58,10 @@ class hdict_(dict[str, VT]):
     {
         x: 4,
         f: "<function <lambda> at 0x...>",
-        _id: 1ws77ctcACmwuueXYdeMmCOrl0DzfsgkQabRj4rU,
+        _id: KxAogdPlPbTXATJzW7E8C.4j.82ZIDrVpTbVRxiZ,
         _ids: {
-            x: Z4rUsx9xu7UMrE42So534CJY5H7E997AvsKunAYW,
-            f: y7tfW6WBHg-gJNqFxKEUogtXbLSRWde9FyrG3l4v
+            x: KeU-dCTjUgnSYGRNrrMMr4i.hg64Dkkfb3c14eh3,
+            f: p-nM7oHlOFr6iHSF9ZISWXc9zqi017c3zcvcV8Dr
         }
     }
     >>> str({"a": 2} * d)  # doctest:+ELLIPSIS
@@ -586,5 +586,5 @@ class hdict_(dict[str, VT]):
     def hoshes(self):
         return self.frozen.hoshes
 
-    #def __reduce__(self):
-        #return self.frozen.__reduce__()
+    # def __reduce__(self):
+    # return self.frozen.__reduce__()

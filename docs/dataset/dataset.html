@@ -146,27 +146,82 @@ def df2liac(df, relation=&#34;data&#34;, description=&#34;&#34;):  # pragma: no 
     return result
 
 
-# def dump(df, fp):  # TODO: save arff/CSV from hdict
+# def dump(df, fp):  # todo: : save arff/CSV from hdict
 #     import arff as liacarff
 #
 #     arff = df2liac(df)
 #     liacarff.dump(arff, fp)
 #
 #
-# def dumps(df):  # TODO: output arff/CSV from hdict
+# def dumps(df):  # todo: : output arff/CSV from hdict
 #     import arff as liacarff
 #
 #     arff = df2liac(df)
 #     return liacarff.dumps(arff)
 
 
-def df2Xy(df):
-    from sklearn.preprocessing import LabelEncoder
+def df2Xy(df, target=None):
+    r&#34;&#34;&#34;
+    &gt;&gt;&gt; from hdict import hdict
+    &gt;&gt;&gt; from hdict.dataset.dataset import df2Xy
+    &gt;&gt;&gt; from testfixtures import TempDirectory
+    &gt;&gt;&gt; arff = &#34;@RELATION mini\n@ATTRIBUTE attr1        REAL\n@ATTRIBUTE attr2  REAL\n@ATTRIBUTE class  {0,1}\n@DATA\n5.1,3.5,0\n3.1,4.5,1&#34;
+    &gt;&gt;&gt; with TempDirectory() as tmp:  # doctest:+ELLIPSIS
+    ...    tmp.write(&#34;mini.arff&#34;, arff.encode())
+    ...    d = hdict.fromfile(tmp.path + &#34;/mini.arff&#34;)
+    &#39;/tmp/.../mini.arff&#39;
+    &gt;&gt;&gt; df2Xy(d.df)
+    {&#39;X&#39;:    attr1  attr2
+    0    5.1    3.5
+    1    3.1    4.5, &#39;y&#39;: array([0, 1])}
+    &gt;&gt;&gt; df2Xy(d.df, target=&#34;attr2&#34;)
+    {&#39;X&#39;:    attr1 class
+    0    5.1     0
+    1    3.1     1, &#39;y&#39;: 0    3.5
+    1    4.5
+    Name: attr2, dtype: float64}
+    &#34;&#34;&#34;
+    if target is None:
+        from sklearn.preprocessing import LabelEncoder
 
-    le = LabelEncoder()
-    X_ = df.drop(df.columns[[-1]], axis=1)
-    y_ = le.fit_transform(df[df.columns[-1]])
-    return {&#34;X&#34;: X_, &#34;y&#34;: y_}
+        le = LabelEncoder()
+        X = df.drop(df.columns[[-1]], axis=1)
+        y = le.fit_transform(df[df.columns[-1]])
+    else:
+        y = df[target]
+        X = df.drop(target, axis=1)
+    return {&#34;X&#34;: X, &#34;y&#34;: y}
+
+
+def nom2bin(X, nomcols):
+    &#34;&#34;&#34;
+    &gt;&gt;&gt; import numpy as np
+    &gt;&gt;&gt; from pandas import DataFrame as DF
+    &gt;&gt;&gt; X = DF(np.array([[0, &#34;a&#34;, 1.6], [3.2, &#34;b&#34;, 2], [8, &#34;c&#34;, 3]]))
+    &gt;&gt;&gt; X
+         0  1    2
+    0    0  a  1.6
+    1  3.2  b    2
+    2    8  c    3
+    &gt;&gt;&gt; nom2bin(X, nomcols=[1])
+         0    2  1_a  1_b  1_c
+    0    0  1.6    1    0    0
+    1  3.2    2    0    1    0
+    2    8    3    0    0    1
+    &#34;&#34;&#34;
+    if X.__class__.__name__ in [&#34;DataFrame&#34;, &#34;Series&#34;]:
+        import pandas
+
+        clabels = X.columns[nomcols]
+        return pandas.get_dummies(X, prefix=clabels, columns=clabels, dtype=int)
+    else:
+        import numpy
+        from sklearn.preprocessing import OneHotEncoder
+
+        encoder = OneHotEncoder()
+        nom = encoder.fit_transform(X.iloc[:, nomcols] if hasattr(X, &#34;iloc&#34;) else X[:, nomcols]).toarray()
+        num = numpy.delete(X, nomcols, axis=1).astype(float)
+        return numpy.column_stack((nom, num))
 
 
 #
@@ -241,21 +296,63 @@ def df2Xy(df):
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
 <dt id="hdict.dataset.dataset.df2Xy"><code class="name flex">
-<span>def <span class="ident">df2Xy</span></span>(<span>df)</span>
+<span>def <span class="ident">df2Xy</span></span>(<span>df, target=None)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><pre><code class="language-python-repl">&gt;&gt;&gt; from hdict import hdict
+&gt;&gt;&gt; from hdict.dataset.dataset import df2Xy
+&gt;&gt;&gt; from testfixtures import TempDirectory
+&gt;&gt;&gt; arff = &quot;@RELATION mini\n@ATTRIBUTE attr1        REAL\n@ATTRIBUTE attr2  REAL\n@ATTRIBUTE class  {0,1}\n@DATA\n5.1,3.5,0\n3.1,4.5,1&quot;
+&gt;&gt;&gt; with TempDirectory() as tmp:  # doctest:+ELLIPSIS
+...    tmp.write(&quot;mini.arff&quot;, arff.encode())
+...    d = hdict.fromfile(tmp.path + &quot;/mini.arff&quot;)
+'/tmp/.../mini.arff'
+&gt;&gt;&gt; df2Xy(d.df)
+{'X':    attr1  attr2
+0    5.1    3.5
+1    3.1    4.5, 'y': array([0, 1])}
+&gt;&gt;&gt; df2Xy(d.df, target=&quot;attr2&quot;)
+{'X':    attr1 class
+0    5.1     0
+1    3.1     1, 'y': 0    3.5
+1    4.5
+Name: attr2, dtype: float64}
+</code></pre></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def df2Xy(df):
-    from sklearn.preprocessing import LabelEncoder
+<pre><code class="python">def df2Xy(df, target=None):
+    r&#34;&#34;&#34;
+    &gt;&gt;&gt; from hdict import hdict
+    &gt;&gt;&gt; from hdict.dataset.dataset import df2Xy
+    &gt;&gt;&gt; from testfixtures import TempDirectory
+    &gt;&gt;&gt; arff = &#34;@RELATION mini\n@ATTRIBUTE attr1        REAL\n@ATTRIBUTE attr2  REAL\n@ATTRIBUTE class  {0,1}\n@DATA\n5.1,3.5,0\n3.1,4.5,1&#34;
+    &gt;&gt;&gt; with TempDirectory() as tmp:  # doctest:+ELLIPSIS
+    ...    tmp.write(&#34;mini.arff&#34;, arff.encode())
+    ...    d = hdict.fromfile(tmp.path + &#34;/mini.arff&#34;)
+    &#39;/tmp/.../mini.arff&#39;
+    &gt;&gt;&gt; df2Xy(d.df)
+    {&#39;X&#39;:    attr1  attr2
+    0    5.1    3.5
+    1    3.1    4.5, &#39;y&#39;: array([0, 1])}
+    &gt;&gt;&gt; df2Xy(d.df, target=&#34;attr2&#34;)
+    {&#39;X&#39;:    attr1 class
+    0    5.1     0
+    1    3.1     1, &#39;y&#39;: 0    3.5
+    1    4.5
+    Name: attr2, dtype: float64}
+    &#34;&#34;&#34;
+    if target is None:
+        from sklearn.preprocessing import LabelEncoder
 
-    le = LabelEncoder()
-    X_ = df.drop(df.columns[[-1]], axis=1)
-    y_ = le.fit_transform(df[df.columns[-1]])
-    return {&#34;X&#34;: X_, &#34;y&#34;: y_}</code></pre>
+        le = LabelEncoder()
+        X = df.drop(df.columns[[-1]], axis=1)
+        y = le.fit_transform(df[df.columns[-1]])
+    else:
+        y = df[target]
+        X = df.drop(target, axis=1)
+    return {&#34;X&#34;: X, &#34;y&#34;: y}</code></pre>
 </details>
 </dd>
 <dt id="hdict.dataset.dataset.df2liac"><code class="name flex">
@@ -405,6 +502,59 @@ generator yielding elements of string.</p></div>
     return liac2pandas(data)</code></pre>
 </details>
 </dd>
+<dt id="hdict.dataset.dataset.nom2bin"><code class="name flex">
+<span>def <span class="ident">nom2bin</span></span>(<span>X, nomcols)</span>
+</code></dt>
+<dd>
+<div class="desc"><pre><code class="language-python-repl">&gt;&gt;&gt; import numpy as np
+&gt;&gt;&gt; from pandas import DataFrame as DF
+&gt;&gt;&gt; X = DF(np.array([[0, &quot;a&quot;, 1.6], [3.2, &quot;b&quot;, 2], [8, &quot;c&quot;, 3]]))
+&gt;&gt;&gt; X
+     0  1    2
+0    0  a  1.6
+1  3.2  b    2
+2    8  c    3
+&gt;&gt;&gt; nom2bin(X, nomcols=[1])
+     0    2  1_a  1_b  1_c
+0    0  1.6    1    0    0
+1  3.2    2    0    1    0
+2    8    3    0    0    1
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def nom2bin(X, nomcols):
+    &#34;&#34;&#34;
+    &gt;&gt;&gt; import numpy as np
+    &gt;&gt;&gt; from pandas import DataFrame as DF
+    &gt;&gt;&gt; X = DF(np.array([[0, &#34;a&#34;, 1.6], [3.2, &#34;b&#34;, 2], [8, &#34;c&#34;, 3]]))
+    &gt;&gt;&gt; X
+         0  1    2
+    0    0  a  1.6
+    1  3.2  b    2
+    2    8  c    3
+    &gt;&gt;&gt; nom2bin(X, nomcols=[1])
+         0    2  1_a  1_b  1_c
+    0    0  1.6    1    0    0
+    1  3.2    2    0    1    0
+    2    8    3    0    0    1
+    &#34;&#34;&#34;
+    if X.__class__.__name__ in [&#34;DataFrame&#34;, &#34;Series&#34;]:
+        import pandas
+
+        clabels = X.columns[nomcols]
+        return pandas.get_dummies(X, prefix=clabels, columns=clabels, dtype=int)
+    else:
+        import numpy
+        from sklearn.preprocessing import OneHotEncoder
+
+        encoder = OneHotEncoder()
+        nom = encoder.fit_transform(X.iloc[:, nomcols] if hasattr(X, &#34;iloc&#34;) else X[:, nomcols]).toarray()
+        num = numpy.delete(X, nomcols, axis=1).astype(float)
+        return numpy.column_stack((nom, num))</code></pre>
+</details>
+</dd>
 </dl>
 </section>
 <section>
@@ -429,6 +579,7 @@ generator yielding elements of string.</p></div>
 <li><code><a title="hdict.dataset.dataset.liac2pandas" href="#hdict.dataset.dataset.liac2pandas">liac2pandas</a></code></li>
 <li><code><a title="hdict.dataset.dataset.load" href="#hdict.dataset.dataset.load">load</a></code></li>
 <li><code><a title="hdict.dataset.dataset.loads" href="#hdict.dataset.dataset.loads">loads</a></code></li>
+<li><code><a title="hdict.dataset.dataset.nom2bin" href="#hdict.dataset.dataset.nom2bin">nom2bin</a></code></li>
 </ul>
 </li>
 </ul>

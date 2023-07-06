@@ -76,12 +76,12 @@ class frozenhdict(UserDict, dict[str, VT]):
         x: 3,
         y: 5,
         z: λ(v x),
-        _id: -a24f2g4z-c-tPEss6G8WEd7h8zMopCCsCdQowjL,
+        _id: 0qFPOnULZigyiXU9Jv.1D.XSTIYHZ24UCT00DMHF,
         _ids: {
             v: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf,
             x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
             y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
-            z: .beBfajsUjKto9qdBCKsLmBgsaNPpJiyz24P9.qg
+            z: 2-wfv1b9RyFHB2kdba3EBCy6Do5L-mMPJjT-nfPa
         }
     }
     >>> d = _ >> d
@@ -91,12 +91,12 @@ class frozenhdict(UserDict, dict[str, VT]):
         x: 3,
         y: 5,
         z: λ(v x),
-        _id: -a24f2g4z-c-tPEss6G8WEd7h8zMopCCsCdQowjL,
+        _id: 0qFPOnULZigyiXU9Jv.1D.XSTIYHZ24UCT00DMHF,
         _ids: {
             v: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf,
             x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
             y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
-            z: .beBfajsUjKto9qdBCKsLmBgsaNPpJiyz24P9.qg
+            z: 2-wfv1b9RyFHB2kdba3EBCy6Do5L-mMPJjT-nfPa
         }
     }
     >>> d = {"a": 5} >> d
@@ -107,13 +107,13 @@ class frozenhdict(UserDict, dict[str, VT]):
         x: 3,
         y: 5,
         z: λ(v x),
-        _id: ELQZugqdug6eCOLZSPaimnGqgmhRjJoDLD8cOlYR,
+        _id: jZrJ2CiVUA9OqW.G7dwb3KoaTWGMUmSUVUXn0CkM,
         _ids: {
             a: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
             v: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf,
             x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
             y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
-            z: .beBfajsUjKto9qdBCKsLmBgsaNPpJiyz24P9.qg
+            z: 2-wfv1b9RyFHB2kdba3EBCy6Do5L-mMPJjT-nfPa
         }
     }
     >>> from hdict.content.entry import AbsEntry, Unevaluated
@@ -586,8 +586,8 @@ class frozenhdict(UserDict, dict[str, VT]):
     def __hash__(self):
         return hash(self.hosh)
 
-    #def __reduce__(self):
-        #dic = self.data.copy()
-        #del dic["_id"]
-        #del dic["_ids"]
-        #return self.__class__, (dic,)
+    # def __reduce__(self):
+    # dic = self.data.copy()
+    # del dic["_id"]
+    # del dic["_ids"]
+    # return self.__class__, (dic,)

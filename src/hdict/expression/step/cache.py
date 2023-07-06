@@ -34,11 +34,11 @@ class cache(AbsStep):
         x: 3,
         y: 5,
         z: λ(x y),
-        _id: UB8No.x9HiKWeFqpmTv1lWn0lEsTJS16lPNCojcK,
+        _id: IIh20mb2BGUx9XMCDwzTr4y7v-JaGin3eEHvx692,
         _ids: {
             x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
             y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
-            z: cszQVZnzMQSS3.2tdWWQL-wGCv.lO0TWqVoSNFww
+            z: GC-BMZNVRagHxgUynUadKUYA1kZ8GzcUj6OKWstQ
         }
     }
     >>> d >>= cache(storage)
@@ -47,11 +47,11 @@ class cache(AbsStep):
         x: 3,
         y: 5,
         z: ↑↓ cached at `dict`·,
-        _id: UB8No.x9HiKWeFqpmTv1lWn0lEsTJS16lPNCojcK,
+        _id: IIh20mb2BGUx9XMCDwzTr4y7v-JaGin3eEHvx692,
         _ids: {
             x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
             y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
-            z: cszQVZnzMQSS3.2tdWWQL-wGCv.lO0TWqVoSNFww
+            z: GC-BMZNVRagHxgUynUadKUYA1kZ8GzcUj6OKWstQ
         }
     }
     >>> d.evaluate()
@@ -60,11 +60,11 @@ class cache(AbsStep):
         x: 3,
         y: 5,
         z: 0.6,
-        _id: UB8No.x9HiKWeFqpmTv1lWn0lEsTJS16lPNCojcK,
+        _id: IIh20mb2BGUx9XMCDwzTr4y7v-JaGin3eEHvx692,
         _ids: {
             x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
             y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
-            z: cszQVZnzMQSS3.2tdWWQL-wGCv.lO0TWqVoSNFww
+            z: GC-BMZNVRagHxgUynUadKUYA1kZ8GzcUj6OKWstQ
         }
     }
     """

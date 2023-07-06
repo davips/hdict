@@ -77,13 +77,13 @@ class CustomJSONEncoder(JSONEncoder):
                 1: IIffH-qkWUFB.-VFd0z6BBrIpfvNuc8GPxlQYgg3
             }
         },
-        _id: VRlid5klewaC1bro7soJEr8Ynmt-N9YCNjW8iPN0,
+        _id: S1nTzl98Gz1FWNCx4PjWyiicvZwwm17VZ.Pk-hbr,
         _ids: {
             d: fBb9FHVYpHC7vyM-B8UrXuN4oCcQ4Y7pnQ6oSK3J,
             y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
             ell: P1oPe-8hTjTdV6gKov4oIQnmTUXyD2fU6E7C8MS6,
             df: Zrz1JpxxZz7HIZDWPjdZEvMsqClGQnH7qcIqzhOb,
-            df_: Zrz1JpxxZz7HIZDWPjdZEvMsqClGQnH7qcIqzhOb
+            df_: Bzf414aFK2VBHxFEmB4pLGAsKSllj4QcNfm0QC7l
         }
     }
     >>> from numpy import array
@@ -111,22 +111,22 @@ class CustomJSONEncoder(JSONEncoder):
                     1: IIffH-qkWUFB.-VFd0z6BBrIpfvNuc8GPxlQYgg3
                 }
             },
-            _id: VRlid5klewaC1bro7soJEr8Ynmt-N9YCNjW8iPN0,
+            _id: S1nTzl98Gz1FWNCx4PjWyiicvZwwm17VZ.Pk-hbr,
             _ids: {
                 d: fBb9FHVYpHC7vyM-B8UrXuN4oCcQ4Y7pnQ6oSK3J,
                 y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
                 ell: P1oPe-8hTjTdV6gKov4oIQnmTUXyD2fU6E7C8MS6,
                 df: Zrz1JpxxZz7HIZDWPjdZEvMsqClGQnH7qcIqzhOb,
-                df_: Zrz1JpxxZz7HIZDWPjdZEvMsqClGQnH7qcIqzhOb
+                df_: Bzf414aFK2VBHxFEmB4pLGAsKSllj4QcNfm0QC7l
             }
         },
         z: 9,
         c: "‹[1 2 3]›",
         d: "‹{0: 1, 1: 2, 2: 3}›",
         dd: "‹[[1 2] [3 4]]›",
-        _id: 75i4qCm0ZAOdRV9TWDeUNQ7GuGmWWMQ8dndlVEsm,
+        _id: Jd3NfEBIPpLs5oPz4VEXkRY38XfsvE.qp37xB7SM,
         _ids: {
-            b: VRlid5klewaC1bro7soJEr8Ynmt-N9YCNjW8iPN0,
+            b: S1nTzl98Gz1FWNCx4PjWyiicvZwwm17VZ.Pk-hbr,
             z: GuwIQCrendfKXZr5jGfrUwoP-8TWMhmLHYrja2yj,
             c: QkfVsy7ITAmoIiOFgbYpsQodBSIYshhiUm3v2r8d,
             d: 5iU-DAFL3XTLno88g056s2G12RidCKkCgLCLIwB5,
@@ -164,6 +164,7 @@ class CustomJSONEncoder(JSONEncoder):
                 return "..."
             if isinstance(obj, AbsEntry) and obj.isevaluated:
                 from hdict import hdict, frozenhdict
+
                 if isinstance(obj.value, (frozenhdict, hdict)):
                     return obj.value.asdicts_noid
                 return obj.value

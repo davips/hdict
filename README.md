@@ -3,7 +3,7 @@
 <a href="https://pypi.org/project/hdict">
 <img src="https://img.shields.io/pypi/v/hdict.svg?label=release&color=blue&style=flat-square" alt="pypi">
 </a>
-![Python version](https://img.shields.io/badge/python-3.10...-blue.svg)
+![Python version](https://img.shields.io/badge/python-3.10+-blue.svg)
 [![license: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 <!--- [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5501845.svg)](https://doi.org/10.5281/zenodo.5501845) --->

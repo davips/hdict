@@ -73,7 +73,7 @@ class sample(AbsMetaArgument):
 
     def __init__(self, *values: list[int | float], rnd: int | Random = 0, maxdigits=28):
         self.rnd = rnd
-        # TODO: accept list of non numeric types (categoric)?
+        # todo: : accept list of non numeric types (categoric)?
         prog = list2progression(values, maxdigits=maxdigits)
         if prog.n.is_infinite():  # pragma: no cover
             raise Exception(f&#34;Cannot sample from an infinite list: {prog}&#34;)
@@ -135,7 +135,7 @@ class sample(AbsMetaArgument):
 
     def __init__(self, *values: list[int | float], rnd: int | Random = 0, maxdigits=28):
         self.rnd = rnd
-        # TODO: accept list of non numeric types (categoric)?
+        # todo: : accept list of non numeric types (categoric)?
         prog = list2progression(values, maxdigits=maxdigits)
         if prog.n.is_infinite():  # pragma: no cover
             raise Exception(f&#34;Cannot sample from an infinite list: {prog}&#34;)

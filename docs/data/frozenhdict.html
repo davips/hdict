@@ -104,12 +104,12 @@ class frozenhdict(UserDict, dict[str, VT]):
         x: 3,
         y: 5,
         z: λ(v x),
-        _id: -a24f2g4z-c-tPEss6G8WEd7h8zMopCCsCdQowjL,
+        _id: 0qFPOnULZigyiXU9Jv.1D.XSTIYHZ24UCT00DMHF,
         _ids: {
             v: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf,
             x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
             y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
-            z: .beBfajsUjKto9qdBCKsLmBgsaNPpJiyz24P9.qg
+            z: 2-wfv1b9RyFHB2kdba3EBCy6Do5L-mMPJjT-nfPa
         }
     }
     &gt;&gt;&gt; d = _ &gt;&gt; d
@@ -119,12 +119,12 @@ class frozenhdict(UserDict, dict[str, VT]):
         x: 3,
         y: 5,
         z: λ(v x),
-        _id: -a24f2g4z-c-tPEss6G8WEd7h8zMopCCsCdQowjL,
+        _id: 0qFPOnULZigyiXU9Jv.1D.XSTIYHZ24UCT00DMHF,
         _ids: {
             v: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf,
             x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
             y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
-            z: .beBfajsUjKto9qdBCKsLmBgsaNPpJiyz24P9.qg
+            z: 2-wfv1b9RyFHB2kdba3EBCy6Do5L-mMPJjT-nfPa
         }
     }
     &gt;&gt;&gt; d = {&#34;a&#34;: 5} &gt;&gt; d
@@ -135,13 +135,13 @@ class frozenhdict(UserDict, dict[str, VT]):
         x: 3,
         y: 5,
         z: λ(v x),
-        _id: ELQZugqdug6eCOLZSPaimnGqgmhRjJoDLD8cOlYR,
+        _id: jZrJ2CiVUA9OqW.G7dwb3KoaTWGMUmSUVUXn0CkM,
         _ids: {
             a: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
             v: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf,
             x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
             y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
-            z: .beBfajsUjKto9qdBCKsLmBgsaNPpJiyz24P9.qg
+            z: 2-wfv1b9RyFHB2kdba3EBCy6Do5L-mMPJjT-nfPa
         }
     }
     &gt;&gt;&gt; from hdict.content.entry import AbsEntry, Unevaluated
@@ -150,6 +150,7 @@ class frozenhdict(UserDict, dict[str, VT]):
 
     _evaluated = None
     _asdict, _asdicts, _asdicts_noid = None, None, None
+    _hoshes = None
 
     # noinspection PyMissingConstructor
     def __init__(self, /, _dictionary=None, _previous=None, **kwargs):
@@ -160,7 +161,7 @@ class frozenhdict(UserDict, dict[str, VT]):
         if _previous is None:
             _previous = {}
 
-        # TODO: check if _dictionary keys is &#39;str&#39;; regex to check if k is an identifier;
+        # todo: : check if _dictionary keys is &#39;str&#39;; regex to check if k is an identifier;
         data = _dictionary or {}
         # REMINDER: Inside data, the only &#39;dict&#39; entries are &#34;_id&#34; and &#34;_ids&#34;, the rest are AbsEntry objects.
         self.data: dict[str, AbsEntry | str | dict[str, str]]
@@ -168,6 +169,12 @@ class frozenhdict(UserDict, dict[str, VT]):
         self.hosh, self.ids = handle_identity(self.data)
         self.id = self.hosh.id
         self.raw = self.data
+
+    @property
+    def hoshes(self):
+        if self._hoshes is None:
+            self._hoshes = {k: v.hosh for k, v in self.data.items()}
+        return self._hoshes
 
     def __rmul__(self, left):
         from hdict import frozenhdict
@@ -234,7 +241,6 @@ class frozenhdict(UserDict, dict[str, VT]):
                 return Expr(self, other).solve()
             case _:  # pragma: no cover
                 return NotImplemented
-
         return frozenhdict(dct, _previous=self.data)
 
     def __getitem__(self, item):  # pragma: no cover
@@ -393,7 +399,7 @@ class frozenhdict(UserDict, dict[str, VT]):
         dicts, hoshes = self.asdicts_hoshes_noneval
         txt = json.dumps(dicts, indent=4, ensure_ascii=False, cls=CustomJSONEncoder)
 
-        # Put colors after json, to avoid escaping ansi codes.  TODO: check how HTML behaves here
+        # Put colors after json, to avoid escaping ansi codes.  todo: check how HTML behaves here
         for h in hoshes:
             txt = txt.replace(f&#39;&#34;{h.id}&#34;&#39;, repr(h)) if colored else txt.replace(f&#39;&#34;{h.id}&#34;&#39;, h.id)
 
@@ -457,12 +463,18 @@ class frozenhdict(UserDict, dict[str, VT]):
         for field, fid in self.ids.items():
             value = self[field]
             if field.endswith(&#34;_&#34;):
-                # TODO check existence of the counterpart
+                raise Exception(f&#34;Not implemented for mirror fields&#34;)
+                # todo:  confirm existence of the counterpart
                 data[kindid(fid)] = str(type(value))
             elif isinstance(value, frozenhdict):
                 value.save(storage)
             else:
                 data[fid] = Stored(value)
+        # todo:  check if frozenhdict is being stored by mistake
+        # todo:  attribute/method as subfield:
+        #       apply(f, _.df.x)            SubField(name=&#34;df&#34;, attribute=&#34;x&#34;)
+        #       apply(_.df.drop, &#34;col1&#34;)    SubField(name=&#34;df&#34;, attribute=&#34;drop&#34;)
+        #
         storage.update(data)
 
     @staticmethod
@@ -500,6 +512,9 @@ class frozenhdict(UserDict, dict[str, VT]):
             mirrored = set()
             for field, fid in ids.items():
                 if field.endswith(&#34;_&#34;):
+                    # TODO:  2023-06-23
+                    #  -
+                    raise Exception(f&#34;Not implemented for mirror fields&#34;)
                     mirrored.add(field[:-1])
                     continue
                 if lazy:
@@ -530,13 +545,13 @@ class frozenhdict(UserDict, dict[str, VT]):
         return DataFrame(data, index=index)
 
     @staticmethod
-    def fromfile(name, fields=None, format=&#34;df&#34;, named=None):
+    def fromfile(name, fields=None, format=&#34;df&#34;, named=None, hide_types=True):
         r&#34;&#34;&#34;
         Input format is defined by file extension: .arff, .csv
         &#34;&#34;&#34;
         from hdict.data.aux_frozendict import handle_format
 
-        df, name = file2df(name)
+        df, name = file2df(name, hide_types)
         return handle_format(format, fields, df, named and name)
 
     @staticmethod
@@ -597,7 +612,13 @@ class frozenhdict(UserDict, dict[str, VT]):
             yield k
 
     def __hash__(self):
-        return hash(self.hosh)</code></pre>
+        return hash(self.hosh)
+
+    # def __reduce__(self):
+    # dic = self.data.copy()
+    # del dic[&#34;_id&#34;]
+    # del dic[&#34;_ids&#34;]
+    # return self.__class__, (dic,)</code></pre>
 </details>
 </section>
 <section>
@@ -652,12 +673,12 @@ class frozenhdict(UserDict, dict[str, VT]):
     x: 3,
     y: 5,
     z: λ(v x),
-    _id: -a24f2g4z-c-tPEss6G8WEd7h8zMopCCsCdQowjL,
+    _id: 0qFPOnULZigyiXU9Jv.1D.XSTIYHZ24UCT00DMHF,
     _ids: {
         v: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf,
         x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
         y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
-        z: .beBfajsUjKto9qdBCKsLmBgsaNPpJiyz24P9.qg
+        z: 2-wfv1b9RyFHB2kdba3EBCy6Do5L-mMPJjT-nfPa
     }
 }
 &gt;&gt;&gt; d = _ &gt;&gt; d
@@ -667,12 +688,12 @@ class frozenhdict(UserDict, dict[str, VT]):
     x: 3,
     y: 5,
     z: λ(v x),
-    _id: -a24f2g4z-c-tPEss6G8WEd7h8zMopCCsCdQowjL,
+    _id: 0qFPOnULZigyiXU9Jv.1D.XSTIYHZ24UCT00DMHF,
     _ids: {
         v: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf,
         x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
         y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
-        z: .beBfajsUjKto9qdBCKsLmBgsaNPpJiyz24P9.qg
+        z: 2-wfv1b9RyFHB2kdba3EBCy6Do5L-mMPJjT-nfPa
     }
 }
 &gt;&gt;&gt; d = {&quot;a&quot;: 5} &gt;&gt; d
@@ -683,13 +704,13 @@ class frozenhdict(UserDict, dict[str, VT]):
     x: 3,
     y: 5,
     z: λ(v x),
-    _id: ELQZugqdug6eCOLZSPaimnGqgmhRjJoDLD8cOlYR,
+    _id: jZrJ2CiVUA9OqW.G7dwb3KoaTWGMUmSUVUXn0CkM,
     _ids: {
         a: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
         v: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf,
         x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
         y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
-        z: .beBfajsUjKto9qdBCKsLmBgsaNPpJiyz24P9.qg
+        z: 2-wfv1b9RyFHB2kdba3EBCy6Do5L-mMPJjT-nfPa
     }
 }
 &gt;&gt;&gt; from hdict.content.entry import AbsEntry, Unevaluated
@@ -741,12 +762,12 @@ class frozenhdict(UserDict, dict[str, VT]):
         x: 3,
         y: 5,
         z: λ(v x),
-        _id: -a24f2g4z-c-tPEss6G8WEd7h8zMopCCsCdQowjL,
+        _id: 0qFPOnULZigyiXU9Jv.1D.XSTIYHZ24UCT00DMHF,
         _ids: {
             v: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf,
             x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
             y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
-            z: .beBfajsUjKto9qdBCKsLmBgsaNPpJiyz24P9.qg
+            z: 2-wfv1b9RyFHB2kdba3EBCy6Do5L-mMPJjT-nfPa
         }
     }
     &gt;&gt;&gt; d = _ &gt;&gt; d
@@ -756,12 +777,12 @@ class frozenhdict(UserDict, dict[str, VT]):
         x: 3,
         y: 5,
         z: λ(v x),
-        _id: -a24f2g4z-c-tPEss6G8WEd7h8zMopCCsCdQowjL,
+        _id: 0qFPOnULZigyiXU9Jv.1D.XSTIYHZ24UCT00DMHF,
         _ids: {
             v: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf,
             x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
             y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
-            z: .beBfajsUjKto9qdBCKsLmBgsaNPpJiyz24P9.qg
+            z: 2-wfv1b9RyFHB2kdba3EBCy6Do5L-mMPJjT-nfPa
         }
     }
     &gt;&gt;&gt; d = {&#34;a&#34;: 5} &gt;&gt; d
@@ -772,13 +793,13 @@ class frozenhdict(UserDict, dict[str, VT]):
         x: 3,
         y: 5,
         z: λ(v x),
-        _id: ELQZugqdug6eCOLZSPaimnGqgmhRjJoDLD8cOlYR,
+        _id: jZrJ2CiVUA9OqW.G7dwb3KoaTWGMUmSUVUXn0CkM,
         _ids: {
             a: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
             v: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf,
             x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
             y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
-            z: .beBfajsUjKto9qdBCKsLmBgsaNPpJiyz24P9.qg
+            z: 2-wfv1b9RyFHB2kdba3EBCy6Do5L-mMPJjT-nfPa
         }
     }
     &gt;&gt;&gt; from hdict.content.entry import AbsEntry, Unevaluated
@@ -787,6 +808,7 @@ class frozenhdict(UserDict, dict[str, VT]):
 
     _evaluated = None
     _asdict, _asdicts, _asdicts_noid = None, None, None
+    _hoshes = None
 
     # noinspection PyMissingConstructor
     def __init__(self, /, _dictionary=None, _previous=None, **kwargs):
@@ -797,7 +819,7 @@ class frozenhdict(UserDict, dict[str, VT]):
         if _previous is None:
             _previous = {}
 
-        # TODO: check if _dictionary keys is &#39;str&#39;; regex to check if k is an identifier;
+        # todo: : check if _dictionary keys is &#39;str&#39;; regex to check if k is an identifier;
         data = _dictionary or {}
         # REMINDER: Inside data, the only &#39;dict&#39; entries are &#34;_id&#34; and &#34;_ids&#34;, the rest are AbsEntry objects.
         self.data: dict[str, AbsEntry | str | dict[str, str]]
@@ -805,6 +827,12 @@ class frozenhdict(UserDict, dict[str, VT]):
         self.hosh, self.ids = handle_identity(self.data)
         self.id = self.hosh.id
         self.raw = self.data
+
+    @property
+    def hoshes(self):
+        if self._hoshes is None:
+            self._hoshes = {k: v.hosh for k, v in self.data.items()}
+        return self._hoshes
 
     def __rmul__(self, left):
         from hdict import frozenhdict
@@ -871,7 +899,6 @@ class frozenhdict(UserDict, dict[str, VT]):
                 return Expr(self, other).solve()
             case _:  # pragma: no cover
                 return NotImplemented
-
         return frozenhdict(dct, _previous=self.data)
 
     def __getitem__(self, item):  # pragma: no cover
@@ -1030,7 +1057,7 @@ class frozenhdict(UserDict, dict[str, VT]):
         dicts, hoshes = self.asdicts_hoshes_noneval
         txt = json.dumps(dicts, indent=4, ensure_ascii=False, cls=CustomJSONEncoder)
 
-        # Put colors after json, to avoid escaping ansi codes.  TODO: check how HTML behaves here
+        # Put colors after json, to avoid escaping ansi codes.  todo: check how HTML behaves here
         for h in hoshes:
             txt = txt.replace(f&#39;&#34;{h.id}&#34;&#39;, repr(h)) if colored else txt.replace(f&#39;&#34;{h.id}&#34;&#39;, h.id)
 
@@ -1094,12 +1121,18 @@ class frozenhdict(UserDict, dict[str, VT]):
         for field, fid in self.ids.items():
             value = self[field]
             if field.endswith(&#34;_&#34;):
-                # TODO check existence of the counterpart
+                raise Exception(f&#34;Not implemented for mirror fields&#34;)
+                # todo:  confirm existence of the counterpart
                 data[kindid(fid)] = str(type(value))
             elif isinstance(value, frozenhdict):
                 value.save(storage)
             else:
                 data[fid] = Stored(value)
+        # todo:  check if frozenhdict is being stored by mistake
+        # todo:  attribute/method as subfield:
+        #       apply(f, _.df.x)            SubField(name=&#34;df&#34;, attribute=&#34;x&#34;)
+        #       apply(_.df.drop, &#34;col1&#34;)    SubField(name=&#34;df&#34;, attribute=&#34;drop&#34;)
+        #
         storage.update(data)
 
     @staticmethod
@@ -1137,6 +1170,9 @@ class frozenhdict(UserDict, dict[str, VT]):
             mirrored = set()
             for field, fid in ids.items():
                 if field.endswith(&#34;_&#34;):
+                    # TODO:  2023-06-23
+                    #  -
+                    raise Exception(f&#34;Not implemented for mirror fields&#34;)
                     mirrored.add(field[:-1])
                     continue
                 if lazy:
@@ -1167,13 +1203,13 @@ class frozenhdict(UserDict, dict[str, VT]):
         return DataFrame(data, index=index)
 
     @staticmethod
-    def fromfile(name, fields=None, format=&#34;df&#34;, named=None):
+    def fromfile(name, fields=None, format=&#34;df&#34;, named=None, hide_types=True):
         r&#34;&#34;&#34;
         Input format is defined by file extension: .arff, .csv
         &#34;&#34;&#34;
         from hdict.data.aux_frozendict import handle_format
 
-        df, name = file2df(name)
+        df, name = file2df(name, hide_types)
         return handle_format(format, fields, df, named and name)
 
     @staticmethod
@@ -1234,7 +1270,13 @@ class frozenhdict(UserDict, dict[str, VT]):
             yield k
 
     def __hash__(self):
-        return hash(self.hosh)</code></pre>
+        return hash(self.hosh)
+
+    # def __reduce__(self):
+    # dic = self.data.copy()
+    # del dic[&#34;_id&#34;]
+    # del dic[&#34;_ids&#34;]
+    # return self.__class__, (dic,)</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -1289,6 +1331,9 @@ def fetch(id: str, storage: dict, lazy=True, ishdict=False) -&gt; Union[&#34;fro
         mirrored = set()
         for field, fid in ids.items():
             if field.endswith(&#34;_&#34;):
+                # TODO:  2023-06-23
+                #  -
+                raise Exception(f&#34;Not implemented for mirror fields&#34;)
                 mirrored.add(field[:-1])
                 continue
             if lazy:
@@ -1356,7 +1401,7 @@ def fromdict(dictionary, ids):
 </details>
 </dd>
 <dt id="hdict.data.frozenhdict.frozenhdict.fromfile"><code class="name flex">
-<span>def <span class="ident">fromfile</span></span>(<span>name, fields=None, format='df', named=None)</span>
+<span>def <span class="ident">fromfile</span></span>(<span>name, fields=None, format='df', named=None, hide_types=True)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Input format is defined by file extension: .arff, .csv</p></div>
@@ -1365,13 +1410,13 @@ def fromdict(dictionary, ids):
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@staticmethod
-def fromfile(name, fields=None, format=&#34;df&#34;, named=None):
+def fromfile(name, fields=None, format=&#34;df&#34;, named=None, hide_types=True):
     r&#34;&#34;&#34;
     Input format is defined by file extension: .arff, .csv
     &#34;&#34;&#34;
     from hdict.data.aux_frozendict import handle_format
 
-    df, name = file2df(name)
+    df, name = file2df(name, hide_types)
     return handle_format(format, fields, df, named and name)</code></pre>
 </details>
 </dd>
@@ -1631,6 +1676,20 @@ def evaluated(self):
     return self</code></pre>
 </details>
 </dd>
+<dt id="hdict.data.frozenhdict.frozenhdict.hoshes"><code class="name">var <span class="ident">hoshes</span></code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def hoshes(self):
+    if self._hoshes is None:
+        self._hoshes = {k: v.hosh for k, v in self.data.items()}
+    return self._hoshes</code></pre>
+</details>
+</dd>
 <dt id="hdict.data.frozenhdict.frozenhdict.unfrozen"><code class="name">var <span class="ident">unfrozen</span></code></dt>
 <dd>
 <div class="desc"></div>
@@ -1662,7 +1721,7 @@ def unfrozen(self):
     dicts, hoshes = self.asdicts_hoshes_noneval
     txt = json.dumps(dicts, indent=4, ensure_ascii=False, cls=CustomJSONEncoder)
 
-    # Put colors after json, to avoid escaping ansi codes.  TODO: check how HTML behaves here
+    # Put colors after json, to avoid escaping ansi codes.  todo: check how HTML behaves here
     for h in hoshes:
         txt = txt.replace(f&#39;&#34;{h.id}&#34;&#39;, repr(h)) if colored else txt.replace(f&#39;&#34;{h.id}&#34;&#39;, h.id)
 
@@ -1765,12 +1824,18 @@ def unfrozen(self):
     for field, fid in self.ids.items():
         value = self[field]
         if field.endswith(&#34;_&#34;):
-            # TODO check existence of the counterpart
+            raise Exception(f&#34;Not implemented for mirror fields&#34;)
+            # todo:  confirm existence of the counterpart
             data[kindid(fid)] = str(type(value))
         elif isinstance(value, frozenhdict):
             value.save(storage)
         else:
             data[fid] = Stored(value)
+    # todo:  check if frozenhdict is being stored by mistake
+    # todo:  attribute/method as subfield:
+    #       apply(f, _.df.x)            SubField(name=&#34;df&#34;, attribute=&#34;x&#34;)
+    #       apply(_.df.drop, &#34;col1&#34;)    SubField(name=&#34;df&#34;, attribute=&#34;drop&#34;)
+    #
     storage.update(data)</code></pre>
 </details>
 </dd>
@@ -1837,6 +1902,7 @@ def unfrozen(self):
 <li><code><a title="hdict.data.frozenhdict.frozenhdict.fromdict" href="#hdict.data.frozenhdict.frozenhdict.fromdict">fromdict</a></code></li>
 <li><code><a title="hdict.data.frozenhdict.frozenhdict.fromfile" href="#hdict.data.frozenhdict.frozenhdict.fromfile">fromfile</a></code></li>
 <li><code><a title="hdict.data.frozenhdict.frozenhdict.fromtext" href="#hdict.data.frozenhdict.frozenhdict.fromtext">fromtext</a></code></li>
+<li><code><a title="hdict.data.frozenhdict.frozenhdict.hoshes" href="#hdict.data.frozenhdict.frozenhdict.hoshes">hoshes</a></code></li>
 <li><code><a title="hdict.data.frozenhdict.frozenhdict.items" href="#hdict.data.frozenhdict.frozenhdict.items">items</a></code></li>
 <li><code><a title="hdict.data.frozenhdict.frozenhdict.keys" href="#hdict.data.frozenhdict.frozenhdict.keys">keys</a></code></li>
 <li><code><a title="hdict.data.frozenhdict.frozenhdict.load" href="#hdict.data.frozenhdict.frozenhdict.load">load</a></code></li>

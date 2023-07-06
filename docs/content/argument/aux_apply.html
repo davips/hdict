@@ -43,7 +43,7 @@ class IndexedDict(IndexedOrderedDict):
         return repr(dict(self.items()))
 
 
-class Arg:
+class Arg(str):
     def __init__(self, position: int):
         self.position = position
 
@@ -51,10 +51,13 @@ class Arg:
         return hash(self.position)
 
     def __lt__(self, other):
-        return f&#34;~{self.position}&#34; &lt; other
+        return f&#34;~{self.position}&#34; &lt; str(other)
+
+    def __ge__(self, other):
+        return f&#34;~{self.position}&#34; &gt;= str(other)
 
     def __repr__(self):
-        return f&#34;_{self.position}&#34;
+        return f&#34;arg_{self.position}&#34;
 
 
 def handle_args(signature, applied_args, applied_kwargs):
@@ -101,17 +104,17 @@ def handle_args(signature, applied_args, applied_kwargs):
         else:
             if i &gt;= len(params):
                 if not hasargs:  # pragma: no cover
-                    raise Exception(&#34;Too many arguments to apply. No &#39;*contentarg&#39; detected for &#39;f&#39;.&#34;)
+                    raise Exception(&#34;Too many arguments to apply. No &#39;*arg&#39; detected for &#39;f&#39;.&#34;)
                 name = Arg(i)  # REMINDER: this is just a unique hash for the nameless argument
             else:
-                name = params[i]
+                name = Arg(i) if hasargs and i &gt;= len(fargs) else params[i]
                 if name in fkwargs:
                     del fkwargs[name]
             fargs[name] = wrap(applied_arg)
 
     for applied_kwarg, v in applied_kwargs.items():
         if applied_kwarg in used:  # pragma: no cover
-            raise Exception(f&#34;Parameter &#39;{applied_kwarg}&#39; cannot appear in both &#39;contentarg&#39; and &#39;kwargs&#39; of &#39;apply()&#39;.&#34;)
+            raise Exception(f&#34;Parameter &#39;{applied_kwarg}&#39; cannot appear in both &#39;arg&#39; and &#39;kwargs&#39; of &#39;apply()&#39;.&#34;)
         if applied_kwarg in fargs:
             fargs[applied_kwarg] = wrap(v)
         elif applied_kwarg in fkwargs or haskwargs:
@@ -182,17 +185,17 @@ def handle_args(signature, applied_args, applied_kwargs):
         else:
             if i &gt;= len(params):
                 if not hasargs:  # pragma: no cover
-                    raise Exception(&#34;Too many arguments to apply. No &#39;*contentarg&#39; detected for &#39;f&#39;.&#34;)
+                    raise Exception(&#34;Too many arguments to apply. No &#39;*arg&#39; detected for &#39;f&#39;.&#34;)
                 name = Arg(i)  # REMINDER: this is just a unique hash for the nameless argument
             else:
-                name = params[i]
+                name = Arg(i) if hasargs and i &gt;= len(fargs) else params[i]
                 if name in fkwargs:
                     del fkwargs[name]
             fargs[name] = wrap(applied_arg)
 
     for applied_kwarg, v in applied_kwargs.items():
         if applied_kwarg in used:  # pragma: no cover
-            raise Exception(f&#34;Parameter &#39;{applied_kwarg}&#39; cannot appear in both &#39;contentarg&#39; and &#39;kwargs&#39; of &#39;apply()&#39;.&#34;)
+            raise Exception(f&#34;Parameter &#39;{applied_kwarg}&#39; cannot appear in both &#39;arg&#39; and &#39;kwargs&#39; of &#39;apply()&#39;.&#34;)
         if applied_kwarg in fargs:
             fargs[applied_kwarg] = wrap(v)
         elif applied_kwarg in fkwargs or haskwargs:
@@ -213,12 +216,20 @@ def handle_args(signature, applied_args, applied_kwargs):
 <span>(</span><span>position: int)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>str(object='') -&gt; str
+str(bytes_or_buffer[, encoding[, errors]]) -&gt; str</p>
+<p>Create a new string object from the given object. If encoding or
+errors is specified, then the object must expose a data buffer
+that will be decoded using the given encoding and error handler.
+Otherwise, returns the result of object.<strong>str</strong>() (if defined)
+or repr(object).
+encoding defaults to sys.getdefaultencoding().
+errors defaults to 'strict'.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class Arg:
+<pre><code class="python">class Arg(str):
     def __init__(self, position: int):
         self.position = position
 
@@ -226,11 +237,18 @@ def handle_args(signature, applied_args, applied_kwargs):
         return hash(self.position)
 
     def __lt__(self, other):
-        return f&#34;~{self.position}&#34; &lt; other
+        return f&#34;~{self.position}&#34; &lt; str(other)
+
+    def __ge__(self, other):
+        return f&#34;~{self.position}&#34; &gt;= str(other)
 
     def __repr__(self):
-        return f&#34;_{self.position}&#34;</code></pre>
+        return f&#34;arg_{self.position}&#34;</code></pre>
 </details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>builtins.str</li>
+</ul>
 </dd>
 <dt id="hdict.content.argument.aux_apply.IndexedDict"><code class="flex name class">
 <span>class <span class="ident">IndexedDict</span></span>
