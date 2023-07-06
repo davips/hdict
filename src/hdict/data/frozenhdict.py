@@ -213,7 +213,6 @@ class frozenhdict(UserDict, dict[str, VT]):
                 return Expr(self, other).solve()
             case _:  # pragma: no cover
                 return NotImplemented
-
         return frozenhdict(dct, _previous=self.data)
 
     def __getitem__(self, item):  # pragma: no cover
@@ -592,4 +591,3 @@ class frozenhdict(UserDict, dict[str, VT]):
         #del dic["_id"]
         #del dic["_ids"]
         #return self.__class__, (dic,)
-

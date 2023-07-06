@@ -58,7 +58,7 @@ class sample(AbsMetaArgument):
             rnd = Random(rnd)
         if not isinstance(rnd, Random):  # pragma: no cover
             raise Exception(f"Sampling needs an integer seed or a Random object.")
-        idx = rnd.randint(0, self.values.i - 1)
+        idx = rnd.randint(0, self.values.n - 1)
         return value(self.values[idx])
 
     def __repr__(self):

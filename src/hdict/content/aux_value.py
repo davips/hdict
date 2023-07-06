@@ -51,11 +51,11 @@ def v2hosh(value: object) -> Hosh:
     else:
         try:
             if callable(value):
-                value = f2hosh(value)
+                return f2hosh(value)
             # REMINDER: pickle is the fastest serialization
             return Hosh(dumps(value, protocol=5))
         except TypeError as e:  # pragma: no cover
-            raise Exception(f"Cannot pickle. Pickling is needed to hosh idict values ({value}): {e}")
+            raise Exception(f"Cannot pickle. Pickling is needed to hosh hdict values ({value}): {e}")
 
 
 def f2hosh(function: callable):

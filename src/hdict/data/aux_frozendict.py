@@ -82,8 +82,8 @@ def handle_item(key, item, previous):
         return handle_multioutput(key, res, previous)
     elif not isinstance(key, str):  # pragma: no cover
         raise Exception(f"Invalid type for input field specification: {type(key).__name__}")
-    elif key.startswith("_"):  # pragma: no cover
-        raise Exception(f"Field names cannot start with '_': {key}")
+    # elif key.startswith("_"):  # pragma: no cover     # reminder: _* allowed here due to parameter name in getattr(__o)
+    #     raise Exception(f"Field names cannot start with '_': {key}")
 
     return res
 

@@ -461,14 +461,14 @@ test = ["objgraph", "psutil"]
 
 [[package]]
 name = "hosh"
-version = "2.230416.1"
+version = "3.230705.2"
 description = "Predictable Operable HaSH-based identifiers"
 category = "main"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "hosh-2.230416.1-py3-none-any.whl", hash = "sha256:085c0f14c1773eff8fa7204f388917403ed787d8544f96d7eecab9be27eea378"},
-    {file = "hosh-2.230416.1.tar.gz", hash = "sha256:0c05419358f2ee7cbd1ce6aa93c96c8e26a7b81aec04b4b9e40efa390856582b"},
+    {file = "hosh-3.230705.2-py3-none-any.whl", hash = "sha256:9bc7d4919190e4b07addadd0e3faf83842e2b611f4189d8562a49a833ef4957a"},
+    {file = "hosh-3.230705.2.tar.gz", hash = "sha256:bebdd9a2d0e5885a3f46a17f3027fbe9e9b88ed44c44b4ae4608e3f3dd228c8d"},
 ]
 
 [package.dependencies]
@@ -1791,4 +1791,4 @@ full = ["pandas", "shelchemy", "safeserializer", "lz4", "scikit-learn", "liac-ar
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "0bbd698077a985b46d88873145bb02305605d3842bfe4568b46c7596465fd834"
+content-hash = "fd2b2022076820578e9099504a6a6c54ff55dd7bd8c8a607d96e2d53a0705142"
