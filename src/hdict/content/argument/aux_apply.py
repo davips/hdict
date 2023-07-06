@@ -15,7 +15,7 @@ class IndexedDict(IndexedOrderedDict):
         return repr(dict(self.items()))
 
 
-class Arg:
+class Arg(str):
     def __init__(self, position: int):
         self.position = position
 
@@ -23,7 +23,10 @@ class Arg:
         return hash(self.position)
 
     def __lt__(self, other):
-        return f"~{self.position}" < other
+        return f"~{self.position}" < str(other)
+
+    def __ge__(self, other):
+        return f"~{self.position}" >= str(other)
 
     def __repr__(self):
         return f"arg_{self.position}"

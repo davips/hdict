@@ -586,3 +586,10 @@ class frozenhdict(UserDict, dict[str, VT]):
 
     def __hash__(self):
         return hash(self.hosh)
+
+    #def __reduce__(self):
+        #dic = self.data.copy()
+        #del dic["_id"]
+        #del dic["_ids"]
+        #return self.__class__, (dic,)
+

@@ -47,7 +47,7 @@ class sample(AbsMetaArgument):
         self.rnd = rnd
         # todo: : accept list of non numeric types (categoric)?
         prog = list2progression(values, maxdigits=maxdigits)
-        if prog.i.is_infinite():  # pragma: no cover
+        if prog.n.is_infinite():  # pragma: no cover
             raise Exception(f"Cannot sample from an infinite list: {prog}")
         self.values = prog
 

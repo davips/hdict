@@ -98,7 +98,7 @@ class apply(AbsBaseArgument):
     {'a': field(a), 'b': field(b), 'c': default(1), 'd': 5, 'e': default(13)}
     >>> f = lambda a,b, *arg, c=1,d=2,e=13, **kwargs: 0
     >>> apply(f,3,4,5,6,7,8).requirements
-    {'a': 3, 'b': 4, 'c': 5, 'd': 6, 'e': 7, _5: 8}
+    {'a': 3, 'b': 4, arg_2: 5, arg_3: 6, arg_4: 7, arg_5: 8, 'c': default(1), 'd': default(2), 'e': default(13)}
     >>> apply(f,x=3,e=4,d=5,c=6,b=7,a=8).requirements
     {'a': 8, 'b': 7, 'c': 6, 'd': 5, 'e': 4, 'x': 3}
     >>> apply(f,3,c=77,x=5).requirements
@@ -113,11 +113,11 @@ class apply(AbsBaseArgument):
         x: 3,
         y: ·3,
         r: λ(·x),
-        _id: drMRkK24R01dlyw0ye-Rx8Gzac7zxmZUS.toA1gi,
+        _id: bh0bgTZI.2f-WteZFpIrsMxJvZYUBydOfF3wFLV.,
         _ids: {
             x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
             y: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
-            r: .PtYLSxMYqVXNTh-mnqsQygl4goFXoRrXCtQrTYP
+            r: NoAit6.-dyFNiCZnoRAhY5zbJ0hc6u5lkQzYwBCx
         }
     }
     >>> b = a.x.sample()
@@ -141,9 +141,9 @@ class apply(AbsBaseArgument):
                 a: k3PWYRxIEc0lEvD1f6rbnk.36RAD5AyfROy1aT29
             }
         },
-        _id: Wjqo4.Qw7KBK6NbppnlKT2W3d5KScpptjoCcNsjj,
+        _id: V8nyMrJbhGschQAaW3ZXD6uxvVRIluFmIFIkSaZ0,
         _ids: {
-            x: .PtYLSxMYqVXNTh-mnqsQygl4goFXoRrXCtQrTYP,
+            x: NoAit6.-dyFNiCZnoRAhY5zbJ0hc6u5lkQzYwBCx,
             h: GfMhwM5bo6OzIpngAf8Ruro6.QgOv2kb0nbj0mgd
         }
     }
@@ -159,9 +159,9 @@ class apply(AbsBaseArgument):
                 a: k3PWYRxIEc0lEvD1f6rbnk.36RAD5AyfROy1aT29
             }
         },
-        _id: 5fUCSwb7D633jeGv.xMb006XT8Ulr18os.KxyeTH,
+        _id: okwLxwrcv9.FCsOTgCrB0ZG0yBArMbEaeqXNIGa7,
         _ids: {
-            x: -89UidPh6BgYdYYTx4nxewuDpdilgWzm4O6adFwc,
+            x: H8Tgrs3lS78y7Nqm0Qaaks8JLygevb49SEOpn5QD,
             h: GfMhwM5bo6OzIpngAf8Ruro6.QgOv2kb0nbj0mgd
         }
     }
@@ -177,9 +177,9 @@ class apply(AbsBaseArgument):
                 a: k3PWYRxIEc0lEvD1f6rbnk.36RAD5AyfROy1aT29
             }
         },
-        _id: pEhqOs9sPjot-eiGgJbKQ5j7aTL1MySiBaoTj0r4,
+        _id: ZAozaV7y5Z1cjwzR9XoiBggegMtt9VC-Leafzaod,
         _ids: {
-            x: mmdYysfo0-rbXPLWBaqHKdxGkR9xwyihdlfv-q4B,
+            x: Hqq4pKtqmIAejPzyjEf6BixYtzWYVU2Znp1TdB1K,
             h: GfMhwM5bo6OzIpngAf8Ruro6.QgOv2kb0nbj0mgd
         }
     }
@@ -196,9 +196,9 @@ class apply(AbsBaseArgument):
         },
         b: 2,
         c: ·2,
-        _id: WoI36oD8iHnd81y0q-VTpbFoN2rhdAbRGOk1yBK5,
+        _id: 9bTAxQR8bR-XsqVTjc7sLgCvTXoJCWXwRS6pNLHe,
         _ids: {
-            x: mmdYysfo0-rbXPLWBaqHKdxGkR9xwyihdlfv-q4B,
+            x: Hqq4pKtqmIAejPzyjEf6BixYtzWYVU2Znp1TdB1K,
             h: GfMhwM5bo6OzIpngAf8Ruro6.QgOv2kb0nbj0mgd,
             b: k3PWYRxIEc0lEvD1f6rbnk.36RAD5AyfROy1aT29,
             c: k3PWYRxIEc0lEvD1f6rbnk.36RAD5AyfROy1aT29
@@ -228,9 +228,9 @@ class apply(AbsBaseArgument):
         b2: "(2, 3)→1",
         a3: ·(2, 3)→0,
         b3: ·(2, 3)→1,
-        _id: jY2TGGf9ZSvPk7k3Mu4bgeJJXZ45Gwwye.wPVBgX,
+        _id: gf.QcPTyypNvMcSEMveLdLVC2T218MgepHPb9Md4,
         _ids: {
-            x: mmdYysfo0-rbXPLWBaqHKdxGkR9xwyihdlfv-q4B,
+            x: Hqq4pKtqmIAejPzyjEf6BixYtzWYVU2Znp1TdB1K,
             h: GfMhwM5bo6OzIpngAf8Ruro6.QgOv2kb0nbj0mgd,
             b: -a.WUGANQp6aVgbRCtUljlgs12HNtJ-dJOAgSZWk,
             c: k3PWYRxIEc0lEvD1f6rbnk.36RAD5AyfROy1aT29,

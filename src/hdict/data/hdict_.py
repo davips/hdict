@@ -120,7 +120,6 @@ class hdict_(dict[str, VT]):
                 x: J746LLRT3gd5glC2ZiaHBgHegmewpiOMC4Sq4bp9
             }
         }
-        }
         >>> d.evaluate()
         >>> d.show(colored=False)
         {
@@ -133,9 +132,9 @@ class hdict_(dict[str, VT]):
         >>> d.evaluated.show(colored=False)
         {
             x: 2,
-            _id: GJC7Qc4lmfpP32nUEG6UAe2fL35KL1wDnubPFgJS,
+            _id: YwRX7paX43aafhz-Jndo9HYnvyMSOtPEbRDjgQ3r,
             _ids: {
-                x: uOjLdXgq4zFpx0Hw7Ofsj1PiXt64oSuLOFpWtD2B
+                x: J746LLRT3gd5glC2ZiaHBgHegmewpiOMC4Sq4bp9
             }
         }
         """
@@ -312,12 +311,12 @@ class hdict_(dict[str, VT]):
                 }
             },
             w: λ(x y),
-            _id: s3aPQRspwLR81It8zlXsD3Da1Gg76DGSDe841d0b,
+            _id: Jf8QtLAszezNdiqblJCXMuoXocCWZ90QwrxY90Zu,
             _ids: {
                 x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
                 y: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf,
                 z: izn67XbX0tQNF6E5qkwniN2jxZg5MT6f7z5AJzPM,
-                w: vo3qMHk3Ef-O065cO-sb4MLHq69x6bKSU694sREJ
+                w: NjWbIhEnN3s8E-w61pptxBuiYmqQ2D3QNX2ZAEB1
             }
         }
         >>> d.save(storage)
@@ -374,28 +373,14 @@ class hdict_(dict[str, VT]):
         >>> arff = "@RELATION mini\n@ATTRIBUTE attr1	REAL\n@ATTRIBUTE attr2 	REAL\n@ATTRIBUTE class 	{0,1}\n@DATA\n5.1,3.5,0\n3.1,4.5,1"
         >>> with TempDirectory() as tmp:  # doctest:+ELLIPSIS
         ...    tmp.write("mini.arff", arff.encode())
-        ...    d = hdict.fromfile(tmp.path + "/mini.arff", fields=["df_"])
+        ...    d = hdict.fromfile(tmp.path + "/mini.arff", fields=["df"])
         '/tmp/.../mini.arff'
         >>> d.show(colored=False)
         {
-            df_: "‹{'attr1@REAL': {0: 5.1, 1: 3.1}, 'attr2@REAL': {0: 3.5, 1: 4.5}, 'class@{0,1}': {0: '0', 1: '1'}}›",
-            df: {
-                index: "‹{0: 0, 1: 1}›",
-                "attr1@REAL": "‹{0: 5.1, 1: 3.1}›",
-                "attr2@REAL": "‹{0: 3.5, 1: 4.5}›",
-                "class@{0,1}": "‹{0: '0', 1: '1'}›",
-                _id: cHrG-npBDd2VEB8Foeg.7jQNZtdkTM1uhouHgW.J,
-                _ids: {
-                    index: DQa5yWRkGo-9FLqmaST8pbElYdUEgqF8xPvip6-3,
-                    "attr1@REAL": wsy0JDrZO04O0RVwr64jpawX62WmCKtddYdvZlwm,
-                    "attr2@REAL": LvEgUazJoB1-.A3kABbskN-.iauWmWLTTo1iC51n,
-                    "class@{0,1}": b.kJy3SrU-JQ1oeh1d.uWLO7Pqh-eW6zwK78nTY4
-                }
-            },
-            _id: 1CkO9AO6rUhrnowQn3rkpXtvPf4xW9VHgJyg5vit,
+            df: "‹{'attr1': {0: 5.1, 1: 3.1}, 'attr2': {0: 3.5, 1: 4.5}, 'class': {0: '0', 1: '1'}}›",
+            _id: lV4eqST0pTJL.B3GB4Njtv.P1P2aS5EcuQrjnrdX,
             _ids: {
-                df: cHrG-npBDd2VEB8Foeg.7jQNZtdkTM1uhouHgW.J,
-                df_: J.WgHuohu1MTkdtZNQj7.geoF8BEV2dDBpn-GrHc
+                df: rq05QYjRDa4F3kJfE4P8USt4ngF.3skHvVOU5aUt
             }
         }
         >>> storage = {}
@@ -404,99 +389,85 @@ class hdict_(dict[str, VT]):
         >>> d.show(colored=False)
         {
             df: ↑↓ cached at `dict`·,
-            df_: λ(df=↑↓ cached at `dict`·),
-            _id: CWkreYbSmrL0DPN9OtoU4Za1dg8.Jjl.fXD6yblb,
+            _id: lV4eqST0pTJL.B3GB4Njtv.P1P2aS5EcuQrjnrdX,
             _ids: {
-                df: cHrG-npBDd2VEB8Foeg.7jQNZtdkTM1uhouHgW.J,
-                df_: cHrG-npBDd2VEB8Foeg.7jQNZtdkTM1uhouHgW.J
+                df: rq05QYjRDa4F3kJfE4P8USt4ngF.3skHvVOU5aUt
             }
         }
-        >>> d.df_
-           attr1@REAL  attr2@REAL class@{0,1}
-        0         5.1         3.5           0
-        1         3.1         4.5           1
-        >>> d.df.show(colored=False)
-        {
-            index: "‹{0: 0, 1: 1}›",
-            "attr1@REAL": "‹{0: 5.1, 1: 3.1}›",
-            "attr2@REAL": "‹{0: 3.5, 1: 4.5}›",
-            "class@{0,1}": "‹{0: '0', 1: '1'}›",
-            _id: cHrG-npBDd2VEB8Foeg.7jQNZtdkTM1uhouHgW.J,
-            _ids: {
-                index: DQa5yWRkGo-9FLqmaST8pbElYdUEgqF8xPvip6-3,
-                "attr1@REAL": wsy0JDrZO04O0RVwr64jpawX62WmCKtddYdvZlwm,
-                "attr2@REAL": LvEgUazJoB1-.A3kABbskN-.iauWmWLTTo1iC51n,
-                "class@{0,1}": b.kJy3SrU-JQ1oeh1d.uWLO7Pqh-eW6zwK78nTY4
-            }
-        }
-        >>> d = hdict.fetch(d.id, storage, lazy=False)
-        >>> d.show(colored=False)
-        {
-            df: {
-                index: "‹{0: 0, 1: 1}›",
-                "attr1@REAL": "‹{0: 5.1, 1: 3.1}›",
-                "attr2@REAL": "‹{0: 3.5, 1: 4.5}›",
-                "class@{0,1}": "‹{0: '0', 1: '1'}›",
-                _id: cHrG-npBDd2VEB8Foeg.7jQNZtdkTM1uhouHgW.J,
-                _ids: {
-                    index: DQa5yWRkGo-9FLqmaST8pbElYdUEgqF8xPvip6-3,
-                    "attr1@REAL": wsy0JDrZO04O0RVwr64jpawX62WmCKtddYdvZlwm,
-                    "attr2@REAL": LvEgUazJoB1-.A3kABbskN-.iauWmWLTTo1iC51n,
-                    "class@{0,1}": b.kJy3SrU-JQ1oeh1d.uWLO7Pqh-eW6zwK78nTY4
-                }
-            },
-            df_: λ({    i···),
-            _id: CWkreYbSmrL0DPN9OtoU4Za1dg8.Jjl.fXD6yblb,
-            _ids: {
-                df: cHrG-npBDd2VEB8Foeg.7jQNZtdkTM1uhouHgW.J,
-                df_: cHrG-npBDd2VEB8Foeg.7jQNZtdkTM1uhouHgW.J
-            }
-        }
-        >>> del d["df_"]
-        >>> d.show(colored=False)
-        {
-            df: {
-                index: "‹{0: 0, 1: 1}›",
-                "attr1@REAL": "‹{0: 5.1, 1: 3.1}›",
-                "attr2@REAL": "‹{0: 3.5, 1: 4.5}›",
-                "class@{0,1}": "‹{0: '0', 1: '1'}›",
-                _id: cHrG-npBDd2VEB8Foeg.7jQNZtdkTM1uhouHgW.J,
-                _ids: {
-                    index: DQa5yWRkGo-9FLqmaST8pbElYdUEgqF8xPvip6-3,
-                    "attr1@REAL": wsy0JDrZO04O0RVwr64jpawX62WmCKtddYdvZlwm,
-                    "attr2@REAL": LvEgUazJoB1-.A3kABbskN-.iauWmWLTTo1iC51n,
-                    "class@{0,1}": b.kJy3SrU-JQ1oeh1d.uWLO7Pqh-eW6zwK78nTY4
-                }
-            },
-            _id: CWkreYbSmrL0DPN9OtoU4Za1dg8.Jjl.fXD6yblb,
-            _ids: {
-                df: cHrG-npBDd2VEB8Foeg.7jQNZtdkTM1uhouHgW.J
-            }
-        }
-        >>> d.save(storage)
-        >>> d = hdict.fetch(d.id, storage, lazy=False)
-        >>> d.show(colored=False)
-        {
-            df: {
-                index: "‹{0: 0, 1: 1}›",
-                "attr1@REAL": "‹{0: 5.1, 1: 3.1}›",
-                "attr2@REAL": "‹{0: 3.5, 1: 4.5}›",
-                "class@{0,1}": "‹{0: '0', 1: '1'}›",
-                _id: cHrG-npBDd2VEB8Foeg.7jQNZtdkTM1uhouHgW.J,
-                _ids: {
-                    index: DQa5yWRkGo-9FLqmaST8pbElYdUEgqF8xPvip6-3,
-                    "attr1@REAL": wsy0JDrZO04O0RVwr64jpawX62WmCKtddYdvZlwm,
-                    "attr2@REAL": LvEgUazJoB1-.A3kABbskN-.iauWmWLTTo1iC51n,
-                    "class@{0,1}": b.kJy3SrU-JQ1oeh1d.uWLO7Pqh-eW6zwK78nTY4
-                }
-            },
-            _id: CWkreYbSmrL0DPN9OtoU4Za1dg8.Jjl.fXD6yblb,
-            _ids: {
-                df: cHrG-npBDd2VEB8Foeg.7jQNZtdkTM1uhouHgW.J
-            }
-        }
-        >>> str(d)
-        '{df: {index: "‹{0: 0, 1: 1}›", attr1@REAL: "‹{0: 5.1, 1: 3.1}›", attr2@REAL: "‹{0: 3.5, 1: 4.5}›", class@{0,1}: "‹{0: \'0\', 1: \'1\'}›"}}'
+        >>> d.df
+           attr1  attr2 class
+        0    5.1    3.5     0
+        1    3.1    4.5     1
+
+        # >>> #d.df.show(colored=False)
+        # >>> d = hdict.fetch(d.id, storage, lazy=False)
+        # >>> d.show(colored=False)
+        # {
+        #     df: {
+        #         index: "‹{0: 0, 1: 1}›",
+        #         "attr1@REAL": "‹{0: 5.1, 1: 3.1}›",
+        #         "attr2@REAL": "‹{0: 3.5, 1: 4.5}›",
+        #         "class@{0,1}": "‹{0: '0', 1: '1'}›",
+        #         _id: cHrG-npBDd2VEB8Foeg.7jQNZtdkTM1uhouHgW.J,
+        #         _ids: {
+        #             index: DQa5yWRkGo-9FLqmaST8pbElYdUEgqF8xPvip6-3,
+        #             "attr1@REAL": wsy0JDrZO04O0RVwr64jpawX62WmCKtddYdvZlwm,
+        #             "attr2@REAL": LvEgUazJoB1-.A3kABbskN-.iauWmWLTTo1iC51n,
+        #             "class@{0,1}": b.kJy3SrU-JQ1oeh1d.uWLO7Pqh-eW6zwK78nTY4
+        #         }
+        #     },
+        #     df_: λ({    i···),
+        #     _id: CWkreYbSmrL0DPN9OtoU4Za1dg8.Jjl.fXD6yblb,
+        #     _ids: {
+        #         df: cHrG-npBDd2VEB8Foeg.7jQNZtdkTM1uhouHgW.J,
+        #         df_: cHrG-npBDd2VEB8Foeg.7jQNZtdkTM1uhouHgW.J
+        #     }
+        # }
+        # >>> #del d["df_"]
+        # >>> d.show(colored=False)
+        # {
+        #     df: {
+        #         index: "‹{0: 0, 1: 1}›",
+        #         "attr1@REAL": "‹{0: 5.1, 1: 3.1}›",
+        #         "attr2@REAL": "‹{0: 3.5, 1: 4.5}›",
+        #         "class@{0,1}": "‹{0: '0', 1: '1'}›",
+        #         _id: cHrG-npBDd2VEB8Foeg.7jQNZtdkTM1uhouHgW.J,
+        #         _ids: {
+        #             index: DQa5yWRkGo-9FLqmaST8pbElYdUEgqF8xPvip6-3,
+        #             "attr1@REAL": wsy0JDrZO04O0RVwr64jpawX62WmCKtddYdvZlwm,
+        #             "attr2@REAL": LvEgUazJoB1-.A3kABbskN-.iauWmWLTTo1iC51n,
+        #             "class@{0,1}": b.kJy3SrU-JQ1oeh1d.uWLO7Pqh-eW6zwK78nTY4
+        #         }
+        #     },
+        #     _id: CWkreYbSmrL0DPN9OtoU4Za1dg8.Jjl.fXD6yblb,
+        #     _ids: {
+        #         df: cHrG-npBDd2VEB8Foeg.7jQNZtdkTM1uhouHgW.J
+        #     }
+        # }
+        # >>> d.save(storage)
+        # >>> d = hdict.fetch(d.id, storage, lazy=False)
+        # >>> d.show(colored=False)
+        # {
+        #     df: {
+        #         index: "‹{0: 0, 1: 1}›",
+        #         "attr1@REAL": "‹{0: 5.1, 1: 3.1}›",
+        #         "attr2@REAL": "‹{0: 3.5, 1: 4.5}›",
+        #         "class@{0,1}": "‹{0: '0', 1: '1'}›",
+        #         _id: cHrG-npBDd2VEB8Foeg.7jQNZtdkTM1uhouHgW.J,
+        #         _ids: {
+        #             index: DQa5yWRkGo-9FLqmaST8pbElYdUEgqF8xPvip6-3,
+        #             "attr1@REAL": wsy0JDrZO04O0RVwr64jpawX62WmCKtddYdvZlwm,
+        #             "attr2@REAL": LvEgUazJoB1-.A3kABbskN-.iauWmWLTTo1iC51n,
+        #             "class@{0,1}": b.kJy3SrU-JQ1oeh1d.uWLO7Pqh-eW6zwK78nTY4
+        #         }
+        #     },
+        #     _id: CWkreYbSmrL0DPN9OtoU4Za1dg8.Jjl.fXD6yblb,
+        #     _ids: {
+        #         df: cHrG-npBDd2VEB8Foeg.7jQNZtdkTM1uhouHgW.J
+        #     }
+        # }
+        # >>> str(d)
+        # '{df: {index: "‹{0: 0, 1: 1}›", attr1@REAL: "‹{0: 5.1, 1: 3.1}›", attr2@REAL: "‹{0: 3.5, 1: 4.5}›", class@{0,1}: "‹{0: \'0\', 1: \'1\'}›"}}'
         """
         return frozenhdict.fetch(id, storage, lazy, ishdict).unfrozen
 
@@ -545,10 +516,10 @@ class hdict_(dict[str, VT]):
         '/tmp/.../mini.arff'
         >>> d.show(colored=False)
         {
-            df: "‹{'attr1@REAL': {0: 5.1, 1: 3.1}, 'attr2@REAL': {0: 3.5, 1: 4.5}, 'class@{0,1}': {0: '0', 1: '1'}}›",
-            _id: wnqmxW7DhwDdwtUZSku-M8bbSR0PHIw8Ak0pYI0G,
+            df: "‹{'attr1': {0: 5.1, 1: 3.1}, 'attr2': {0: 3.5, 1: 4.5}, 'class': {0: '0', 1: '1'}}›",
+            _id: lV4eqST0pTJL.B3GB4Njtv.P1P2aS5EcuQrjnrdX,
             _ids: {
-                df: J.WgHuohu1MTkdtZNQj7.geoF8BEV2dDBpn-GrHc
+                df: rq05QYjRDa4F3kJfE4P8USt4ngF.3skHvVOU5aUt
             }
         }
         >>> csv = "attr1,attr2,class\n5.1,3.5,0\n3.1,4.5,1"
@@ -559,9 +530,9 @@ class hdict_(dict[str, VT]):
         >>> d.show(colored=False)
         {
             df: "‹{'attr1': {0: 5.1, 1: 3.1}, 'attr2': {0: 3.5, 1: 4.5}, 'class': {0: 0, 1: 1}}›",
-            _id: qc0xETP2nDbj6P5MtTo7bIBrsog-vkwXq3heRlM3,
+            _id: X5OQYZSPdJyyE0sSuSRbkfqVuKyd1zppSAhb6EQd,
             _ids: {
-                df: umQM5hZ9ueOt5hTo4Vn7yvGcfkkjFNcqsw7Pz4rC
+                df: SOhTT4S1x3Tfct.v4Fi7QhjacZWya06UT18MQmvM
             }
         }
         """
@@ -578,9 +549,9 @@ class hdict_(dict[str, VT]):
         >>> d.show(colored=False)
         {
             df: "‹{'attr1@REAL': {0: 5.1, 1: 3.1}, 'attr2@REAL': {0: 3.5, 1: 4.5}, 'class@{0,1}': {0: '0', 1: '1'}}›",
-            _id: wnqmxW7DhwDdwtUZSku-M8bbSR0PHIw8Ak0pYI0G,
+            _id: CukZPsWIhD.itTmQB6-7svrjNtrRJjwm2lJwNp2x,
             _ids: {
-                df: J.WgHuohu1MTkdtZNQj7.geoF8BEV2dDBpn-GrHc
+                df: sZ.7F68Bw2uV6jehdOpmzOK7-mWGXFcR3q46w8J3
             }
         }
         >>> csv = "attr1,attr2,class\n5.1,3.5,0\n3.1,4.5,1"
@@ -588,9 +559,9 @@ class hdict_(dict[str, VT]):
         >>> d.show(colored=False)
         {
             df: "‹{'attr1': {0: 5.1, 1: 3.1}, 'attr2': {0: 3.5, 1: 4.5}, 'class': {0: 0, 1: 1}}›",
-            _id: qc0xETP2nDbj6P5MtTo7bIBrsog-vkwXq3heRlM3,
+            _id: X5OQYZSPdJyyE0sSuSRbkfqVuKyd1zppSAhb6EQd,
             _ids: {
-                df: umQM5hZ9ueOt5hTo4Vn7yvGcfkkjFNcqsw7Pz4rC
+                df: SOhTT4S1x3Tfct.v4Fi7QhjacZWya06UT18MQmvM
             }
         }
         """
@@ -614,3 +585,6 @@ class hdict_(dict[str, VT]):
     @property
     def hoshes(self):
         return self.frozen.hoshes
+
+    #def __reduce__(self):
+        #return self.frozen.__reduce__()
