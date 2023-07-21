@@ -266,6 +266,7 @@ class frozenhdict(UserDict, dict[str, VT]):
         return self
 
     def evaluate(self):
+        # todo: add flag to inhibit evaluation (i.e., fetching) of cached values; or other solution, e.g. Cache(write_onapply)
         _ = self.evaluated
 
     @property

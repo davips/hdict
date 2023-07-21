@@ -50,7 +50,10 @@ class Empty_(frozenhdict):
         return field(item)
 
     def __getitem__(self, item):
-        return sample(*item)
+        return field(item)
+
+    def __call__(self, *args, **kwargs):
+        return sample(*args)
 
     def __rshift__(self, other):
         res = super().__rshift__(other)
