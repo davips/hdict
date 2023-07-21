@@ -21,7 +21,7 @@ class AbsBaseArgument(AbsArgument):
     Normal function argument provided by the user: `value`*, `field`, `apply`; or from advanced use: `entry`
 
     Exceptionally, 'field' is a subclass that can also be piped through '>>'
-    *value also inherits AbsReadyEntry
+    *value also inherits AbsBaseArgument
     """
 
 

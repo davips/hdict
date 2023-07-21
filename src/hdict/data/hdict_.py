@@ -66,6 +66,30 @@ class hdict_(dict[str, VT]):
     }
     >>> str({"a": 2} * d)  # doctest:+ELLIPSIS
     '⦑{a: 2} » {x: 4, f: "<function <lambda> at 0x...>"}⦒'
+    >>> (d >> apply(lambda d: d.x, _).X).evaluated.show(colored=False)  # doctest:+ELLIPSIS
+    {
+        x: 4,
+        f: "<function <lambda> at 0x...>",
+        X: 4,
+        _id: KaIR9dqecR44MZVRrXLUzwqnIbCHhbOkQswgCuQl,
+        _ids: {
+            x: KeU-dCTjUgnSYGRNrrMMr4i.hg64Dkkfb3c14eh3,
+            f: p-nM7oHlOFr6iHSF9ZISWXc9zqi017c3zcvcV8Dr,
+            X: M411IcX.kF9pEdsWGIiS-XGn.R45qYTVQS0ewQs2
+        }
+    }
+    >>> (d >> apply(lambda _: _.x).X).evaluated.show(colored=False)  # doctest:+ELLIPSIS
+    {
+        x: 4,
+        f: "<function <lambda> at 0x...>",
+        X: 4,
+        _id: c1ZgriP45q8xEmDTkRcHjYe2v1C7RLyyZK4NgQ0L,
+        _ids: {
+            x: KeU-dCTjUgnSYGRNrrMMr4i.hg64Dkkfb3c14eh3,
+            f: p-nM7oHlOFr6iHSF9ZISWXc9zqi017c3zcvcV8Dr,
+            X: nVVYNVw8RyQ-7Kv0CxAUeLjRIzZwZwE7-8BKaaFr
+        }
+    }
     """
 
     # noinspection PyMissingConstructor
@@ -374,6 +398,7 @@ class hdict_(dict[str, VT]):
         >>> with TempDirectory() as tmp:  # doctest:+ELLIPSIS
         ...    tmp.write("mini.arff", arff.encode())
         ...    d = hdict.fromfile(tmp.path + "/mini.arff", fields=["df"])
+        ...    d2 = hdict.fromfile(tmp.path + "/mini.arff", fields=["df"], named=True)
         '/tmp/.../mini.arff'
         >>> d.show(colored=False)
         {
@@ -381,6 +406,16 @@ class hdict_(dict[str, VT]):
             _id: lV4eqST0pTJL.B3GB4Njtv.P1P2aS5EcuQrjnrdX,
             _ids: {
                 df: rq05QYjRDa4F3kJfE4P8USt4ngF.3skHvVOU5aUt
+            }
+        }
+        >>> d2.show(colored=False)
+        {
+            df: "‹{'attr1': {0: 5.1, 1: 3.1}, 'attr2': {0: 3.5, 1: 4.5}, 'class': {0: '0', 1: '1'}}›",
+            name: " mini",
+            _id: zd8NFU.IBqgF9a2uaPpZ4y3e1xm2ly25f.6btvgN,
+            _ids: {
+                df: rq05QYjRDa4F3kJfE4P8USt4ngF.3skHvVOU5aUt,
+                name: 5nzeWHgeVef.PD8CnIrPcjwGqaYoRCXK0iwH0cKm
             }
         }
         >>> storage = {}
@@ -481,7 +516,7 @@ class hdict_(dict[str, VT]):
         >>> fid = "1234567890123456789012345678901234567890"
         >>> did = "0000567890123456789012345678901234567890"
         >>> storage = {did: {"x": fid}, fid: Stored(5)}
-        >>> d = _.load(did, storage)
+        >>> d = (+_).load(did, storage)
         >>> d.show(colored=False)
         {
             x: ↑↓ cached at `dict`·,
@@ -584,6 +619,11 @@ class hdict_(dict[str, VT]):
 
     @property
     def hoshes(self):
+        """
+        >>> from hdict import frozenhdict
+        >>> [h.id for h in frozenhdict(x=3, y=2).hoshes.values()]
+        ['KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr', 'k3PWYRxIEc0lEvD1f6rbnk.36RAD5AyfROy1aT29']
+        """
         return self.frozen.hoshes
 
     # def __reduce__(self):

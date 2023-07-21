@@ -3,7 +3,7 @@ from __future__ import annotations
 from hdict.content.argument import AbsBaseArgument
 
 
-def handle_arg(key, val, data, discarded_defaults, out, torepr):
+def handle_arg(key, val, data, discarded_defaults, out, torepr, previous):
     """Return handled arg and value of pseudocircular entry"""
     from hdict.content.argument.default import default
     from hdict.content.value import value
@@ -12,8 +12,9 @@ def handle_arg(key, val, data, discarded_defaults, out, torepr):
     from hdict.data.aux_frozendict import MissingFieldException
 
     from hdict.content.argument.entry import entry
-    from hdict.content.entry.subvalue import SubValue
 
+    if key == "_":
+        return handle_item(str(key), previous, data, previous)
     match val:
         case default(value=v):
             if key in data:
@@ -28,7 +29,7 @@ def handle_arg(key, val, data, discarded_defaults, out, torepr):
         case field(name=name) if name in out:  # Override case of handle_item if pseudocircular reference.
             if name not in data:  # pragma: no cover
                 raise MissingFieldException(f"Missing pseudocircular field `{name}`")
-            arg = handle_item(str(key), data[name], data)  # key passed for no purpose here AFAIR
+            arg = handle_item(str(key), data[name], data, previous)  # key passed for no purpose here AFAIR
             torepr[key] = arg
             return arg
         case entry(name=name):
@@ -36,12 +37,12 @@ def handle_arg(key, val, data, discarded_defaults, out, torepr):
 
             if name not in data:  # pragma: no cover
                 raise MissingFieldException(f"Missing pseudocircular field `{name}`")
-            content = handle_item(str(key), data[name], data)
+            content = handle_item(str(key), data[name], data, previous)
             arg = Wrapper(content)
             torepr[f"·{name}"] = arg
             return arg
         case AbsBaseArgument():
-            arg = handle_item(str(key), val, data)
+            arg = handle_item(str(key), val, data, previous)
         case _:  # pragma: no cover
             raise Exception(f"Cannot handle argument of type `{type(val).__name__}`")
     torepr[key] = val

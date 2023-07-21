@@ -32,7 +32,7 @@ from typing import TypeVar
 
 from hosh import ø
 
-from hdict import hdict, value, frozenhdict
+from hdict import hdict, value, frozenhdict, Self
 from hdict.abs import AbsAny
 from hdict.content.argument.apply import apply
 from hdict.content.argument.field import field
@@ -49,11 +49,11 @@ class MissingFieldException(Exception):
     pass
 
 
-def handle_items(*datas: [Dict[str, object]], previous: [Dict[str, AbsEntry]]):
-    result = previous.copy()
+def handle_items(*datas: [Dict[str, object]], previous: frozenhdict):
+    result = {} if previous is None else previous.raw.copy()
     result__mirror_fields = {}
     for key, item in chain(*(data.items() for data in datas)):
-        entry = handle_item(key, item, result)
+        entry = handle_item(key, item, result, previous)
         if isinstance(key, str) and key.endswith(&#34;_&#34;):
             if isinstance(entry, value):
                 result__mirror_fields[f&#34;{key[:-1]}&#34;] = value(entry.hdict, entry.hdict.hosh)
@@ -67,24 +67,24 @@ def handle_items(*datas: [Dict[str, object]], previous: [Dict[str, AbsEntry]]):
     return result
 
 
-def handle_item(key, item, previous):
+def handle_item(key, item, result, previous):
     from hdict.content.argument.entry import entry
 
     match item:
         case AbsEntry():
             res = item
         case field(name=name):
-            if name not in previous:  # pragma: no cover
+            if name not in result:  # pragma: no cover
                 raise MissingFieldException(f&#34;Missing field `{name}`&#34;)
-            res = handle_item(name, previous[name], previous)
+            res = handle_item(name, result[name], result, previous)
         case entry(name=name):
             from hdict.content.entry.wrapper import Wrapper
 
-            if name not in previous:  # pragma: no cover
+            if name not in result:  # pragma: no cover
                 raise MissingFieldException(f&#34;Missing entry `{name}`&#34;)
-            res = Wrapper(handle_item(name, previous[name], previous))
+            res = Wrapper(handle_item(name, result[name], result, previous))
         case apply():
-            res = item.enclosure(previous, key)
+            res = item.enclosure(result, key, previous)
         case sample():  # pragma: no cover
             raise Exception(f&#34;Unsampled variable or argument `{key}`&#34;)
         case frozenhdict():
@@ -93,6 +93,10 @@ def handle_item(key, item, previous):
             res = value(item.frozen, item.hosh)
         case ApplyOut():  # pragma: no cover
             raise Exception(&#34;Cannot assign output through both apply and dict-key: &#39;&gt;&gt; {out: apply(...)(out)}&#39;.&#34;)
+        case Self():
+            if previous is None:
+                raise Exception(f&#34;Cannot reference self in a new hdict. `_` is intended to point to a hdict before application.&#34;)
+            res = handle_item(key, previous, result, None)
         case AbsAny():  # pragma: no cover
             raise Exception(f&#34;Cannot handle instance of type &#39;{type(item).__name__}&#39;.&#34;)
         case _ if str(type(item)) == &#34;&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;&#34;:
@@ -107,7 +111,7 @@ def handle_item(key, item, previous):
             res = value(item)
 
     if isinstance(key, tuple):
-        return handle_multioutput(key, res, previous)
+        return handle_multioutput(key, res, result, previous)
     elif not isinstance(key, str):  # pragma: no cover
         raise Exception(f&#34;Invalid type for input field specification: {type(key).__name__}&#34;)
     # elif key.startswith(&#34;_&#34;):  # pragma: no cover     # reminder: _* allowed here due to parameter name in getattr(__o)
@@ -139,16 +143,16 @@ def handle_identity(data):
     return hosh, ids
 
 
-def handle_multioutput(field_names: tuple, entry: AbsEntry | apply, previous):
+def handle_multioutput(field_names: tuple, entry: AbsEntry | apply, previous_result, previous):
     &#34;&#34;&#34;Fields and hoshes are assigned to each output according to the alphabetical order of the original keys.
 
     &gt;&gt;&gt; from hdict import field, value
     &gt;&gt;&gt; d = {&#34;a&#34;: field(&#34;b&#34;), &#34;b&#34;: field(&#34;c&#34;), &#34;c&#34;: 5}
     &gt;&gt;&gt; d
     {&#39;a&#39;: field(b), &#39;b&#39;: field(c), &#39;c&#39;: 5}
-    &gt;&gt;&gt; handle_multioutput((&#34;x&#34;,&#34;y&#34;), value([0, 1]), d)
+    &gt;&gt;&gt; handle_multioutput((&#34;x&#34;,&#34;y&#34;), value([0, 1]), d, None)
     {&#39;x&#39;: 0, &#39;y&#39;: 1}
-    &gt;&gt;&gt; handle_multioutput((&#34;x&#34;,&#34;y&#34;), value({1: &#34;a&#34;, 0: &#34;b&#34;}), d)
+    &gt;&gt;&gt; handle_multioutput((&#34;x&#34;,&#34;y&#34;), value({1: &#34;a&#34;, 0: &#34;b&#34;}), d, None)
     {&#39;x&#39;: &#39;b&#39;, &#39;y&#39;: &#39;a&#39;}
     &#34;&#34;&#34;
     from hdict import value
@@ -160,15 +164,15 @@ def handle_multioutput(field_names: tuple, entry: AbsEntry | apply, previous):
             if len(field_names) != len(lst):  # pragma: no cover
                 raise Exception(f&#34;Number of output fields (&#39;{len(field_names)}&#39;) should match number of list elements (&#39;{len(lst)}&#39;).&#34;)
             for field_name, val in zip(field_names, lst):
-                data[field_name] = handle_item(field_name, val, previous)
+                data[field_name] = handle_item(field_name, val, previous_result, previous)
         case value(value=dict() as dct):
             if len(field_names) != len(dct):  # pragma: no cover
                 raise Exception(f&#34;Number of output fields (&#39;{len(field_names)}&#39;) should match number of dict entries (&#39;{len(dct)}&#39;).&#34;)
             for field_name, (_, val) in zip(field_names, sorted(dct.items())):
-                data[field_name] = handle_item(field_name, val, previous)
+                data[field_name] = handle_item(field_name, val, previous_result, previous)
         case AbsEntry() | apply():
             keys = []  # For repr().
-            parent = Closure(entry, previous, keys) if isinstance(entry, apply) else entry
+            parent = Closure(entry, previous_result, keys, previous) if isinstance(entry, apply) else entry
             n = len(field_names)
             for key, i, source in loop_field_names(field_names):
                 if key is not None:
@@ -194,19 +198,19 @@ def loop_field_names(field_names):
             yield field_name, i, None
 
 
-def handle_mirror(k, data, id, kind):  # object | Cached
-    from hdict.content.entry.cached import Cached
-
-    if not isinstance(data[k], (Cached, frozenhdict)):  # pragma: no cover
-        raise Exception(f&#34;Cannot handle fetched object of type `{type(data[k])}`&#34;)
-    match kind:
-        case &#34;&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;&#34;:
-            f = lambda **kwargs: kwargs[k].asdf
-            return apply(f, fhosh=ø, **{k: field(k)}).enclosure(data, k)
-        case None:  # pragma: no cover
-            pass
-        case _:  # pragma: no cover
-            raise Exception(f&#34;Unknown mirror field kind `{kind}`.&#34;)
+# def handle_mirror(k, data, id, kind, previous):  # object | Cached
+#     from hdict.content.entry.cached import Cached
+#
+#     if not isinstance(data[k], (Cached, frozenhdict)):  # pragma: no cover
+#         raise Exception(f&#34;Cannot handle fetched object of type `{type(data[k])}`&#34;)
+#     match kind:
+#         case &#34;&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;&#34;:
+#             f = lambda **kwargs: kwargs[k].asdf
+#             return apply(f, fhosh=ø, **{k: field(k)}).enclosure(data, k, previous)
+#         case None:  # pragma: no cover
+#             pass
+#         case _:  # pragma: no cover
+#             raise Exception(f&#34;Unknown mirror field kind `{kind}`.&#34;)
 
 
 def handle_format(format, fields, df, name):
@@ -422,7 +426,7 @@ def handle_format(format, fields, df, name):
 </details>
 </dd>
 <dt id="hdict.data.aux_frozendict.handle_item"><code class="name flex">
-<span>def <span class="ident">handle_item</span></span>(<span>key, item, previous)</span>
+<span>def <span class="ident">handle_item</span></span>(<span>key, item, result, previous)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -430,24 +434,24 @@ def handle_format(format, fields, df, name):
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def handle_item(key, item, previous):
+<pre><code class="python">def handle_item(key, item, result, previous):
     from hdict.content.argument.entry import entry
 
     match item:
         case AbsEntry():
             res = item
         case field(name=name):
-            if name not in previous:  # pragma: no cover
+            if name not in result:  # pragma: no cover
                 raise MissingFieldException(f&#34;Missing field `{name}`&#34;)
-            res = handle_item(name, previous[name], previous)
+            res = handle_item(name, result[name], result, previous)
         case entry(name=name):
             from hdict.content.entry.wrapper import Wrapper
 
-            if name not in previous:  # pragma: no cover
+            if name not in result:  # pragma: no cover
                 raise MissingFieldException(f&#34;Missing entry `{name}`&#34;)
-            res = Wrapper(handle_item(name, previous[name], previous))
+            res = Wrapper(handle_item(name, result[name], result, previous))
         case apply():
-            res = item.enclosure(previous, key)
+            res = item.enclosure(result, key, previous)
         case sample():  # pragma: no cover
             raise Exception(f&#34;Unsampled variable or argument `{key}`&#34;)
         case frozenhdict():
@@ -456,6 +460,10 @@ def handle_format(format, fields, df, name):
             res = value(item.frozen, item.hosh)
         case ApplyOut():  # pragma: no cover
             raise Exception(&#34;Cannot assign output through both apply and dict-key: &#39;&gt;&gt; {out: apply(...)(out)}&#39;.&#34;)
+        case Self():
+            if previous is None:
+                raise Exception(f&#34;Cannot reference self in a new hdict. `_` is intended to point to a hdict before application.&#34;)
+            res = handle_item(key, previous, result, None)
         case AbsAny():  # pragma: no cover
             raise Exception(f&#34;Cannot handle instance of type &#39;{type(item).__name__}&#39;.&#34;)
         case _ if str(type(item)) == &#34;&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;&#34;:
@@ -470,7 +478,7 @@ def handle_format(format, fields, df, name):
             res = value(item)
 
     if isinstance(key, tuple):
-        return handle_multioutput(key, res, previous)
+        return handle_multioutput(key, res, result, previous)
     elif not isinstance(key, str):  # pragma: no cover
         raise Exception(f&#34;Invalid type for input field specification: {type(key).__name__}&#34;)
     # elif key.startswith(&#34;_&#34;):  # pragma: no cover     # reminder: _* allowed here due to parameter name in getattr(__o)
@@ -480,7 +488,7 @@ def handle_format(format, fields, df, name):
 </details>
 </dd>
 <dt id="hdict.data.aux_frozendict.handle_items"><code class="name flex">
-<span>def <span class="ident">handle_items</span></span>(<span>*datas: [typing.Dict[str, object]], previous: [typing.Dict[str, <a title="hdict.content.entry.AbsEntry" href="../content/entry/index.html#hdict.content.entry.AbsEntry">AbsEntry</a>]])</span>
+<span>def <span class="ident">handle_items</span></span>(<span>*datas: [typing.Dict[str, object]], previous: <a title="hdict.data.frozenhdict.frozenhdict" href="frozenhdict.html#hdict.data.frozenhdict.frozenhdict">frozenhdict</a>)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -488,11 +496,11 @@ def handle_format(format, fields, df, name):
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def handle_items(*datas: [Dict[str, object]], previous: [Dict[str, AbsEntry]]):
-    result = previous.copy()
+<pre><code class="python">def handle_items(*datas: [Dict[str, object]], previous: frozenhdict):
+    result = {} if previous is None else previous.raw.copy()
     result__mirror_fields = {}
     for key, item in chain(*(data.items() for data in datas)):
-        entry = handle_item(key, item, result)
+        entry = handle_item(key, item, result, previous)
         if isinstance(key, str) and key.endswith(&#34;_&#34;):
             if isinstance(entry, value):
                 result__mirror_fields[f&#34;{key[:-1]}&#34;] = value(entry.hdict, entry.hdict.hosh)
@@ -506,32 +514,8 @@ def handle_format(format, fields, df, name):
     return result</code></pre>
 </details>
 </dd>
-<dt id="hdict.data.aux_frozendict.handle_mirror"><code class="name flex">
-<span>def <span class="ident">handle_mirror</span></span>(<span>k, data, id, kind)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def handle_mirror(k, data, id, kind):  # object | Cached
-    from hdict.content.entry.cached import Cached
-
-    if not isinstance(data[k], (Cached, frozenhdict)):  # pragma: no cover
-        raise Exception(f&#34;Cannot handle fetched object of type `{type(data[k])}`&#34;)
-    match kind:
-        case &#34;&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;&#34;:
-            f = lambda **kwargs: kwargs[k].asdf
-            return apply(f, fhosh=ø, **{k: field(k)}).enclosure(data, k)
-        case None:  # pragma: no cover
-            pass
-        case _:  # pragma: no cover
-            raise Exception(f&#34;Unknown mirror field kind `{kind}`.&#34;)</code></pre>
-</details>
-</dd>
 <dt id="hdict.data.aux_frozendict.handle_multioutput"><code class="name flex">
-<span>def <span class="ident">handle_multioutput</span></span>(<span>field_names: tuple, entry: <a title="hdict.content.entry.AbsEntry" href="../content/entry/index.html#hdict.content.entry.AbsEntry">AbsEntry</a> | <a title="hdict.content.argument.apply.apply" href="../content/argument/apply.html#hdict.content.argument.apply.apply">apply</a>, previous)</span>
+<span>def <span class="ident">handle_multioutput</span></span>(<span>field_names: tuple, entry: <a title="hdict.content.entry.AbsEntry" href="../content/entry/index.html#hdict.content.entry.AbsEntry">AbsEntry</a> | <a title="hdict.content.argument.apply.apply" href="../content/argument/apply.html#hdict.content.argument.apply.apply">apply</a>, previous_result, previous)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Fields and hoshes are assigned to each output according to the alphabetical order of the original keys.</p>
@@ -539,25 +523,25 @@ def handle_format(format, fields, df, name):
 &gt;&gt;&gt; d = {&quot;a&quot;: field(&quot;b&quot;), &quot;b&quot;: field(&quot;c&quot;), &quot;c&quot;: 5}
 &gt;&gt;&gt; d
 {'a': field(b), 'b': field(c), 'c': 5}
-&gt;&gt;&gt; handle_multioutput((&quot;x&quot;,&quot;y&quot;), value([0, 1]), d)
+&gt;&gt;&gt; handle_multioutput((&quot;x&quot;,&quot;y&quot;), value([0, 1]), d, None)
 {'x': 0, 'y': 1}
-&gt;&gt;&gt; handle_multioutput((&quot;x&quot;,&quot;y&quot;), value({1: &quot;a&quot;, 0: &quot;b&quot;}), d)
+&gt;&gt;&gt; handle_multioutput((&quot;x&quot;,&quot;y&quot;), value({1: &quot;a&quot;, 0: &quot;b&quot;}), d, None)
 {'x': 'b', 'y': 'a'}
 </code></pre></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def handle_multioutput(field_names: tuple, entry: AbsEntry | apply, previous):
+<pre><code class="python">def handle_multioutput(field_names: tuple, entry: AbsEntry | apply, previous_result, previous):
     &#34;&#34;&#34;Fields and hoshes are assigned to each output according to the alphabetical order of the original keys.
 
     &gt;&gt;&gt; from hdict import field, value
     &gt;&gt;&gt; d = {&#34;a&#34;: field(&#34;b&#34;), &#34;b&#34;: field(&#34;c&#34;), &#34;c&#34;: 5}
     &gt;&gt;&gt; d
     {&#39;a&#39;: field(b), &#39;b&#39;: field(c), &#39;c&#39;: 5}
-    &gt;&gt;&gt; handle_multioutput((&#34;x&#34;,&#34;y&#34;), value([0, 1]), d)
+    &gt;&gt;&gt; handle_multioutput((&#34;x&#34;,&#34;y&#34;), value([0, 1]), d, None)
     {&#39;x&#39;: 0, &#39;y&#39;: 1}
-    &gt;&gt;&gt; handle_multioutput((&#34;x&#34;,&#34;y&#34;), value({1: &#34;a&#34;, 0: &#34;b&#34;}), d)
+    &gt;&gt;&gt; handle_multioutput((&#34;x&#34;,&#34;y&#34;), value({1: &#34;a&#34;, 0: &#34;b&#34;}), d, None)
     {&#39;x&#39;: &#39;b&#39;, &#39;y&#39;: &#39;a&#39;}
     &#34;&#34;&#34;
     from hdict import value
@@ -569,15 +553,15 @@ def handle_format(format, fields, df, name):
             if len(field_names) != len(lst):  # pragma: no cover
                 raise Exception(f&#34;Number of output fields (&#39;{len(field_names)}&#39;) should match number of list elements (&#39;{len(lst)}&#39;).&#34;)
             for field_name, val in zip(field_names, lst):
-                data[field_name] = handle_item(field_name, val, previous)
+                data[field_name] = handle_item(field_name, val, previous_result, previous)
         case value(value=dict() as dct):
             if len(field_names) != len(dct):  # pragma: no cover
                 raise Exception(f&#34;Number of output fields (&#39;{len(field_names)}&#39;) should match number of dict entries (&#39;{len(dct)}&#39;).&#34;)
             for field_name, (_, val) in zip(field_names, sorted(dct.items())):
-                data[field_name] = handle_item(field_name, val, previous)
+                data[field_name] = handle_item(field_name, val, previous_result, previous)
         case AbsEntry() | apply():
             keys = []  # For repr().
-            parent = Closure(entry, previous, keys) if isinstance(entry, apply) else entry
+            parent = Closure(entry, previous_result, keys, previous) if isinstance(entry, apply) else entry
             n = len(field_names)
             for key, i, source in loop_field_names(field_names):
                 if key is not None:
@@ -656,7 +640,6 @@ def handle_format(format, fields, df, name):
 <li><code><a title="hdict.data.aux_frozendict.handle_identity" href="#hdict.data.aux_frozendict.handle_identity">handle_identity</a></code></li>
 <li><code><a title="hdict.data.aux_frozendict.handle_item" href="#hdict.data.aux_frozendict.handle_item">handle_item</a></code></li>
 <li><code><a title="hdict.data.aux_frozendict.handle_items" href="#hdict.data.aux_frozendict.handle_items">handle_items</a></code></li>
-<li><code><a title="hdict.data.aux_frozendict.handle_mirror" href="#hdict.data.aux_frozendict.handle_mirror">handle_mirror</a></code></li>
 <li><code><a title="hdict.data.aux_frozendict.handle_multioutput" href="#hdict.data.aux_frozendict.handle_multioutput">handle_multioutput</a></code></li>
 <li><code><a title="hdict.data.aux_frozendict.loop_field_names" href="#hdict.data.aux_frozendict.loop_field_names">loop_field_names</a></code></li>
 </ul>

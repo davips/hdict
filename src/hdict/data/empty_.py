@@ -21,16 +21,14 @@
 #  time spent here.
 #
 
-from hdict.content.argument.field import field
-from hdict.content.argument.sample import sample
 from hdict.data.frozenhdict import frozenhdict
 
 
 class Empty_(frozenhdict):
     """
-    >>> from hdict import _
-    >>> d = _ >> {"x": 5} >> dict(y=7)
-    >>> type(_), type(d)
+    >>> from hdict import Ø
+    >>> d = Ø >> {"x": 5} >> dict(y=7)
+    >>> type(Ø), type(d)
     (<class 'hdict.Empty'>, <class 'hdict.hdict'>)
     >>> d.show(colored=False)
     {
@@ -42,18 +40,9 @@ class Empty_(frozenhdict):
             y: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf
         }
     }
-    >>> str(_ * {})
+    >>> str(Ø * {})
     '⦑{} » {}⦒'
     """
-
-    def __getattr__(self, item):
-        return field(item)
-
-    def __getitem__(self, item):
-        return field(item)
-
-    def __call__(self, *args, **kwargs):
-        return sample(*args)
 
     def __rshift__(self, other):
         res = super().__rshift__(other)

@@ -57,6 +57,7 @@ from hdict.data.empty_ import Empty_
 from hdict.content.value import value
 from hdict.data.frozenhdict import frozenhdict
 from hdict.data.hdict_ import hdict_
+from hdict.data.self_ import Self_
 from hdict.expression.step.cache import cache
 
 __all__ = [&#34;hdict&#34;, &#34;_&#34;, &#34;Ø&#34;, &#34;apply&#34;, &#34;field&#34;, &#34;sample&#34;, &#34;frozenhdict&#34;, &#34;value&#34;, &#34;cache&#34;]
@@ -202,8 +203,8 @@ class hdict(hdict_):
     &gt;&gt;&gt; pp = apply(f, field(&#34;x&#34;), y=3)(&#34;z&#34;) &gt;&gt; apply(g, y=7)(&#34;w&#34;, &#34;v&#34;)
     &gt;&gt;&gt; d &gt;&gt;= {&#34;x&#34;: 3} &gt;&gt; pp &gt;&gt; apply(g, y=7)(&#34;w&#34;, &#34;v&#34;)
     &gt;&gt;&gt; from hdict import _
-    &gt;&gt;&gt; a1 = apply(f, y=_[1, 2, 4, ..., 128])
-    &gt;&gt;&gt; a2 = apply(f, _[0, 3, 6, ..., 9], y=_[0, 3, 6, ..., 9])
+    &gt;&gt;&gt; a1 = apply(f, y=_(1, 2, 4, ..., 128))
+    &gt;&gt;&gt; a2 = apply(f, _(0, 3, 6, ..., 9), y=_(0, 3, 6, ..., 9))
     &gt;&gt;&gt; ppp = hdict() &gt;&gt; a2.sample()(&#34;k&#34;, &#34;t&#34;)
     &gt;&gt;&gt; ppp.show(colored=False)
     {
@@ -223,7 +224,7 @@ class hdict(hdict_):
     ((&#39;w&#39;, &#39;a&#39;), (&#39;v&#39;, &#39;b&#39;))=λ(x=~[0 3 .+. 9] y=~[0 3 .+. 9])
     &gt;&gt;&gt; p = a1(&#34;z&#34;) &gt;&gt; a2(w=&#34;a&#34;, v=&#34;b&#34;)
     &gt;&gt;&gt; h = lambda a, b=4: 5
-    &gt;&gt;&gt; app = apply(h, a=_[0, 3, 6, ..., 9])
+    &gt;&gt;&gt; app = apply(h, a=_(0, 3, 6, ..., 9))
     &gt;&gt;&gt; app
     λ(a=~[0 3 .+. 9] b=default(4))
     &gt;&gt;&gt; app.c
@@ -258,8 +259,8 @@ class hdict(hdict_):
     &gt;&gt;&gt; d[&#34;w&#34;, &#34;v&#34;] = apply(f, _.x, y=_.x)
     &gt;&gt;&gt; d[&#34;w&#34;, &#34;v&#34;] = apply(_.f, _.x, y=default(3))
     &gt;&gt;&gt; d = hdict() &gt;&gt; {&#34;z&#34;: apply(f, 7, y=3), (&#34;w&#34;, &#34;v&#34;): apply(g, default(6), y=7)}
-    &gt;&gt;&gt; d = hdict(w=6) &gt;&gt; (apply(f, _.w, y=3)(z=&#34;z&#34;) &gt;&gt; apply(g, x=_[1,2,3,...,5], y=7)(&#34;ww&#34;, &#34;v&#34;)).sample(0)
-    &gt;&gt;&gt; p = apply(f, y=_[1, 2, 4, ..., 128])(&#34;z&#34;) &gt;&gt; apply(f, y=_[0, 3, 6, ..., 9])(w=&#34;a&#34;, v=&#34;b&#34;)
+    &gt;&gt;&gt; d = hdict(w=6) &gt;&gt; (apply(f, _[&#34;w&#34;], y=3)(z=&#34;z&#34;) &gt;&gt; apply(g, x=_(1,2,3,...,5), y=7)(&#34;ww&#34;, &#34;v&#34;)).sample(0)
+    &gt;&gt;&gt; p = apply(f, y=_(1, 2, 4, ..., 128))(&#34;z&#34;) &gt;&gt; apply(f, y=_(0, 3, 6, ..., 9))(w=&#34;a&#34;, v=&#34;b&#34;)
     &gt;&gt;&gt; d.show(colored=False)
     {
         w: 6,
@@ -481,7 +482,7 @@ class Empty(Empty_):
     &#34;&#34;&#34;
     &gt;&gt;&gt; from hdict import _
     &gt;&gt;&gt; d = _ &gt;&gt; {&#34;x&#34;: 5} &gt;&gt; dict(y=7)
-    &gt;&gt;&gt; type(_), type(d)
+    &gt;&gt;&gt; type(+_), type(d)
     (&lt;class &#39;hdict.Empty&#39;&gt;, &lt;class &#39;hdict.hdict&#39;&gt;)
     &gt;&gt;&gt; d.show(colored=False)
     {
@@ -496,7 +497,12 @@ class Empty(Empty_):
     &#34;&#34;&#34;
 
 
-Ø = _ = Empty()</code></pre>
+class Self(Self_):
+    &#34;&#34;&#34;&#34;&#34;&#34;
+
+
+Ø = empty = Empty()
+_ = Self()</code></pre>
 </details>
 </section>
 <section>
@@ -559,11 +565,11 @@ Multioutput application is defined by a call: 'apply(f)("output_field1", "output
 <pre><code class="language-python-repl">&gt;&gt;&gt; v2 = apply(f, a=v, b=value(7))
 &gt;&gt;&gt; v2
 λ(a=λ(5 7) 7)
-&gt;&gt;&gt; v.enclosure({}, &quot;j&quot;).value
+&gt;&gt;&gt; v.enclosure({}, &quot;j&quot;, None).value
 78125
-&gt;&gt;&gt; v2.enclosure({}, &quot;j&quot;)
+&gt;&gt;&gt; v2.enclosure({}, &quot;j&quot;, None)
 λ(a=λ(5 7) 7)
-&gt;&gt;&gt; v2.enclosure({}, &quot;j&quot;).value
+&gt;&gt;&gt; v2.enclosure({}, &quot;j&quot;, None).value
 17763568394002504646778106689453125
 </code></pre>
 <pre><code class="language-python-repl">&gt;&gt;&gt; f = lambda a,b, c=1,d=2,e=13: 0
@@ -574,7 +580,7 @@ Multioutput application is defined by a call: 'apply(f)("output_field1", "output
 {'a': 3, 'b': field(b), 'c': default(1), 'd': default(2), 'e': default(13)}
 &gt;&gt;&gt; ap
 λ(3 b c=default(1) d=default(2) e=default(13))
-&gt;&gt;&gt; ap.enclosure({&quot;b&quot;: value(77)}, &quot;j&quot;)
+&gt;&gt;&gt; ap.enclosure({&quot;b&quot;: value(77)}, &quot;j&quot;, None)
 λ(3 b c=1 d=2 e=13)
 &gt;&gt;&gt; ap
 λ(3 b c=default(1) d=default(2) e=default(13))
@@ -582,7 +588,7 @@ Multioutput application is defined by a call: 'apply(f)("output_field1", "output
 &gt;&gt;&gt; d
 {'f': λ(3 b c=default(1) d=default(2) e=default(13)), 'b': 5, 'd': 1, 'e': field(b)}
 &gt;&gt;&gt; from hdict.data.aux_frozendict import handle_items
-&gt;&gt;&gt; handle_items(d, previous={&quot;b&quot;: 5})
+&gt;&gt;&gt; handle_items(d, previous=frozenhdict({&quot;b&quot;: 5}))
 {'b': 5, 'f': λ(3 b c=1 d=2 e=13), 'd': 1, 'e': 5}
 &gt;&gt;&gt; d
 {'f': λ(3 b c=default(1) d=default(2) e=default(13)), 'b': 5, 'd': 1, 'e': field(b)}
@@ -766,11 +772,11 @@ False
     &gt;&gt;&gt; v2 = apply(f, a=v, b=value(7))
     &gt;&gt;&gt; v2
     λ(a=λ(5 7) 7)
-    &gt;&gt;&gt; v.enclosure({}, &#34;j&#34;).value
+    &gt;&gt;&gt; v.enclosure({}, &#34;j&#34;, None).value
     78125
-    &gt;&gt;&gt; v2.enclosure({}, &#34;j&#34;)
+    &gt;&gt;&gt; v2.enclosure({}, &#34;j&#34;, None)
     λ(a=λ(5 7) 7)
-    &gt;&gt;&gt; v2.enclosure({}, &#34;j&#34;).value
+    &gt;&gt;&gt; v2.enclosure({}, &#34;j&#34;, None).value
     17763568394002504646778106689453125
 
     &gt;&gt;&gt; f = lambda a,b, c=1,d=2,e=13: 0
@@ -781,7 +787,7 @@ False
     {&#39;a&#39;: 3, &#39;b&#39;: field(b), &#39;c&#39;: default(1), &#39;d&#39;: default(2), &#39;e&#39;: default(13)}
     &gt;&gt;&gt; ap
     λ(3 b c=default(1) d=default(2) e=default(13))
-    &gt;&gt;&gt; ap.enclosure({&#34;b&#34;: value(77)}, &#34;j&#34;)
+    &gt;&gt;&gt; ap.enclosure({&#34;b&#34;: value(77)}, &#34;j&#34;, None)
     λ(3 b c=1 d=2 e=13)
     &gt;&gt;&gt; ap
     λ(3 b c=default(1) d=default(2) e=default(13))
@@ -789,7 +795,7 @@ False
     &gt;&gt;&gt; d
     {&#39;f&#39;: λ(3 b c=default(1) d=default(2) e=default(13)), &#39;b&#39;: 5, &#39;d&#39;: 1, &#39;e&#39;: field(b)}
     &gt;&gt;&gt; from hdict.data.aux_frozendict import handle_items
-    &gt;&gt;&gt; handle_items(d, previous={&#34;b&#34;: 5})
+    &gt;&gt;&gt; handle_items(d, previous=frozenhdict({&#34;b&#34;: 5}))
     {&#39;b&#39;: 5, &#39;f&#39;: λ(3 b c=1 d=2 e=13), &#39;d&#39;: 1, &#39;e&#39;: 5}
     &gt;&gt;&gt; d
     {&#39;f&#39;: λ(3 b c=default(1) d=default(2) e=default(13)), &#39;b&#39;: 5, &#39;d&#39;: 1, &#39;e&#39;: field(b)}
@@ -1023,10 +1029,10 @@ False
             clone.fkwargs[k] = v.sample(rnd)
         return clone
 
-    def enclosure(self, data, key):
+    def enclosure(self, data, key, previous):
         from hdict.content.entry.closure import Closure
 
-        return Closure(self, data, [key])
+        return Closure(self, data, [key], previous)
 
     def __call__(self, *out, **kwout):
         from hdict.expression.step.applyout import ApplyOut
@@ -1162,7 +1168,7 @@ def sampleable(self):
 </details>
 </dd>
 <dt id="hdict.apply.enclosure"><code class="name flex">
-<span>def <span class="ident">enclosure</span></span>(<span>self, data, key)</span>
+<span>def <span class="ident">enclosure</span></span>(<span>self, data, key, previous)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -1170,10 +1176,10 @@ def sampleable(self):
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def enclosure(self, data, key):
+<pre><code class="python">def enclosure(self, data, key, previous):
     from hdict.content.entry.closure import Closure
 
-    return Closure(self, data, [key])</code></pre>
+    return Closure(self, data, [key], previous)</code></pre>
 </details>
 </dd>
 <dt id="hdict.apply.sample"><code class="name flex">
@@ -1320,7 +1326,7 @@ def sampleable(self):
     _id: 0000000000000000000000000000000000000000,
     _ids: {}
 }
-&gt;&gt;&gt; d = _
+&gt;&gt;&gt; d = +_
 &gt;&gt;&gt; d.show(colored=False)
 {
     _id: 0000000000000000000000000000000000000000,
@@ -1362,7 +1368,7 @@ class field(AbsBaseArgument):
         _id: 0000000000000000000000000000000000000000,
         _ids: {}
     }
-    &gt;&gt;&gt; d = _
+    &gt;&gt;&gt; d = +_
     &gt;&gt;&gt; d.show(colored=False)
     {
         _id: 0000000000000000000000000000000000000000,
@@ -1594,9 +1600,6 @@ class field(AbsBaseArgument):
         from hdict.data.aux_frozendict import handle_identity
         from hdict.data.aux_frozendict import handle_items
 
-        if _previous is None:
-            _previous = {}
-
         # todo: : check if _dictionary keys is &#39;str&#39;; regex to check if k is an identifier;
         data = _dictionary or {}
         # REMINDER: Inside data, the only &#39;dict&#39; entries are &#34;_id&#34; and &#34;_ids&#34;, the rest are AbsEntry objects.
@@ -1658,7 +1661,7 @@ class field(AbsBaseArgument):
         from hdict.content.argument import AbsArgument
 
         if isinstance(other, AbsArgument):  # pragma: no cover
-            raise Exception(f&#34;Cannot pipe {type(other).__name__} without specifying output.\n&#34; f&#34;Hint: d &gt;&gt; {&#39;field name&#39;: object}\n&#34; f&#34;Hint: d[&#39;field name&#39;] = object&#34;)
+            raise Exception(f&#34;Cannot pipe {type(other).__name__} without specifying output.\n&#34; &#34;Hint: d &gt;&gt; {&#39;field name&#39;: object}\n&#34; f&#34;Hint: d[&#39;field name&#39;] = object&#34;)
 
         from hdict.expression.expr import Expr
 
@@ -1677,7 +1680,7 @@ class field(AbsBaseArgument):
                 return Expr(self, other).solve()
             case _:  # pragma: no cover
                 return NotImplemented
-        return frozenhdict(dct, _previous=self.data)
+        return frozenhdict(dct, _previous=self)
 
     def __getitem__(self, item):  # pragma: no cover
         return self.data[item].value
@@ -1730,6 +1733,7 @@ class field(AbsBaseArgument):
         return self
 
     def evaluate(self):
+        # todo: add flag to inhibit evaluation (i.e., fetching) of cached values; or other solution, e.g. Cache(write_onapply)
         _ = self.evaluated
 
     @property
@@ -1892,7 +1896,6 @@ class field(AbsBaseArgument):
         &#34;&#34;&#34;
         Store an entire frozenidict
         &#34;&#34;&#34;
-        from hdict.content.entry.cached import kindid
         from hdict.persistence.stored import Stored
 
         data = {self.id: self.ids}
@@ -1901,7 +1904,7 @@ class field(AbsBaseArgument):
             if field.endswith(&#34;_&#34;):
                 raise Exception(f&#34;Not implemented for mirror fields&#34;)
                 # todo:  confirm existence of the counterpart
-                data[kindid(fid)] = str(type(value))
+                # data[kindid(fid)] = str(type(value))
             elif isinstance(value, frozenhdict):
                 value.save(storage)
             else:
@@ -1930,8 +1933,6 @@ class field(AbsBaseArgument):
         When cache is a list, traverse it from the end (right item to the left item).
         &#34;&#34;&#34;
         from hdict.content.entry.cached import Cached
-        from hdict.content.entry.cached import getkind
-        from hdict.data.aux_frozendict import handle_mirror
         from hdict.persistence.stored import Stored
 
         if id not in storage:
@@ -1951,7 +1952,7 @@ class field(AbsBaseArgument):
                     # TODO:  2023-06-23
                     #  -
                     raise Exception(f&#34;Not implemented for mirror fields&#34;)
-                    mirrored.add(field[:-1])
+                    # mirrored.add(field[:-1])
                     continue
                 if lazy:
                     data[field] = Cached(fid, storage)
@@ -1961,10 +1962,10 @@ class field(AbsBaseArgument):
                         print(storage.keys())
                         raise Exception(f&#34;Incomplete hdict: id &#39;{id}&#39; not found in the provided cache.&#34;)
                     data[field] = obj
-            for field in mirrored:
-                obj = data[field]
-                kind = obj.kind if isinstance(obj, Cached) else getkind(storage, obj.hosh)
-                data[field + &#34;_&#34;] = handle_mirror(field, data, ids[field], kind)
+            # for field in mirrored:
+            #     obj = data[field]
+            #     kind = obj.kind if isinstance(obj, Cached) else getkind(storage, obj.hosh)
+            #     data[field + &#34;_&#34;] = handle_mirror(field, data, ids[field], kind)
             return frozenhdict.fromdict(data, ids)
 
         return obj.content
@@ -1987,7 +1988,7 @@ class field(AbsBaseArgument):
         &#34;&#34;&#34;
         from hdict.data.aux_frozendict import handle_format
 
-        df, name = file2df(name, hide_types)
+        df, name = file2df(name, hide_types, True)
         return handle_format(format, fields, df, named and name)
 
     @staticmethod
@@ -2091,8 +2092,6 @@ def fetch(id: str, storage: dict, lazy=True, ishdict=False) -&gt; Union[&#34;fro
     When cache is a list, traverse it from the end (right item to the left item).
     &#34;&#34;&#34;
     from hdict.content.entry.cached import Cached
-    from hdict.content.entry.cached import getkind
-    from hdict.data.aux_frozendict import handle_mirror
     from hdict.persistence.stored import Stored
 
     if id not in storage:
@@ -2112,7 +2111,7 @@ def fetch(id: str, storage: dict, lazy=True, ishdict=False) -&gt; Union[&#34;fro
                 # TODO:  2023-06-23
                 #  -
                 raise Exception(f&#34;Not implemented for mirror fields&#34;)
-                mirrored.add(field[:-1])
+                # mirrored.add(field[:-1])
                 continue
             if lazy:
                 data[field] = Cached(fid, storage)
@@ -2122,10 +2121,10 @@ def fetch(id: str, storage: dict, lazy=True, ishdict=False) -&gt; Union[&#34;fro
                     print(storage.keys())
                     raise Exception(f&#34;Incomplete hdict: id &#39;{id}&#39; not found in the provided cache.&#34;)
                 data[field] = obj
-        for field in mirrored:
-            obj = data[field]
-            kind = obj.kind if isinstance(obj, Cached) else getkind(storage, obj.hosh)
-            data[field + &#34;_&#34;] = handle_mirror(field, data, ids[field], kind)
+        # for field in mirrored:
+        #     obj = data[field]
+        #     kind = obj.kind if isinstance(obj, Cached) else getkind(storage, obj.hosh)
+        #     data[field + &#34;_&#34;] = handle_mirror(field, data, ids[field], kind)
         return frozenhdict.fromdict(data, ids)
 
     return obj.content</code></pre>
@@ -2194,7 +2193,7 @@ def fromfile(name, fields=None, format=&#34;df&#34;, named=None, hide_types=True
     &#34;&#34;&#34;
     from hdict.data.aux_frozendict import handle_format
 
-    df, name = file2df(name, hide_types)
+    df, name = file2df(name, hide_types, True)
     return handle_format(format, fields, df, named and name)</code></pre>
 </details>
 </dd>
@@ -2536,6 +2535,7 @@ def unfrozen(self):
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def evaluate(self):
+    # todo: add flag to inhibit evaluation (i.e., fetching) of cached values; or other solution, e.g. Cache(write_onapply)
     _ = self.evaluated</code></pre>
 </details>
 </dd>
@@ -2595,7 +2595,6 @@ def unfrozen(self):
     &#34;&#34;&#34;
     Store an entire frozenidict
     &#34;&#34;&#34;
-    from hdict.content.entry.cached import kindid
     from hdict.persistence.stored import Stored
 
     data = {self.id: self.ids}
@@ -2604,7 +2603,7 @@ def unfrozen(self):
         if field.endswith(&#34;_&#34;):
             raise Exception(f&#34;Not implemented for mirror fields&#34;)
             # todo:  confirm existence of the counterpart
-            data[kindid(fid)] = str(type(value))
+            # data[kindid(fid)] = str(type(value))
         elif isinstance(value, frozenhdict):
             value.save(storage)
         else:
@@ -2788,8 +2787,8 @@ This is needed to enable handling a function as a value, under the original id.<
 &gt;&gt;&gt; pp = apply(f, field(&quot;x&quot;), y=3)(&quot;z&quot;) &gt;&gt; apply(g, y=7)(&quot;w&quot;, &quot;v&quot;)
 &gt;&gt;&gt; d &gt;&gt;= {&quot;x&quot;: 3} &gt;&gt; pp &gt;&gt; apply(g, y=7)(&quot;w&quot;, &quot;v&quot;)
 &gt;&gt;&gt; from hdict import _
-&gt;&gt;&gt; a1 = apply(f, y=_[1, 2, 4, ..., 128])
-&gt;&gt;&gt; a2 = apply(f, _[0, 3, 6, ..., 9], y=_[0, 3, 6, ..., 9])
+&gt;&gt;&gt; a1 = apply(f, y=_(1, 2, 4, ..., 128))
+&gt;&gt;&gt; a2 = apply(f, _(0, 3, 6, ..., 9), y=_(0, 3, 6, ..., 9))
 &gt;&gt;&gt; ppp = hdict() &gt;&gt; a2.sample()(&quot;k&quot;, &quot;t&quot;)
 &gt;&gt;&gt; ppp.show(colored=False)
 {
@@ -2809,7 +2808,7 @@ z=λ(x y=~[1 2 .*. 128])
 (('w', 'a'), ('v', 'b'))=λ(x=~[0 3 .+. 9] y=~[0 3 .+. 9])
 &gt;&gt;&gt; p = a1(&quot;z&quot;) &gt;&gt; a2(w=&quot;a&quot;, v=&quot;b&quot;)
 &gt;&gt;&gt; h = lambda a, b=4: 5
-&gt;&gt;&gt; app = apply(h, a=_[0, 3, 6, ..., 9])
+&gt;&gt;&gt; app = apply(h, a=_(0, 3, 6, ..., 9))
 &gt;&gt;&gt; app
 λ(a=~[0 3 .+. 9] b=default(4))
 &gt;&gt;&gt; app.c
@@ -2844,8 +2843,8 @@ c=λ(9 b=default(4))
 &gt;&gt;&gt; d[&quot;w&quot;, &quot;v&quot;] = apply(f, _.x, y=_.x)
 &gt;&gt;&gt; d[&quot;w&quot;, &quot;v&quot;] = apply(_.f, _.x, y=default(3))
 &gt;&gt;&gt; d = hdict() &gt;&gt; {&quot;z&quot;: apply(f, 7, y=3), (&quot;w&quot;, &quot;v&quot;): apply(g, default(6), y=7)}
-&gt;&gt;&gt; d = hdict(w=6) &gt;&gt; (apply(f, _.w, y=3)(z=&quot;z&quot;) &gt;&gt; apply(g, x=_[1,2,3,...,5], y=7)(&quot;ww&quot;, &quot;v&quot;)).sample(0)
-&gt;&gt;&gt; p = apply(f, y=_[1, 2, 4, ..., 128])(&quot;z&quot;) &gt;&gt; apply(f, y=_[0, 3, 6, ..., 9])(w=&quot;a&quot;, v=&quot;b&quot;)
+&gt;&gt;&gt; d = hdict(w=6) &gt;&gt; (apply(f, _[&quot;w&quot;], y=3)(z=&quot;z&quot;) &gt;&gt; apply(g, x=_(1,2,3,...,5), y=7)(&quot;ww&quot;, &quot;v&quot;)).sample(0)
+&gt;&gt;&gt; p = apply(f, y=_(1, 2, 4, ..., 128))(&quot;z&quot;) &gt;&gt; apply(f, y=_(0, 3, 6, ..., 9))(w=&quot;a&quot;, v=&quot;b&quot;)
 &gt;&gt;&gt; d.show(colored=False)
 {
     w: 6,
@@ -3203,8 +3202,8 @@ busy
     &gt;&gt;&gt; pp = apply(f, field(&#34;x&#34;), y=3)(&#34;z&#34;) &gt;&gt; apply(g, y=7)(&#34;w&#34;, &#34;v&#34;)
     &gt;&gt;&gt; d &gt;&gt;= {&#34;x&#34;: 3} &gt;&gt; pp &gt;&gt; apply(g, y=7)(&#34;w&#34;, &#34;v&#34;)
     &gt;&gt;&gt; from hdict import _
-    &gt;&gt;&gt; a1 = apply(f, y=_[1, 2, 4, ..., 128])
-    &gt;&gt;&gt; a2 = apply(f, _[0, 3, 6, ..., 9], y=_[0, 3, 6, ..., 9])
+    &gt;&gt;&gt; a1 = apply(f, y=_(1, 2, 4, ..., 128))
+    &gt;&gt;&gt; a2 = apply(f, _(0, 3, 6, ..., 9), y=_(0, 3, 6, ..., 9))
     &gt;&gt;&gt; ppp = hdict() &gt;&gt; a2.sample()(&#34;k&#34;, &#34;t&#34;)
     &gt;&gt;&gt; ppp.show(colored=False)
     {
@@ -3224,7 +3223,7 @@ busy
     ((&#39;w&#39;, &#39;a&#39;), (&#39;v&#39;, &#39;b&#39;))=λ(x=~[0 3 .+. 9] y=~[0 3 .+. 9])
     &gt;&gt;&gt; p = a1(&#34;z&#34;) &gt;&gt; a2(w=&#34;a&#34;, v=&#34;b&#34;)
     &gt;&gt;&gt; h = lambda a, b=4: 5
-    &gt;&gt;&gt; app = apply(h, a=_[0, 3, 6, ..., 9])
+    &gt;&gt;&gt; app = apply(h, a=_(0, 3, 6, ..., 9))
     &gt;&gt;&gt; app
     λ(a=~[0 3 .+. 9] b=default(4))
     &gt;&gt;&gt; app.c
@@ -3259,8 +3258,8 @@ busy
     &gt;&gt;&gt; d[&#34;w&#34;, &#34;v&#34;] = apply(f, _.x, y=_.x)
     &gt;&gt;&gt; d[&#34;w&#34;, &#34;v&#34;] = apply(_.f, _.x, y=default(3))
     &gt;&gt;&gt; d = hdict() &gt;&gt; {&#34;z&#34;: apply(f, 7, y=3), (&#34;w&#34;, &#34;v&#34;): apply(g, default(6), y=7)}
-    &gt;&gt;&gt; d = hdict(w=6) &gt;&gt; (apply(f, _.w, y=3)(z=&#34;z&#34;) &gt;&gt; apply(g, x=_[1,2,3,...,5], y=7)(&#34;ww&#34;, &#34;v&#34;)).sample(0)
-    &gt;&gt;&gt; p = apply(f, y=_[1, 2, 4, ..., 128])(&#34;z&#34;) &gt;&gt; apply(f, y=_[0, 3, 6, ..., 9])(w=&#34;a&#34;, v=&#34;b&#34;)
+    &gt;&gt;&gt; d = hdict(w=6) &gt;&gt; (apply(f, _[&#34;w&#34;], y=3)(z=&#34;z&#34;) &gt;&gt; apply(g, x=_(1,2,3,...,5), y=7)(&#34;ww&#34;, &#34;v&#34;)).sample(0)
+    &gt;&gt;&gt; p = apply(f, y=_(1, 2, 4, ..., 128))(&#34;z&#34;) &gt;&gt; apply(f, y=_(0, 3, 6, ..., 9))(w=&#34;a&#34;, v=&#34;b&#34;)
     &gt;&gt;&gt; d.show(colored=False)
     {
         w: 6,
@@ -3495,6 +3494,7 @@ busy
 <li><code><a title="hdict.data.hdict_.hdict_.fromdict" href="data/hdict_.html#hdict.data.hdict_.hdict_.fromdict">fromdict</a></code></li>
 <li><code><a title="hdict.data.hdict_.hdict_.fromfile" href="data/hdict_.html#hdict.data.hdict_.hdict_.fromfile">fromfile</a></code></li>
 <li><code><a title="hdict.data.hdict_.hdict_.fromtext" href="data/hdict_.html#hdict.data.hdict_.hdict_.fromtext">fromtext</a></code></li>
+<li><code><a title="hdict.data.hdict_.hdict_.hoshes" href="data/hdict_.html#hdict.data.hdict_.hdict_.hoshes">hoshes</a></code></li>
 <li><code><a title="hdict.data.hdict_.hdict_.id" href="data/hdict_.html#hdict.data.hdict_.hdict_.id">id</a></code></li>
 <li><code><a title="hdict.data.hdict_.hdict_.ids" href="data/hdict_.html#hdict.data.hdict_.hdict_.ids">ids</a></code></li>
 <li><code><a title="hdict.data.hdict_.hdict_.items" href="data/hdict_.html#hdict.data.hdict_.hdict_.items">items</a></code></li>

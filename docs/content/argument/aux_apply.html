@@ -44,6 +44,11 @@ class IndexedDict(IndexedOrderedDict):
 
 
 class Arg(str):
+    &#34;&#34;&#34;
+    &gt;&gt;&gt; Arg(&#34;a&#34;) &gt;= Arg(&#34;a&#34;)
+    True
+    &#34;&#34;&#34;
+
     def __init__(self, position: int):
         self.position = position
 
@@ -78,10 +83,11 @@ def handle_args(signature, applied_args, applied_kwargs):
             params.append(k)
     else:
         for par in signature.parameters.values():
-            if str(par).startswith(&#34;**&#34;):
+            strpar = str(par)
+            if strpar.startswith(&#34;**&#34;):
                 haskwargs = True
                 continue
-            elif str(par).startswith(&#34;*&#34;):
+            elif strpar.startswith(&#34;*&#34;):
                 hasargs = True
                 continue
             name = par.name
@@ -159,10 +165,11 @@ def handle_args(signature, applied_args, applied_kwargs):
             params.append(k)
     else:
         for par in signature.parameters.values():
-            if str(par).startswith(&#34;**&#34;):
+            strpar = str(par)
+            if strpar.startswith(&#34;**&#34;):
                 haskwargs = True
                 continue
-            elif str(par).startswith(&#34;*&#34;):
+            elif strpar.startswith(&#34;*&#34;):
                 hasargs = True
                 continue
             name = par.name
@@ -216,20 +223,19 @@ def handle_args(signature, applied_args, applied_kwargs):
 <span>(</span><span>position: int)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>str(object='') -&gt; str
-str(bytes_or_buffer[, encoding[, errors]]) -&gt; str</p>
-<p>Create a new string object from the given object. If encoding or
-errors is specified, then the object must expose a data buffer
-that will be decoded using the given encoding and error handler.
-Otherwise, returns the result of object.<strong>str</strong>() (if defined)
-or repr(object).
-encoding defaults to sys.getdefaultencoding().
-errors defaults to 'strict'.</p></div>
+<div class="desc"><pre><code class="language-python-repl">&gt;&gt;&gt; Arg(&quot;a&quot;) &gt;= Arg(&quot;a&quot;)
+True
+</code></pre></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class Arg(str):
+    &#34;&#34;&#34;
+    &gt;&gt;&gt; Arg(&#34;a&#34;) &gt;= Arg(&#34;a&#34;)
+    True
+    &#34;&#34;&#34;
+
     def __init__(self, position: int):
         self.position = position
 

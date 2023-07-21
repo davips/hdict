@@ -82,9 +82,9 @@ class AbsEntry(AbsAny):
     @property
     def isevaluated(self):
         &#34;&#34;&#34;
-        &gt;&gt;&gt; from hdict import apply
+        &gt;&gt;&gt; from hdict import apply, frozenhdict
         &gt;&gt;&gt; from hdict.content.entry.closure import Closure
-        &gt;&gt;&gt; Closure(apply(lambda x, y: x + y), {&#34;x&#34;: 3, &#34;y&#34;: 5}, []).isevaluated
+        &gt;&gt;&gt; Closure(apply(lambda x, y: x + y), {&#34;x&#34;: 3, &#34;y&#34;: 5}, [], frozenhdict).isevaluated
         False
         &#34;&#34;&#34;
         return not isinstance(self._value, Unevaluated)</code></pre>
@@ -153,9 +153,9 @@ class AbsEntry(AbsAny):
     @property
     def isevaluated(self):
         &#34;&#34;&#34;
-        &gt;&gt;&gt; from hdict import apply
+        &gt;&gt;&gt; from hdict import apply, frozenhdict
         &gt;&gt;&gt; from hdict.content.entry.closure import Closure
-        &gt;&gt;&gt; Closure(apply(lambda x, y: x + y), {&#34;x&#34;: 3, &#34;y&#34;: 5}, []).isevaluated
+        &gt;&gt;&gt; Closure(apply(lambda x, y: x + y), {&#34;x&#34;: 3, &#34;y&#34;: 5}, [], frozenhdict).isevaluated
         False
         &#34;&#34;&#34;
         return not isinstance(self._value, Unevaluated)</code></pre>
@@ -199,9 +199,9 @@ def id(self):  # pragma: no cover
 </dd>
 <dt id="hdict.content.entry.AbsEntry.isevaluated"><code class="name">var <span class="ident">isevaluated</span></code></dt>
 <dd>
-<div class="desc"><pre><code class="language-python-repl">&gt;&gt;&gt; from hdict import apply
+<div class="desc"><pre><code class="language-python-repl">&gt;&gt;&gt; from hdict import apply, frozenhdict
 &gt;&gt;&gt; from hdict.content.entry.closure import Closure
-&gt;&gt;&gt; Closure(apply(lambda x, y: x + y), {&quot;x&quot;: 3, &quot;y&quot;: 5}, []).isevaluated
+&gt;&gt;&gt; Closure(apply(lambda x, y: x + y), {&quot;x&quot;: 3, &quot;y&quot;: 5}, [], frozenhdict).isevaluated
 False
 </code></pre></div>
 <details class="source">
@@ -211,9 +211,9 @@ False
 <pre><code class="python">@property
 def isevaluated(self):
     &#34;&#34;&#34;
-    &gt;&gt;&gt; from hdict import apply
+    &gt;&gt;&gt; from hdict import apply, frozenhdict
     &gt;&gt;&gt; from hdict.content.entry.closure import Closure
-    &gt;&gt;&gt; Closure(apply(lambda x, y: x + y), {&#34;x&#34;: 3, &#34;y&#34;: 5}, []).isevaluated
+    &gt;&gt;&gt; Closure(apply(lambda x, y: x + y), {&#34;x&#34;: 3, &#34;y&#34;: 5}, [], frozenhdict).isevaluated
     False
     &#34;&#34;&#34;
     return not isinstance(self._value, Unevaluated)</code></pre>

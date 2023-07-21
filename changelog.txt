@@ -1,3 +1,4 @@
+Add Self: `_` for usage as parameter, argument, or value pointing to the hdict itself
 Change semantics of _ for consistency:
-_(1,2,3) = sample(1,2,3)
-_["a"] = hdict["a"]
+    _(1,2,3) = sample(1,2,3)
+    _["a"] = hdict["a"]

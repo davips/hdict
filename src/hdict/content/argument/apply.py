@@ -36,6 +36,19 @@ from hdict.content.aux_value import f2hosh
 
 
 def getattr_(__o: object, name: str, __default=None):
+    """
+    >>> from hdict import _, apply
+    >>> (_ >> {"o": "str"} >> apply(getattr, _.o, "find").r).evaluated.show(colored=False)  # doctest:+ELLIPSIS
+    {
+        o: "str",
+        r: "<built-in method find of str object at 0x...>",
+        _id: zU3QsJ.a9fjr8eeoqwaPKlufC6.AEacZZBWScM39,
+        _ids: {
+            o: PdHGvI1xk.ZG7wt3-2TQm-GjFXidwYNw8xsD3Wpe,
+            r: BKrY9O9ExQh8k0xjgINKKV2-JD6qEEjDOIVR1yyq
+        }
+    }
+    """
     return getattr(__o, name, __default)
 
 
@@ -59,11 +72,11 @@ class apply(AbsBaseArgument):
     >>> v2 = apply(f, a=v, b=value(7))
     >>> v2
     λ(a=λ(5 7) 7)
-    >>> v.enclosure({}, "j").value
+    >>> v.enclosure({}, "j", None).value
     78125
-    >>> v2.enclosure({}, "j")
+    >>> v2.enclosure({}, "j", None)
     λ(a=λ(5 7) 7)
-    >>> v2.enclosure({}, "j").value
+    >>> v2.enclosure({}, "j", None).value
     17763568394002504646778106689453125
 
     >>> f = lambda a,b, c=1,d=2,e=13: 0
@@ -74,7 +87,7 @@ class apply(AbsBaseArgument):
     {'a': 3, 'b': field(b), 'c': default(1), 'd': default(2), 'e': default(13)}
     >>> ap
     λ(3 b c=default(1) d=default(2) e=default(13))
-    >>> ap.enclosure({"b": value(77)}, "j")
+    >>> ap.enclosure({"b": value(77)}, "j", None)
     λ(3 b c=1 d=2 e=13)
     >>> ap
     λ(3 b c=default(1) d=default(2) e=default(13))
@@ -82,7 +95,7 @@ class apply(AbsBaseArgument):
     >>> d
     {'f': λ(3 b c=default(1) d=default(2) e=default(13)), 'b': 5, 'd': 1, 'e': field(b)}
     >>> from hdict.data.aux_frozendict import handle_items
-    >>> handle_items(d, previous={"b": 5})
+    >>> handle_items(d, previous=frozenhdict({"b": 5}))
     {'b': 5, 'f': λ(3 b c=1 d=2 e=13), 'd': 1, 'e': 5}
     >>> d
     {'f': λ(3 b c=default(1) d=default(2) e=default(13)), 'b': 5, 'd': 1, 'e': field(b)}
@@ -316,10 +329,10 @@ class apply(AbsBaseArgument):
             clone.fkwargs[k] = v.sample(rnd)
         return clone
 
-    def enclosure(self, data, key):
+    def enclosure(self, data, key, previous):
         from hdict.content.entry.closure import Closure
 
-        return Closure(self, data, [key])
+        return Closure(self, data, [key], previous)
 
     def __call__(self, *out, **kwout):
         from hdict.expression.step.applyout import ApplyOut

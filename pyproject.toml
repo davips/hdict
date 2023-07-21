@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "hdict"
-version = "2.230720.0"
+version = "2.230721.2"
 description = "A versatile dictionary based on a novel paradigm useful for computing, caching, experiments, distributed data, among others."
 authors = ["davips <dpsabc@gmail.com>"]
 license = "GPLv3"
@@ -41,6 +41,7 @@ safeserializer = "^0.230202.1"
 lz4 = "^4.3.2"
 scikit-learn = "^1.2.2"
 liac-arff = "^2.5.0"
+pycrunch-engine = "^1.5.2"
 
 [build-system]
 requires = ["poetry-core"]

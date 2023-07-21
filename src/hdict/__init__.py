@@ -29,6 +29,7 @@ from hdict.data.empty_ import Empty_
 from hdict.content.value import value
 from hdict.data.frozenhdict import frozenhdict
 from hdict.data.hdict_ import hdict_
+from hdict.data.self_ import Self_
 from hdict.expression.step.cache import cache
 
 __all__ = ["hdict", "_", "Ø", "apply", "field", "sample", "frozenhdict", "value", "cache"]
@@ -174,8 +175,8 @@ class hdict(hdict_):
     >>> pp = apply(f, field("x"), y=3)("z") >> apply(g, y=7)("w", "v")
     >>> d >>= {"x": 3} >> pp >> apply(g, y=7)("w", "v")
     >>> from hdict import _
-    >>> a1 = apply(f, y=_[1, 2, 4, ..., 128])
-    >>> a2 = apply(f, _[0, 3, 6, ..., 9], y=_[0, 3, 6, ..., 9])
+    >>> a1 = apply(f, y=_(1, 2, 4, ..., 128))
+    >>> a2 = apply(f, _(0, 3, 6, ..., 9), y=_(0, 3, 6, ..., 9))
     >>> ppp = hdict() >> a2.sample()("k", "t")
     >>> ppp.show(colored=False)
     {
@@ -195,7 +196,7 @@ class hdict(hdict_):
     (('w', 'a'), ('v', 'b'))=λ(x=~[0 3 .+. 9] y=~[0 3 .+. 9])
     >>> p = a1("z") >> a2(w="a", v="b")
     >>> h = lambda a, b=4: 5
-    >>> app = apply(h, a=_[0, 3, 6, ..., 9])
+    >>> app = apply(h, a=_(0, 3, 6, ..., 9))
     >>> app
     λ(a=~[0 3 .+. 9] b=default(4))
     >>> app.c
@@ -230,8 +231,8 @@ class hdict(hdict_):
     >>> d["w", "v"] = apply(f, _.x, y=_.x)
     >>> d["w", "v"] = apply(_.f, _.x, y=default(3))
     >>> d = hdict() >> {"z": apply(f, 7, y=3), ("w", "v"): apply(g, default(6), y=7)}
-    >>> d = hdict(w=6) >> (apply(f, _.w, y=3)(z="z") >> apply(g, x=_[1,2,3,...,5], y=7)("ww", "v")).sample(0)
-    >>> p = apply(f, y=_[1, 2, 4, ..., 128])("z") >> apply(f, y=_[0, 3, 6, ..., 9])(w="a", v="b")
+    >>> d = hdict(w=6) >> (apply(f, _["w"], y=3)(z="z") >> apply(g, x=_(1,2,3,...,5), y=7)("ww", "v")).sample(0)
+    >>> p = apply(f, y=_(1, 2, 4, ..., 128))("z") >> apply(f, y=_(0, 3, 6, ..., 9))(w="a", v="b")
     >>> d.show(colored=False)
     {
         w: 6,
@@ -453,7 +454,7 @@ class Empty(Empty_):
     """
     >>> from hdict import _
     >>> d = _ >> {"x": 5} >> dict(y=7)
-    >>> type(_), type(d)
+    >>> type(+_), type(d)
     (<class 'hdict.Empty'>, <class 'hdict.hdict'>)
     >>> d.show(colored=False)
     {
@@ -468,4 +469,9 @@ class Empty(Empty_):
     """
 
 
-Ø = _ = Empty()
+class Self(Self_):
+    """"""
+
+
+Ø = empty = Empty()
+_ = Self()

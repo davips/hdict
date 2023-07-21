@@ -54,9 +54,9 @@ class AbsEntry(AbsAny):
     @property
     def isevaluated(self):
         """
-        >>> from hdict import apply
+        >>> from hdict import apply, frozenhdict
         >>> from hdict.content.entry.closure import Closure
-        >>> Closure(apply(lambda x, y: x + y), {"x": 3, "y": 5}, []).isevaluated
+        >>> Closure(apply(lambda x, y: x + y), {"x": 3, "y": 5}, [], frozenhdict).isevaluated
         False
         """
         return not isinstance(self._value, Unevaluated)

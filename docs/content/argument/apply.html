@@ -64,6 +64,19 @@ from hdict.content.aux_value import f2hosh
 
 
 def getattr_(__o: object, name: str, __default=None):
+    &#34;&#34;&#34;
+    &gt;&gt;&gt; from hdict import _, apply
+    &gt;&gt;&gt; (_ &gt;&gt; {&#34;o&#34;: &#34;str&#34;} &gt;&gt; apply(getattr, _.o, &#34;find&#34;).r).evaluated.show(colored=False)  # doctest:+ELLIPSIS
+    {
+        o: &#34;str&#34;,
+        r: &#34;&lt;built-in method find of str object at 0x...&gt;&#34;,
+        _id: zU3QsJ.a9fjr8eeoqwaPKlufC6.AEacZZBWScM39,
+        _ids: {
+            o: PdHGvI1xk.ZG7wt3-2TQm-GjFXidwYNw8xsD3Wpe,
+            r: BKrY9O9ExQh8k0xjgINKKV2-JD6qEEjDOIVR1yyq
+        }
+    }
+    &#34;&#34;&#34;
     return getattr(__o, name, __default)
 
 
@@ -87,11 +100,11 @@ class apply(AbsBaseArgument):
     &gt;&gt;&gt; v2 = apply(f, a=v, b=value(7))
     &gt;&gt;&gt; v2
     λ(a=λ(5 7) 7)
-    &gt;&gt;&gt; v.enclosure({}, &#34;j&#34;).value
+    &gt;&gt;&gt; v.enclosure({}, &#34;j&#34;, None).value
     78125
-    &gt;&gt;&gt; v2.enclosure({}, &#34;j&#34;)
+    &gt;&gt;&gt; v2.enclosure({}, &#34;j&#34;, None)
     λ(a=λ(5 7) 7)
-    &gt;&gt;&gt; v2.enclosure({}, &#34;j&#34;).value
+    &gt;&gt;&gt; v2.enclosure({}, &#34;j&#34;, None).value
     17763568394002504646778106689453125
 
     &gt;&gt;&gt; f = lambda a,b, c=1,d=2,e=13: 0
@@ -102,7 +115,7 @@ class apply(AbsBaseArgument):
     {&#39;a&#39;: 3, &#39;b&#39;: field(b), &#39;c&#39;: default(1), &#39;d&#39;: default(2), &#39;e&#39;: default(13)}
     &gt;&gt;&gt; ap
     λ(3 b c=default(1) d=default(2) e=default(13))
-    &gt;&gt;&gt; ap.enclosure({&#34;b&#34;: value(77)}, &#34;j&#34;)
+    &gt;&gt;&gt; ap.enclosure({&#34;b&#34;: value(77)}, &#34;j&#34;, None)
     λ(3 b c=1 d=2 e=13)
     &gt;&gt;&gt; ap
     λ(3 b c=default(1) d=default(2) e=default(13))
@@ -110,7 +123,7 @@ class apply(AbsBaseArgument):
     &gt;&gt;&gt; d
     {&#39;f&#39;: λ(3 b c=default(1) d=default(2) e=default(13)), &#39;b&#39;: 5, &#39;d&#39;: 1, &#39;e&#39;: field(b)}
     &gt;&gt;&gt; from hdict.data.aux_frozendict import handle_items
-    &gt;&gt;&gt; handle_items(d, previous={&#34;b&#34;: 5})
+    &gt;&gt;&gt; handle_items(d, previous=frozenhdict({&#34;b&#34;: 5}))
     {&#39;b&#39;: 5, &#39;f&#39;: λ(3 b c=1 d=2 e=13), &#39;d&#39;: 1, &#39;e&#39;: 5}
     &gt;&gt;&gt; d
     {&#39;f&#39;: λ(3 b c=default(1) d=default(2) e=default(13)), &#39;b&#39;: 5, &#39;d&#39;: 1, &#39;e&#39;: field(b)}
@@ -344,10 +357,10 @@ class apply(AbsBaseArgument):
             clone.fkwargs[k] = v.sample(rnd)
         return clone
 
-    def enclosure(self, data, key):
+    def enclosure(self, data, key, previous):
         from hdict.content.entry.closure import Closure
 
-        return Closure(self, data, [key])
+        return Closure(self, data, [key], previous)
 
     def __call__(self, *out, **kwout):
         from hdict.expression.step.applyout import ApplyOut
@@ -418,12 +431,36 @@ class apply(AbsBaseArgument):
 <span>def <span class="ident">getattr_</span></span>(<span>__o: object, name: str)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><pre><code class="language-python-repl">&gt;&gt;&gt; from hdict import _, apply
+&gt;&gt;&gt; (_ &gt;&gt; {&quot;o&quot;: &quot;str&quot;} &gt;&gt; apply(getattr, _.o, &quot;find&quot;).r).evaluated.show(colored=False)  # doctest:+ELLIPSIS
+{
+    o: &quot;str&quot;,
+    r: &quot;&lt;built-in method find of str object at 0x...&gt;&quot;,
+    _id: zU3QsJ.a9fjr8eeoqwaPKlufC6.AEacZZBWScM39,
+    _ids: {
+        o: PdHGvI1xk.ZG7wt3-2TQm-GjFXidwYNw8xsD3Wpe,
+        r: BKrY9O9ExQh8k0xjgINKKV2-JD6qEEjDOIVR1yyq
+    }
+}
+</code></pre></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def getattr_(__o: object, name: str, __default=None):
+    &#34;&#34;&#34;
+    &gt;&gt;&gt; from hdict import _, apply
+    &gt;&gt;&gt; (_ &gt;&gt; {&#34;o&#34;: &#34;str&#34;} &gt;&gt; apply(getattr, _.o, &#34;find&#34;).r).evaluated.show(colored=False)  # doctest:+ELLIPSIS
+    {
+        o: &#34;str&#34;,
+        r: &#34;&lt;built-in method find of str object at 0x...&gt;&#34;,
+        _id: zU3QsJ.a9fjr8eeoqwaPKlufC6.AEacZZBWScM39,
+        _ids: {
+            o: PdHGvI1xk.ZG7wt3-2TQm-GjFXidwYNw8xsD3Wpe,
+            r: BKrY9O9ExQh8k0xjgINKKV2-JD6qEEjDOIVR1yyq
+        }
+    }
+    &#34;&#34;&#34;
     return getattr(__o, name, __default)</code></pre>
 </details>
 </dd>
@@ -452,11 +489,11 @@ Multioutput application is defined by a call: 'apply(f)("output_field1", "output
 <pre><code class="language-python-repl">&gt;&gt;&gt; v2 = apply(f, a=v, b=value(7))
 &gt;&gt;&gt; v2
 λ(a=λ(5 7) 7)
-&gt;&gt;&gt; v.enclosure({}, &quot;j&quot;).value
+&gt;&gt;&gt; v.enclosure({}, &quot;j&quot;, None).value
 78125
-&gt;&gt;&gt; v2.enclosure({}, &quot;j&quot;)
+&gt;&gt;&gt; v2.enclosure({}, &quot;j&quot;, None)
 λ(a=λ(5 7) 7)
-&gt;&gt;&gt; v2.enclosure({}, &quot;j&quot;).value
+&gt;&gt;&gt; v2.enclosure({}, &quot;j&quot;, None).value
 17763568394002504646778106689453125
 </code></pre>
 <pre><code class="language-python-repl">&gt;&gt;&gt; f = lambda a,b, c=1,d=2,e=13: 0
@@ -467,7 +504,7 @@ Multioutput application is defined by a call: 'apply(f)("output_field1", "output
 {'a': 3, 'b': field(b), 'c': default(1), 'd': default(2), 'e': default(13)}
 &gt;&gt;&gt; ap
 λ(3 b c=default(1) d=default(2) e=default(13))
-&gt;&gt;&gt; ap.enclosure({&quot;b&quot;: value(77)}, &quot;j&quot;)
+&gt;&gt;&gt; ap.enclosure({&quot;b&quot;: value(77)}, &quot;j&quot;, None)
 λ(3 b c=1 d=2 e=13)
 &gt;&gt;&gt; ap
 λ(3 b c=default(1) d=default(2) e=default(13))
@@ -475,7 +512,7 @@ Multioutput application is defined by a call: 'apply(f)("output_field1", "output
 &gt;&gt;&gt; d
 {'f': λ(3 b c=default(1) d=default(2) e=default(13)), 'b': 5, 'd': 1, 'e': field(b)}
 &gt;&gt;&gt; from hdict.data.aux_frozendict import handle_items
-&gt;&gt;&gt; handle_items(d, previous={&quot;b&quot;: 5})
+&gt;&gt;&gt; handle_items(d, previous=frozenhdict({&quot;b&quot;: 5}))
 {'b': 5, 'f': λ(3 b c=1 d=2 e=13), 'd': 1, 'e': 5}
 &gt;&gt;&gt; d
 {'f': λ(3 b c=default(1) d=default(2) e=default(13)), 'b': 5, 'd': 1, 'e': field(b)}
@@ -659,11 +696,11 @@ False
     &gt;&gt;&gt; v2 = apply(f, a=v, b=value(7))
     &gt;&gt;&gt; v2
     λ(a=λ(5 7) 7)
-    &gt;&gt;&gt; v.enclosure({}, &#34;j&#34;).value
+    &gt;&gt;&gt; v.enclosure({}, &#34;j&#34;, None).value
     78125
-    &gt;&gt;&gt; v2.enclosure({}, &#34;j&#34;)
+    &gt;&gt;&gt; v2.enclosure({}, &#34;j&#34;, None)
     λ(a=λ(5 7) 7)
-    &gt;&gt;&gt; v2.enclosure({}, &#34;j&#34;).value
+    &gt;&gt;&gt; v2.enclosure({}, &#34;j&#34;, None).value
     17763568394002504646778106689453125
 
     &gt;&gt;&gt; f = lambda a,b, c=1,d=2,e=13: 0
@@ -674,7 +711,7 @@ False
     {&#39;a&#39;: 3, &#39;b&#39;: field(b), &#39;c&#39;: default(1), &#39;d&#39;: default(2), &#39;e&#39;: default(13)}
     &gt;&gt;&gt; ap
     λ(3 b c=default(1) d=default(2) e=default(13))
-    &gt;&gt;&gt; ap.enclosure({&#34;b&#34;: value(77)}, &#34;j&#34;)
+    &gt;&gt;&gt; ap.enclosure({&#34;b&#34;: value(77)}, &#34;j&#34;, None)
     λ(3 b c=1 d=2 e=13)
     &gt;&gt;&gt; ap
     λ(3 b c=default(1) d=default(2) e=default(13))
@@ -682,7 +719,7 @@ False
     &gt;&gt;&gt; d
     {&#39;f&#39;: λ(3 b c=default(1) d=default(2) e=default(13)), &#39;b&#39;: 5, &#39;d&#39;: 1, &#39;e&#39;: field(b)}
     &gt;&gt;&gt; from hdict.data.aux_frozendict import handle_items
-    &gt;&gt;&gt; handle_items(d, previous={&#34;b&#34;: 5})
+    &gt;&gt;&gt; handle_items(d, previous=frozenhdict({&#34;b&#34;: 5}))
     {&#39;b&#39;: 5, &#39;f&#39;: λ(3 b c=1 d=2 e=13), &#39;d&#39;: 1, &#39;e&#39;: 5}
     &gt;&gt;&gt; d
     {&#39;f&#39;: λ(3 b c=default(1) d=default(2) e=default(13)), &#39;b&#39;: 5, &#39;d&#39;: 1, &#39;e&#39;: field(b)}
@@ -916,10 +953,10 @@ False
             clone.fkwargs[k] = v.sample(rnd)
         return clone
 
-    def enclosure(self, data, key):
+    def enclosure(self, data, key, previous):
         from hdict.content.entry.closure import Closure
 
-        return Closure(self, data, [key])
+        return Closure(self, data, [key], previous)
 
     def __call__(self, *out, **kwout):
         from hdict.expression.step.applyout import ApplyOut
@@ -1055,7 +1092,7 @@ def sampleable(self):
 </details>
 </dd>
 <dt id="hdict.content.argument.apply.apply.enclosure"><code class="name flex">
-<span>def <span class="ident">enclosure</span></span>(<span>self, data, key)</span>
+<span>def <span class="ident">enclosure</span></span>(<span>self, data, key, previous)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -1063,10 +1100,10 @@ def sampleable(self):
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def enclosure(self, data, key):
+<pre><code class="python">def enclosure(self, data, key, previous):
     from hdict.content.entry.closure import Closure
 
-    return Closure(self, data, [key])</code></pre>
+    return Closure(self, data, [key], previous)</code></pre>
 </details>
 </dd>
 <dt id="hdict.content.argument.apply.apply.sample"><code class="name flex">

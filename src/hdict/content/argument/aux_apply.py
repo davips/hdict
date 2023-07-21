@@ -16,6 +16,11 @@ class IndexedDict(IndexedOrderedDict):
 
 
 class Arg(str):
+    """
+    >>> Arg("a") >= Arg("a")
+    True
+    """
+
     def __init__(self, position: int):
         self.position = position
 
@@ -50,10 +55,11 @@ def handle_args(signature, applied_args, applied_kwargs):
             params.append(k)
     else:
         for par in signature.parameters.values():
-            if str(par).startswith("**"):
+            strpar = str(par)
+            if strpar.startswith("**"):
                 haskwargs = True
                 continue
-            elif str(par).startswith("*"):
+            elif strpar.startswith("*"):
                 hasargs = True
                 continue
             name = par.name

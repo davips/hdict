@@ -31,7 +31,7 @@
 from hdict.content.argument import AbsBaseArgument
 
 
-def handle_arg(key, val, data, discarded_defaults, out, torepr):
+def handle_arg(key, val, data, discarded_defaults, out, torepr, previous):
     &#34;&#34;&#34;Return handled arg and value of pseudocircular entry&#34;&#34;&#34;
     from hdict.content.argument.default import default
     from hdict.content.value import value
@@ -40,8 +40,9 @@ def handle_arg(key, val, data, discarded_defaults, out, torepr):
     from hdict.data.aux_frozendict import MissingFieldException
 
     from hdict.content.argument.entry import entry
-    from hdict.content.entry.subvalue import SubValue
 
+    if key == &#34;_&#34;:
+        return handle_item(str(key), previous, data, previous)
     match val:
         case default(value=v):
             if key in data:
@@ -56,7 +57,7 @@ def handle_arg(key, val, data, discarded_defaults, out, torepr):
         case field(name=name) if name in out:  # Override case of handle_item if pseudocircular reference.
             if name not in data:  # pragma: no cover
                 raise MissingFieldException(f&#34;Missing pseudocircular field `{name}`&#34;)
-            arg = handle_item(str(key), data[name], data)  # key passed for no purpose here AFAIR
+            arg = handle_item(str(key), data[name], data, previous)  # key passed for no purpose here AFAIR
             torepr[key] = arg
             return arg
         case entry(name=name):
@@ -64,12 +65,12 @@ def handle_arg(key, val, data, discarded_defaults, out, torepr):
 
             if name not in data:  # pragma: no cover
                 raise MissingFieldException(f&#34;Missing pseudocircular field `{name}`&#34;)
-            content = handle_item(str(key), data[name], data)
+            content = handle_item(str(key), data[name], data, previous)
             arg = Wrapper(content)
             torepr[f&#34;·{name}&#34;] = arg
             return arg
         case AbsBaseArgument():
-            arg = handle_item(str(key), val, data)
+            arg = handle_item(str(key), val, data, previous)
         case _:  # pragma: no cover
             raise Exception(f&#34;Cannot handle argument of type `{type(val).__name__}`&#34;)
     torepr[key] = val
@@ -84,7 +85,7 @@ def handle_arg(key, val, data, discarded_defaults, out, torepr):
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
 <dt id="hdict.content.entry.aux_closure.handle_arg"><code class="name flex">
-<span>def <span class="ident">handle_arg</span></span>(<span>key, val, data, discarded_defaults, out, torepr)</span>
+<span>def <span class="ident">handle_arg</span></span>(<span>key, val, data, discarded_defaults, out, torepr, previous)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Return handled arg and value of pseudocircular entry</p></div>
@@ -92,7 +93,7 @@ def handle_arg(key, val, data, discarded_defaults, out, torepr):
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def handle_arg(key, val, data, discarded_defaults, out, torepr):
+<pre><code class="python">def handle_arg(key, val, data, discarded_defaults, out, torepr, previous):
     &#34;&#34;&#34;Return handled arg and value of pseudocircular entry&#34;&#34;&#34;
     from hdict.content.argument.default import default
     from hdict.content.value import value
@@ -101,8 +102,9 @@ def handle_arg(key, val, data, discarded_defaults, out, torepr):
     from hdict.data.aux_frozendict import MissingFieldException
 
     from hdict.content.argument.entry import entry
-    from hdict.content.entry.subvalue import SubValue
 
+    if key == &#34;_&#34;:
+        return handle_item(str(key), previous, data, previous)
     match val:
         case default(value=v):
             if key in data:
@@ -117,7 +119,7 @@ def handle_arg(key, val, data, discarded_defaults, out, torepr):
         case field(name=name) if name in out:  # Override case of handle_item if pseudocircular reference.
             if name not in data:  # pragma: no cover
                 raise MissingFieldException(f&#34;Missing pseudocircular field `{name}`&#34;)
-            arg = handle_item(str(key), data[name], data)  # key passed for no purpose here AFAIR
+            arg = handle_item(str(key), data[name], data, previous)  # key passed for no purpose here AFAIR
             torepr[key] = arg
             return arg
         case entry(name=name):
@@ -125,12 +127,12 @@ def handle_arg(key, val, data, discarded_defaults, out, torepr):
 
             if name not in data:  # pragma: no cover
                 raise MissingFieldException(f&#34;Missing pseudocircular field `{name}`&#34;)
-            content = handle_item(str(key), data[name], data)
+            content = handle_item(str(key), data[name], data, previous)
             arg = Wrapper(content)
             torepr[f&#34;·{name}&#34;] = arg
             return arg
         case AbsBaseArgument():
-            arg = handle_item(str(key), val, data)
+            arg = handle_item(str(key), val, data, previous)
         case _:  # pragma: no cover
             raise Exception(f&#34;Cannot handle argument of type `{type(val).__name__}`&#34;)
     torepr[key] = val

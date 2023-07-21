@@ -158,9 +158,6 @@ class frozenhdict(UserDict, dict[str, VT]):
         from hdict.data.aux_frozendict import handle_identity
         from hdict.data.aux_frozendict import handle_items
 
-        if _previous is None:
-            _previous = {}
-
         # todo: : check if _dictionary keys is &#39;str&#39;; regex to check if k is an identifier;
         data = _dictionary or {}
         # REMINDER: Inside data, the only &#39;dict&#39; entries are &#34;_id&#34; and &#34;_ids&#34;, the rest are AbsEntry objects.
@@ -222,7 +219,7 @@ class frozenhdict(UserDict, dict[str, VT]):
         from hdict.content.argument import AbsArgument
 
         if isinstance(other, AbsArgument):  # pragma: no cover
-            raise Exception(f&#34;Cannot pipe {type(other).__name__} without specifying output.\n&#34; f&#34;Hint: d &gt;&gt; {&#39;field name&#39;: object}\n&#34; f&#34;Hint: d[&#39;field name&#39;] = object&#34;)
+            raise Exception(f&#34;Cannot pipe {type(other).__name__} without specifying output.\n&#34; &#34;Hint: d &gt;&gt; {&#39;field name&#39;: object}\n&#34; f&#34;Hint: d[&#39;field name&#39;] = object&#34;)
 
         from hdict.expression.expr import Expr
 
@@ -241,7 +238,7 @@ class frozenhdict(UserDict, dict[str, VT]):
                 return Expr(self, other).solve()
             case _:  # pragma: no cover
                 return NotImplemented
-        return frozenhdict(dct, _previous=self.data)
+        return frozenhdict(dct, _previous=self)
 
     def __getitem__(self, item):  # pragma: no cover
         return self.data[item].value
@@ -294,6 +291,7 @@ class frozenhdict(UserDict, dict[str, VT]):
         return self
 
     def evaluate(self):
+        # todo: add flag to inhibit evaluation (i.e., fetching) of cached values; or other solution, e.g. Cache(write_onapply)
         _ = self.evaluated
 
     @property
@@ -456,7 +454,6 @@ class frozenhdict(UserDict, dict[str, VT]):
         &#34;&#34;&#34;
         Store an entire frozenidict
         &#34;&#34;&#34;
-        from hdict.content.entry.cached import kindid
         from hdict.persistence.stored import Stored
 
         data = {self.id: self.ids}
@@ -465,7 +462,7 @@ class frozenhdict(UserDict, dict[str, VT]):
             if field.endswith(&#34;_&#34;):
                 raise Exception(f&#34;Not implemented for mirror fields&#34;)
                 # todo:  confirm existence of the counterpart
-                data[kindid(fid)] = str(type(value))
+                # data[kindid(fid)] = str(type(value))
             elif isinstance(value, frozenhdict):
                 value.save(storage)
             else:
@@ -494,8 +491,6 @@ class frozenhdict(UserDict, dict[str, VT]):
         When cache is a list, traverse it from the end (right item to the left item).
         &#34;&#34;&#34;
         from hdict.content.entry.cached import Cached
-        from hdict.content.entry.cached import getkind
-        from hdict.data.aux_frozendict import handle_mirror
         from hdict.persistence.stored import Stored
 
         if id not in storage:
@@ -515,7 +510,7 @@ class frozenhdict(UserDict, dict[str, VT]):
                     # TODO:  2023-06-23
                     #  -
                     raise Exception(f&#34;Not implemented for mirror fields&#34;)
-                    mirrored.add(field[:-1])
+                    # mirrored.add(field[:-1])
                     continue
                 if lazy:
                     data[field] = Cached(fid, storage)
@@ -525,10 +520,10 @@ class frozenhdict(UserDict, dict[str, VT]):
                         print(storage.keys())
                         raise Exception(f&#34;Incomplete hdict: id &#39;{id}&#39; not found in the provided cache.&#34;)
                     data[field] = obj
-            for field in mirrored:
-                obj = data[field]
-                kind = obj.kind if isinstance(obj, Cached) else getkind(storage, obj.hosh)
-                data[field + &#34;_&#34;] = handle_mirror(field, data, ids[field], kind)
+            # for field in mirrored:
+            #     obj = data[field]
+            #     kind = obj.kind if isinstance(obj, Cached) else getkind(storage, obj.hosh)
+            #     data[field + &#34;_&#34;] = handle_mirror(field, data, ids[field], kind)
             return frozenhdict.fromdict(data, ids)
 
         return obj.content
@@ -551,7 +546,7 @@ class frozenhdict(UserDict, dict[str, VT]):
         &#34;&#34;&#34;
         from hdict.data.aux_frozendict import handle_format
 
-        df, name = file2df(name, hide_types)
+        df, name = file2df(name, hide_types, True)
         return handle_format(format, fields, df, named and name)
 
     @staticmethod
@@ -816,9 +811,6 @@ class frozenhdict(UserDict, dict[str, VT]):
         from hdict.data.aux_frozendict import handle_identity
         from hdict.data.aux_frozendict import handle_items
 
-        if _previous is None:
-            _previous = {}
-
         # todo: : check if _dictionary keys is &#39;str&#39;; regex to check if k is an identifier;
         data = _dictionary or {}
         # REMINDER: Inside data, the only &#39;dict&#39; entries are &#34;_id&#34; and &#34;_ids&#34;, the rest are AbsEntry objects.
@@ -880,7 +872,7 @@ class frozenhdict(UserDict, dict[str, VT]):
         from hdict.content.argument import AbsArgument
 
         if isinstance(other, AbsArgument):  # pragma: no cover
-            raise Exception(f&#34;Cannot pipe {type(other).__name__} without specifying output.\n&#34; f&#34;Hint: d &gt;&gt; {&#39;field name&#39;: object}\n&#34; f&#34;Hint: d[&#39;field name&#39;] = object&#34;)
+            raise Exception(f&#34;Cannot pipe {type(other).__name__} without specifying output.\n&#34; &#34;Hint: d &gt;&gt; {&#39;field name&#39;: object}\n&#34; f&#34;Hint: d[&#39;field name&#39;] = object&#34;)
 
         from hdict.expression.expr import Expr
 
@@ -899,7 +891,7 @@ class frozenhdict(UserDict, dict[str, VT]):
                 return Expr(self, other).solve()
             case _:  # pragma: no cover
                 return NotImplemented
-        return frozenhdict(dct, _previous=self.data)
+        return frozenhdict(dct, _previous=self)
 
     def __getitem__(self, item):  # pragma: no cover
         return self.data[item].value
@@ -952,6 +944,7 @@ class frozenhdict(UserDict, dict[str, VT]):
         return self
 
     def evaluate(self):
+        # todo: add flag to inhibit evaluation (i.e., fetching) of cached values; or other solution, e.g. Cache(write_onapply)
         _ = self.evaluated
 
     @property
@@ -1114,7 +1107,6 @@ class frozenhdict(UserDict, dict[str, VT]):
         &#34;&#34;&#34;
         Store an entire frozenidict
         &#34;&#34;&#34;
-        from hdict.content.entry.cached import kindid
         from hdict.persistence.stored import Stored
 
         data = {self.id: self.ids}
@@ -1123,7 +1115,7 @@ class frozenhdict(UserDict, dict[str, VT]):
             if field.endswith(&#34;_&#34;):
                 raise Exception(f&#34;Not implemented for mirror fields&#34;)
                 # todo:  confirm existence of the counterpart
-                data[kindid(fid)] = str(type(value))
+                # data[kindid(fid)] = str(type(value))
             elif isinstance(value, frozenhdict):
                 value.save(storage)
             else:
@@ -1152,8 +1144,6 @@ class frozenhdict(UserDict, dict[str, VT]):
         When cache is a list, traverse it from the end (right item to the left item).
         &#34;&#34;&#34;
         from hdict.content.entry.cached import Cached
-        from hdict.content.entry.cached import getkind
-        from hdict.data.aux_frozendict import handle_mirror
         from hdict.persistence.stored import Stored
 
         if id not in storage:
@@ -1173,7 +1163,7 @@ class frozenhdict(UserDict, dict[str, VT]):
                     # TODO:  2023-06-23
                     #  -
                     raise Exception(f&#34;Not implemented for mirror fields&#34;)
-                    mirrored.add(field[:-1])
+                    # mirrored.add(field[:-1])
                     continue
                 if lazy:
                     data[field] = Cached(fid, storage)
@@ -1183,10 +1173,10 @@ class frozenhdict(UserDict, dict[str, VT]):
                         print(storage.keys())
                         raise Exception(f&#34;Incomplete hdict: id &#39;{id}&#39; not found in the provided cache.&#34;)
                     data[field] = obj
-            for field in mirrored:
-                obj = data[field]
-                kind = obj.kind if isinstance(obj, Cached) else getkind(storage, obj.hosh)
-                data[field + &#34;_&#34;] = handle_mirror(field, data, ids[field], kind)
+            # for field in mirrored:
+            #     obj = data[field]
+            #     kind = obj.kind if isinstance(obj, Cached) else getkind(storage, obj.hosh)
+            #     data[field + &#34;_&#34;] = handle_mirror(field, data, ids[field], kind)
             return frozenhdict.fromdict(data, ids)
 
         return obj.content
@@ -1209,7 +1199,7 @@ class frozenhdict(UserDict, dict[str, VT]):
         &#34;&#34;&#34;
         from hdict.data.aux_frozendict import handle_format
 
-        df, name = file2df(name, hide_types)
+        df, name = file2df(name, hide_types, True)
         return handle_format(format, fields, df, named and name)
 
     @staticmethod
@@ -1313,8 +1303,6 @@ def fetch(id: str, storage: dict, lazy=True, ishdict=False) -&gt; Union[&#34;fro
     When cache is a list, traverse it from the end (right item to the left item).
     &#34;&#34;&#34;
     from hdict.content.entry.cached import Cached
-    from hdict.content.entry.cached import getkind
-    from hdict.data.aux_frozendict import handle_mirror
     from hdict.persistence.stored import Stored
 
     if id not in storage:
@@ -1334,7 +1322,7 @@ def fetch(id: str, storage: dict, lazy=True, ishdict=False) -&gt; Union[&#34;fro
                 # TODO:  2023-06-23
                 #  -
                 raise Exception(f&#34;Not implemented for mirror fields&#34;)
-                mirrored.add(field[:-1])
+                # mirrored.add(field[:-1])
                 continue
             if lazy:
                 data[field] = Cached(fid, storage)
@@ -1344,10 +1332,10 @@ def fetch(id: str, storage: dict, lazy=True, ishdict=False) -&gt; Union[&#34;fro
                     print(storage.keys())
                     raise Exception(f&#34;Incomplete hdict: id &#39;{id}&#39; not found in the provided cache.&#34;)
                 data[field] = obj
-        for field in mirrored:
-            obj = data[field]
-            kind = obj.kind if isinstance(obj, Cached) else getkind(storage, obj.hosh)
-            data[field + &#34;_&#34;] = handle_mirror(field, data, ids[field], kind)
+        # for field in mirrored:
+        #     obj = data[field]
+        #     kind = obj.kind if isinstance(obj, Cached) else getkind(storage, obj.hosh)
+        #     data[field + &#34;_&#34;] = handle_mirror(field, data, ids[field], kind)
         return frozenhdict.fromdict(data, ids)
 
     return obj.content</code></pre>
@@ -1416,7 +1404,7 @@ def fromfile(name, fields=None, format=&#34;df&#34;, named=None, hide_types=True
     &#34;&#34;&#34;
     from hdict.data.aux_frozendict import handle_format
 
-    df, name = file2df(name, hide_types)
+    df, name = file2df(name, hide_types, True)
     return handle_format(format, fields, df, named and name)</code></pre>
 </details>
 </dd>
@@ -1758,6 +1746,7 @@ def unfrozen(self):
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def evaluate(self):
+    # todo: add flag to inhibit evaluation (i.e., fetching) of cached values; or other solution, e.g. Cache(write_onapply)
     _ = self.evaluated</code></pre>
 </details>
 </dd>
@@ -1817,7 +1806,6 @@ def unfrozen(self):
     &#34;&#34;&#34;
     Store an entire frozenidict
     &#34;&#34;&#34;
-    from hdict.content.entry.cached import kindid
     from hdict.persistence.stored import Stored
 
     data = {self.id: self.ids}
@@ -1826,7 +1814,7 @@ def unfrozen(self):
         if field.endswith(&#34;_&#34;):
             raise Exception(f&#34;Not implemented for mirror fields&#34;)
             # todo:  confirm existence of the counterpart
-            data[kindid(fid)] = str(type(value))
+            # data[kindid(fid)] = str(type(value))
         elif isinstance(value, frozenhdict):
             value.save(storage)
         else:

@@ -4,7 +4,7 @@ from typing import TypeVar
 
 from hosh import ø
 
-from hdict import hdict, value, frozenhdict
+from hdict import hdict, value, frozenhdict, Self
 from hdict.abs import AbsAny
 from hdict.content.argument.apply import apply
 from hdict.content.argument.field import field
@@ -21,11 +21,11 @@ class MissingFieldException(Exception):
     pass
 
 
-def handle_items(*datas: [Dict[str, object]], previous: [Dict[str, AbsEntry]]):
-    result = previous.copy()
+def handle_items(*datas: [Dict[str, object]], previous: frozenhdict):
+    result = {} if previous is None else previous.raw.copy()
     result__mirror_fields = {}
     for key, item in chain(*(data.items() for data in datas)):
-        entry = handle_item(key, item, result)
+        entry = handle_item(key, item, result, previous)
         if isinstance(key, str) and key.endswith("_"):
             if isinstance(entry, value):
                 result__mirror_fields[f"{key[:-1]}"] = value(entry.hdict, entry.hdict.hosh)
@@ -39,24 +39,24 @@ def handle_items(*datas: [Dict[str, object]], previous: [Dict[str, AbsEntry]]):
     return result
 
 
-def handle_item(key, item, previous):
+def handle_item(key, item, result, previous):
     from hdict.content.argument.entry import entry
 
     match item:
         case AbsEntry():
             res = item
         case field(name=name):
-            if name not in previous:  # pragma: no cover
+            if name not in result:  # pragma: no cover
                 raise MissingFieldException(f"Missing field `{name}`")
-            res = handle_item(name, previous[name], previous)
+            res = handle_item(name, result[name], result, previous)
         case entry(name=name):
             from hdict.content.entry.wrapper import Wrapper
 
-            if name not in previous:  # pragma: no cover
+            if name not in result:  # pragma: no cover
                 raise MissingFieldException(f"Missing entry `{name}`")
-            res = Wrapper(handle_item(name, previous[name], previous))
+            res = Wrapper(handle_item(name, result[name], result, previous))
         case apply():
-            res = item.enclosure(previous, key)
+            res = item.enclosure(result, key, previous)
         case sample():  # pragma: no cover
             raise Exception(f"Unsampled variable or argument `{key}`")
         case frozenhdict():
@@ -65,6 +65,10 @@ def handle_item(key, item, previous):
             res = value(item.frozen, item.hosh)
         case ApplyOut():  # pragma: no cover
             raise Exception("Cannot assign output through both apply and dict-key: '>> {out: apply(...)(out)}'.")
+        case Self():
+            if previous is None:
+                raise Exception(f"Cannot reference self in a new hdict. `_` is intended to point to a hdict before application.")
+            res = handle_item(key, previous, result, None)
         case AbsAny():  # pragma: no cover
             raise Exception(f"Cannot handle instance of type '{type(item).__name__}'.")
         case _ if str(type(item)) == "<class 'pandas.core.frame.DataFrame'>":
@@ -79,7 +83,7 @@ def handle_item(key, item, previous):
             res = value(item)
 
     if isinstance(key, tuple):
-        return handle_multioutput(key, res, previous)
+        return handle_multioutput(key, res, result, previous)
     elif not isinstance(key, str):  # pragma: no cover
         raise Exception(f"Invalid type for input field specification: {type(key).__name__}")
     # elif key.startswith("_"):  # pragma: no cover     # reminder: _* allowed here due to parameter name in getattr(__o)
@@ -111,16 +115,16 @@ def handle_identity(data):
     return hosh, ids
 
 
-def handle_multioutput(field_names: tuple, entry: AbsEntry | apply, previous):
+def handle_multioutput(field_names: tuple, entry: AbsEntry | apply, previous_result, previous):
     """Fields and hoshes are assigned to each output according to the alphabetical order of the original keys.
 
     >>> from hdict import field, value
     >>> d = {"a": field("b"), "b": field("c"), "c": 5}
     >>> d
     {'a': field(b), 'b': field(c), 'c': 5}
-    >>> handle_multioutput(("x","y"), value([0, 1]), d)
+    >>> handle_multioutput(("x","y"), value([0, 1]), d, None)
     {'x': 0, 'y': 1}
-    >>> handle_multioutput(("x","y"), value({1: "a", 0: "b"}), d)
+    >>> handle_multioutput(("x","y"), value({1: "a", 0: "b"}), d, None)
     {'x': 'b', 'y': 'a'}
     """
     from hdict import value
@@ -132,15 +136,15 @@ def handle_multioutput(field_names: tuple, entry: AbsEntry | apply, previous):
             if len(field_names) != len(lst):  # pragma: no cover
                 raise Exception(f"Number of output fields ('{len(field_names)}') should match number of list elements ('{len(lst)}').")
             for field_name, val in zip(field_names, lst):
-                data[field_name] = handle_item(field_name, val, previous)
+                data[field_name] = handle_item(field_name, val, previous_result, previous)
         case value(value=dict() as dct):
             if len(field_names) != len(dct):  # pragma: no cover
                 raise Exception(f"Number of output fields ('{len(field_names)}') should match number of dict entries ('{len(dct)}').")
             for field_name, (_, val) in zip(field_names, sorted(dct.items())):
-                data[field_name] = handle_item(field_name, val, previous)
+                data[field_name] = handle_item(field_name, val, previous_result, previous)
         case AbsEntry() | apply():
             keys = []  # For repr().
-            parent = Closure(entry, previous, keys) if isinstance(entry, apply) else entry
+            parent = Closure(entry, previous_result, keys, previous) if isinstance(entry, apply) else entry
             n = len(field_names)
             for key, i, source in loop_field_names(field_names):
                 if key is not None:
@@ -166,19 +170,19 @@ def loop_field_names(field_names):
             yield field_name, i, None
 
 
-def handle_mirror(k, data, id, kind):  # object | Cached
-    from hdict.content.entry.cached import Cached
-
-    if not isinstance(data[k], (Cached, frozenhdict)):  # pragma: no cover
-        raise Exception(f"Cannot handle fetched object of type `{type(data[k])}`")
-    match kind:
-        case "<class 'pandas.core.frame.DataFrame'>":
-            f = lambda **kwargs: kwargs[k].asdf
-            return apply(f, fhosh=ø, **{k: field(k)}).enclosure(data, k)
-        case None:  # pragma: no cover
-            pass
-        case _:  # pragma: no cover
-            raise Exception(f"Unknown mirror field kind `{kind}`.")
+# def handle_mirror(k, data, id, kind, previous):  # object | Cached
+#     from hdict.content.entry.cached import Cached
+#
+#     if not isinstance(data[k], (Cached, frozenhdict)):  # pragma: no cover
+#         raise Exception(f"Cannot handle fetched object of type `{type(data[k])}`")
+#     match kind:
+#         case "<class 'pandas.core.frame.DataFrame'>":
+#             f = lambda **kwargs: kwargs[k].asdf
+#             return apply(f, fhosh=ø, **{k: field(k)}).enclosure(data, k, previous)
+#         case None:  # pragma: no cover
+#             pass
+#         case _:  # pragma: no cover
+#             raise Exception(f"Unknown mirror field kind `{kind}`.")
 
 
 def handle_format(format, fields, df, name):

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from itertools import chain
 
+from hdict.data.frozenhdict import frozenhdict
 from hosh import ø
 
 from hdict.content.argument import AbsArgument
@@ -13,7 +14,7 @@ from hdict.text.customjson import truncate
 
 
 class Closure(AbsEntry):
-    def __init__(self, application: apply, data: dict[str, AbsEntry], out: list):
+    def __init__(self, application: apply, data: dict[str, AbsEntry], out: list, previous: frozenhdict):
         from hdict.data.aux_frozendict import handle_item
 
         self.application = application
@@ -26,16 +27,16 @@ class Closure(AbsEntry):
         for idx, tup in sorted(chain(sortable_fargs, application.fkwargs.items())):  # We sort by keys for a deterministic hosh.
             if isinstance(tup, tuple):
                 key, val = tup
-                arg = handle_arg(key, val, data, discarded_defaults, out, self.torepr)
+                arg = handle_arg(key, val, data, discarded_defaults, out, self.torepr, previous)
                 fargs[key] = arg
             else:
                 key, val = idx, tup
-                arg = handle_arg(key, val, data, discarded_defaults, out, self.torepr)
+                arg = handle_arg(key, val, data, discarded_defaults, out, self.torepr, previous)
                 fkwargs[key] = arg
             hosh *= arg.hosh
 
         if application.isfield:
-            appliable_entry = handle_item(application.appliable.name, application.appliable, data)
+            appliable_entry = handle_item(application.appliable.name, application.appliable, data, previous)
             hosh *= appliable_entry.hosh.rev
 
             def f():

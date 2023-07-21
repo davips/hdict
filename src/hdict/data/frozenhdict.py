@@ -130,9 +130,6 @@ class frozenhdict(UserDict, dict[str, VT]):
         from hdict.data.aux_frozendict import handle_identity
         from hdict.data.aux_frozendict import handle_items
 
-        if _previous is None:
-            _previous = {}
-
         # todo: : check if _dictionary keys is 'str'; regex to check if k is an identifier;
         data = _dictionary or {}
         # REMINDER: Inside data, the only 'dict' entries are "_id" and "_ids", the rest are AbsEntry objects.
@@ -194,7 +191,7 @@ class frozenhdict(UserDict, dict[str, VT]):
         from hdict.content.argument import AbsArgument
 
         if isinstance(other, AbsArgument):  # pragma: no cover
-            raise Exception(f"Cannot pipe {type(other).__name__} without specifying output.\n" f"Hint: d >> {'field name': object}\n" f"Hint: d['field name'] = object")
+            raise Exception(f"Cannot pipe {type(other).__name__} without specifying output.\n" "Hint: d >> {'field name': object}\n" f"Hint: d['field name'] = object")
 
         from hdict.expression.expr import Expr
 
@@ -213,7 +210,7 @@ class frozenhdict(UserDict, dict[str, VT]):
                 return Expr(self, other).solve()
             case _:  # pragma: no cover
                 return NotImplemented
-        return frozenhdict(dct, _previous=self.data)
+        return frozenhdict(dct, _previous=self)
 
     def __getitem__(self, item):  # pragma: no cover
         return self.data[item].value
@@ -429,7 +426,6 @@ class frozenhdict(UserDict, dict[str, VT]):
         """
         Store an entire frozenidict
         """
-        from hdict.content.entry.cached import kindid
         from hdict.persistence.stored import Stored
 
         data = {self.id: self.ids}
@@ -438,7 +434,7 @@ class frozenhdict(UserDict, dict[str, VT]):
             if field.endswith("_"):
                 raise Exception(f"Not implemented for mirror fields")
                 # todo:  confirm existence of the counterpart
-                data[kindid(fid)] = str(type(value))
+                # data[kindid(fid)] = str(type(value))
             elif isinstance(value, frozenhdict):
                 value.save(storage)
             else:
@@ -467,8 +463,6 @@ class frozenhdict(UserDict, dict[str, VT]):
         When cache is a list, traverse it from the end (right item to the left item).
         """
         from hdict.content.entry.cached import Cached
-        from hdict.content.entry.cached import getkind
-        from hdict.data.aux_frozendict import handle_mirror
         from hdict.persistence.stored import Stored
 
         if id not in storage:
@@ -488,7 +482,7 @@ class frozenhdict(UserDict, dict[str, VT]):
                     # TODO:  2023-06-23
                     #  -
                     raise Exception(f"Not implemented for mirror fields")
-                    mirrored.add(field[:-1])
+                    # mirrored.add(field[:-1])
                     continue
                 if lazy:
                     data[field] = Cached(fid, storage)
@@ -498,10 +492,10 @@ class frozenhdict(UserDict, dict[str, VT]):
                         print(storage.keys())
                         raise Exception(f"Incomplete hdict: id '{id}' not found in the provided cache.")
                     data[field] = obj
-            for field in mirrored:
-                obj = data[field]
-                kind = obj.kind if isinstance(obj, Cached) else getkind(storage, obj.hosh)
-                data[field + "_"] = handle_mirror(field, data, ids[field], kind)
+            # for field in mirrored:
+            #     obj = data[field]
+            #     kind = obj.kind if isinstance(obj, Cached) else getkind(storage, obj.hosh)
+            #     data[field + "_"] = handle_mirror(field, data, ids[field], kind)
             return frozenhdict.fromdict(data, ids)
 
         return obj.content
@@ -524,7 +518,7 @@ class frozenhdict(UserDict, dict[str, VT]):
         """
         from hdict.data.aux_frozendict import handle_format
 
-        df, name = file2df(name, hide_types)
+        df, name = file2df(name, hide_types, True)
         return handle_format(format, fields, df, named and name)
 
     @staticmethod

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
-<title>hdict.data.empty_ API documentation</title>
+<title>hdict.data.self_ API documentation</title>
 <meta name="description" content="" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
@@ -19,7 +19,7 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>hdict.data.empty_</code></h1>
+<h1 class="title">Module <code>hdict.data.self_</code></h1>
 </header>
 <section id="section-intro">
 <details class="source">
@@ -48,16 +48,39 @@
 #  part of this work is illegal and it is unethical regarding the effort and
 #  time spent here.
 #
+from hdict.content.argument import AbsBaseArgument
 
-from hdict.data.frozenhdict import frozenhdict
-
-
-class Empty_(frozenhdict):
+# todo: accept `apply(lambda _: _.x**2)` as shortcut for `apply(lambda d: d.x**2, _)`  ?
+class Self_(AbsBaseArgument):
     &#34;&#34;&#34;
-    &gt;&gt;&gt; from hdict import Ø
-    &gt;&gt;&gt; d = Ø &gt;&gt; {&#34;x&#34;: 5} &gt;&gt; dict(y=7)
-    &gt;&gt;&gt; type(Ø), type(d)
-    (&lt;class &#39;hdict.Empty&#39;&gt;, &lt;class &#39;hdict.hdict&#39;&gt;)
+    &gt;&gt;&gt; from hdict import _, apply
+    &gt;&gt;&gt; d = _ &gt;&gt; {&#34;x&#34;: 5} &gt;&gt; dict(y=7)
+    &gt;&gt;&gt; (d &gt;&gt; apply(lambda a: d.x, _).X).evaluated.show(colored=False)
+    {
+        x: 5,
+        y: 7,
+        X: 5,
+        _id: I.3UGqgTnpbVa5UdEJGdEvGAX53KEr30qdpnfccX,
+        _ids: {
+            x: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+            y: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf,
+            X: yVmnByh3DGnZwkav2cyJLm24fxJ6x7pjyQFWovy0
+        }
+    }
+    &gt;&gt;&gt; (d &gt;&gt; apply(lambda _: d.x).X).evaluated.show(colored=False)
+    {
+        x: 5,
+        y: 7,
+        X: 5,
+        _id: nSe4f8qCC8JFPqvV5MnmpmR1UpdXzIwhkta2DNU3,
+        _ids: {
+            x: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+            y: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf,
+            X: G8MwJEvu5ZxQiWb9U.roscMuvGuPnvSAssWAM4f9
+        }
+    }
+    &gt;&gt;&gt; type(_), type(+_), type(d)
+    (&lt;class &#39;hdict.Self&#39;&gt;, &lt;class &#39;hdict.Empty&#39;&gt;, &lt;class &#39;hdict.hdict&#39;&gt;)
     &gt;&gt;&gt; d.show(colored=False)
     {
         x: 5,
@@ -68,12 +91,29 @@ class Empty_(frozenhdict):
             y: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf
         }
     }
-    &gt;&gt;&gt; str(Ø * {})
+    &gt;&gt;&gt; str(_ * {})
     &#39;⦑{} » {}⦒&#39;
     &#34;&#34;&#34;
 
+    def __getattr__(self, item):
+        from hdict.content.argument.field import field
+
+        return field(item)
+
+    def __getitem__(self, item):
+        from hdict.content.argument.field import field
+
+        return field(item)
+
+    def __call__(self, *args, **kwargs):
+        from hdict.content.argument.sample import sample
+
+        return sample(*args)
+
     def __rshift__(self, other):
-        res = super().__rshift__(other)
+        from hdict.data.frozenhdict import frozenhdict
+
+        res = frozenhdict().__rshift__(other)
         if res is NotImplemented:  # pragma: no cover
             return res
         if isinstance(res, frozenhdict):
@@ -81,10 +121,17 @@ class Empty_(frozenhdict):
         return res
 
     def __mul__(self, other):
-        res = super().__mul__(other)
+        from hdict.data.frozenhdict import frozenhdict
+
+        res = frozenhdict().__mul__(other)
         if res is NotImplemented:  # pragma: no cover
             return res
-        return res.unfrozen</code></pre>
+        return res.unfrozen
+
+    def __pos__(self):
+        from hdict import Ø
+
+        return Ø</code></pre>
 </details>
 </section>
 <section>
@@ -96,15 +143,38 @@ class Empty_(frozenhdict):
 <section>
 <h2 class="section-title" id="header-classes">Classes</h2>
 <dl>
-<dt id="hdict.data.empty_.Empty_"><code class="flex name class">
-<span>class <span class="ident">Empty_</span></span>
-<span>(</span><span>**kwargs)</span>
+<dt id="hdict.data.self_.Self_"><code class="flex name class">
+<span>class <span class="ident">Self_</span></span>
 </code></dt>
 <dd>
-<div class="desc"><pre><code class="language-python-repl">&gt;&gt;&gt; from hdict import Ø
-&gt;&gt;&gt; d = Ø &gt;&gt; {&quot;x&quot;: 5} &gt;&gt; dict(y=7)
-&gt;&gt;&gt; type(Ø), type(d)
-(&lt;class 'hdict.Empty'&gt;, &lt;class 'hdict.hdict'&gt;)
+<div class="desc"><pre><code class="language-python-repl">&gt;&gt;&gt; from hdict import _, apply
+&gt;&gt;&gt; d = _ &gt;&gt; {&quot;x&quot;: 5} &gt;&gt; dict(y=7)
+&gt;&gt;&gt; (d &gt;&gt; apply(lambda a: d.x, _).X).evaluated.show(colored=False)
+{
+    x: 5,
+    y: 7,
+    X: 5,
+    _id: I.3UGqgTnpbVa5UdEJGdEvGAX53KEr30qdpnfccX,
+    _ids: {
+        x: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+        y: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf,
+        X: yVmnByh3DGnZwkav2cyJLm24fxJ6x7pjyQFWovy0
+    }
+}
+&gt;&gt;&gt; (d &gt;&gt; apply(lambda _: d.x).X).evaluated.show(colored=False)
+{
+    x: 5,
+    y: 7,
+    X: 5,
+    _id: nSe4f8qCC8JFPqvV5MnmpmR1UpdXzIwhkta2DNU3,
+    _ids: {
+        x: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+        y: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf,
+        X: G8MwJEvu5ZxQiWb9U.roscMuvGuPnvSAssWAM4f9
+    }
+}
+&gt;&gt;&gt; type(_), type(+_), type(d)
+(&lt;class 'hdict.Self'&gt;, &lt;class 'hdict.Empty'&gt;, &lt;class 'hdict.hdict'&gt;)
 &gt;&gt;&gt; d.show(colored=False)
 {
     x: 5,
@@ -115,19 +185,43 @@ class Empty_(frozenhdict):
         y: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf
     }
 }
-&gt;&gt;&gt; str(Ø * {})
+&gt;&gt;&gt; str(_ * {})
 '⦑{} » {}⦒'
 </code></pre></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class Empty_(frozenhdict):
+<pre><code class="python">class Self_(AbsBaseArgument):
     &#34;&#34;&#34;
-    &gt;&gt;&gt; from hdict import Ø
-    &gt;&gt;&gt; d = Ø &gt;&gt; {&#34;x&#34;: 5} &gt;&gt; dict(y=7)
-    &gt;&gt;&gt; type(Ø), type(d)
-    (&lt;class &#39;hdict.Empty&#39;&gt;, &lt;class &#39;hdict.hdict&#39;&gt;)
+    &gt;&gt;&gt; from hdict import _, apply
+    &gt;&gt;&gt; d = _ &gt;&gt; {&#34;x&#34;: 5} &gt;&gt; dict(y=7)
+    &gt;&gt;&gt; (d &gt;&gt; apply(lambda a: d.x, _).X).evaluated.show(colored=False)
+    {
+        x: 5,
+        y: 7,
+        X: 5,
+        _id: I.3UGqgTnpbVa5UdEJGdEvGAX53KEr30qdpnfccX,
+        _ids: {
+            x: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+            y: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf,
+            X: yVmnByh3DGnZwkav2cyJLm24fxJ6x7pjyQFWovy0
+        }
+    }
+    &gt;&gt;&gt; (d &gt;&gt; apply(lambda _: d.x).X).evaluated.show(colored=False)
+    {
+        x: 5,
+        y: 7,
+        X: 5,
+        _id: nSe4f8qCC8JFPqvV5MnmpmR1UpdXzIwhkta2DNU3,
+        _ids: {
+            x: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+            y: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf,
+            X: G8MwJEvu5ZxQiWb9U.roscMuvGuPnvSAssWAM4f9
+        }
+    }
+    &gt;&gt;&gt; type(_), type(+_), type(d)
+    (&lt;class &#39;hdict.Self&#39;&gt;, &lt;class &#39;hdict.Empty&#39;&gt;, &lt;class &#39;hdict.hdict&#39;&gt;)
     &gt;&gt;&gt; d.show(colored=False)
     {
         x: 5,
@@ -138,12 +232,29 @@ class Empty_(frozenhdict):
             y: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf
         }
     }
-    &gt;&gt;&gt; str(Ø * {})
+    &gt;&gt;&gt; str(_ * {})
     &#39;⦑{} » {}⦒&#39;
     &#34;&#34;&#34;
 
+    def __getattr__(self, item):
+        from hdict.content.argument.field import field
+
+        return field(item)
+
+    def __getitem__(self, item):
+        from hdict.content.argument.field import field
+
+        return field(item)
+
+    def __call__(self, *args, **kwargs):
+        from hdict.content.argument.sample import sample
+
+        return sample(*args)
+
     def __rshift__(self, other):
-        res = super().__rshift__(other)
+        from hdict.data.frozenhdict import frozenhdict
+
+        res = frozenhdict().__rshift__(other)
         if res is NotImplemented:  # pragma: no cover
             return res
         if isinstance(res, frozenhdict):
@@ -151,49 +262,27 @@ class Empty_(frozenhdict):
         return res
 
     def __mul__(self, other):
-        res = super().__mul__(other)
+        from hdict.data.frozenhdict import frozenhdict
+
+        res = frozenhdict().__mul__(other)
         if res is NotImplemented:  # pragma: no cover
             return res
-        return res.unfrozen</code></pre>
+        return res.unfrozen
+
+    def __pos__(self):
+        from hdict import Ø
+
+        return Ø</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
-<li><a title="hdict.data.frozenhdict.frozenhdict" href="frozenhdict.html#hdict.data.frozenhdict.frozenhdict">frozenhdict</a></li>
-<li>collections.UserDict</li>
-<li>collections.abc.MutableMapping</li>
-<li>collections.abc.Mapping</li>
-<li>collections.abc.Collection</li>
-<li>collections.abc.Sized</li>
-<li>collections.abc.Iterable</li>
-<li>collections.abc.Container</li>
-<li>builtins.dict</li>
+<li><a title="hdict.content.argument.AbsBaseArgument" href="../content/argument/index.html#hdict.content.argument.AbsBaseArgument">AbsBaseArgument</a></li>
+<li><a title="hdict.content.argument.AbsArgument" href="../content/argument/index.html#hdict.content.argument.AbsArgument">AbsArgument</a></li>
+<li><a title="hdict.abs.AbsAny" href="../abs/index.html#hdict.abs.AbsAny">AbsAny</a></li>
 </ul>
 <h3>Subclasses</h3>
 <ul class="hlist">
-<li>hdict.Empty</li>
-</ul>
-<h3>Inherited members</h3>
-<ul class="hlist">
-<li><code><b><a title="hdict.data.frozenhdict.frozenhdict" href="frozenhdict.html#hdict.data.frozenhdict.frozenhdict">frozenhdict</a></b></code>:
-<ul class="hlist">
-<li><code><a title="hdict.data.frozenhdict.frozenhdict.asdf" href="frozenhdict.html#hdict.data.frozenhdict.frozenhdict.asdf">asdf</a></code></li>
-<li><code><a title="hdict.data.frozenhdict.frozenhdict.asdict" href="frozenhdict.html#hdict.data.frozenhdict.frozenhdict.asdict">asdict</a></code></li>
-<li><code><a title="hdict.data.frozenhdict.frozenhdict.asdicts" href="frozenhdict.html#hdict.data.frozenhdict.frozenhdict.asdicts">asdicts</a></code></li>
-<li><code><a title="hdict.data.frozenhdict.frozenhdict.asdicts_noid" href="frozenhdict.html#hdict.data.frozenhdict.frozenhdict.asdicts_noid">asdicts_noid</a></code></li>
-<li><code><a title="hdict.data.frozenhdict.frozenhdict.astext" href="frozenhdict.html#hdict.data.frozenhdict.frozenhdict.astext">astext</a></code></li>
-<li><code><a title="hdict.data.frozenhdict.frozenhdict.copy" href="frozenhdict.html#hdict.data.frozenhdict.frozenhdict.copy">copy</a></code></li>
-<li><code><a title="hdict.data.frozenhdict.frozenhdict.fetch" href="frozenhdict.html#hdict.data.frozenhdict.frozenhdict.fetch">fetch</a></code></li>
-<li><code><a title="hdict.data.frozenhdict.frozenhdict.fromdict" href="frozenhdict.html#hdict.data.frozenhdict.frozenhdict.fromdict">fromdict</a></code></li>
-<li><code><a title="hdict.data.frozenhdict.frozenhdict.fromfile" href="frozenhdict.html#hdict.data.frozenhdict.frozenhdict.fromfile">fromfile</a></code></li>
-<li><code><a title="hdict.data.frozenhdict.frozenhdict.fromtext" href="frozenhdict.html#hdict.data.frozenhdict.frozenhdict.fromtext">fromtext</a></code></li>
-<li><code><a title="hdict.data.frozenhdict.frozenhdict.items" href="frozenhdict.html#hdict.data.frozenhdict.frozenhdict.items">items</a></code></li>
-<li><code><a title="hdict.data.frozenhdict.frozenhdict.keys" href="frozenhdict.html#hdict.data.frozenhdict.frozenhdict.keys">keys</a></code></li>
-<li><code><a title="hdict.data.frozenhdict.frozenhdict.load" href="frozenhdict.html#hdict.data.frozenhdict.frozenhdict.load">load</a></code></li>
-<li><code><a title="hdict.data.frozenhdict.frozenhdict.save" href="frozenhdict.html#hdict.data.frozenhdict.frozenhdict.save">save</a></code></li>
-<li><code><a title="hdict.data.frozenhdict.frozenhdict.show" href="frozenhdict.html#hdict.data.frozenhdict.frozenhdict.show">show</a></code></li>
-<li><code><a title="hdict.data.frozenhdict.frozenhdict.values" href="frozenhdict.html#hdict.data.frozenhdict.frozenhdict.values">values</a></code></li>
-</ul>
-</li>
+<li>hdict.Self</li>
 </ul>
 </dd>
 </dl>
@@ -213,7 +302,7 @@ class Empty_(frozenhdict):
 <li><h3><a href="#header-classes">Classes</a></h3>
 <ul>
 <li>
-<h4><code><a title="hdict.data.empty_.Empty_" href="#hdict.data.empty_.Empty_">Empty_</a></code></h4>
+<h4><code><a title="hdict.data.self_.Self_" href="#hdict.data.self_.Self_">Self_</a></code></h4>
 </li>
 </ul>
 </li>
