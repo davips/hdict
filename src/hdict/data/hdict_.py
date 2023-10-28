@@ -403,18 +403,18 @@ class hdict_(dict[str, VT]):
         >>> d.show(colored=False)
         {
             df: "‹{'attr1': {0: 5.1, 1: 3.1}, 'attr2': {0: 3.5, 1: 4.5}, 'class': {0: '0', 1: '1'}}›",
-            _id: lV4eqST0pTJL.B3GB4Njtv.P1P2aS5EcuQrjnrdX,
+            _id: YaEOJ7a7aOUux8qb1lY3mucUo6AU4vVv15JhAnn2,
             _ids: {
-                df: rq05QYjRDa4F3kJfE4P8USt4ngF.3skHvVOU5aUt
+                df: Sxa-cdrwGU60j--6mK9FvWc7IaYdeYB-2yzSi62B
             }
         }
         >>> d2.show(colored=False)
         {
             df: "‹{'attr1': {0: 5.1, 1: 3.1}, 'attr2': {0: 3.5, 1: 4.5}, 'class': {0: '0', 1: '1'}}›",
             name: " mini",
-            _id: zd8NFU.IBqgF9a2uaPpZ4y3e1xm2ly25f.6btvgN,
+            _id: NuQ3MtEDc-RqAgxUtgEJdg1wnQngv2koODT8GrqU,
             _ids: {
-                df: rq05QYjRDa4F3kJfE4P8USt4ngF.3skHvVOU5aUt,
+                df: Sxa-cdrwGU60j--6mK9FvWc7IaYdeYB-2yzSi62B,
                 name: 5nzeWHgeVef.PD8CnIrPcjwGqaYoRCXK0iwH0cKm
             }
         }
@@ -424,9 +424,9 @@ class hdict_(dict[str, VT]):
         >>> d.show(colored=False)
         {
             df: ↑↓ cached at `dict`·,
-            _id: lV4eqST0pTJL.B3GB4Njtv.P1P2aS5EcuQrjnrdX,
+            _id: YaEOJ7a7aOUux8qb1lY3mucUo6AU4vVv15JhAnn2,
             _ids: {
-                df: rq05QYjRDa4F3kJfE4P8USt4ngF.3skHvVOU5aUt
+                df: Sxa-cdrwGU60j--6mK9FvWc7IaYdeYB-2yzSi62B
             }
         }
         >>> d.df
@@ -552,9 +552,9 @@ class hdict_(dict[str, VT]):
         >>> d.show(colored=False)
         {
             df: "‹{'attr1': {0: 5.1, 1: 3.1}, 'attr2': {0: 3.5, 1: 4.5}, 'class': {0: '0', 1: '1'}}›",
-            _id: lV4eqST0pTJL.B3GB4Njtv.P1P2aS5EcuQrjnrdX,
+            _id: YaEOJ7a7aOUux8qb1lY3mucUo6AU4vVv15JhAnn2,
             _ids: {
-                df: rq05QYjRDa4F3kJfE4P8USt4ngF.3skHvVOU5aUt
+                df: Sxa-cdrwGU60j--6mK9FvWc7IaYdeYB-2yzSi62B
             }
         }
         >>> csv = "attr1,attr2,class\n5.1,3.5,0\n3.1,4.5,1"
@@ -565,9 +565,9 @@ class hdict_(dict[str, VT]):
         >>> d.show(colored=False)
         {
             df: "‹{'attr1': {0: 5.1, 1: 3.1}, 'attr2': {0: 3.5, 1: 4.5}, 'class': {0: 0, 1: 1}}›",
-            _id: X5OQYZSPdJyyE0sSuSRbkfqVuKyd1zppSAhb6EQd,
+            _id: NPf36ZQWhyTj8yV3hVNjlKN3qJTNIxjgDJAkMWJY,
             _ids: {
-                df: SOhTT4S1x3Tfct.v4Fi7QhjacZWya06UT18MQmvM
+                df: ytTKB-58EG6oWjgbY2-a-xyZJhBWUT.KESXVuFov
             }
         }
         """
@@ -584,9 +584,9 @@ class hdict_(dict[str, VT]):
         >>> d.show(colored=False)
         {
             df: "‹{'attr1@REAL': {0: 5.1, 1: 3.1}, 'attr2@REAL': {0: 3.5, 1: 4.5}, 'class@{0,1}': {0: '0', 1: '1'}}›",
-            _id: CukZPsWIhD.itTmQB6-7svrjNtrRJjwm2lJwNp2x,
+            _id: zkG1Kyr0K0matB3G0-BvKmIi2e.dHhA4zA6X6DwO,
             _ids: {
-                df: sZ.7F68Bw2uV6jehdOpmzOK7-mWGXFcR3q46w8J3
+                df: FPE1eyMzyycW6Ue9SqyxaiakR3H3VDgzAFtwRlbl
             }
         }
         >>> csv = "attr1,attr2,class\n5.1,3.5,0\n3.1,4.5,1"
@@ -594,9 +594,9 @@ class hdict_(dict[str, VT]):
         >>> d.show(colored=False)
         {
             df: "‹{'attr1': {0: 5.1, 1: 3.1}, 'attr2': {0: 3.5, 1: 4.5}, 'class': {0: 0, 1: 1}}›",
-            _id: X5OQYZSPdJyyE0sSuSRbkfqVuKyd1zppSAhb6EQd,
+            _id: NPf36ZQWhyTj8yV3hVNjlKN3qJTNIxjgDJAkMWJY,
             _ids: {
-                df: SOhTT4S1x3Tfct.v4Fi7QhjacZWya06UT18MQmvM
+                df: ytTKB-58EG6oWjgbY2-a-xyZJhBWUT.KESXVuFov
             }
         }
         """

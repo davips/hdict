@@ -35,17 +35,17 @@ def explode_df(df):
             index: "‹{'a': 'a', 'b': 'b', 'c': 'c'}›",
             x: "‹{'a': 1, 'b': 2, 'c': 3}›",
             y: "‹{'a': 5, 'b': 6, 'c': 7}›",
-            _id: CO3m4w1vqM.etZXkoHQoNxA.PS.kQI-LomW.H6VC,
+            _id: efFl2-CCjnStQSpp8QmwkK-7ANKh8bNctOap9X9m,
             _ids: {
-                index: HBNoEs58wCDhsdWWisp0sjMwsWmNMXuwaGFE9UAt,
-                x: 3F.7UkfLr2tpB-FxATaRJYIpbYpg9oa1r5M31M0j,
-                y: bqYjHGDn-brebdANtxtNo4OkpOXfDwwVYejlzo4t
+                index: HdOKL6NHC9ApFmGygZ54A9f265R6TxhGjBRwdO9r,
+                x: n7fkFYWuvJ.MTp7asUu8489mQMwoZiL.5.or1EDt,
+                y: N9Of5idOlZFH25hFb9IcjOwJrxt2.tXddWKuYq94
             }
         },
-        _id: aeZiHhtCekhlDKPjI1odXiO-beLTbpUeMO.jzWtS,
+        _id: symsSXy-oMJrIpAisV7aHbn.fZ9yfjfrExxIq6HS,
         _ids: {
-            df: CO3m4w1vqM.etZXkoHQoNxA.PS.kQI-LomW.H6VC,
-            df_: Cem6iaHrGtpk5R64.TcbqxhNgRv-dmfUZwoJJGZI
+            df: efFl2-CCjnStQSpp8QmwkK-7ANKh8bNctOap9X9m,
+            df_: e.VIUfoRxV4B6aoIZeJ8AlDwmq7IZNPDNPFI72WZ
         }
     }
     >>> d.df_
@@ -62,17 +62,17 @@ def explode_df(df):
             index: "‹{'a': 'a', 'b': 'b', 'c': 'c'}›",
             x: "‹{'a': 1, 'b': 2, 'c': 3}›",
             y: "‹{'a': 5, 'b': 6, 'c': 7}›",
-            _id: CO3m4w1vqM.etZXkoHQoNxA.PS.kQI-LomW.H6VC,
+            _id: efFl2-CCjnStQSpp8QmwkK-7ANKh8bNctOap9X9m,
             _ids: {
-                index: HBNoEs58wCDhsdWWisp0sjMwsWmNMXuwaGFE9UAt,
-                x: 3F.7UkfLr2tpB-FxATaRJYIpbYpg9oa1r5M31M0j,
-                y: bqYjHGDn-brebdANtxtNo4OkpOXfDwwVYejlzo4t
+                index: HdOKL6NHC9ApFmGygZ54A9f265R6TxhGjBRwdO9r,
+                x: n7fkFYWuvJ.MTp7asUu8489mQMwoZiL.5.or1EDt,
+                y: N9Of5idOlZFH25hFb9IcjOwJrxt2.tXddWKuYq94
             }
         },
-        _id: aeZiHhtCekhlDKPjI1odXiO-beLTbpUeMO.jzWtS,
+        _id: symsSXy-oMJrIpAisV7aHbn.fZ9yfjfrExxIq6HS,
         _ids: {
-            df: CO3m4w1vqM.etZXkoHQoNxA.PS.kQI-LomW.H6VC,
-            df_: Cem6iaHrGtpk5R64.TcbqxhNgRv-dmfUZwoJJGZI
+            df: efFl2-CCjnStQSpp8QmwkK-7ANKh8bNctOap9X9m,
+            df_: e.VIUfoRxV4B6aoIZeJ8AlDwmq7IZNPDNPFI72WZ
         }
     }
     >>> d.df.show(colored=False)
@@ -80,11 +80,11 @@ def explode_df(df):
         index: "‹{'a': 'a', 'b': 'b', 'c': 'c'}›",
         x: "‹{'a': 1, 'b': 2, 'c': 3}›",
         y: "‹{'a': 5, 'b': 6, 'c': 7}›",
-        _id: CO3m4w1vqM.etZXkoHQoNxA.PS.kQI-LomW.H6VC,
+        _id: efFl2-CCjnStQSpp8QmwkK-7ANKh8bNctOap9X9m,
         _ids: {
-            index: HBNoEs58wCDhsdWWisp0sjMwsWmNMXuwaGFE9UAt,
-            x: 3F.7UkfLr2tpB-FxATaRJYIpbYpg9oa1r5M31M0j,
-            y: bqYjHGDn-brebdANtxtNo4OkpOXfDwwVYejlzo4t
+            index: HdOKL6NHC9ApFmGygZ54A9f265R6TxhGjBRwdO9r,
+            x: n7fkFYWuvJ.MTp7asUu8489mQMwoZiL.5.or1EDt,
+            y: N9Of5idOlZFH25hFb9IcjOwJrxt2.tXddWKuYq94
         }
     }
     """
@@ -97,7 +97,7 @@ def explode_df(df):
     return d
 
 
-def file2df(filename, hide_types=True, return_name=True):
+def file2df(filename, hide_types=True, return_name=True, transpose=False, index=False):
     from hdict.dataset.dataset import load
 
     if filename.endswith(".arff"):
@@ -109,6 +109,16 @@ def file2df(filename, hide_types=True, return_name=True):
                     break
         with open(filename) as f:
             df = load(f)
+
+        if index or transpose:
+            indexname = df.columns[0]
+            df.set_index(indexname, inplace=True)
+            df.index.name = indexname
+        if transpose:
+            df = df.T
+            if index:
+                df.index.rename(indexname, inplace=True)
+
         if hide_types:
             df.rename(columns={k: k.split("@")[0] for k in df.columns}, inplace=True)
         if return_name:
@@ -118,9 +128,20 @@ def file2df(filename, hide_types=True, return_name=True):
     elif filename.endswith(".csv"):
         from pandas import read_csv
 
+        df = read_csv(filename)
+
+        if index or transpose:
+            indexname = df.columns[0]
+            df.set_index(indexname, inplace=True)
+            df.index.name = indexname
+        if transpose:
+            df = df.T
+            if index:
+                df.index.rename(indexname, inplace=True)
+
         if return_name:
-            return read_csv(filename), filename
+            return df, filename
         else:
-            return read_csv(filename)
+            return df
     else:  # pragma: no cover
         raise Exception(f"Unknown extension {filename.split('.')[-1]}.")
