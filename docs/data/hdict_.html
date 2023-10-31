@@ -70,6 +70,8 @@ class hdict_(dict[str, VT]):
         _ids: {}
     } » {} » {}⦒
     &gt;&gt;&gt; d = {&#34;x&#34;: 3, &#34;f&#34;: lambda x: x+1} &gt;&gt; e &gt;&gt; apply(_.f, _.x).x
+    &gt;&gt;&gt; bool(d), bool(e.sample())
+    (True, False)
     &gt;&gt;&gt; d.show(colored=False)  # doctest:+ELLIPSIS
     {
         x: λ(3),
@@ -654,6 +656,8 @@ class hdict_(dict[str, VT]):
         &#34;&#34;&#34;
         return self.frozen.hoshes
 
+    def __bool__(self):
+        return bool(self.frozen.data)
     # def __reduce__(self):
     # return self.frozen.__reduce__()</code></pre>
 </details>
@@ -681,6 +685,8 @@ class hdict_(dict[str, VT]):
     _ids: {}
 } » {} » {}⦒
 &gt;&gt;&gt; d = {&quot;x&quot;: 3, &quot;f&quot;: lambda x: x+1} &gt;&gt; e &gt;&gt; apply(_.f, _.x).x
+&gt;&gt;&gt; bool(d), bool(e.sample())
+(True, False)
 &gt;&gt;&gt; d.show(colored=False)  # doctest:+ELLIPSIS
 {
     x: λ(3),
@@ -746,6 +752,8 @@ class hdict_(dict[str, VT]):
         _ids: {}
     } » {} » {}⦒
     &gt;&gt;&gt; d = {&#34;x&#34;: 3, &#34;f&#34;: lambda x: x+1} &gt;&gt; e &gt;&gt; apply(_.f, _.x).x
+    &gt;&gt;&gt; bool(d), bool(e.sample())
+    (True, False)
     &gt;&gt;&gt; d.show(colored=False)  # doctest:+ELLIPSIS
     {
         x: λ(3),
@@ -1330,6 +1338,8 @@ class hdict_(dict[str, VT]):
         &#34;&#34;&#34;
         return self.frozen.hoshes
 
+    def __bool__(self):
+        return bool(self.frozen.data)
     # def __reduce__(self):
     # return self.frozen.__reduce__()</code></pre>
 </details>

@@ -43,7 +43,10 @@ class EDict(AbsStep):
     dct: dict
 
     def __repr__(self):
-        return stringfy(self.dct)</code></pre>
+        return stringfy(self.dct)
+
+    def __bool__(self):
+        return bool(self.dct)</code></pre>
 </details>
 </section>
 <section>
@@ -77,7 +80,10 @@ class EDict(AbsStep):
     dct: dict
 
     def __repr__(self):
-        return stringfy(self.dct)</code></pre>
+        return stringfy(self.dct)
+
+    def __bool__(self):
+        return bool(self.dct)</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">

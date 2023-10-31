@@ -630,5 +630,6 @@ class hdict_(dict[str, VT]):
 
     def __bool__(self):
         return bool(self.frozen.data)
+
     # def __reduce__(self):
     # return self.frozen.__reduce__()

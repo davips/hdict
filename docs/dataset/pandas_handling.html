@@ -141,7 +141,7 @@ def file2df(filename, hide_types=True, return_name=True, transpose=False, index=
         if index or transpose:
             indexname = df.columns[0]
             df.set_index(indexname, inplace=True)
-            df.index.name=indexname
+            df.index.name = indexname
         if transpose:
             df = df.T
             if index:
@@ -155,12 +155,13 @@ def file2df(filename, hide_types=True, return_name=True, transpose=False, index=
             return df
     elif filename.endswith(&#34;.csv&#34;):
         from pandas import read_csv
+
         df = read_csv(filename)
 
         if index or transpose:
             indexname = df.columns[0]
             df.set_index(indexname, inplace=True)
-            df.index.name=indexname
+            df.index.name = indexname
         if transpose:
             df = df.T
             if index:
@@ -353,7 +354,7 @@ c  3  7
         if index or transpose:
             indexname = df.columns[0]
             df.set_index(indexname, inplace=True)
-            df.index.name=indexname
+            df.index.name = indexname
         if transpose:
             df = df.T
             if index:
@@ -367,12 +368,13 @@ c  3  7
             return df
     elif filename.endswith(&#34;.csv&#34;):
         from pandas import read_csv
+
         df = read_csv(filename)
 
         if index or transpose:
             indexname = df.columns[0]
             df.set_index(indexname, inplace=True)
-            df.index.name=indexname
+            df.index.name = indexname
         if transpose:
             df = df.T
             if index:

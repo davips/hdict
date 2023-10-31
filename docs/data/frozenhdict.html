@@ -68,7 +68,7 @@ class frozenhdict(UserDict, dict[str, VT]):
 
     Any nested &#39;hdict&#39; value will be frozen to avoid inconsistency between the hdict id (inner id) and the frozenhdict id (outer id).
 
-    &gt;&gt;&gt; from hdict import frozenhdict
+    &gt;&gt;&gt; from hdict import frozenhdict, hdict
     &gt;&gt;&gt; d = frozenhdict({&#34;x&#34;: 3}, y=5)
     &gt;&gt;&gt; from hosh._internals_appearance import decolorize
     &gt;&gt;&gt; print(decolorize(repr(d)))  # This is equivalent to just &#39;d&#39;, without colors.
@@ -81,6 +81,8 @@ class frozenhdict(UserDict, dict[str, VT]):
             y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2
         }
     }
+    &gt;&gt;&gt; bool(d), bool(frozenhdict())
+    (True, False)
     &gt;&gt;&gt; d.data
     {&#39;x&#39;: 3, &#39;y&#39;: 5}
     &gt;&gt;&gt; from hdict import _, apply
@@ -609,6 +611,9 @@ class frozenhdict(UserDict, dict[str, VT]):
     def __hash__(self):
         return hash(self.hosh)
 
+    def __bool__(self):
+        return bool(self.data)
+
     # def __reduce__(self):
     # dic = self.data.copy()
     # del dic[&#34;_id&#34;]
@@ -632,7 +637,7 @@ class frozenhdict(UserDict, dict[str, VT]):
 <dd>
 <div class="desc"><p>Immutable hdict.</p>
 <p>Any nested 'hdict' value will be frozen to avoid inconsistency between the hdict id (inner id) and the frozenhdict id (outer id).</p>
-<pre><code class="language-python-repl">&gt;&gt;&gt; from hdict import frozenhdict
+<pre><code class="language-python-repl">&gt;&gt;&gt; from hdict import frozenhdict, hdict
 &gt;&gt;&gt; d = frozenhdict({&quot;x&quot;: 3}, y=5)
 &gt;&gt;&gt; from hosh._internals_appearance import decolorize
 &gt;&gt;&gt; print(decolorize(repr(d)))  # This is equivalent to just 'd', without colors.
@@ -645,6 +650,8 @@ class frozenhdict(UserDict, dict[str, VT]):
         y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2
     }
 }
+&gt;&gt;&gt; bool(d), bool(frozenhdict())
+(True, False)
 &gt;&gt;&gt; d.data
 {'x': 3, 'y': 5}
 &gt;&gt;&gt; from hdict import _, apply
@@ -721,7 +728,7 @@ class frozenhdict(UserDict, dict[str, VT]):
 
     Any nested &#39;hdict&#39; value will be frozen to avoid inconsistency between the hdict id (inner id) and the frozenhdict id (outer id).
 
-    &gt;&gt;&gt; from hdict import frozenhdict
+    &gt;&gt;&gt; from hdict import frozenhdict, hdict
     &gt;&gt;&gt; d = frozenhdict({&#34;x&#34;: 3}, y=5)
     &gt;&gt;&gt; from hosh._internals_appearance import decolorize
     &gt;&gt;&gt; print(decolorize(repr(d)))  # This is equivalent to just &#39;d&#39;, without colors.
@@ -734,6 +741,8 @@ class frozenhdict(UserDict, dict[str, VT]):
             y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2
         }
     }
+    &gt;&gt;&gt; bool(d), bool(frozenhdict())
+    (True, False)
     &gt;&gt;&gt; d.data
     {&#39;x&#39;: 3, &#39;y&#39;: 5}
     &gt;&gt;&gt; from hdict import _, apply
@@ -1261,6 +1270,9 @@ class frozenhdict(UserDict, dict[str, VT]):
 
     def __hash__(self):
         return hash(self.hosh)
+
+    def __bool__(self):
+        return bool(self.data)
 
     # def __reduce__(self):
     # dic = self.data.copy()
