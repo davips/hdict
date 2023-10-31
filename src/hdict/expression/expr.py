@@ -32,6 +32,7 @@ class Expr(AbsStep):
         from hdict.content.argument import AbsArgument
         from hdict.expression.step.applyout import ApplyOut
         from hdict import cache, hdict
+        from hdict.data.frozenhdict import frozenhdict
         from hdict.expression.step.edict import EDict
 
         lst = []
@@ -47,10 +48,12 @@ class Expr(AbsStep):
                         if isinstance(v, AbsArgument):
                             dct[k] = dct[k].sample(rnd)
                     lst.append(EDict(dct))
+                case frozenhdict() | hdict():
+                    lst.append(step)
                 case AbsAny():  # pragma: no cover
                     raise Exception(f"{type(step)}")
-                case _:  # pragma: no cover
-                    raise Exception(f"")
+                case x:  # pragma: no cover
+                    raise Exception(f"{type(x)}")
         expr = Expr.fromiter(lst)
         return expr.solve() if solve else expr
 
@@ -116,3 +119,6 @@ class Expr(AbsStep):
         for step in self:
             out.append(str(step))
         return "⦑" + " » ".join(out) + "⦒"
+
+    def __bool__(self):  # pragma: no cover
+        raise Exception(f"Cannot know the bool value of an expression before evaluating it.")

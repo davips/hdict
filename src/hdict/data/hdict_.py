@@ -42,6 +42,8 @@ class hdict_(dict[str, VT]):
         _ids: {}
     } » {} » {}⦒
     >>> d = {"x": 3, "f": lambda x: x+1} >> e >> apply(_.f, _.x).x
+    >>> bool(d), bool(e.sample())
+    (True, False)
     >>> d.show(colored=False)  # doctest:+ELLIPSIS
     {
         x: λ(3),
@@ -626,5 +628,7 @@ class hdict_(dict[str, VT]):
         """
         return self.frozen.hoshes
 
+    def __bool__(self):
+        return bool(self.frozen.data)
     # def __reduce__(self):
     # return self.frozen.__reduce__()

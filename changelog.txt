@@ -1,1 +1,2 @@
-Add option to transpose imported CSV/ARFF
+Fix unhandled hdict/frozenhdict inside expressions
+Implement cast to `bool`

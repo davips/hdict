@@ -16,3 +16,6 @@ class EDict(AbsStep):
 
     def __repr__(self):
         return stringfy(self.dct)
+
+    def __bool__(self):
+        return bool(self.dct)
