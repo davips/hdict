@@ -1,2 +1,1 @@
-Fix unhandled hdict/frozenhdict inside expressions
-Implement cast to `bool`
+Update hosh

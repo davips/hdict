@@ -766,13 +766,13 @@ files = [
 
 [[package]]
 name = "hosh"
-version = "3.230705.4"
+version = "3.230705.5"
 description = "Predictable Operable HaSH-based identifiers"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "hosh-3.230705.4-py3-none-any.whl", hash = "sha256:1389f3a6c4bbf7492bbc401b511c40a62c77a63c8bb1cff89bc6e4325c35075f"},
-    {file = "hosh-3.230705.4.tar.gz", hash = "sha256:22308e35ccf6522b5a137b25a7b67ffe0b5be755370580bb26864adbd58d3bab"},
+    {file = "hosh-3.230705.5-py3-none-any.whl", hash = "sha256:11c443f9e6eaf65eb0a2fba4bde78369097e387d0834881678e0a0f6632b7064"},
+    {file = "hosh-3.230705.5.tar.gz", hash = "sha256:4d9960d15d3440071de8ccebcef34f663f281866bda1dad03c48df01c95b901d"},
 ]
 
 [package.dependencies]
