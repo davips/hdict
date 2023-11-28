@@ -83,6 +83,8 @@ def v2hosh(value: object) -&gt; Hosh:
             # REMINDER: pickle is the fastest serialization
             return Hosh(dumps(value, protocol=5))
         except TypeError as e:  # pragma: no cover
+            if &#34;disassemble _PredictScorer&#34; in str(e) or &#34;disassemble _ProbaScorer&#34; in str(e):
+                return Hosh(dumps(value, protocol=5))
             raise Exception(f&#34;Cannot pickle. Pickling is needed to hosh hdict values ({value}): {e}&#34;)
 
 
@@ -246,6 +248,8 @@ My-custom-identifier-arbitrarily-defined
             # REMINDER: pickle is the fastest serialization
             return Hosh(dumps(value, protocol=5))
         except TypeError as e:  # pragma: no cover
+            if &#34;disassemble _PredictScorer&#34; in str(e) or &#34;disassemble _ProbaScorer&#34; in str(e):
+                return Hosh(dumps(value, protocol=5))
             raise Exception(f&#34;Cannot pickle. Pickling is needed to hosh hdict values ({value}): {e}&#34;)</code></pre>
 </details>
 </dd>

@@ -32,6 +32,7 @@ VT = TypeVar("VT")
 # todo: incluir no pacote esquema de aplicar f no hdict inteiro como feito no artigo.
 #  seria outro hdict ou só precisaria de uma função wrapper para f? ou um happly que transforma o hdict inteiro?
 
+
 class hdict_(dict[str, VT]):
     """
     This class was created only due to slowness of IDE created by excessive doctests in the main file.
