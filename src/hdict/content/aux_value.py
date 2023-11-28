@@ -55,6 +55,8 @@ def v2hosh(value: object) -> Hosh:
             # REMINDER: pickle is the fastest serialization
             return Hosh(dumps(value, protocol=5))
         except TypeError as e:  # pragma: no cover
+            if "disassemble _PredictScorer" in str(e) or "disassemble _ProbaScorer" in str(e):
+                return Hosh(dumps(value, protocol=5))
             raise Exception(f"Cannot pickle. Pickling is needed to hosh hdict values ({value}): {e}")
 
 

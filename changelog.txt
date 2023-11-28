@@ -1,1 +1,1 @@
-Update hosh
+Add support for hoshing _PredictScorer and _ProbaScore

@@ -29,6 +29,8 @@ VT = TypeVar("VT")
 
 # todo: : finish all '*' combinations and check all '>>' to see when to generate hdict and when to generate Expr.
 
+# todo: incluir no pacote esquema de aplicar f no hdict inteiro como feito no artigo.
+#  seria outro hdict ou só precisaria de uma função wrapper para f? ou um happly que transforma o hdict inteiro?
 
 class hdict_(dict[str, VT]):
     """
@@ -90,6 +92,18 @@ class hdict_(dict[str, VT]):
             x: KeU-dCTjUgnSYGRNrrMMr4i.hg64Dkkfb3c14eh3,
             f: p-nM7oHlOFr6iHSF9ZISWXc9zqi017c3zcvcV8Dr,
             X: nVVYNVw8RyQ-7Kv0CxAUeLjRIzZwZwE7-8BKaaFr
+        }
+    }
+    >>> (d >> apply(lambda _: _["x"] * 3).s).evaluated.show(colored=False)  # doctest:+ELLIPSIS
+    {
+        x: 4,
+        f: "<function <lambda> at 0x...>",
+        s: 12,
+        _id: iht2boR5MlpURpv7HldOcsWeXaV.4LF80tBnMQ49,
+        _ids: {
+            x: KeU-dCTjUgnSYGRNrrMMr4i.hg64Dkkfb3c14eh3,
+            f: p-nM7oHlOFr6iHSF9ZISWXc9zqi017c3zcvcV8Dr,
+            s: Dhu.akwH18RjAvlq9DktCNMfVu5zH.segcKI6AZ0
         }
     }
     """
@@ -388,7 +402,7 @@ class hdict_(dict[str, VT]):
         self.frozen.save(storage)
 
     @staticmethod
-    def fetch(id: str, storage: dict, lazy=True, ishdict=False) -> Union["hdict_", None]:
+    def fetch(id: str, storage: dict, lazy=True) -> Union["hdict_", None]:
         r"""
         Fetch a single entry
 
@@ -506,7 +520,7 @@ class hdict_(dict[str, VT]):
         # >>> str(d)
         # '{df: {index: "‹{0: 0, 1: 1}›", attr1@REAL: "‹{0: 5.1, 1: 3.1}›", attr2@REAL: "‹{0: 3.5, 1: 4.5}›", class@{0,1}: "‹{0: \'0\', 1: \'1\'}›"}}'
         """
-        return frozenhdict.fetch(id, storage, lazy, ishdict).unfrozen
+        return frozenhdict.fetch(id, storage, lazy, ishdict=False)
 
     @staticmethod
     def load(id, storage: dict):
