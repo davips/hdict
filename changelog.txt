@@ -1,1 +1,1 @@
-Add support for hoshing _PredictScorer and _ProbaScore
+Add method `apply`

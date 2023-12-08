@@ -22,6 +22,10 @@
 #
 from typing import TypeVar, Union
 
+from hosh import Hosh
+
+from hdict.content.argument.apply import apply
+from hdict.content.argument.field import field
 from hdict.data.frozenhdict import frozenhdict
 
 VT = TypeVar("VT")
@@ -645,6 +649,17 @@ class hdict_(dict[str, VT]):
 
     def __bool__(self):
         return bool(self.frozen.data)
+
+    def apply(self, appliable: apply | field, *applied_args, out=None, fhosh: Hosh = None, inplace=True, _sampleable=None, **applied_kwargs):
+        if out is None:
+            raise Exception(f"Missing output field name `out`")
+        a = apply(appliable, *applied_args, fhosh=fhosh, _sampleable=_sampleable, **applied_kwargs)
+        ao = a(*out) if isinstance(out, tuple) else a(out)
+        frozen = self.frozen >> ao
+        if inplace:
+            self.frozen = frozen
+        else:
+            return frozen.unfrozen
 
     # def __reduce__(self):
     # return self.frozen.__reduce__()
