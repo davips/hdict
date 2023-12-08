@@ -50,6 +50,10 @@
 #
 from typing import TypeVar, Union
 
+from hosh import Hosh
+
+from hdict.content.argument.apply import apply
+from hdict.content.argument.field import field
 from hdict.data.frozenhdict import frozenhdict
 
 VT = TypeVar(&#34;VT&#34;)
@@ -59,6 +63,7 @@ VT = TypeVar(&#34;VT&#34;)
 
 # todo: incluir no pacote esquema de aplicar f no hdict inteiro como feito no artigo.
 #  seria outro hdict ou só precisaria de uma função wrapper para f? ou um happly que transforma o hdict inteiro?
+
 
 class hdict_(dict[str, VT]):
     &#34;&#34;&#34;
@@ -672,6 +677,17 @@ class hdict_(dict[str, VT]):
 
     def __bool__(self):
         return bool(self.frozen.data)
+
+    def apply(self, appliable: apply | field, *applied_args, out=None, fhosh: Hosh = None, inplace=True, _sampleable=None, **applied_kwargs):
+        if out is None:
+            raise Exception(f&#34;Missing output field name `out`&#34;)
+        a = apply(appliable, *applied_args, fhosh=fhosh, _sampleable=_sampleable, **applied_kwargs)
+        ao = a(*out) if isinstance(out, tuple) else a(out)
+        frozen = self.frozen &gt;&gt; ao
+        if inplace:
+            self.frozen = frozen
+        else:
+            return frozen.unfrozen
 
     # def __reduce__(self):
     # return self.frozen.__reduce__()</code></pre>
@@ -1380,6 +1396,17 @@ class hdict_(dict[str, VT]):
     def __bool__(self):
         return bool(self.frozen.data)
 
+    def apply(self, appliable: apply | field, *applied_args, out=None, fhosh: Hosh = None, inplace=True, _sampleable=None, **applied_kwargs):
+        if out is None:
+            raise Exception(f&#34;Missing output field name `out`&#34;)
+        a = apply(appliable, *applied_args, fhosh=fhosh, _sampleable=_sampleable, **applied_kwargs)
+        ao = a(*out) if isinstance(out, tuple) else a(out)
+        frozen = self.frozen &gt;&gt; ao
+        if inplace:
+            self.frozen = frozen
+        else:
+            return frozen.unfrozen
+
     # def __reduce__(self):
     # return self.frozen.__reduce__()</code></pre>
 </details>
@@ -2069,6 +2096,27 @@ def ids(self):
 </dl>
 <h3>Methods</h3>
 <dl>
+<dt id="hdict.data.hdict_.hdict_.apply"><code class="name flex">
+<span>def <span class="ident">apply</span></span>(<span>self, appliable: <a title="hdict.content.argument.apply.apply" href="../content/argument/apply.html#hdict.content.argument.apply.apply">apply</a> | <a title="hdict.content.argument.field.field" href="../content/argument/field.html#hdict.content.argument.field.field">field</a>, *applied_args, out=None, fhosh: hosh.hosh_.Hosh = None, inplace=True, **applied_kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def apply(self, appliable: apply | field, *applied_args, out=None, fhosh: Hosh = None, inplace=True, _sampleable=None, **applied_kwargs):
+    if out is None:
+        raise Exception(f&#34;Missing output field name `out`&#34;)
+    a = apply(appliable, *applied_args, fhosh=fhosh, _sampleable=_sampleable, **applied_kwargs)
+    ao = a(*out) if isinstance(out, tuple) else a(out)
+    frozen = self.frozen &gt;&gt; ao
+    if inplace:
+        self.frozen = frozen
+    else:
+        return frozen.unfrozen</code></pre>
+</details>
+</dd>
 <dt id="hdict.data.hdict_.hdict_.astext"><code class="name flex">
 <span>def <span class="ident">astext</span></span>(<span>self, colored=True, key_quotes=False)</span>
 </code></dt>
@@ -2442,6 +2490,7 @@ y 2
 <li>
 <h4><code><a title="hdict.data.hdict_.hdict_" href="#hdict.data.hdict_.hdict_">hdict_</a></code></h4>
 <ul class="two-column">
+<li><code><a title="hdict.data.hdict_.hdict_.apply" href="#hdict.data.hdict_.hdict_.apply">apply</a></code></li>
 <li><code><a title="hdict.data.hdict_.hdict_.asdf" href="#hdict.data.hdict_.hdict_.asdf">asdf</a></code></li>
 <li><code><a title="hdict.data.hdict_.hdict_.asdict" href="#hdict.data.hdict_.hdict_.asdict">asdict</a></code></li>
 <li><code><a title="hdict.data.hdict_.hdict_.asdicts" href="#hdict.data.hdict_.hdict_.asdicts">asdicts</a></code></li>
