@@ -1,1 +1,2 @@
-Add method `apply`
+Accept metafields, i.e., fields with keys like `_x_`.
+A metafield implies `hosh(value) = ~hosh(key)` so that the entry is invisible for identification purposes.

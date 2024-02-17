@@ -11,6 +11,7 @@ def getkind(storage, hosh):
     return storage[kindid(hosh)]
 
 
+# TODO: fix id not found due to entry=None, might be caused by the entry having the value None
 class Cached(AbsEntry):
     """Layer to enable delaying fetching from storage"""
 

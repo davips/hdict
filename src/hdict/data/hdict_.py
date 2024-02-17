@@ -34,7 +34,7 @@ VT = TypeVar("VT")
 # todo: : finish all '*' combinations and check all '>>' to see when to generate hdict and when to generate Expr.
 
 # todo: incluir no pacote esquema de aplicar f no hdict inteiro como feito no artigo.
-#  seria outro hdict ou só precisaria de uma função wrapper para f? ou um happly que transforma o hdict inteiro?
+#  seria outro hdict ou só precisaria de uma função wrapper para f? ou um h_apply que transforma o hdict inteiro?
 
 
 class hdict_(dict[str, VT]):

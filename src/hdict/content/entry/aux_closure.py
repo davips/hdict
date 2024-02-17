@@ -14,7 +14,7 @@ def handle_arg(key, val, data, discarded_defaults, out, torepr, previous):
     from hdict.content.argument.entry import entry
 
     if key == "_":
-        return handle_item(str(key), previous, data, previous)
+        return handle_item(key, previous, data, previous)
     match val:
         case default(value=v):
             if key in data:

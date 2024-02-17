@@ -410,18 +410,15 @@ class frozenhdict(UserDict, dict[str, VT]):
         >>> list(hdict(x=3, y=5).values())
         [3, 5]
         """
-        # return (k for k in self.data if not k.startswith("_"))
         return self.data.keys()
 
     def values(self, evaluate=True):
-        """Generator of field values (keys that don't start with '_')"""
+        """Generator of field values"""
         return ((v.value if evaluate else v) for k, v in self.data.items())
-        # return ((v.value if evaluate else v) for k, v in self.data.items() if not k.startswith("_"))
 
     def items(self, evaluate=True):
         """Generator over field-value pairs"""
         for k, val in self.data.items():
-            # if not k.startswith("_"):
             yield k, (val.value if evaluate else val)
 
     def save(self, storage: dict):
@@ -434,7 +431,7 @@ class frozenhdict(UserDict, dict[str, VT]):
         for field, fid in self.ids.items():
             value = self[field]
             if field.endswith("_"):
-                raise Exception(f"Not implemented for mirror fields")
+                raise Exception(f"Not implemented for mirror fields and is not possible for metafields")
                 # todo:  confirm existence of the counterpart
                 # data[kindid(fid)] = str(type(value))
             elif isinstance(value, frozenhdict):
@@ -469,6 +466,10 @@ class frozenhdict(UserDict, dict[str, VT]):
 
         if id not in storage:
             return None
+            # if ishdict:
+            #     raise Exception(f"hdict not saved or not cached if its nested.  `id` not found: `{id}`")
+            # else:
+            #     raise Exception(f"Entry not cached. `id` not found: `{id}`")
         obj = storage[id]
         if isinstance(obj, dict):
             ishdict = True  # Set to True, because now we have a nested frozenhdict
@@ -483,7 +484,7 @@ class frozenhdict(UserDict, dict[str, VT]):
                 if field.endswith("_"):
                     # TODO:  2023-06-23
                     #  -
-                    raise Exception(f"Not implemented for mirror fields")
+                    raise Exception(f"Not implemented for mirror fields and is not possible for metafields")
                     # mirrored.add(field[:-1])
                     continue
                 if lazy:

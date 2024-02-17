@@ -2,7 +2,7 @@ from itertools import chain
 from typing import Dict
 from typing import TypeVar
 
-from hosh import ø
+from hosh import ø, Hosh
 
 from hdict import hdict, value, frozenhdict, Self
 from hdict.abs import AbsAny
@@ -26,7 +26,7 @@ def handle_items(*datas: [Dict[str, object]], previous: frozenhdict):
     result__mirror_fields = {}
     for key, item in chain(*(data.items() for data in datas)):
         entry = handle_item(key, item, result, previous)
-        if isinstance(key, str) and key.endswith("_"):
+        if isinstance(key, str) and key.endswith("_") and not key.startswith("_"):
             if isinstance(entry, value):
                 result__mirror_fields[f"{key[:-1]}"] = value(entry.hdict, entry.hdict.hosh)
             else:
@@ -86,22 +86,48 @@ def handle_item(key, item, result, previous):
         return handle_multioutput(key, res, result, previous)
     elif not isinstance(key, str):  # pragma: no cover
         raise Exception(f"Invalid type for input field specification: {type(key).__name__}")
-    # elif key.startswith("_"):  # pragma: no cover     # reminder: _* allowed here due to parameter name in getattr(__o)
-    #     raise Exception(f"Field names cannot start with '_': {key}")
+    # reminder: some parameter names start with: `__o` in getattr(__o)
 
     return res
 
 
 def handle_identity(data):
+    """
+    >>> from hdict import _
+    >>> d = hdict(_x_=5)
+    >>> d.show(colored=False)
+    {
+        _x_: 5,
+        _id: 0000000000000000000000000000000000000000,
+        _ids: {
+            _x_: "bwXY2nkgcPxh5U9ccraq-iznyWbzNYNQDp4HzejJ"
+        }
+    }
+    >>> d.apply(lambda x: x**2, x=_._x_, out="r")
+    >>> d.evaluated.show(colored=False)
+    {
+        _x_: 5,
+        r: 25,
+        _id: 9iw-s44RA7bJPi5sIejt2i1HHq2WB2uUTBOWc5-u,
+        _ids: {
+            r: 5E5iUv0J2e.GePNtAn6ley68v9nei9Sy5v4gfO2a,
+            _x_: "bwXY2nkgcPxh5U9ccraq-iznyWbzNYNQDp4HzejJ"
+        }
+    }
+    >>> (Hosh.fromid("9iw-s44RA7bJPi5sIejt2i1HHq2WB2uUTBOWc5-u")-("5E5iUv0J2e.GePNtAn6ley68v9nei9Sy5v4gfO2a"*Hosh(b"r"))).id
+    '0000000000000000000000000000000000000000'
+    >>> (Hosh.fromid("0000000000000000000000000000000000000000") / Hosh(b"_x_")).id
+    'bwXY2nkgcPxh5U9ccraq-iznyWbzNYNQDp4HzejJ'
+    """
     hosh = ø
     ids, later = {}, {}
     for k, v in data.items():
-        # Handle meta. mirror, and field ids differently.
-        if k.startswith("_"):  # pragma: no cover
-            raise Exception("Custom metafields are not allowed:", k)
-            # self.mhosh += self.data[k].hosh * k.encode()                # self.mids[k] = self.data[k].hosh.id
-        elif k.endswith("_"):
-            # mirrorfield, e.g.: 'df_' is a mirror/derived from 'df'
+        # Handle meta,mirror field ids differently. e.g.: 'df_' is a mirror/derived from 'df'
+        if k[-1] == "_":
+            if k[0] == "_":
+                if len(k) < 3:
+                    raise Exception(f"Cannot have a field named `__`.")
+                v = value(v.value, hosh=~Hosh(k.encode()))  # metafield, e.g.: "_myfield_"
             later[k] = v.id
         else:
             ids[k] = v.hosh.id
