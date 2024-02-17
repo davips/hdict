@@ -1,2 +1,2 @@
-Accept metafields, i.e., fields with keys like `_x_`.
-A metafield implies `hosh(value) = ~hosh(key)` so that the entry is invisible for identification purposes.
+Make metafield be invisible also when passed as argument to function application
+This requires now that `hosh(value) = ø`, and during `hdict.hosh` calculation: `hosh(key) = ø`.

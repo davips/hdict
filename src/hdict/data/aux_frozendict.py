@@ -2,6 +2,8 @@ from itertools import chain
 from typing import Dict
 from typing import TypeVar
 
+import indexed
+
 from hosh import ø, Hosh
 
 from hdict import hdict, value, frozenhdict, Self
@@ -28,6 +30,8 @@ def handle_items(*datas: [Dict[str, object]], previous: frozenhdict):
         entry = handle_item(key, item, result, previous)
         if isinstance(key, str) and key.endswith("_") and not key.startswith("_"):
             if isinstance(entry, value):
+                if entry.hdict is None:
+                    raise Exception(f"Cannot create a mirror field from provided value identified by `{key}`.")
                 result__mirror_fields[f"{key[:-1]}"] = value(entry.hdict, entry.hdict.hosh)
             else:
                 raise Exception(f"lazy mirror?")  # todo:
@@ -100,7 +104,7 @@ def handle_identity(data):
         _x_: 5,
         _id: 0000000000000000000000000000000000000000,
         _ids: {
-            _x_: "bwXY2nkgcPxh5U9ccraq-iznyWbzNYNQDp4HzejJ"
+            _x_: 0000000000000000000000000000000000000000
         }
     }
     >>> d.apply(lambda x: x**2, x=_._x_, out="r")
@@ -111,33 +115,52 @@ def handle_identity(data):
         _id: 9iw-s44RA7bJPi5sIejt2i1HHq2WB2uUTBOWc5-u,
         _ids: {
             r: 5E5iUv0J2e.GePNtAn6ley68v9nei9Sy5v4gfO2a,
-            _x_: "bwXY2nkgcPxh5U9ccraq-iznyWbzNYNQDp4HzejJ"
+            _x_: "0000000000000000000000000000000000000000"
         }
     }
     >>> (Hosh.fromid("9iw-s44RA7bJPi5sIejt2i1HHq2WB2uUTBOWc5-u")-("5E5iUv0J2e.GePNtAn6ley68v9nei9Sy5v4gfO2a"*Hosh(b"r"))).id
     '0000000000000000000000000000000000000000'
     >>> (Hosh.fromid("0000000000000000000000000000000000000000") / Hosh(b"_x_")).id
     'bwXY2nkgcPxh5U9ccraq-iznyWbzNYNQDp4HzejJ'
+    >>> d["a"] = 9
+    >>> d.show(colored=False)
+    {
+        _x_: 5,
+        r: 25,
+        a: 9,
+        _id: HFRpb21-RBvVuqwfmHUtv1IroWppQOBzK-SvdCJS,
+        _ids: {
+            r: 5E5iUv0J2e.GePNtAn6ley68v9nei9Sy5v4gfO2a,
+            a: GuwIQCrendfKXZr5jGfrUwoP-8TWMhmLHYrja2yj,
+            _x_: "0000000000000000000000000000000000000000"
+        }
+    }
     """
     hosh = ø
-    ids, later = {}, {}
+    ids, later, later2 = {}, {}, {}
     for k, v in data.items():
-        # Handle meta,mirror field ids differently. e.g.: 'df_' is a mirror/derived from 'df'
+        # Handle meta,mirror field ids differently.
         if k[-1] == "_":
             if k[0] == "_":
                 if len(k) < 3:
                     raise Exception(f"Cannot have a field named `__`.")
-                v = value(v.value, hosh=~Hosh(k.encode()))  # metafield, e.g.: "_myfield_"
-            later[k] = v.id
+                v = value(v.value, hosh=ø)  # metafield, e.g.: `_myfield_`
+                khosh = ø
+                later2[k] = v.id
+            else:
+                khosh = k.encode()  # mirror field, e.g.: `df_` is a mirror/derived from `df`
+                later[k] = v.id
         else:
             ids[k] = v.hosh.id
-        hosh += v.hosh * k.encode()
+            khosh = k.encode()
+        hosh += v.hosh * khosh
         # todo:  PAPER REMINDER: state in the paper that identifiers are not strings. they are a special type that never appears as a value.
         #   I.e., hash(identifier) must be different from hash(value), for all identifiers and values.
         #   E.g.: hash(field name X) != hash(string "X")
         #   In this impementation, the difference is always* true because values are always pickled (they are never hashed as strings), while identifiers are just str.encoded().
         #   * → probabilistically
     ids.update(later)
+    ids.update(later2)
     return hosh, ids
 
 
