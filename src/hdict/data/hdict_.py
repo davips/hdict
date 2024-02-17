@@ -123,11 +123,13 @@ class hdict_(dict[str, VT]):
         if isinstance(key, tuple):
             key = tuple((x.start, x.stop) if isinstance(x, slice) else x for x in key)
         self.frozen = self.frozen >> {key: value}
+        self.raw = self.frozen.data
 
     def __delitem__(self, key):
         data = self.frozen.data.copy()
         del data[key]
         self.frozen = frozenhdict(data)
+        self.raw = self.frozen.data
 
     def __getitem__(self, item):
         return self.frozen[item]
@@ -658,6 +660,7 @@ class hdict_(dict[str, VT]):
         frozen = self.frozen >> ao
         if inplace:
             self.frozen = frozen
+            self.raw = self.frozen.data
         else:
             return frozen.unfrozen
 

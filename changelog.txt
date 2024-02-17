@@ -1,2 +1,3 @@
-Make metafield be invisible also when passed as argument to function application
-This requires now that `hosh(value) = ø`, and during `hdict.hosh` calculation: `hosh(key) = ø`.
+Add metafield, e.g.: `_x_`.
+A metafield implies that `hosh(value) = ø`, and during `hdict.hosh` calculation: `hosh(key) = ø`.
+They are invisible for identification purposes.

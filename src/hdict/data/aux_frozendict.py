@@ -112,27 +112,45 @@ def handle_identity(data):
     {
         _x_: 5,
         r: 25,
-        _id: 9iw-s44RA7bJPi5sIejt2i1HHq2WB2uUTBOWc5-u,
+        _id: AHcd7D3o.qKnN77gwJM7S-PQOJKI6dtPL4wQFKys,
         _ids: {
-            r: 5E5iUv0J2e.GePNtAn6ley68v9nei9Sy5v4gfO2a,
-            _x_: "0000000000000000000000000000000000000000"
+            r: Fj6QNDP99MyaY3Gr11X9B2QalYvkNjRtZ1O9IrD7,
+            _x_: 0000000000000000000000000000000000000000
         }
     }
-    >>> (Hosh.fromid("9iw-s44RA7bJPi5sIejt2i1HHq2WB2uUTBOWc5-u")-("5E5iUv0J2e.GePNtAn6ley68v9nei9Sy5v4gfO2a"*Hosh(b"r"))).id
+    >>> (Hosh.fromid("AHcd7D3o.qKnN77gwJM7S-PQOJKI6dtPL4wQFKys")-("Fj6QNDP99MyaY3Gr11X9B2QalYvkNjRtZ1O9IrD7"*Hosh(b"r"))).id
     '0000000000000000000000000000000000000000'
-    >>> (Hosh.fromid("0000000000000000000000000000000000000000") / Hosh(b"_x_")).id
-    'bwXY2nkgcPxh5U9ccraq-iznyWbzNYNQDp4HzejJ'
     >>> d["a"] = 9
     >>> d.show(colored=False)
     {
         _x_: 5,
         r: 25,
         a: 9,
-        _id: HFRpb21-RBvVuqwfmHUtv1IroWppQOBzK-SvdCJS,
+        _id: mTOBcwwtk3kEsb6BB8m8YcNBvdmvjZAuCxApGfiQ,
         _ids: {
-            r: 5E5iUv0J2e.GePNtAn6ley68v9nei9Sy5v4gfO2a,
+            r: Fj6QNDP99MyaY3Gr11X9B2QalYvkNjRtZ1O9IrD7,
             a: GuwIQCrendfKXZr5jGfrUwoP-8TWMhmLHYrja2yj,
-            _x_: "0000000000000000000000000000000000000000"
+            _x_: 0000000000000000000000000000000000000000
+        }
+    }
+    >>> d["_y_"] = 4
+    >>> # Metafields must not interfere with the result of a function.
+    >>> # Otherwise, the function application will produce the same id for different results as shown below:
+    >>> d.apply(lambda x: x**2, _._y_, out="w")
+    >>> d.evaluated.show(colored=False)
+    {
+        _x_: 5,
+        r: 25,
+        a: 9,
+        _y_: 4,
+        w: 16,
+        _id: -x9vK.GvNslhzKyDqO0AsGL0KAfKYXdCPwC0ZFFd,
+        _ids: {
+            r: Fj6QNDP99MyaY3Gr11X9B2QalYvkNjRtZ1O9IrD7,
+            a: GuwIQCrendfKXZr5jGfrUwoP-8TWMhmLHYrja2yj,
+            w: Fj6QNDP99MyaY3Gr11X9B2QalYvkNjRtZ1O9IrD7,
+            _x_: 0000000000000000000000000000000000000000,
+            _y_: 0000000000000000000000000000000000000000
         }
     }
     """
@@ -145,6 +163,7 @@ def handle_identity(data):
                 if len(k) < 3:
                     raise Exception(f"Cannot have a field named `__`.")
                 v = value(v.value, hosh=ø)  # metafield, e.g.: `_myfield_`
+                data[k] = v
                 khosh = ø
                 later2[k] = v.id
             else:
