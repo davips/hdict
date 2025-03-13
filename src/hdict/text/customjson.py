@@ -70,20 +70,20 @@ class CustomJSONEncoder(JSONEncoder):
             index: "‹{0: 0, 1: 1}›",
             0: "‹{0: 1, 1: 3}›",
             1: "‹{0: 2, 1: 4}›",
-            _id: 5AEwwOH-Pce.9hYv7iKRH4Y3fb0Sn87Y9hjc2KSq,
+            _id: 9IdmSJdqW2H6TNk-vZP9Cjy2ivJuVGRiPq8LHhfe,
             _ids: {
-                index: QdEJIrQysoxHLAyadXmhHZEOJ-uUQHDU2I8c6Sa5,
-                0: g21M8pVG-91m4ekI5WLbhsilHR5yY6x41SGUhJNk,
-                1: jT2rJg-ZO6jg9V5UJnXpPTZM9qZ1cUYYMqMfdj5j
+                index: M8XwULlv6ilpIvXmi5SNfgi8379P9iMB2qLa1pV7,
+                0: Kh-hznvufUsLX4KPtm4q6jJx-aRWS3d2WXxnG2vb,
+                1: 9HBB7VslFycHxGGd3loY8L-pTzbnuTSExM7lz-1d
             }
         },
-        _id: k6uCZEvebQoeSVoQjrgYJJ3eGAoN5culz7tRBRzU,
+        _id: KjZXwdfa-puASw2IS1.7rUR8ZAerCcagq1PV9E5J,
         _ids: {
             d: fBb9FHVYpHC7vyM-B8UrXuN4oCcQ4Y7pnQ6oSK3J,
             y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
             ell: P1oPe-8hTjTdV6gKov4oIQnmTUXyD2fU6E7C8MS6,
-            df: 5AEwwOH-Pce.9hYv7iKRH4Y3fb0Sn87Y9hjc2KSq,
-            df_: dDWRsi5u5lmXCdQ8w0OnCFclDcWJtuLQCmoLYJrz
+            df: 9IdmSJdqW2H6TNk-vZP9Cjy2ivJuVGRiPq8LHhfe,
+            df_: NBEgzdBGuzDzJk7zM5kjfH-Kr2HruYIoQ2VgTYAA
         }
     }
     >>> from numpy import array
@@ -104,33 +104,33 @@ class CustomJSONEncoder(JSONEncoder):
                 index: "‹{0: 0, 1: 1}›",
                 0: "‹{0: 1, 1: 3}›",
                 1: "‹{0: 2, 1: 4}›",
-                _id: 5AEwwOH-Pce.9hYv7iKRH4Y3fb0Sn87Y9hjc2KSq,
+                _id: 9IdmSJdqW2H6TNk-vZP9Cjy2ivJuVGRiPq8LHhfe,
                 _ids: {
-                    index: QdEJIrQysoxHLAyadXmhHZEOJ-uUQHDU2I8c6Sa5,
-                    0: g21M8pVG-91m4ekI5WLbhsilHR5yY6x41SGUhJNk,
-                    1: jT2rJg-ZO6jg9V5UJnXpPTZM9qZ1cUYYMqMfdj5j
+                    index: M8XwULlv6ilpIvXmi5SNfgi8379P9iMB2qLa1pV7,
+                    0: Kh-hznvufUsLX4KPtm4q6jJx-aRWS3d2WXxnG2vb,
+                    1: 9HBB7VslFycHxGGd3loY8L-pTzbnuTSExM7lz-1d
                 }
             },
-            _id: k6uCZEvebQoeSVoQjrgYJJ3eGAoN5culz7tRBRzU,
+            _id: KjZXwdfa-puASw2IS1.7rUR8ZAerCcagq1PV9E5J,
             _ids: {
                 d: fBb9FHVYpHC7vyM-B8UrXuN4oCcQ4Y7pnQ6oSK3J,
                 y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
                 ell: P1oPe-8hTjTdV6gKov4oIQnmTUXyD2fU6E7C8MS6,
-                df: 5AEwwOH-Pce.9hYv7iKRH4Y3fb0Sn87Y9hjc2KSq,
-                df_: dDWRsi5u5lmXCdQ8w0OnCFclDcWJtuLQCmoLYJrz
+                df: 9IdmSJdqW2H6TNk-vZP9Cjy2ivJuVGRiPq8LHhfe,
+                df_: NBEgzdBGuzDzJk7zM5kjfH-Kr2HruYIoQ2VgTYAA
             }
         },
         z: 9,
         c: "‹[1 2 3]›",
         d: "‹{0: 1, 1: 2, 2: 3}›",
         dd: "‹[[1 2] [3 4]]›",
-        _id: ohw1N1eWttnXESOq2fY1LZ5ysZDwr786kqQrWDMw,
+        _id: 3VteRpIhkdiA1YXml7QCZwVpWnXtDa7-mzx2JnYi,
         _ids: {
-            b: k6uCZEvebQoeSVoQjrgYJJ3eGAoN5culz7tRBRzU,
+            b: KjZXwdfa-puASw2IS1.7rUR8ZAerCcagq1PV9E5J,
             z: GuwIQCrendfKXZr5jGfrUwoP-8TWMhmLHYrja2yj,
-            c: QkfVsy7ITAmoIiOFgbYpsQodBSIYshhiUm3v2r8d,
-            d: GxcSmtUACjP6u10QYPRJsa6OyoAwK96RBma9qt7o,
-            dd: fVj30baMeet4PcN9ZY-8uMpFin89FY8h8MI4RkDd
+            c: sXcntO5yqsuKT9nMsmrHwUePOhRYvOqFwaikIy1b,
+            d: 2vXubn-sXNgUOoS9VQabJM9u5L-C5FS5nB7Kxwcg,
+            dd: JKwKdIbigl-t0wy7sQXHGOKgAuTlW-xCWYTci7jl
         }
     }
     >>> hdict(s={1,3,2}, t={3,1,2}, u={2,1,3}, v={2,1,3}).show(colored=False)

@@ -1,0 +1,1927 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.10.0" />
+<title>hdict.data.frozenhdict API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>hdict.data.frozenhdict</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">#  Copyright (c) 2023. Davi Pereira dos Santos
+#  This file is part of the hdict project.
+#  Please respect the license - more about this in the section (*) below.
+#
+#  hdict is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  hdict is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with hdict.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+#
+#  (*) Removing authorship by any means, e.g. by distribution of derived
+#  works or verbatim, obfuscated, compiled or rewritten versions of any
+#  part of this work is illegal and it is unethical regarding the effort and
+#  time spent here.
+#
+
+import json
+import re
+from collections import UserDict
+from io import StringIO
+from typing import TypeVar, Union
+
+from hdict.dataset.dataset import loads, isplit
+from hdict.dataset.pandas_handling import file2df
+from hdict.text.customjson import CustomJSONEncoder, stringfy
+
+VT = TypeVar(&#34;VT&#34;)
+
+
+class frozenhdict(UserDict, dict[str, VT]):
+    &#34;&#34;&#34;
+    Immutable hdict.
+
+    Any nested &#39;hdict&#39; value will be frozen to avoid inconsistency between the hdict id (inner id) and the frozenhdict id (outer id).
+
+    &gt;&gt;&gt; from hdict import frozenhdict, hdict
+    &gt;&gt;&gt; d = frozenhdict({&#34;x&#34;: 3}, y=5)
+    &gt;&gt;&gt; from hosh._internals_appearance import decolorize
+    &gt;&gt;&gt; print(decolorize(repr(d)))  # This is equivalent to just &#39;d&#39;, without colors.
+    {
+        x: 3,
+        y: 5,
+        _id: r5A2Mh6vRRO5rxi5nfXv1myeguGSTmqHuHev38qM,
+        _ids: {
+            x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+            y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2
+        }
+    }
+    &gt;&gt;&gt; bool(d), bool(frozenhdict())
+    (True, False)
+    &gt;&gt;&gt; d.data
+    {&#39;x&#39;: 3, &#39;y&#39;: 5}
+    &gt;&gt;&gt; from hdict import _, apply
+    &gt;&gt;&gt; d *= apply(lambda v, x: v - x).z
+    &gt;&gt;&gt; str(d)
+    &#39;⦑{x: 3, y: 5} » z=λ(v x)⦒&#39;
+    &gt;&gt;&gt; d.show(colored=False)
+    ⦑{
+        x: 3,
+        y: 5,
+        _id: r5A2Mh6vRRO5rxi5nfXv1myeguGSTmqHuHev38qM,
+        _ids: {
+            x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+            y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2
+        }
+    } » z=λ(v x)⦒
+    &gt;&gt;&gt; d = {&#34;v&#34;: 7} * d
+    &gt;&gt;&gt; d.solve().show(colored=False)
+    {
+        v: 7,
+        x: 3,
+        y: 5,
+        z: λ(v x),
+        _id: 0qFPOnULZigyiXU9Jv.1D.XSTIYHZ24UCT00DMHF,
+        _ids: {
+            v: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf,
+            x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+            y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+            z: 2-wfv1b9RyFHB2kdba3EBCy6Do5L-mMPJjT-nfPa
+        }
+    }
+    &gt;&gt;&gt; d = _ &gt;&gt; d
+    &gt;&gt;&gt; d.show(colored=False)
+    {
+        v: 7,
+        x: 3,
+        y: 5,
+        z: λ(v x),
+        _id: 0qFPOnULZigyiXU9Jv.1D.XSTIYHZ24UCT00DMHF,
+        _ids: {
+            v: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf,
+            x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+            y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+            z: 2-wfv1b9RyFHB2kdba3EBCy6Do5L-mMPJjT-nfPa
+        }
+    }
+    &gt;&gt;&gt; d = {&#34;a&#34;: 5} &gt;&gt; d
+    &gt;&gt;&gt; d.show(colored=False)
+    {
+        a: 5,
+        v: 7,
+        x: 3,
+        y: 5,
+        z: λ(v x),
+        _id: jZrJ2CiVUA9OqW.G7dwb3KoaTWGMUmSUVUXn0CkM,
+        _ids: {
+            a: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+            v: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf,
+            x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+            y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+            z: 2-wfv1b9RyFHB2kdba3EBCy6Do5L-mMPJjT-nfPa
+        }
+    }
+    &gt;&gt;&gt; from hdict.content.entry import AbsEntry, Unevaluated
+    &gt;&gt;&gt; from hdict import frozenhdict
+    &#34;&#34;&#34;
+
+    _evaluated = None
+    _asdict, _asdicts, _asdicts_noid = None, None, None
+    _hoshes = None
+
+    # noinspection PyMissingConstructor
+    def __init__(self, /, _dictionary=None, _previous=None, **kwargs):
+        from hdict.content.entry import AbsEntry
+        from hdict.data.aux_frozendict import handle_identity
+        from hdict.data.aux_frozendict import handle_items
+
+        # todo: : check if _dictionary keys is &#39;str&#39;; regex to check if k is an identifier;
+        data = _dictionary or {}
+        # REMINDER: Inside data, the only &#39;dict&#39; entries are &#34;_id&#34; and &#34;_ids&#34;, the rest are AbsEntry objects.
+        self.data: dict[str, AbsEntry | str | dict[str, str]]
+        self.data = handle_items(data, kwargs, previous=_previous)
+        self.hosh, self.ids = handle_identity(self.data)
+        self.id = self.hosh.id
+        self.raw = self.data
+
+    @property
+    def hoshes(self):
+        if self._hoshes is None:
+            self._hoshes = {k: v.hosh for k, v in self.data.items()}
+        return self._hoshes
+
+    def __rmul__(self, left):
+        from hdict import frozenhdict
+        from hdict.expression.step.edict import EDict
+        from hdict.expression.expr import Expr
+
+        from hdict import hdict
+
+        if isinstance(left, dict) and not isinstance(left, (hdict, frozenhdict)):
+            return Expr(EDict(left), self)
+        return NotImplemented  # pragma: no cover
+
+    def __mul__(self, other):
+        from hdict import hdict, frozenhdict
+        from hdict.expression.step.edict import EDict
+        from hdict.expression.expr import Expr
+        from hdict.expression.step.step import AbsStep
+
+        match other:
+            case AbsStep() | hdict() | frozenhdict():
+                return Expr(self, other)
+            case dict():
+                return Expr(self, EDict(other))
+            case _:  # pragma: no cover
+                return NotImplemented
+
+    def __rrshift__(self, left):
+        from hdict import hdict
+
+        if isinstance(left, dict) and not isinstance(left, (hdict, frozenhdict)):
+            return frozenhdict(left) &gt;&gt; self
+        return NotImplemented  # pragma: no cover
+
+    def __rshift__(self, other):
+        # If merging, keep ids.
+        from hdict import hdict
+        from hdict.expression.step.applyout import ApplyOut
+        from hdict.expression.step.cache import cache
+        from hdict.content.entry.cached import Cached
+
+        from hdict.content.argument.apply import apply
+
+        if isinstance(other, apply):  # pragma: no cover
+            raise Exception(f&#34;Cannot apply without specifying output(s).\n&#34; f&#34;Hint: d &gt;&gt; apply(f)(&#39;output_field1&#39;, &#39;output_field2&#39;)&#34;)
+        from hdict.content.argument import AbsArgument
+
+        if isinstance(other, AbsArgument):  # pragma: no cover
+            raise Exception(f&#34;Cannot pipe {type(other).__name__} without specifying output.\n&#34; &#34;Hint: d &gt;&gt; {&#39;field name&#39;: object}\n&#34; f&#34;Hint: d[&#39;field name&#39;] = object&#34;)
+
+        from hdict.expression.expr import Expr
+
+        match other:
+            case hdict() | frozenhdict():
+                dct = other.raw
+            case ApplyOut(nested, out):
+                dct = {out: nested}
+            case cache(storage=storage, fields=fields):
+                if not fields:
+                    fields = (k for k, v in self.raw.items() if not v.isevaluated)
+                dct = {k: Cached(self.ids[k], storage, self.raw[k]) for k in fields}
+            case dict():
+                dct = other
+            case Expr():
+                return Expr(self, other).solve()
+            case _:  # pragma: no cover
+                return NotImplemented
+        return frozenhdict(dct, _previous=self)
+
+    def __getitem__(self, item):  # pragma: no cover
+        return self.data[item].value
+
+    def __getattr__(self, item):  # pragma: no cover
+        if item in self.data:
+            return self.data[item].value
+        return self.__getattribute__(item)
+
+    def __setitem__(self, key: str, value):  # pragma: no cover
+        print(value)
+        raise Exception(f&#34;Cannot set an entry ({key}) of a frozen dict.&#34;)
+
+    def __delitem__(self, key):  # pragma: no cover
+        raise Exception(f&#34;Cannot delete an entry ({key}) from a frozen dict.&#34;)
+
+    @staticmethod
+    def fromdict(dictionary, ids):
+        &#34;&#34;&#34;Build a frozenidict from values and pre-defined ids
+
+        &gt;&gt;&gt; from hdict import hdict, value
+        &gt;&gt;&gt; hdict.fromdict({&#34;x&#34;: value(5, hosh=&#34;0123456789012345678901234567890123456789&#34;)}, {&#34;x&#34;: &#34;0123456789012345678901234567890123456789&#34;}).show(colored=False)
+        {
+            x: 5,
+            _id: bi5Qdbh-zgA1ZQdxGhxqjaKaQROtxk1VCPRZhMOq,
+            _ids: {
+                x: 0123456789012345678901234567890123456789
+            }
+        }
+        &#34;&#34;&#34;
+        from hdict.content.value import value
+        from hdict.content.entry import AbsEntry
+
+        data = {}
+        for k, v in dictionary.items():
+            if isinstance(v, AbsEntry):
+                if k in ids and ids[k] != v.id:  # pragma: no cover
+                    raise Exception(f&#34;Conflicting ids provided for key &#39;{k}&#39;: ival.id={v.id}; ids[{k}]={ids[k]}&#34;)
+                data[k] = v
+            else:
+                data[k] = value(v, ids[k] if k in ids else None)
+        return frozenhdict(data)
+
+    @property
+    def evaluated(self):
+        if self._evaluated is None:
+            for k, val in self.data.items():
+                val.evaluate()
+            self._evaluated = self
+        return self
+
+    def evaluate(self):
+        # todo: add flag to inhibit evaluation (i.e., fetching) of cached values; or other solution, e.g. Cache(write_onapply)
+        _ = self.evaluated
+
+    @property
+    def asdict(self):
+        &#34;&#34;&#34;
+        Convert to &#39;dict&#39;, including ids.
+
+        This evaluates all fields.
+        HINT: Use &#39;dict(d)&#39; to convert a &#39;hdict&#39; to a &#39;dict&#39; excluding ids.
+
+        &gt;&gt;&gt; from hdict import hdict, value
+        &gt;&gt;&gt; d = hdict.fromdict({&#34;x&#34;: value(5, hosh=&#34;0123456789012345678901234567890123456789&#34;)}, {&#34;x&#34;: &#34;0123456789012345678901234567890123456789&#34;})
+        &gt;&gt;&gt; d.asdict
+        {&#39;x&#39;: 5, &#39;_id&#39;: &#39;bi5Qdbh-zgA1ZQdxGhxqjaKaQROtxk1VCPRZhMOq&#39;, &#39;_ids&#39;: {&#39;x&#39;: &#39;0123456789012345678901234567890123456789&#39;}}
+        &#34;&#34;&#34;
+        if self._asdict is None:
+            dic = dict(self.items())
+            dic[&#34;_id&#34;] = self.id
+            dic[&#34;_ids&#34;] = self.ids.copy()
+            self._asdict = dic
+        return self._asdict
+
+    @property
+    def asdicts(self):
+        &#34;&#34;&#34;
+        Convert to &#39;dict&#39; recursing into nested frozenhdicts, including ids.
+
+        This evaluates all fields.
+        REMINDER: hdict is never nested, frozenhdict is used instead
+        HINT: Use &#39;asdicts_noid&#39; to recursively convert a &#39;hdict&#39; to a &#39;dict&#39; excluding ids.
+
+        &gt;&gt;&gt; from hdict import value, hdict
+        &gt;&gt;&gt; d = hdict(x=value(5, hosh=&#34;0123456789012345678901234567890123456789&#34;))
+        &gt;&gt;&gt; e = hdict(d=d)
+        &gt;&gt;&gt; e.asdicts
+        {&#39;d&#39;: {&#39;x&#39;: 5, &#39;_id&#39;: &#39;bi5Qdbh-zgA1ZQdxGhxqjaKaQROtxk1VCPRZhMOq&#39;, &#39;_ids&#39;: {&#39;x&#39;: &#39;0123456789012345678901234567890123456789&#39;}}, &#39;_id&#39;: &#39;GGhKhUmGhISaoHevn39hb-pLZEMoAc3KzE6Z0.IH&#39;, &#39;_ids&#39;: {&#39;d&#39;: &#39;bi5Qdbh-zgA1ZQdxGhxqjaKaQROtxk1VCPRZhMOq&#39;}}
+        &gt;&gt;&gt; dict(e) == e
+        True
+        &#34;&#34;&#34;
+        if self._asdicts is None:
+            from hdict import hdict
+
+            dic = {}
+            for k, v in self.items():
+                dic[k] = v.asdicts if isinstance(v, (hdict, frozenhdict)) else v
+            dic[&#34;_id&#34;] = self.id
+            dic[&#34;_ids&#34;] = self.ids.copy()
+            self._asdicts = dic
+        return self._asdicts
+
+    @property
+    def asdicts_noid(self):
+        &#34;&#34;&#34;
+        Convert to &#39;dict&#39; recursing into nested frozenhdicts, excluding ids.
+
+        REMINDER: hdict is never nested, frozenhdict is used instead
+        HINT: Use &#39;asdicts&#39; to recursively convert a &#39;hdict&#39; &#39;d&#39; to &#39;dict&#39; including ids.
+
+        &gt;&gt;&gt; from hdict import value, hdict
+        &gt;&gt;&gt; d = hdict(x=value(5, hosh=&#34;0123456789012345678901234567890123456789&#34;))
+        &gt;&gt;&gt; e = hdict(d=d)
+        &gt;&gt;&gt; e.asdicts_noid
+        {&#39;d&#39;: {&#39;x&#39;: 5}}
+        &gt;&gt;&gt; dict(e) == e
+        True
+
+        &#34;&#34;&#34;
+        if self._asdicts_noid is None:
+            from hdict import hdict
+
+            dic = {}
+            for k, v in self.items():
+                dic[k] = v.asdicts_noid if isinstance(v, (hdict, frozenhdict)) else v
+            self._asdicts_noid = dic
+        return self._asdicts_noid
+
+    @property
+    def asdicts_hoshes_noneval(self):
+        from hdict import value
+        from hdict.content.entry import AbsEntry
+
+        hoshes = set()
+        dic = {}
+        for k, val in self.data.items():
+            if isinstance(val, AbsEntry):
+                hoshes.add(val.hosh)
+            if isinstance(val, value):
+                v = val.value
+                if isinstance(v, frozenhdict):
+                    dic[k], subhoshes = v.asdicts_hoshes_noneval
+                    hoshes.update(subhoshes)
+                else:
+                    dic[k] = v
+            else:
+                dic[k] = val
+        hoshes.add(self.hosh)
+        dic[&#34;_id&#34;] = self.id
+        dic[&#34;_ids&#34;] = self.ids.copy()
+        return dic, hoshes
+
+    def astext(self, colored=True, key_quotes=False):
+        r&#34;&#34;&#34;Textual representation of a frozenidict object&#34;&#34;&#34;
+        dicts, hoshes = self.asdicts_hoshes_noneval
+        txt = json.dumps(dicts, indent=4, ensure_ascii=False, cls=CustomJSONEncoder)
+
+        # Put colors after json, to avoid escaping ansi codes.  todo: check how HTML behaves here
+        for h in hoshes:
+            txt = txt.replace(f&#39;&#34;{h.id}&#34;&#39;, repr(h)) if colored else txt.replace(f&#39;&#34;{h.id}&#34;&#39;, h.id)
+
+        # Remove quotes.
+        txt = re.sub(r&#39;(&#34;: )&#34;(λ.+?)&#34;(?=,\n)&#39;, &#39;&#34;: \\2&#39;, txt)  # Closure
+        txt = re.sub(r&#39;(&#34;: )&#34;(·.+?)&#34;(?=,\n)&#39;, &#39;&#34;: \\2&#39;, txt)  # Wrapper
+        txt = re.sub(r&#39;(&#34;: )&#34;(↑↓ cached at `.+?·)&#34;(?=,\n)&#39;, &#39;&#34;: \\2&#39;, txt)  # cache
+        if not key_quotes:
+            txt = re.sub(r&#39;(?&lt;!: )&#34;([\-a-zA-Z0-9_ ]+?)&#34;(?=: )&#39;, &#34;\\1&#34;, txt)  # keys
+
+        return txt
+
+    def show(self, colored=True, key_quotes=False):
+        r&#34;&#34;&#34;Print textual representation of a frozenidict object&#34;&#34;&#34;
+        print(self.astext(colored, key_quotes))
+
+    def copy(self):  # pragma: no cover
+        raise Exception(&#34;A FrozenIdict doesn&#39;t need copies&#34;)
+
+    @property
+    def unfrozen(self):
+        from hdict import hdict
+
+        return hdict(_frozen=self)
+
+    # def entries(self, evaluate=True):
+    #     &#34;&#34;&#34;Iterator over all items&#34;&#34;&#34;
+    #     yield from self.items(evaluate)
+    #     # yield from self.metaitems(evaluate)
+
+    def keys(self):
+        &#34;&#34;&#34;Generator of keys which don&#39;t start with &#39;_&#39;&#34;
+        &gt;&gt;&gt; from hdict import hdict
+        &gt;&gt;&gt; list(hdict(x=3, y=5).keys())
+        [&#39;x&#39;, &#39;y&#39;]
+        &gt;&gt;&gt; list(hdict(x=3, y=5).values())
+        [3, 5]
+        &#34;&#34;&#34;
+        return self.data.keys()
+
+    def values(self, evaluate=True):
+        &#34;&#34;&#34;Generator of field values&#34;&#34;&#34;
+        return ((v.value if evaluate else v) for k, v in self.data.items())
+
+    def items(self, evaluate=True):
+        &#34;&#34;&#34;Generator over field-value pairs&#34;&#34;&#34;
+        for k, val in self.data.items():
+            yield k, (val.value if evaluate else val)
+
+    def save(self, storage: dict):
+        &#34;&#34;&#34;
+        Store an entire frozenidict
+        &#34;&#34;&#34;
+        from hdict.persistence.stored import Stored
+
+        data = {self.id: self.ids}
+        for field, fid in self.ids.items():
+            value = self[field]
+            if field.endswith(&#34;_&#34;):
+                raise Exception(f&#34;Not implemented for mirror fields and is not possible for metafields&#34;)
+                # todo:  confirm existence of the counterpart
+                # data[kindid(fid)] = str(type(value))
+            elif isinstance(value, frozenhdict):
+                value.save(storage)
+            else:
+                data[fid] = Stored(value)
+        # todo:  check if frozenhdict is being stored by mistake
+        # todo:  attribute/method as subfield:
+        #       apply(f, _.df.x)            SubField(name=&#34;df&#34;, attribute=&#34;x&#34;)
+        #       apply(_.df.drop, &#34;col1&#34;)    SubField(name=&#34;df&#34;, attribute=&#34;drop&#34;)
+        #
+        storage.update(data)
+
+    @staticmethod
+    def load(id, storage: dict, lazy=True) -&gt; Union[&#34;frozenhdict&#34;, None]:
+        &#34;&#34;&#34;
+        Fetch an entire frozenidict
+        &#34;&#34;&#34;
+        if len(id) != 40:  # pragma: no cover
+            raise Exception(f&#34;id should have lenght of 40, not {len(id)}&#34;)
+        return frozenhdict.fetch(id, storage, lazy, ishdict=True)
+
+    @staticmethod
+    def fetch(id: str, storage: dict, lazy=True, ishdict=False) -&gt; Union[&#34;frozenhdict&#34;, None]:
+        &#34;&#34;&#34;
+        Fetch a single entry
+
+        When cache is a list, traverse it from the end (right item to the left item).
+        &#34;&#34;&#34;
+        from hdict.content.entry.cached import Cached
+        from hdict.persistence.stored import Stored
+
+        if id not in storage:
+            return None
+            # if ishdict:
+            #     raise Exception(f&#34;hdict not saved or not cached if its nested.  `id` not found: `{id}`&#34;)
+            # else:
+            #     raise Exception(f&#34;Entry not cached. `id` not found: `{id}`&#34;)
+        obj = storage[id]
+        if isinstance(obj, dict):
+            ishdict = True  # Set to True, because now we have a nested frozenhdict
+        elif ishdict or not isinstance(obj, Stored):  # pragma: no cover
+            raise Exception(f&#34;Wrong content for hdict expected under id {id}: {type(obj)}.&#34;)
+
+        if ishdict:
+            ids = obj
+            data = {}
+            mirrored = set()
+            for field, fid in ids.items():
+                if field.endswith(&#34;_&#34;):
+                    # TODO:  2023-06-23
+                    #  -
+                    raise Exception(f&#34;Not implemented for mirror fields and is not possible for metafields&#34;)
+                    # mirrored.add(field[:-1])
+                    continue
+                if lazy:
+                    data[field] = Cached(fid, storage)
+                else:
+                    obj = frozenhdict.fetch(fid, storage, lazy=False, ishdict=False)
+                    if obj is None:  # pragma: no cover
+                        print(storage.keys())
+                        raise Exception(f&#34;Incomplete hdict: id &#39;{id}&#39; not found in the provided cache.&#34;)
+                    data[field] = obj
+            # for field in mirrored:
+            #     obj = data[field]
+            #     kind = obj.kind if isinstance(obj, Cached) else getkind(storage, obj.hosh)
+            #     data[field + &#34;_&#34;] = handle_mirror(field, data, ids[field], kind)
+            return frozenhdict.fromdict(data, ids)
+
+        return obj.content
+
+    @property
+    def asdf(self):
+        &#34;&#34;&#34;
+        Represent hdict as a DataFrame if possible
+        &#34;&#34;&#34;
+        from pandas import DataFrame
+
+        data = dict(self)
+        index = data.pop(&#34;index&#34;)
+        return DataFrame(data, index=index)
+
+    @staticmethod
+    def fromfile(name, fields=None, format=&#34;df&#34;, named=None, hide_types=True):
+        r&#34;&#34;&#34;
+        Input format is defined by file extension: .arff, .csv
+        &#34;&#34;&#34;
+        from hdict.data.aux_frozendict import handle_format
+
+        df, name = file2df(name, hide_types, True)
+        return handle_format(format, fields, df, named and name)
+
+    @staticmethod
+    def fromtext(text: str, fields=None, format=&#34;df&#34;, named=None):
+        r&#34;&#34;&#34;
+        Input format is defined by file extension: .arff, .csv
+        &#34;&#34;&#34;
+        from hdict import frozenhdict
+
+        if text.startswith(&#34;@&#34;):
+            name = &#34;&lt;Unnamed&gt;&#34;
+            with StringIO() as f:
+                f.write(text)
+                text = f.getvalue()
+                df = loads(text)
+                for line in isplit(text, &#34;\n&#34;):
+                    if line[:9].upper() == &#34;@RELATION&#34;:
+                        name = line[9:].strip()
+                        break
+        else:
+            from testfixtures import TempDirectory
+
+            with TempDirectory() as tmp:
+                tmp.write(
+                    &#34;temp.csv&#34;,
+                    text.encode(),
+                )
+                return frozenhdict.fromfile(tmp.path + &#34;/temp.csv&#34;, fields, format, named)
+
+        from hdict.data.aux_frozendict import handle_format
+
+        return handle_format(format, fields, df, named and name)
+
+    def __eq__(self, other):
+        if isinstance(other, dict):
+            if &#34;_id&#34; in other:
+                return self.id == other[&#34;_id&#34;]
+            if list(self.keys()) != list(other.keys()):
+                return False
+            from hdict import hdict
+
+            if isinstance(other, (frozenhdict, hdict)):
+                return self.id == other.id
+            return dict(self) == other
+        return NotImplemented  # pragma: no cover
+
+    def __ne__(self, other):
+        return not (self == other)
+
+    def __repr__(self):
+        return self.astext()
+
+    def __str__(self):
+        return stringfy(self.data)
+
+    def __iter__(self):
+        for k in self.data:
+            yield k
+
+    def __hash__(self):
+        return hash(self.hosh)
+
+    def __bool__(self):
+        return bool(self.data)
+
+    # def __reduce__(self):
+    # dic = self.data.copy()
+    # del dic[&#34;_id&#34;]
+    # del dic[&#34;_ids&#34;]
+    # return self.__class__, (dic,)</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="hdict.data.frozenhdict.frozenhdict"><code class="flex name class">
+<span>class <span class="ident">frozenhdict</span></span>
+<span>(</span><span>**kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Immutable hdict.</p>
+<p>Any nested 'hdict' value will be frozen to avoid inconsistency between the hdict id (inner id) and the frozenhdict id (outer id).</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; from hdict import frozenhdict, hdict
+&gt;&gt;&gt; d = frozenhdict({&quot;x&quot;: 3}, y=5)
+&gt;&gt;&gt; from hosh._internals_appearance import decolorize
+&gt;&gt;&gt; print(decolorize(repr(d)))  # This is equivalent to just 'd', without colors.
+{
+    x: 3,
+    y: 5,
+    _id: r5A2Mh6vRRO5rxi5nfXv1myeguGSTmqHuHev38qM,
+    _ids: {
+        x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+        y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2
+    }
+}
+&gt;&gt;&gt; bool(d), bool(frozenhdict())
+(True, False)
+&gt;&gt;&gt; d.data
+{'x': 3, 'y': 5}
+&gt;&gt;&gt; from hdict import _, apply
+&gt;&gt;&gt; d *= apply(lambda v, x: v - x).z
+&gt;&gt;&gt; str(d)
+'⦑{x: 3, y: 5} » z=λ(v x)⦒'
+&gt;&gt;&gt; d.show(colored=False)
+⦑{
+    x: 3,
+    y: 5,
+    _id: r5A2Mh6vRRO5rxi5nfXv1myeguGSTmqHuHev38qM,
+    _ids: {
+        x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+        y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2
+    }
+} » z=λ(v x)⦒
+&gt;&gt;&gt; d = {&quot;v&quot;: 7} * d
+&gt;&gt;&gt; d.solve().show(colored=False)
+{
+    v: 7,
+    x: 3,
+    y: 5,
+    z: λ(v x),
+    _id: 0qFPOnULZigyiXU9Jv.1D.XSTIYHZ24UCT00DMHF,
+    _ids: {
+        v: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf,
+        x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+        y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+        z: 2-wfv1b9RyFHB2kdba3EBCy6Do5L-mMPJjT-nfPa
+    }
+}
+&gt;&gt;&gt; d = _ &gt;&gt; d
+&gt;&gt;&gt; d.show(colored=False)
+{
+    v: 7,
+    x: 3,
+    y: 5,
+    z: λ(v x),
+    _id: 0qFPOnULZigyiXU9Jv.1D.XSTIYHZ24UCT00DMHF,
+    _ids: {
+        v: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf,
+        x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+        y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+        z: 2-wfv1b9RyFHB2kdba3EBCy6Do5L-mMPJjT-nfPa
+    }
+}
+&gt;&gt;&gt; d = {&quot;a&quot;: 5} &gt;&gt; d
+&gt;&gt;&gt; d.show(colored=False)
+{
+    a: 5,
+    v: 7,
+    x: 3,
+    y: 5,
+    z: λ(v x),
+    _id: jZrJ2CiVUA9OqW.G7dwb3KoaTWGMUmSUVUXn0CkM,
+    _ids: {
+        a: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+        v: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf,
+        x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+        y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+        z: 2-wfv1b9RyFHB2kdba3EBCy6Do5L-mMPJjT-nfPa
+    }
+}
+&gt;&gt;&gt; from hdict.content.entry import AbsEntry, Unevaluated
+&gt;&gt;&gt; from hdict import frozenhdict
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class frozenhdict(UserDict, dict[str, VT]):
+    &#34;&#34;&#34;
+    Immutable hdict.
+
+    Any nested &#39;hdict&#39; value will be frozen to avoid inconsistency between the hdict id (inner id) and the frozenhdict id (outer id).
+
+    &gt;&gt;&gt; from hdict import frozenhdict, hdict
+    &gt;&gt;&gt; d = frozenhdict({&#34;x&#34;: 3}, y=5)
+    &gt;&gt;&gt; from hosh._internals_appearance import decolorize
+    &gt;&gt;&gt; print(decolorize(repr(d)))  # This is equivalent to just &#39;d&#39;, without colors.
+    {
+        x: 3,
+        y: 5,
+        _id: r5A2Mh6vRRO5rxi5nfXv1myeguGSTmqHuHev38qM,
+        _ids: {
+            x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+            y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2
+        }
+    }
+    &gt;&gt;&gt; bool(d), bool(frozenhdict())
+    (True, False)
+    &gt;&gt;&gt; d.data
+    {&#39;x&#39;: 3, &#39;y&#39;: 5}
+    &gt;&gt;&gt; from hdict import _, apply
+    &gt;&gt;&gt; d *= apply(lambda v, x: v - x).z
+    &gt;&gt;&gt; str(d)
+    &#39;⦑{x: 3, y: 5} » z=λ(v x)⦒&#39;
+    &gt;&gt;&gt; d.show(colored=False)
+    ⦑{
+        x: 3,
+        y: 5,
+        _id: r5A2Mh6vRRO5rxi5nfXv1myeguGSTmqHuHev38qM,
+        _ids: {
+            x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+            y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2
+        }
+    } » z=λ(v x)⦒
+    &gt;&gt;&gt; d = {&#34;v&#34;: 7} * d
+    &gt;&gt;&gt; d.solve().show(colored=False)
+    {
+        v: 7,
+        x: 3,
+        y: 5,
+        z: λ(v x),
+        _id: 0qFPOnULZigyiXU9Jv.1D.XSTIYHZ24UCT00DMHF,
+        _ids: {
+            v: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf,
+            x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+            y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+            z: 2-wfv1b9RyFHB2kdba3EBCy6Do5L-mMPJjT-nfPa
+        }
+    }
+    &gt;&gt;&gt; d = _ &gt;&gt; d
+    &gt;&gt;&gt; d.show(colored=False)
+    {
+        v: 7,
+        x: 3,
+        y: 5,
+        z: λ(v x),
+        _id: 0qFPOnULZigyiXU9Jv.1D.XSTIYHZ24UCT00DMHF,
+        _ids: {
+            v: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf,
+            x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+            y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+            z: 2-wfv1b9RyFHB2kdba3EBCy6Do5L-mMPJjT-nfPa
+        }
+    }
+    &gt;&gt;&gt; d = {&#34;a&#34;: 5} &gt;&gt; d
+    &gt;&gt;&gt; d.show(colored=False)
+    {
+        a: 5,
+        v: 7,
+        x: 3,
+        y: 5,
+        z: λ(v x),
+        _id: jZrJ2CiVUA9OqW.G7dwb3KoaTWGMUmSUVUXn0CkM,
+        _ids: {
+            a: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+            v: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf,
+            x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+            y: ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2,
+            z: 2-wfv1b9RyFHB2kdba3EBCy6Do5L-mMPJjT-nfPa
+        }
+    }
+    &gt;&gt;&gt; from hdict.content.entry import AbsEntry, Unevaluated
+    &gt;&gt;&gt; from hdict import frozenhdict
+    &#34;&#34;&#34;
+
+    _evaluated = None
+    _asdict, _asdicts, _asdicts_noid = None, None, None
+    _hoshes = None
+
+    # noinspection PyMissingConstructor
+    def __init__(self, /, _dictionary=None, _previous=None, **kwargs):
+        from hdict.content.entry import AbsEntry
+        from hdict.data.aux_frozendict import handle_identity
+        from hdict.data.aux_frozendict import handle_items
+
+        # todo: : check if _dictionary keys is &#39;str&#39;; regex to check if k is an identifier;
+        data = _dictionary or {}
+        # REMINDER: Inside data, the only &#39;dict&#39; entries are &#34;_id&#34; and &#34;_ids&#34;, the rest are AbsEntry objects.
+        self.data: dict[str, AbsEntry | str | dict[str, str]]
+        self.data = handle_items(data, kwargs, previous=_previous)
+        self.hosh, self.ids = handle_identity(self.data)
+        self.id = self.hosh.id
+        self.raw = self.data
+
+    @property
+    def hoshes(self):
+        if self._hoshes is None:
+            self._hoshes = {k: v.hosh for k, v in self.data.items()}
+        return self._hoshes
+
+    def __rmul__(self, left):
+        from hdict import frozenhdict
+        from hdict.expression.step.edict import EDict
+        from hdict.expression.expr import Expr
+
+        from hdict import hdict
+
+        if isinstance(left, dict) and not isinstance(left, (hdict, frozenhdict)):
+            return Expr(EDict(left), self)
+        return NotImplemented  # pragma: no cover
+
+    def __mul__(self, other):
+        from hdict import hdict, frozenhdict
+        from hdict.expression.step.edict import EDict
+        from hdict.expression.expr import Expr
+        from hdict.expression.step.step import AbsStep
+
+        match other:
+            case AbsStep() | hdict() | frozenhdict():
+                return Expr(self, other)
+            case dict():
+                return Expr(self, EDict(other))
+            case _:  # pragma: no cover
+                return NotImplemented
+
+    def __rrshift__(self, left):
+        from hdict import hdict
+
+        if isinstance(left, dict) and not isinstance(left, (hdict, frozenhdict)):
+            return frozenhdict(left) &gt;&gt; self
+        return NotImplemented  # pragma: no cover
+
+    def __rshift__(self, other):
+        # If merging, keep ids.
+        from hdict import hdict
+        from hdict.expression.step.applyout import ApplyOut
+        from hdict.expression.step.cache import cache
+        from hdict.content.entry.cached import Cached
+
+        from hdict.content.argument.apply import apply
+
+        if isinstance(other, apply):  # pragma: no cover
+            raise Exception(f&#34;Cannot apply without specifying output(s).\n&#34; f&#34;Hint: d &gt;&gt; apply(f)(&#39;output_field1&#39;, &#39;output_field2&#39;)&#34;)
+        from hdict.content.argument import AbsArgument
+
+        if isinstance(other, AbsArgument):  # pragma: no cover
+            raise Exception(f&#34;Cannot pipe {type(other).__name__} without specifying output.\n&#34; &#34;Hint: d &gt;&gt; {&#39;field name&#39;: object}\n&#34; f&#34;Hint: d[&#39;field name&#39;] = object&#34;)
+
+        from hdict.expression.expr import Expr
+
+        match other:
+            case hdict() | frozenhdict():
+                dct = other.raw
+            case ApplyOut(nested, out):
+                dct = {out: nested}
+            case cache(storage=storage, fields=fields):
+                if not fields:
+                    fields = (k for k, v in self.raw.items() if not v.isevaluated)
+                dct = {k: Cached(self.ids[k], storage, self.raw[k]) for k in fields}
+            case dict():
+                dct = other
+            case Expr():
+                return Expr(self, other).solve()
+            case _:  # pragma: no cover
+                return NotImplemented
+        return frozenhdict(dct, _previous=self)
+
+    def __getitem__(self, item):  # pragma: no cover
+        return self.data[item].value
+
+    def __getattr__(self, item):  # pragma: no cover
+        if item in self.data:
+            return self.data[item].value
+        return self.__getattribute__(item)
+
+    def __setitem__(self, key: str, value):  # pragma: no cover
+        print(value)
+        raise Exception(f&#34;Cannot set an entry ({key}) of a frozen dict.&#34;)
+
+    def __delitem__(self, key):  # pragma: no cover
+        raise Exception(f&#34;Cannot delete an entry ({key}) from a frozen dict.&#34;)
+
+    @staticmethod
+    def fromdict(dictionary, ids):
+        &#34;&#34;&#34;Build a frozenidict from values and pre-defined ids
+
+        &gt;&gt;&gt; from hdict import hdict, value
+        &gt;&gt;&gt; hdict.fromdict({&#34;x&#34;: value(5, hosh=&#34;0123456789012345678901234567890123456789&#34;)}, {&#34;x&#34;: &#34;0123456789012345678901234567890123456789&#34;}).show(colored=False)
+        {
+            x: 5,
+            _id: bi5Qdbh-zgA1ZQdxGhxqjaKaQROtxk1VCPRZhMOq,
+            _ids: {
+                x: 0123456789012345678901234567890123456789
+            }
+        }
+        &#34;&#34;&#34;
+        from hdict.content.value import value
+        from hdict.content.entry import AbsEntry
+
+        data = {}
+        for k, v in dictionary.items():
+            if isinstance(v, AbsEntry):
+                if k in ids and ids[k] != v.id:  # pragma: no cover
+                    raise Exception(f&#34;Conflicting ids provided for key &#39;{k}&#39;: ival.id={v.id}; ids[{k}]={ids[k]}&#34;)
+                data[k] = v
+            else:
+                data[k] = value(v, ids[k] if k in ids else None)
+        return frozenhdict(data)
+
+    @property
+    def evaluated(self):
+        if self._evaluated is None:
+            for k, val in self.data.items():
+                val.evaluate()
+            self._evaluated = self
+        return self
+
+    def evaluate(self):
+        # todo: add flag to inhibit evaluation (i.e., fetching) of cached values; or other solution, e.g. Cache(write_onapply)
+        _ = self.evaluated
+
+    @property
+    def asdict(self):
+        &#34;&#34;&#34;
+        Convert to &#39;dict&#39;, including ids.
+
+        This evaluates all fields.
+        HINT: Use &#39;dict(d)&#39; to convert a &#39;hdict&#39; to a &#39;dict&#39; excluding ids.
+
+        &gt;&gt;&gt; from hdict import hdict, value
+        &gt;&gt;&gt; d = hdict.fromdict({&#34;x&#34;: value(5, hosh=&#34;0123456789012345678901234567890123456789&#34;)}, {&#34;x&#34;: &#34;0123456789012345678901234567890123456789&#34;})
+        &gt;&gt;&gt; d.asdict
+        {&#39;x&#39;: 5, &#39;_id&#39;: &#39;bi5Qdbh-zgA1ZQdxGhxqjaKaQROtxk1VCPRZhMOq&#39;, &#39;_ids&#39;: {&#39;x&#39;: &#39;0123456789012345678901234567890123456789&#39;}}
+        &#34;&#34;&#34;
+        if self._asdict is None:
+            dic = dict(self.items())
+            dic[&#34;_id&#34;] = self.id
+            dic[&#34;_ids&#34;] = self.ids.copy()
+            self._asdict = dic
+        return self._asdict
+
+    @property
+    def asdicts(self):
+        &#34;&#34;&#34;
+        Convert to &#39;dict&#39; recursing into nested frozenhdicts, including ids.
+
+        This evaluates all fields.
+        REMINDER: hdict is never nested, frozenhdict is used instead
+        HINT: Use &#39;asdicts_noid&#39; to recursively convert a &#39;hdict&#39; to a &#39;dict&#39; excluding ids.
+
+        &gt;&gt;&gt; from hdict import value, hdict
+        &gt;&gt;&gt; d = hdict(x=value(5, hosh=&#34;0123456789012345678901234567890123456789&#34;))
+        &gt;&gt;&gt; e = hdict(d=d)
+        &gt;&gt;&gt; e.asdicts
+        {&#39;d&#39;: {&#39;x&#39;: 5, &#39;_id&#39;: &#39;bi5Qdbh-zgA1ZQdxGhxqjaKaQROtxk1VCPRZhMOq&#39;, &#39;_ids&#39;: {&#39;x&#39;: &#39;0123456789012345678901234567890123456789&#39;}}, &#39;_id&#39;: &#39;GGhKhUmGhISaoHevn39hb-pLZEMoAc3KzE6Z0.IH&#39;, &#39;_ids&#39;: {&#39;d&#39;: &#39;bi5Qdbh-zgA1ZQdxGhxqjaKaQROtxk1VCPRZhMOq&#39;}}
+        &gt;&gt;&gt; dict(e) == e
+        True
+        &#34;&#34;&#34;
+        if self._asdicts is None:
+            from hdict import hdict
+
+            dic = {}
+            for k, v in self.items():
+                dic[k] = v.asdicts if isinstance(v, (hdict, frozenhdict)) else v
+            dic[&#34;_id&#34;] = self.id
+            dic[&#34;_ids&#34;] = self.ids.copy()
+            self._asdicts = dic
+        return self._asdicts
+
+    @property
+    def asdicts_noid(self):
+        &#34;&#34;&#34;
+        Convert to &#39;dict&#39; recursing into nested frozenhdicts, excluding ids.
+
+        REMINDER: hdict is never nested, frozenhdict is used instead
+        HINT: Use &#39;asdicts&#39; to recursively convert a &#39;hdict&#39; &#39;d&#39; to &#39;dict&#39; including ids.
+
+        &gt;&gt;&gt; from hdict import value, hdict
+        &gt;&gt;&gt; d = hdict(x=value(5, hosh=&#34;0123456789012345678901234567890123456789&#34;))
+        &gt;&gt;&gt; e = hdict(d=d)
+        &gt;&gt;&gt; e.asdicts_noid
+        {&#39;d&#39;: {&#39;x&#39;: 5}}
+        &gt;&gt;&gt; dict(e) == e
+        True
+
+        &#34;&#34;&#34;
+        if self._asdicts_noid is None:
+            from hdict import hdict
+
+            dic = {}
+            for k, v in self.items():
+                dic[k] = v.asdicts_noid if isinstance(v, (hdict, frozenhdict)) else v
+            self._asdicts_noid = dic
+        return self._asdicts_noid
+
+    @property
+    def asdicts_hoshes_noneval(self):
+        from hdict import value
+        from hdict.content.entry import AbsEntry
+
+        hoshes = set()
+        dic = {}
+        for k, val in self.data.items():
+            if isinstance(val, AbsEntry):
+                hoshes.add(val.hosh)
+            if isinstance(val, value):
+                v = val.value
+                if isinstance(v, frozenhdict):
+                    dic[k], subhoshes = v.asdicts_hoshes_noneval
+                    hoshes.update(subhoshes)
+                else:
+                    dic[k] = v
+            else:
+                dic[k] = val
+        hoshes.add(self.hosh)
+        dic[&#34;_id&#34;] = self.id
+        dic[&#34;_ids&#34;] = self.ids.copy()
+        return dic, hoshes
+
+    def astext(self, colored=True, key_quotes=False):
+        r&#34;&#34;&#34;Textual representation of a frozenidict object&#34;&#34;&#34;
+        dicts, hoshes = self.asdicts_hoshes_noneval
+        txt = json.dumps(dicts, indent=4, ensure_ascii=False, cls=CustomJSONEncoder)
+
+        # Put colors after json, to avoid escaping ansi codes.  todo: check how HTML behaves here
+        for h in hoshes:
+            txt = txt.replace(f&#39;&#34;{h.id}&#34;&#39;, repr(h)) if colored else txt.replace(f&#39;&#34;{h.id}&#34;&#39;, h.id)
+
+        # Remove quotes.
+        txt = re.sub(r&#39;(&#34;: )&#34;(λ.+?)&#34;(?=,\n)&#39;, &#39;&#34;: \\2&#39;, txt)  # Closure
+        txt = re.sub(r&#39;(&#34;: )&#34;(·.+?)&#34;(?=,\n)&#39;, &#39;&#34;: \\2&#39;, txt)  # Wrapper
+        txt = re.sub(r&#39;(&#34;: )&#34;(↑↓ cached at `.+?·)&#34;(?=,\n)&#39;, &#39;&#34;: \\2&#39;, txt)  # cache
+        if not key_quotes:
+            txt = re.sub(r&#39;(?&lt;!: )&#34;([\-a-zA-Z0-9_ ]+?)&#34;(?=: )&#39;, &#34;\\1&#34;, txt)  # keys
+
+        return txt
+
+    def show(self, colored=True, key_quotes=False):
+        r&#34;&#34;&#34;Print textual representation of a frozenidict object&#34;&#34;&#34;
+        print(self.astext(colored, key_quotes))
+
+    def copy(self):  # pragma: no cover
+        raise Exception(&#34;A FrozenIdict doesn&#39;t need copies&#34;)
+
+    @property
+    def unfrozen(self):
+        from hdict import hdict
+
+        return hdict(_frozen=self)
+
+    # def entries(self, evaluate=True):
+    #     &#34;&#34;&#34;Iterator over all items&#34;&#34;&#34;
+    #     yield from self.items(evaluate)
+    #     # yield from self.metaitems(evaluate)
+
+    def keys(self):
+        &#34;&#34;&#34;Generator of keys which don&#39;t start with &#39;_&#39;&#34;
+        &gt;&gt;&gt; from hdict import hdict
+        &gt;&gt;&gt; list(hdict(x=3, y=5).keys())
+        [&#39;x&#39;, &#39;y&#39;]
+        &gt;&gt;&gt; list(hdict(x=3, y=5).values())
+        [3, 5]
+        &#34;&#34;&#34;
+        return self.data.keys()
+
+    def values(self, evaluate=True):
+        &#34;&#34;&#34;Generator of field values&#34;&#34;&#34;
+        return ((v.value if evaluate else v) for k, v in self.data.items())
+
+    def items(self, evaluate=True):
+        &#34;&#34;&#34;Generator over field-value pairs&#34;&#34;&#34;
+        for k, val in self.data.items():
+            yield k, (val.value if evaluate else val)
+
+    def save(self, storage: dict):
+        &#34;&#34;&#34;
+        Store an entire frozenidict
+        &#34;&#34;&#34;
+        from hdict.persistence.stored import Stored
+
+        data = {self.id: self.ids}
+        for field, fid in self.ids.items():
+            value = self[field]
+            if field.endswith(&#34;_&#34;):
+                raise Exception(f&#34;Not implemented for mirror fields and is not possible for metafields&#34;)
+                # todo:  confirm existence of the counterpart
+                # data[kindid(fid)] = str(type(value))
+            elif isinstance(value, frozenhdict):
+                value.save(storage)
+            else:
+                data[fid] = Stored(value)
+        # todo:  check if frozenhdict is being stored by mistake
+        # todo:  attribute/method as subfield:
+        #       apply(f, _.df.x)            SubField(name=&#34;df&#34;, attribute=&#34;x&#34;)
+        #       apply(_.df.drop, &#34;col1&#34;)    SubField(name=&#34;df&#34;, attribute=&#34;drop&#34;)
+        #
+        storage.update(data)
+
+    @staticmethod
+    def load(id, storage: dict, lazy=True) -&gt; Union[&#34;frozenhdict&#34;, None]:
+        &#34;&#34;&#34;
+        Fetch an entire frozenidict
+        &#34;&#34;&#34;
+        if len(id) != 40:  # pragma: no cover
+            raise Exception(f&#34;id should have lenght of 40, not {len(id)}&#34;)
+        return frozenhdict.fetch(id, storage, lazy, ishdict=True)
+
+    @staticmethod
+    def fetch(id: str, storage: dict, lazy=True, ishdict=False) -&gt; Union[&#34;frozenhdict&#34;, None]:
+        &#34;&#34;&#34;
+        Fetch a single entry
+
+        When cache is a list, traverse it from the end (right item to the left item).
+        &#34;&#34;&#34;
+        from hdict.content.entry.cached import Cached
+        from hdict.persistence.stored import Stored
+
+        if id not in storage:
+            return None
+            # if ishdict:
+            #     raise Exception(f&#34;hdict not saved or not cached if its nested.  `id` not found: `{id}`&#34;)
+            # else:
+            #     raise Exception(f&#34;Entry not cached. `id` not found: `{id}`&#34;)
+        obj = storage[id]
+        if isinstance(obj, dict):
+            ishdict = True  # Set to True, because now we have a nested frozenhdict
+        elif ishdict or not isinstance(obj, Stored):  # pragma: no cover
+            raise Exception(f&#34;Wrong content for hdict expected under id {id}: {type(obj)}.&#34;)
+
+        if ishdict:
+            ids = obj
+            data = {}
+            mirrored = set()
+            for field, fid in ids.items():
+                if field.endswith(&#34;_&#34;):
+                    # TODO:  2023-06-23
+                    #  -
+                    raise Exception(f&#34;Not implemented for mirror fields and is not possible for metafields&#34;)
+                    # mirrored.add(field[:-1])
+                    continue
+                if lazy:
+                    data[field] = Cached(fid, storage)
+                else:
+                    obj = frozenhdict.fetch(fid, storage, lazy=False, ishdict=False)
+                    if obj is None:  # pragma: no cover
+                        print(storage.keys())
+                        raise Exception(f&#34;Incomplete hdict: id &#39;{id}&#39; not found in the provided cache.&#34;)
+                    data[field] = obj
+            # for field in mirrored:
+            #     obj = data[field]
+            #     kind = obj.kind if isinstance(obj, Cached) else getkind(storage, obj.hosh)
+            #     data[field + &#34;_&#34;] = handle_mirror(field, data, ids[field], kind)
+            return frozenhdict.fromdict(data, ids)
+
+        return obj.content
+
+    @property
+    def asdf(self):
+        &#34;&#34;&#34;
+        Represent hdict as a DataFrame if possible
+        &#34;&#34;&#34;
+        from pandas import DataFrame
+
+        data = dict(self)
+        index = data.pop(&#34;index&#34;)
+        return DataFrame(data, index=index)
+
+    @staticmethod
+    def fromfile(name, fields=None, format=&#34;df&#34;, named=None, hide_types=True):
+        r&#34;&#34;&#34;
+        Input format is defined by file extension: .arff, .csv
+        &#34;&#34;&#34;
+        from hdict.data.aux_frozendict import handle_format
+
+        df, name = file2df(name, hide_types, True)
+        return handle_format(format, fields, df, named and name)
+
+    @staticmethod
+    def fromtext(text: str, fields=None, format=&#34;df&#34;, named=None):
+        r&#34;&#34;&#34;
+        Input format is defined by file extension: .arff, .csv
+        &#34;&#34;&#34;
+        from hdict import frozenhdict
+
+        if text.startswith(&#34;@&#34;):
+            name = &#34;&lt;Unnamed&gt;&#34;
+            with StringIO() as f:
+                f.write(text)
+                text = f.getvalue()
+                df = loads(text)
+                for line in isplit(text, &#34;\n&#34;):
+                    if line[:9].upper() == &#34;@RELATION&#34;:
+                        name = line[9:].strip()
+                        break
+        else:
+            from testfixtures import TempDirectory
+
+            with TempDirectory() as tmp:
+                tmp.write(
+                    &#34;temp.csv&#34;,
+                    text.encode(),
+                )
+                return frozenhdict.fromfile(tmp.path + &#34;/temp.csv&#34;, fields, format, named)
+
+        from hdict.data.aux_frozendict import handle_format
+
+        return handle_format(format, fields, df, named and name)
+
+    def __eq__(self, other):
+        if isinstance(other, dict):
+            if &#34;_id&#34; in other:
+                return self.id == other[&#34;_id&#34;]
+            if list(self.keys()) != list(other.keys()):
+                return False
+            from hdict import hdict
+
+            if isinstance(other, (frozenhdict, hdict)):
+                return self.id == other.id
+            return dict(self) == other
+        return NotImplemented  # pragma: no cover
+
+    def __ne__(self, other):
+        return not (self == other)
+
+    def __repr__(self):
+        return self.astext()
+
+    def __str__(self):
+        return stringfy(self.data)
+
+    def __iter__(self):
+        for k in self.data:
+            yield k
+
+    def __hash__(self):
+        return hash(self.hosh)
+
+    def __bool__(self):
+        return bool(self.data)
+
+    # def __reduce__(self):
+    # dic = self.data.copy()
+    # del dic[&#34;_id&#34;]
+    # del dic[&#34;_ids&#34;]
+    # return self.__class__, (dic,)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>collections.UserDict</li>
+<li>collections.abc.MutableMapping</li>
+<li>collections.abc.Mapping</li>
+<li>collections.abc.Collection</li>
+<li>collections.abc.Sized</li>
+<li>collections.abc.Iterable</li>
+<li>collections.abc.Container</li>
+<li>builtins.dict</li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="hdict.data.empty_.Empty_" href="empty_.html#hdict.data.empty_.Empty_">Empty_</a></li>
+</ul>
+<h3>Static methods</h3>
+<dl>
+<dt id="hdict.data.frozenhdict.frozenhdict.fetch"><code class="name flex">
+<span>def <span class="ident">fetch</span></span>(<span>id: str, storage: dict, lazy=True, ishdict=False) ‑> Optional[<a title="hdict.data.frozenhdict.frozenhdict" href="#hdict.data.frozenhdict.frozenhdict">frozenhdict</a>]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Fetch a single entry</p>
+<p>When cache is a list, traverse it from the end (right item to the left item).</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def fetch(id: str, storage: dict, lazy=True, ishdict=False) -&gt; Union[&#34;frozenhdict&#34;, None]:
+    &#34;&#34;&#34;
+    Fetch a single entry
+
+    When cache is a list, traverse it from the end (right item to the left item).
+    &#34;&#34;&#34;
+    from hdict.content.entry.cached import Cached
+    from hdict.persistence.stored import Stored
+
+    if id not in storage:
+        return None
+        # if ishdict:
+        #     raise Exception(f&#34;hdict not saved or not cached if its nested.  `id` not found: `{id}`&#34;)
+        # else:
+        #     raise Exception(f&#34;Entry not cached. `id` not found: `{id}`&#34;)
+    obj = storage[id]
+    if isinstance(obj, dict):
+        ishdict = True  # Set to True, because now we have a nested frozenhdict
+    elif ishdict or not isinstance(obj, Stored):  # pragma: no cover
+        raise Exception(f&#34;Wrong content for hdict expected under id {id}: {type(obj)}.&#34;)
+
+    if ishdict:
+        ids = obj
+        data = {}
+        mirrored = set()
+        for field, fid in ids.items():
+            if field.endswith(&#34;_&#34;):
+                # TODO:  2023-06-23
+                #  -
+                raise Exception(f&#34;Not implemented for mirror fields and is not possible for metafields&#34;)
+                # mirrored.add(field[:-1])
+                continue
+            if lazy:
+                data[field] = Cached(fid, storage)
+            else:
+                obj = frozenhdict.fetch(fid, storage, lazy=False, ishdict=False)
+                if obj is None:  # pragma: no cover
+                    print(storage.keys())
+                    raise Exception(f&#34;Incomplete hdict: id &#39;{id}&#39; not found in the provided cache.&#34;)
+                data[field] = obj
+        # for field in mirrored:
+        #     obj = data[field]
+        #     kind = obj.kind if isinstance(obj, Cached) else getkind(storage, obj.hosh)
+        #     data[field + &#34;_&#34;] = handle_mirror(field, data, ids[field], kind)
+        return frozenhdict.fromdict(data, ids)
+
+    return obj.content</code></pre>
+</details>
+</dd>
+<dt id="hdict.data.frozenhdict.frozenhdict.fromdict"><code class="name flex">
+<span>def <span class="ident">fromdict</span></span>(<span>dictionary, ids)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Build a frozenidict from values and pre-defined ids</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; from hdict import hdict, value
+&gt;&gt;&gt; hdict.fromdict({&quot;x&quot;: value(5, hosh=&quot;0123456789012345678901234567890123456789&quot;)}, {&quot;x&quot;: &quot;0123456789012345678901234567890123456789&quot;}).show(colored=False)
+{
+    x: 5,
+    _id: bi5Qdbh-zgA1ZQdxGhxqjaKaQROtxk1VCPRZhMOq,
+    _ids: {
+        x: 0123456789012345678901234567890123456789
+    }
+}
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def fromdict(dictionary, ids):
+    &#34;&#34;&#34;Build a frozenidict from values and pre-defined ids
+
+    &gt;&gt;&gt; from hdict import hdict, value
+    &gt;&gt;&gt; hdict.fromdict({&#34;x&#34;: value(5, hosh=&#34;0123456789012345678901234567890123456789&#34;)}, {&#34;x&#34;: &#34;0123456789012345678901234567890123456789&#34;}).show(colored=False)
+    {
+        x: 5,
+        _id: bi5Qdbh-zgA1ZQdxGhxqjaKaQROtxk1VCPRZhMOq,
+        _ids: {
+            x: 0123456789012345678901234567890123456789
+        }
+    }
+    &#34;&#34;&#34;
+    from hdict.content.value import value
+    from hdict.content.entry import AbsEntry
+
+    data = {}
+    for k, v in dictionary.items():
+        if isinstance(v, AbsEntry):
+            if k in ids and ids[k] != v.id:  # pragma: no cover
+                raise Exception(f&#34;Conflicting ids provided for key &#39;{k}&#39;: ival.id={v.id}; ids[{k}]={ids[k]}&#34;)
+            data[k] = v
+        else:
+            data[k] = value(v, ids[k] if k in ids else None)
+    return frozenhdict(data)</code></pre>
+</details>
+</dd>
+<dt id="hdict.data.frozenhdict.frozenhdict.fromfile"><code class="name flex">
+<span>def <span class="ident">fromfile</span></span>(<span>name, fields=None, format='df', named=None, hide_types=True)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Input format is defined by file extension: .arff, .csv</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def fromfile(name, fields=None, format=&#34;df&#34;, named=None, hide_types=True):
+    r&#34;&#34;&#34;
+    Input format is defined by file extension: .arff, .csv
+    &#34;&#34;&#34;
+    from hdict.data.aux_frozendict import handle_format
+
+    df, name = file2df(name, hide_types, True)
+    return handle_format(format, fields, df, named and name)</code></pre>
+</details>
+</dd>
+<dt id="hdict.data.frozenhdict.frozenhdict.fromtext"><code class="name flex">
+<span>def <span class="ident">fromtext</span></span>(<span>text: str, fields=None, format='df', named=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Input format is defined by file extension: .arff, .csv</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def fromtext(text: str, fields=None, format=&#34;df&#34;, named=None):
+    r&#34;&#34;&#34;
+    Input format is defined by file extension: .arff, .csv
+    &#34;&#34;&#34;
+    from hdict import frozenhdict
+
+    if text.startswith(&#34;@&#34;):
+        name = &#34;&lt;Unnamed&gt;&#34;
+        with StringIO() as f:
+            f.write(text)
+            text = f.getvalue()
+            df = loads(text)
+            for line in isplit(text, &#34;\n&#34;):
+                if line[:9].upper() == &#34;@RELATION&#34;:
+                    name = line[9:].strip()
+                    break
+    else:
+        from testfixtures import TempDirectory
+
+        with TempDirectory() as tmp:
+            tmp.write(
+                &#34;temp.csv&#34;,
+                text.encode(),
+            )
+            return frozenhdict.fromfile(tmp.path + &#34;/temp.csv&#34;, fields, format, named)
+
+    from hdict.data.aux_frozendict import handle_format
+
+    return handle_format(format, fields, df, named and name)</code></pre>
+</details>
+</dd>
+<dt id="hdict.data.frozenhdict.frozenhdict.load"><code class="name flex">
+<span>def <span class="ident">load</span></span>(<span>id, storage: dict, lazy=True) ‑> Optional[<a title="hdict.data.frozenhdict.frozenhdict" href="#hdict.data.frozenhdict.frozenhdict">frozenhdict</a>]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Fetch an entire frozenidict</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def load(id, storage: dict, lazy=True) -&gt; Union[&#34;frozenhdict&#34;, None]:
+    &#34;&#34;&#34;
+    Fetch an entire frozenidict
+    &#34;&#34;&#34;
+    if len(id) != 40:  # pragma: no cover
+        raise Exception(f&#34;id should have lenght of 40, not {len(id)}&#34;)
+    return frozenhdict.fetch(id, storage, lazy, ishdict=True)</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Instance variables</h3>
+<dl>
+<dt id="hdict.data.frozenhdict.frozenhdict.asdf"><code class="name">var <span class="ident">asdf</span></code></dt>
+<dd>
+<div class="desc"><p>Represent hdict as a DataFrame if possible</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def asdf(self):
+    &#34;&#34;&#34;
+    Represent hdict as a DataFrame if possible
+    &#34;&#34;&#34;
+    from pandas import DataFrame
+
+    data = dict(self)
+    index = data.pop(&#34;index&#34;)
+    return DataFrame(data, index=index)</code></pre>
+</details>
+</dd>
+<dt id="hdict.data.frozenhdict.frozenhdict.asdict"><code class="name">var <span class="ident">asdict</span></code></dt>
+<dd>
+<div class="desc"><p>Convert to 'dict', including ids.</p>
+<p>This evaluates all fields.
+HINT: Use 'dict(d)' to convert a 'hdict' to a 'dict' excluding ids.</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; from hdict import hdict, value
+&gt;&gt;&gt; d = hdict.fromdict({&quot;x&quot;: value(5, hosh=&quot;0123456789012345678901234567890123456789&quot;)}, {&quot;x&quot;: &quot;0123456789012345678901234567890123456789&quot;})
+&gt;&gt;&gt; d.asdict
+{'x': 5, '_id': 'bi5Qdbh-zgA1ZQdxGhxqjaKaQROtxk1VCPRZhMOq', '_ids': {'x': '0123456789012345678901234567890123456789'}}
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def asdict(self):
+    &#34;&#34;&#34;
+    Convert to &#39;dict&#39;, including ids.
+
+    This evaluates all fields.
+    HINT: Use &#39;dict(d)&#39; to convert a &#39;hdict&#39; to a &#39;dict&#39; excluding ids.
+
+    &gt;&gt;&gt; from hdict import hdict, value
+    &gt;&gt;&gt; d = hdict.fromdict({&#34;x&#34;: value(5, hosh=&#34;0123456789012345678901234567890123456789&#34;)}, {&#34;x&#34;: &#34;0123456789012345678901234567890123456789&#34;})
+    &gt;&gt;&gt; d.asdict
+    {&#39;x&#39;: 5, &#39;_id&#39;: &#39;bi5Qdbh-zgA1ZQdxGhxqjaKaQROtxk1VCPRZhMOq&#39;, &#39;_ids&#39;: {&#39;x&#39;: &#39;0123456789012345678901234567890123456789&#39;}}
+    &#34;&#34;&#34;
+    if self._asdict is None:
+        dic = dict(self.items())
+        dic[&#34;_id&#34;] = self.id
+        dic[&#34;_ids&#34;] = self.ids.copy()
+        self._asdict = dic
+    return self._asdict</code></pre>
+</details>
+</dd>
+<dt id="hdict.data.frozenhdict.frozenhdict.asdicts"><code class="name">var <span class="ident">asdicts</span></code></dt>
+<dd>
+<div class="desc"><p>Convert to 'dict' recursing into nested frozenhdicts, including ids.</p>
+<p>This evaluates all fields.
+REMINDER: hdict is never nested, frozenhdict is used instead
+HINT: Use 'asdicts_noid' to recursively convert a 'hdict' to a 'dict' excluding ids.</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; from hdict import value, hdict
+&gt;&gt;&gt; d = hdict(x=value(5, hosh=&quot;0123456789012345678901234567890123456789&quot;))
+&gt;&gt;&gt; e = hdict(d=d)
+&gt;&gt;&gt; e.asdicts
+{'d': {'x': 5, '_id': 'bi5Qdbh-zgA1ZQdxGhxqjaKaQROtxk1VCPRZhMOq', '_ids': {'x': '0123456789012345678901234567890123456789'}}, '_id': 'GGhKhUmGhISaoHevn39hb-pLZEMoAc3KzE6Z0.IH', '_ids': {'d': 'bi5Qdbh-zgA1ZQdxGhxqjaKaQROtxk1VCPRZhMOq'}}
+&gt;&gt;&gt; dict(e) == e
+True
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def asdicts(self):
+    &#34;&#34;&#34;
+    Convert to &#39;dict&#39; recursing into nested frozenhdicts, including ids.
+
+    This evaluates all fields.
+    REMINDER: hdict is never nested, frozenhdict is used instead
+    HINT: Use &#39;asdicts_noid&#39; to recursively convert a &#39;hdict&#39; to a &#39;dict&#39; excluding ids.
+
+    &gt;&gt;&gt; from hdict import value, hdict
+    &gt;&gt;&gt; d = hdict(x=value(5, hosh=&#34;0123456789012345678901234567890123456789&#34;))
+    &gt;&gt;&gt; e = hdict(d=d)
+    &gt;&gt;&gt; e.asdicts
+    {&#39;d&#39;: {&#39;x&#39;: 5, &#39;_id&#39;: &#39;bi5Qdbh-zgA1ZQdxGhxqjaKaQROtxk1VCPRZhMOq&#39;, &#39;_ids&#39;: {&#39;x&#39;: &#39;0123456789012345678901234567890123456789&#39;}}, &#39;_id&#39;: &#39;GGhKhUmGhISaoHevn39hb-pLZEMoAc3KzE6Z0.IH&#39;, &#39;_ids&#39;: {&#39;d&#39;: &#39;bi5Qdbh-zgA1ZQdxGhxqjaKaQROtxk1VCPRZhMOq&#39;}}
+    &gt;&gt;&gt; dict(e) == e
+    True
+    &#34;&#34;&#34;
+    if self._asdicts is None:
+        from hdict import hdict
+
+        dic = {}
+        for k, v in self.items():
+            dic[k] = v.asdicts if isinstance(v, (hdict, frozenhdict)) else v
+        dic[&#34;_id&#34;] = self.id
+        dic[&#34;_ids&#34;] = self.ids.copy()
+        self._asdicts = dic
+    return self._asdicts</code></pre>
+</details>
+</dd>
+<dt id="hdict.data.frozenhdict.frozenhdict.asdicts_hoshes_noneval"><code class="name">var <span class="ident">asdicts_hoshes_noneval</span></code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def asdicts_hoshes_noneval(self):
+    from hdict import value
+    from hdict.content.entry import AbsEntry
+
+    hoshes = set()
+    dic = {}
+    for k, val in self.data.items():
+        if isinstance(val, AbsEntry):
+            hoshes.add(val.hosh)
+        if isinstance(val, value):
+            v = val.value
+            if isinstance(v, frozenhdict):
+                dic[k], subhoshes = v.asdicts_hoshes_noneval
+                hoshes.update(subhoshes)
+            else:
+                dic[k] = v
+        else:
+            dic[k] = val
+    hoshes.add(self.hosh)
+    dic[&#34;_id&#34;] = self.id
+    dic[&#34;_ids&#34;] = self.ids.copy()
+    return dic, hoshes</code></pre>
+</details>
+</dd>
+<dt id="hdict.data.frozenhdict.frozenhdict.asdicts_noid"><code class="name">var <span class="ident">asdicts_noid</span></code></dt>
+<dd>
+<div class="desc"><p>Convert to 'dict' recursing into nested frozenhdicts, excluding ids.</p>
+<p>REMINDER: hdict is never nested, frozenhdict is used instead
+HINT: Use 'asdicts' to recursively convert a 'hdict' 'd' to 'dict' including ids.</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; from hdict import value, hdict
+&gt;&gt;&gt; d = hdict(x=value(5, hosh=&quot;0123456789012345678901234567890123456789&quot;))
+&gt;&gt;&gt; e = hdict(d=d)
+&gt;&gt;&gt; e.asdicts_noid
+{'d': {'x': 5}}
+&gt;&gt;&gt; dict(e) == e
+True
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def asdicts_noid(self):
+    &#34;&#34;&#34;
+    Convert to &#39;dict&#39; recursing into nested frozenhdicts, excluding ids.
+
+    REMINDER: hdict is never nested, frozenhdict is used instead
+    HINT: Use &#39;asdicts&#39; to recursively convert a &#39;hdict&#39; &#39;d&#39; to &#39;dict&#39; including ids.
+
+    &gt;&gt;&gt; from hdict import value, hdict
+    &gt;&gt;&gt; d = hdict(x=value(5, hosh=&#34;0123456789012345678901234567890123456789&#34;))
+    &gt;&gt;&gt; e = hdict(d=d)
+    &gt;&gt;&gt; e.asdicts_noid
+    {&#39;d&#39;: {&#39;x&#39;: 5}}
+    &gt;&gt;&gt; dict(e) == e
+    True
+
+    &#34;&#34;&#34;
+    if self._asdicts_noid is None:
+        from hdict import hdict
+
+        dic = {}
+        for k, v in self.items():
+            dic[k] = v.asdicts_noid if isinstance(v, (hdict, frozenhdict)) else v
+        self._asdicts_noid = dic
+    return self._asdicts_noid</code></pre>
+</details>
+</dd>
+<dt id="hdict.data.frozenhdict.frozenhdict.evaluated"><code class="name">var <span class="ident">evaluated</span></code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def evaluated(self):
+    if self._evaluated is None:
+        for k, val in self.data.items():
+            val.evaluate()
+        self._evaluated = self
+    return self</code></pre>
+</details>
+</dd>
+<dt id="hdict.data.frozenhdict.frozenhdict.hoshes"><code class="name">var <span class="ident">hoshes</span></code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def hoshes(self):
+    if self._hoshes is None:
+        self._hoshes = {k: v.hosh for k, v in self.data.items()}
+    return self._hoshes</code></pre>
+</details>
+</dd>
+<dt id="hdict.data.frozenhdict.frozenhdict.unfrozen"><code class="name">var <span class="ident">unfrozen</span></code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def unfrozen(self):
+    from hdict import hdict
+
+    return hdict(_frozen=self)</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="hdict.data.frozenhdict.frozenhdict.astext"><code class="name flex">
+<span>def <span class="ident">astext</span></span>(<span>self, colored=True, key_quotes=False)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Textual representation of a frozenidict object</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def astext(self, colored=True, key_quotes=False):
+    r&#34;&#34;&#34;Textual representation of a frozenidict object&#34;&#34;&#34;
+    dicts, hoshes = self.asdicts_hoshes_noneval
+    txt = json.dumps(dicts, indent=4, ensure_ascii=False, cls=CustomJSONEncoder)
+
+    # Put colors after json, to avoid escaping ansi codes.  todo: check how HTML behaves here
+    for h in hoshes:
+        txt = txt.replace(f&#39;&#34;{h.id}&#34;&#39;, repr(h)) if colored else txt.replace(f&#39;&#34;{h.id}&#34;&#39;, h.id)
+
+    # Remove quotes.
+    txt = re.sub(r&#39;(&#34;: )&#34;(λ.+?)&#34;(?=,\n)&#39;, &#39;&#34;: \\2&#39;, txt)  # Closure
+    txt = re.sub(r&#39;(&#34;: )&#34;(·.+?)&#34;(?=,\n)&#39;, &#39;&#34;: \\2&#39;, txt)  # Wrapper
+    txt = re.sub(r&#39;(&#34;: )&#34;(↑↓ cached at `.+?·)&#34;(?=,\n)&#39;, &#39;&#34;: \\2&#39;, txt)  # cache
+    if not key_quotes:
+        txt = re.sub(r&#39;(?&lt;!: )&#34;([\-a-zA-Z0-9_ ]+?)&#34;(?=: )&#39;, &#34;\\1&#34;, txt)  # keys
+
+    return txt</code></pre>
+</details>
+</dd>
+<dt id="hdict.data.frozenhdict.frozenhdict.copy"><code class="name flex">
+<span>def <span class="ident">copy</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>D.copy() -&gt; a shallow copy of D</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def copy(self):  # pragma: no cover
+    raise Exception(&#34;A FrozenIdict doesn&#39;t need copies&#34;)</code></pre>
+</details>
+</dd>
+<dt id="hdict.data.frozenhdict.frozenhdict.evaluate"><code class="name flex">
+<span>def <span class="ident">evaluate</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def evaluate(self):
+    # todo: add flag to inhibit evaluation (i.e., fetching) of cached values; or other solution, e.g. Cache(write_onapply)
+    _ = self.evaluated</code></pre>
+</details>
+</dd>
+<dt id="hdict.data.frozenhdict.frozenhdict.items"><code class="name flex">
+<span>def <span class="ident">items</span></span>(<span>self, evaluate=True)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Generator over field-value pairs</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def items(self, evaluate=True):
+    &#34;&#34;&#34;Generator over field-value pairs&#34;&#34;&#34;
+    for k, val in self.data.items():
+        yield k, (val.value if evaluate else val)</code></pre>
+</details>
+</dd>
+<dt id="hdict.data.frozenhdict.frozenhdict.keys"><code class="name flex">
+<span>def <span class="ident">keys</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Generator of keys which don't start with '_'"</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; from hdict import hdict
+&gt;&gt;&gt; list(hdict(x=3, y=5).keys())
+['x', 'y']
+&gt;&gt;&gt; list(hdict(x=3, y=5).values())
+[3, 5]
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def keys(self):
+    &#34;&#34;&#34;Generator of keys which don&#39;t start with &#39;_&#39;&#34;
+    &gt;&gt;&gt; from hdict import hdict
+    &gt;&gt;&gt; list(hdict(x=3, y=5).keys())
+    [&#39;x&#39;, &#39;y&#39;]
+    &gt;&gt;&gt; list(hdict(x=3, y=5).values())
+    [3, 5]
+    &#34;&#34;&#34;
+    return self.data.keys()</code></pre>
+</details>
+</dd>
+<dt id="hdict.data.frozenhdict.frozenhdict.save"><code class="name flex">
+<span>def <span class="ident">save</span></span>(<span>self, storage: dict)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Store an entire frozenidict</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def save(self, storage: dict):
+    &#34;&#34;&#34;
+    Store an entire frozenidict
+    &#34;&#34;&#34;
+    from hdict.persistence.stored import Stored
+
+    data = {self.id: self.ids}
+    for field, fid in self.ids.items():
+        value = self[field]
+        if field.endswith(&#34;_&#34;):
+            raise Exception(f&#34;Not implemented for mirror fields and is not possible for metafields&#34;)
+            # todo:  confirm existence of the counterpart
+            # data[kindid(fid)] = str(type(value))
+        elif isinstance(value, frozenhdict):
+            value.save(storage)
+        else:
+            data[fid] = Stored(value)
+    # todo:  check if frozenhdict is being stored by mistake
+    # todo:  attribute/method as subfield:
+    #       apply(f, _.df.x)            SubField(name=&#34;df&#34;, attribute=&#34;x&#34;)
+    #       apply(_.df.drop, &#34;col1&#34;)    SubField(name=&#34;df&#34;, attribute=&#34;drop&#34;)
+    #
+    storage.update(data)</code></pre>
+</details>
+</dd>
+<dt id="hdict.data.frozenhdict.frozenhdict.show"><code class="name flex">
+<span>def <span class="ident">show</span></span>(<span>self, colored=True, key_quotes=False)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Print textual representation of a frozenidict object</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def show(self, colored=True, key_quotes=False):
+    r&#34;&#34;&#34;Print textual representation of a frozenidict object&#34;&#34;&#34;
+    print(self.astext(colored, key_quotes))</code></pre>
+</details>
+</dd>
+<dt id="hdict.data.frozenhdict.frozenhdict.values"><code class="name flex">
+<span>def <span class="ident">values</span></span>(<span>self, evaluate=True)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Generator of field values</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def values(self, evaluate=True):
+    &#34;&#34;&#34;Generator of field values&#34;&#34;&#34;
+    return ((v.value if evaluate else v) for k, v in self.data.items())</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="hdict.data" href="index.html">hdict.data</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="hdict.data.frozenhdict.frozenhdict" href="#hdict.data.frozenhdict.frozenhdict">frozenhdict</a></code></h4>
+<ul class="">
+<li><code><a title="hdict.data.frozenhdict.frozenhdict.asdf" href="#hdict.data.frozenhdict.frozenhdict.asdf">asdf</a></code></li>
+<li><code><a title="hdict.data.frozenhdict.frozenhdict.asdict" href="#hdict.data.frozenhdict.frozenhdict.asdict">asdict</a></code></li>
+<li><code><a title="hdict.data.frozenhdict.frozenhdict.asdicts" href="#hdict.data.frozenhdict.frozenhdict.asdicts">asdicts</a></code></li>
+<li><code><a title="hdict.data.frozenhdict.frozenhdict.asdicts_hoshes_noneval" href="#hdict.data.frozenhdict.frozenhdict.asdicts_hoshes_noneval">asdicts_hoshes_noneval</a></code></li>
+<li><code><a title="hdict.data.frozenhdict.frozenhdict.asdicts_noid" href="#hdict.data.frozenhdict.frozenhdict.asdicts_noid">asdicts_noid</a></code></li>
+<li><code><a title="hdict.data.frozenhdict.frozenhdict.astext" href="#hdict.data.frozenhdict.frozenhdict.astext">astext</a></code></li>
+<li><code><a title="hdict.data.frozenhdict.frozenhdict.copy" href="#hdict.data.frozenhdict.frozenhdict.copy">copy</a></code></li>
+<li><code><a title="hdict.data.frozenhdict.frozenhdict.evaluate" href="#hdict.data.frozenhdict.frozenhdict.evaluate">evaluate</a></code></li>
+<li><code><a title="hdict.data.frozenhdict.frozenhdict.evaluated" href="#hdict.data.frozenhdict.frozenhdict.evaluated">evaluated</a></code></li>
+<li><code><a title="hdict.data.frozenhdict.frozenhdict.fetch" href="#hdict.data.frozenhdict.frozenhdict.fetch">fetch</a></code></li>
+<li><code><a title="hdict.data.frozenhdict.frozenhdict.fromdict" href="#hdict.data.frozenhdict.frozenhdict.fromdict">fromdict</a></code></li>
+<li><code><a title="hdict.data.frozenhdict.frozenhdict.fromfile" href="#hdict.data.frozenhdict.frozenhdict.fromfile">fromfile</a></code></li>
+<li><code><a title="hdict.data.frozenhdict.frozenhdict.fromtext" href="#hdict.data.frozenhdict.frozenhdict.fromtext">fromtext</a></code></li>
+<li><code><a title="hdict.data.frozenhdict.frozenhdict.hoshes" href="#hdict.data.frozenhdict.frozenhdict.hoshes">hoshes</a></code></li>
+<li><code><a title="hdict.data.frozenhdict.frozenhdict.items" href="#hdict.data.frozenhdict.frozenhdict.items">items</a></code></li>
+<li><code><a title="hdict.data.frozenhdict.frozenhdict.keys" href="#hdict.data.frozenhdict.frozenhdict.keys">keys</a></code></li>
+<li><code><a title="hdict.data.frozenhdict.frozenhdict.load" href="#hdict.data.frozenhdict.frozenhdict.load">load</a></code></li>
+<li><code><a title="hdict.data.frozenhdict.frozenhdict.save" href="#hdict.data.frozenhdict.frozenhdict.save">save</a></code></li>
+<li><code><a title="hdict.data.frozenhdict.frozenhdict.show" href="#hdict.data.frozenhdict.frozenhdict.show">show</a></code></li>
+<li><code><a title="hdict.data.frozenhdict.frozenhdict.unfrozen" href="#hdict.data.frozenhdict.frozenhdict.unfrozen">unfrozen</a></code></li>
+<li><code><a title="hdict.data.frozenhdict.frozenhdict.values" href="#hdict.data.frozenhdict.frozenhdict.values">values</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>

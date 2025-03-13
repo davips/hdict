@@ -262,10 +262,10 @@ def handle_format(format, fields, df, name):
         X: "‹{'X': {1: 3, 2: 4}}›",
         y: "‹[0 1]›",
         name: true,
-        _id: rd.NmqV3FPKd3o5c7XAcPcJ6GFkK7O5XSAZR7JkV,
+        _id: YqSK53olUUaUc2KhnelWsVP418Sg3bfRjZNU9dD5,
         _ids: {
-            X: OMVTYSyh4Tl7V-eDNkbZ.1j79E5eLBOPLtXB.87w,
-            y: cm5S71YBRAlVWV5Yn9pXHzsacyZuEH4ZFDNAw9nu,
+            X: TEkLOiYfJLgmeSfmJlhpN8xMki.6v4xXVos8.-xZ,
+            y: 6mcUS3pP8BFepVgq4m1t4Ud85bDELIvLYsA4zPed,
             name: oK8X-7eG1Qp1WH7v6fokBDrQPdngKn.h86tlEnx4
         }
     }
@@ -273,9 +273,9 @@ def handle_format(format, fields, df, name):
     {
         df: "‹{'X': {1: 3, 2: 4}, 'y': {1: 5, 2: 6}}›",
         name: true,
-        _id: VWDHscqLlIW-Fu6bOAjrEBHzUehukqBOxK3RM4m9,
+        _id: Ulp77kWsFx3PllpU8AwjEQb-d5a6JnWdrDAMgUpI,
         _ids: {
-            df: wTtDSUgXcZQVqx-CBZI-L9h4zVjAazPRGQOUNza8,
+            df: MnFrtcwpAdN9.C3zFKJ3ak8M4ZTUAw8hAFjQhneH,
             name: oK8X-7eG1Qp1WH7v6fokBDrQPdngKn.h86tlEnx4
         }
     }
@@ -284,13 +284,14 @@ def handle_format(format, fields, df, name):
         X: "‹{'X': {1: 3, 2: 4}}›",
         y: "‹[0 1]›",
         name: true,
-        _id: rd.NmqV3FPKd3o5c7XAcPcJ6GFkK7O5XSAZR7JkV,
+        _id: YqSK53olUUaUc2KhnelWsVP418Sg3bfRjZNU9dD5,
         _ids: {
-            X: OMVTYSyh4Tl7V-eDNkbZ.1j79E5eLBOPLtXB.87w,
-            y: cm5S71YBRAlVWV5Yn9pXHzsacyZuEH4ZFDNAw9nu,
+            X: TEkLOiYfJLgmeSfmJlhpN8xMki.6v4xXVos8.-xZ,
+            y: 6mcUS3pP8BFepVgq4m1t4Ud85bDELIvLYsA4zPed,
             name: oK8X-7eG1Qp1WH7v6fokBDrQPdngKn.h86tlEnx4
         }
     }
+
     """
     if fields and not isinstance(fields, list):  # pragma: no cover
         raise Exception(f"`fields` must be a list.")

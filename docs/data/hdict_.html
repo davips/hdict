@@ -1,0 +1,2534 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.10.0" />
+<title>hdict.data.hdict_ API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>hdict.data.hdict_</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">#  Copyright (c) 2023. Davi Pereira dos Santos
+#  This file is part of the hdict project.
+#  Please respect the license - more about this in the section (*) below.
+#
+#  hdict is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  hdict is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with hdict.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+#
+#  (*) Removing authorship by any means, e.g. by distribution of derived
+#  works or verbatim, obfuscated, compiled or rewritten versions of any
+#  part of this work is illegal and it is unethical regarding the effort and
+#  time spent here.
+#
+from typing import TypeVar, Union
+
+from hosh import Hosh
+
+from hdict.content.argument.apply import apply
+from hdict.content.argument.field import field
+from hdict.data.frozenhdict import frozenhdict
+
+VT = TypeVar(&#34;VT&#34;)
+
+# todo : detect if argument passed to apply() has a memory address (nondeterminism) and alert user; or try to erase it?
+
+# todo: : finish all &#39;*&#39; combinations and check all &#39;&gt;&gt;&#39; to see when to generate hdict and when to generate Expr.
+
+# todo: incluir no pacote esquema de aplicar f no hdict inteiro como feito no artigo.
+#  seria outro hdict ou só precisaria de uma função wrapper para f? ou um h_apply que transforma o hdict inteiro?
+
+
+class hdict_(dict[str, VT]):
+    &#34;&#34;&#34;
+    This class was created only due to slowness of IDE created by excessive doctests in the main file.
+
+    &gt;&gt;&gt; from hdict import _, apply
+    &gt;&gt;&gt; e = hdict_() * dict() * hdict_()
+    &gt;&gt;&gt; e.show(colored=False)
+    ⦑{
+        _id: 0000000000000000000000000000000000000000,
+        _ids: {}
+    } » {} » {}⦒
+    &gt;&gt;&gt; d = {&#34;x&#34;: 3, &#34;f&#34;: lambda x: x+1} &gt;&gt; e &gt;&gt; apply(_.f, _.x).x
+    &gt;&gt;&gt; bool(d), bool(e.sample())
+    (True, False)
+    &gt;&gt;&gt; d.show(colored=False)  # doctest:+ELLIPSIS
+    {
+        x: λ(3),
+        f: &#34;&lt;function &lt;lambda&gt; at 0x...&gt;&#34;,
+        _id: KxAogdPlPbTXATJzW7E8C.4j.82ZIDrVpTbVRxiZ,
+        _ids: {
+            x: KeU-dCTjUgnSYGRNrrMMr4i.hg64Dkkfb3c14eh3,
+            f: p-nM7oHlOFr6iHSF9ZISWXc9zqi017c3zcvcV8Dr
+        }
+    }
+    &gt;&gt;&gt; d.x
+    4
+    &gt;&gt;&gt; d.show(colored=False)  # doctest:+ELLIPSIS
+    {
+        x: 4,
+        f: &#34;&lt;function &lt;lambda&gt; at 0x...&gt;&#34;,
+        _id: KxAogdPlPbTXATJzW7E8C.4j.82ZIDrVpTbVRxiZ,
+        _ids: {
+            x: KeU-dCTjUgnSYGRNrrMMr4i.hg64Dkkfb3c14eh3,
+            f: p-nM7oHlOFr6iHSF9ZISWXc9zqi017c3zcvcV8Dr
+        }
+    }
+    &gt;&gt;&gt; str({&#34;a&#34;: 2} * d)  # doctest:+ELLIPSIS
+    &#39;⦑{a: 2} » {x: 4, f: &#34;&lt;function &lt;lambda&gt; at 0x...&gt;&#34;}⦒&#39;
+    &gt;&gt;&gt; (d &gt;&gt; apply(lambda d: d.x, _).X).evaluated.show(colored=False)  # doctest:+ELLIPSIS
+    {
+        x: 4,
+        f: &#34;&lt;function &lt;lambda&gt; at 0x...&gt;&#34;,
+        X: 4,
+        _id: KaIR9dqecR44MZVRrXLUzwqnIbCHhbOkQswgCuQl,
+        _ids: {
+            x: KeU-dCTjUgnSYGRNrrMMr4i.hg64Dkkfb3c14eh3,
+            f: p-nM7oHlOFr6iHSF9ZISWXc9zqi017c3zcvcV8Dr,
+            X: M411IcX.kF9pEdsWGIiS-XGn.R45qYTVQS0ewQs2
+        }
+    }
+    &gt;&gt;&gt; (d &gt;&gt; apply(lambda _: _.x).X).evaluated.show(colored=False)  # doctest:+ELLIPSIS
+    {
+        x: 4,
+        f: &#34;&lt;function &lt;lambda&gt; at 0x...&gt;&#34;,
+        X: 4,
+        _id: c1ZgriP45q8xEmDTkRcHjYe2v1C7RLyyZK4NgQ0L,
+        _ids: {
+            x: KeU-dCTjUgnSYGRNrrMMr4i.hg64Dkkfb3c14eh3,
+            f: p-nM7oHlOFr6iHSF9ZISWXc9zqi017c3zcvcV8Dr,
+            X: nVVYNVw8RyQ-7Kv0CxAUeLjRIzZwZwE7-8BKaaFr
+        }
+    }
+    &gt;&gt;&gt; (d &gt;&gt; apply(lambda _: _[&#34;x&#34;] * 3).s).evaluated.show(colored=False)  # doctest:+ELLIPSIS
+    {
+        x: 4,
+        f: &#34;&lt;function &lt;lambda&gt; at 0x...&gt;&#34;,
+        s: 12,
+        _id: iht2boR5MlpURpv7HldOcsWeXaV.4LF80tBnMQ49,
+        _ids: {
+            x: KeU-dCTjUgnSYGRNrrMMr4i.hg64Dkkfb3c14eh3,
+            f: p-nM7oHlOFr6iHSF9ZISWXc9zqi017c3zcvcV8Dr,
+            s: Dhu.akwH18RjAvlq9DktCNMfVu5zH.segcKI6AZ0
+        }
+    }
+    &#34;&#34;&#34;
+
+    # noinspection PyMissingConstructor
+    def __init__(self, /, _dictionary: dict = None, _frozen: frozenhdict = None, **kwargs):
+        # Build hdict from frozen or fresh data. Never both.
+        self.frozen = _frozen or frozenhdict(_dictionary, **kwargs)
+        self.raw = self.frozen.data
+
+    def __setitem__(self, key: str | tuple, value):
+        if isinstance(key, tuple):
+            key = tuple((x.start, x.stop) if isinstance(x, slice) else x for x in key)
+        self.frozen = self.frozen &gt;&gt; {key: value}
+        self.raw = self.frozen.data
+
+    def __delitem__(self, key):
+        data = self.frozen.data.copy()
+        del data[key]
+        self.frozen = frozenhdict(data)
+        self.raw = self.frozen.data
+
+    def __getitem__(self, item):
+        return self.frozen[item]
+
+    def __getattr__(self, item):
+        if item in self.frozen:
+            return self.frozen[item]
+        return self.__getattribute__(item)  # pragma: no cover
+
+    def __rmul__(self, other):
+        return other * self.frozen
+
+    def __mul__(self, other):
+        return self.frozen * other
+
+    def __rrshift__(self, other):
+        return (other &gt;&gt; self.frozen).unfrozen
+
+    def __rshift__(self, other):
+        return (self.frozen &gt;&gt; other).unfrozen
+
+    @property
+    def evaluated(self):
+        return self.frozen.evaluated
+
+    def evaluate(self):
+        &#34;&#34;&#34;
+        &gt;&gt;&gt; from hdict import apply, hdict
+        &gt;&gt;&gt; d = hdict(x=apply(apply(lambda: 2)))
+        &gt;&gt;&gt; d.show(colored=False)
+        {
+            x: λ(),
+            _id: YwRX7paX43aafhz-Jndo9HYnvyMSOtPEbRDjgQ3r,
+            _ids: {
+                x: J746LLRT3gd5glC2ZiaHBgHegmewpiOMC4Sq4bp9
+            }
+        }
+        &gt;&gt;&gt; d.evaluate()
+        &gt;&gt;&gt; d.show(colored=False)
+        {
+            x: 2,
+            _id: YwRX7paX43aafhz-Jndo9HYnvyMSOtPEbRDjgQ3r,
+            _ids: {
+                x: J746LLRT3gd5glC2ZiaHBgHegmewpiOMC4Sq4bp9
+            }
+        }
+        &gt;&gt;&gt; d.evaluated.show(colored=False)
+        {
+            x: 2,
+            _id: YwRX7paX43aafhz-Jndo9HYnvyMSOtPEbRDjgQ3r,
+            _ids: {
+                x: J746LLRT3gd5glC2ZiaHBgHegmewpiOMC4Sq4bp9
+            }
+        }
+        &#34;&#34;&#34;
+        self.frozen.evaluate()
+
+    @property
+    def hosh(self):
+        return self.frozen.hosh
+
+    @property
+    def id(self):
+        &#34;&#34;&#34;
+        &gt;&gt;&gt; from hdict import hdict
+        &gt;&gt;&gt; hdict(x=3, y=5).id == hdict(dict(x=3, y=5)).id
+        True
+        &#34;&#34;&#34;
+        return self.hosh.id
+
+    @property
+    def ids(self):
+        &#34;&#34;&#34;
+        &gt;&gt;&gt; from hdict import hdict
+        &gt;&gt;&gt; hdict(x=3, y=5).ids
+        {&#39;x&#39;: &#39;KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr&#39;, &#39;y&#39;: &#39;ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2&#39;}
+        &#34;&#34;&#34;
+        return self.frozen.ids
+
+    @staticmethod
+    def fromdict(dictionary, ids):
+        &#34;&#34;&#34;Build an idict from values and pre-defined ids
+
+        &gt;&gt;&gt; from hosh import Hosh
+        &gt;&gt;&gt; from hdict import hdict
+        &gt;&gt;&gt; e = hdict.fromdict({&#34;x&#34;: 3, &#34;y&#34;: 5, &#34;z&#34;: 7}, ids={&#34;x&#34;: Hosh(b&#34;x&#34;), &#34;y&#34;: Hosh(b&#34;y&#34;).id})
+        &gt;&gt;&gt; e.show(colored=False)
+        {
+            x: 3,
+            y: 5,
+            z: 7,
+            _id: uf--zyyiojm5Tl.vFKALuyGhZRO0e0eH9irosr0i,
+            _ids: {
+                x: ue7X2I7fd9j0mLl1GjgJ2btdX1QFnb1UAQNUbFGh,
+                y: 5yg5fDxFPxhEqzhoHgXpKyl5f078iBhd.pR0G2X0,
+                z: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf
+            }
+        }
+        &#34;&#34;&#34;
+        from hdict.data.frozenhdict import frozenhdict
+
+        return frozenhdict.fromdict(dictionary, ids).unfrozen
+
+    @property
+    def asdict(self):
+        &#34;&#34;&#34;
+        Convert to &#39;dict&#39;, including ids.
+
+        This evaluates all fields.
+        HINT: Use &#39;dict(d)&#39; to convert &#39;hdict&#39; to &#39;dict&#39; excluding ids.
+
+        &gt;&gt;&gt; from hdict import hdict
+        &gt;&gt;&gt; hdict(x=3, y=5).asdict
+        {&#39;x&#39;: 3, &#39;y&#39;: 5, &#39;_id&#39;: &#39;r5A2Mh6vRRO5rxi5nfXv1myeguGSTmqHuHev38qM&#39;, &#39;_ids&#39;: {&#39;x&#39;: &#39;KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr&#39;, &#39;y&#39;: &#39;ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2&#39;}}
+        &#34;&#34;&#34;
+        return self.frozen.asdict
+
+    @property
+    def asdicts(self):
+        &#34;&#34;&#34;
+        &gt;&gt;&gt; from hdict import hdict
+        &gt;&gt;&gt; hdict(x=3, y=5).asdict
+        {&#39;x&#39;: 3, &#39;y&#39;: 5, &#39;_id&#39;: &#39;r5A2Mh6vRRO5rxi5nfXv1myeguGSTmqHuHev38qM&#39;, &#39;_ids&#39;: {&#39;x&#39;: &#39;KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr&#39;, &#39;y&#39;: &#39;ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2&#39;}}
+        &#34;&#34;&#34;
+        return self.frozen.asdicts
+
+    @property
+    def asdicts_noid(self):
+        return self.frozen.asdicts_noid
+
+    def astext(self, colored=True, key_quotes=False):
+        r&#34;&#34;&#34;
+        &gt;&gt;&gt; from hdict import hdict
+        &gt;&gt;&gt; repr(hdict(x=3, y=5)) == hdict(x=3, y=5).astext()
+        True
+        &gt;&gt;&gt; print(repr(hdict(x=3, y=5)))
+        {
+            x: 3,
+            y: 5,
+            _id: [38;5;225m[1m[48;5;0mr[0m[38;5;225m[1m[48;5;0m5[0m[38;5;15m[1m[48;5;0mA[0m[38;5;225m[1m[48;5;0m2[0m[38;5;225m[1m[48;5;0mM[0m[38;5;195m[1m[48;5;0mh[0m[38;5;225m[1m[48;5;0m6[0m[38;5;219m[1m[48;5;0mv[0m[38;5;183m[1m[48;5;0mR[0m[38;5;251m[1m[48;5;0mR[0m[38;5;177m[1m[48;5;0mO[0m[38;5;147m[1m[48;5;0m5[0m[38;5;183m[1m[48;5;0mr[0m[38;5;189m[1m[48;5;0mx[0m[38;5;15m[1m[48;5;0mi[0m[38;5;225m[1m[48;5;0m5[0m[38;5;225m[1m[48;5;0mn[0m[38;5;225m[1m[48;5;0mf[0m[38;5;15m[1m[48;5;0mX[0m[38;5;225m[1m[48;5;0mv[0m[38;5;225m[1m[48;5;0m1[0m[38;5;195m[1m[48;5;0mm[0m[38;5;225m[1m[48;5;0my[0m[38;5;219m[1m[48;5;0me[0m[38;5;183m[1m[48;5;0mg[0m[38;5;251m[1m[48;5;0mu[0m[38;5;177m[1m[48;5;0mG[0m[38;5;147m[1m[48;5;0mS[0m[38;5;183m[1m[48;5;0mT[0m[38;5;189m[1m[48;5;0mm[0m[38;5;15m[1m[48;5;0mq[0m[38;5;225m[1m[48;5;0mH[0m[38;5;225m[1m[48;5;0mu[0m[38;5;225m[1m[48;5;0mH[0m[38;5;15m[1m[48;5;0me[0m[38;5;225m[1m[48;5;0mv[0m[38;5;225m[1m[48;5;0m3[0m[38;5;195m[1m[48;5;0m8[0m[38;5;225m[1m[48;5;0mq[0m[38;5;219m[1m[48;5;0mM[0m,
+            _ids: {
+                x: [38;5;239m[1m[48;5;0mK[0m[38;5;239m[1m[48;5;0mG[0m[38;5;60m[1m[48;5;0mW[0m[38;5;241m[1m[48;5;0mj[0m[38;5;97m[1m[48;5;0mj[0m[38;5;65m[1m[48;5;0m0[0m[38;5;133m[1m[48;5;0mi[0m[38;5;65m[1m[48;5;0my[0m[38;5;97m[1m[48;5;0mL[0m[38;5;66m[1m[48;5;0mA[0m[38;5;132m[1m[48;5;0mn[0m[38;5;61m[1m[48;5;0m1[0m[38;5;66m[1m[48;5;0mR[0m[38;5;95m[1m[48;5;0mG[0m[38;5;95m[1m[48;5;0m6[0m[38;5;239m[1m[48;5;0mR[0m[38;5;239m[1m[48;5;0mT[0m[38;5;239m[1m[48;5;0mG[0m[38;5;60m[1m[48;5;0mt[0m[38;5;241m[1m[48;5;0ms[0m[38;5;97m[1m[48;5;0mG[0m[38;5;65m[1m[48;5;0mE[0m[38;5;133m[1m[48;5;0m3[0m[38;5;65m[1m[48;5;0mo[0m[38;5;97m[1m[48;5;0mm[0m[38;5;66m[1m[48;5;0mZ[0m[38;5;132m[1m[48;5;0mr[0m[38;5;61m[1m[48;5;0ma[0m[38;5;66m[1m[48;5;0mJ[0m[38;5;95m[1m[48;5;0mM[0m[38;5;95m[1m[48;5;0m6[0m[38;5;239m[1m[48;5;0mx[0m[38;5;239m[1m[48;5;0mO[0m[38;5;239m[1m[48;5;0m.[0m[38;5;60m[1m[48;5;0mk[0m[38;5;241m[1m[48;5;0mv[0m[38;5;97m[1m[48;5;0mG[0m[38;5;65m[1m[48;5;0m5[0m[38;5;133m[1m[48;5;0mp[0m[38;5;65m[1m[48;5;0mr[0m,
+                y: [38;5;227m[1m[48;5;0me[0m[38;5;221m[1m[48;5;0mc[0m[38;5;209m[1m[48;5;0mv[0m[38;5;149m[1m[48;5;0mg[0m[38;5;221m[1m[48;5;0mo[0m[38;5;215m[1m[48;5;0m-[0m[38;5;185m[1m[48;5;0mC[0m[38;5;221m[1m[48;5;0mB[0m[38;5;216m[1m[48;5;0mP[0m[38;5;192m[1m[48;5;0mi[0m[38;5;227m[1m[48;5;0m7[0m[38;5;222m[1m[48;5;0mw[0m[38;5;191m[1m[48;5;0mR[0m[38;5;215m[1m[48;5;0mW[0m[38;5;180m[1m[48;5;0mI[0m[38;5;192m[1m[48;5;0mx[0m[38;5;227m[1m[48;5;0mN[0m[38;5;221m[1m[48;5;0mz[0m[38;5;209m[1m[48;5;0mu[0m[38;5;149m[1m[48;5;0mo[0m[38;5;221m[1m[48;5;0m1[0m[38;5;215m[1m[48;5;0mH[0m[38;5;185m[1m[48;5;0mg[0m[38;5;221m[1m[48;5;0mH[0m[38;5;216m[1m[48;5;0mQ[0m[38;5;192m[1m[48;5;0mC[0m[38;5;227m[1m[48;5;0mb[0m[38;5;222m[1m[48;5;0md[0m[38;5;191m[1m[48;5;0mv[0m[38;5;215m[1m[48;5;0mR[0m[38;5;180m[1m[48;5;0m0[0m[38;5;192m[1m[48;5;0m5[0m[38;5;227m[1m[48;5;0m8[0m[38;5;221m[1m[48;5;0mx[0m[38;5;209m[1m[48;5;0mi[0m[38;5;149m[1m[48;5;0m6[0m[38;5;221m[1m[48;5;0mz[0m[38;5;215m[1m[48;5;0mm[0m[38;5;185m[1m[48;5;0mr[0m[38;5;221m[1m[48;5;0m2[0m
+            }
+        }
+        &#34;&#34;&#34;
+        return self.frozen.astext(colored, key_quotes)
+
+    def show(self, colored=True, key_quotes=False):
+        r&#34;&#34;&#34;
+        Textual representation of an idict object
+
+        &gt;&gt;&gt; from hdict import hdict
+        &gt;&gt;&gt; d = hdict(x=1,y=2)
+        &gt;&gt;&gt; d.show(colored=False)
+        {
+            x: 1,
+            y: 2,
+            _id: 41wHsGFMSo0vbD2n6zAXogYG9YE3FwzIRSqjWc8N,
+            _ids: {
+                x: DYu5bfVvb6FOhBCWNsss4wsEWHZYTbKnsVgoWFvl,
+                y: k3PWYRxIEc0lEvD1f6rbnk.36RAD5AyfROy1aT29
+            }
+        }
+        &#34;&#34;&#34;
+        return self.frozen.show(colored, key_quotes)
+
+    def __iter__(self):
+        return iter(self.frozen)
+
+    def __contains__(self, item):
+        return item in self.frozen
+
+    def __repr__(self):
+        return repr(self.frozen)
+
+    def __str__(self):
+        return str(self.frozen)
+
+    def __eq__(self, other):
+        return self.frozen == other
+
+    def __ne__(self, other):
+        return self.frozen != other
+
+    def keys(self):
+        &#34;&#34;&#34;Generator of field names, i.e., keys which don&#39;t start with &#39;_&#39;&#34;&#34;&#34;
+        return self.frozen.keys()
+
+    def values(self, evaluate=True):
+        &#34;&#34;&#34;Generator of field values (keys that don&#39;t start with &#39;_&#39;)&#34;&#34;&#34;
+        return self.frozen.values(evaluate)
+
+    def items(self, evaluate=True):
+        &#34;&#34;&#34;Generator over field-value pairs
+
+        Exclude ids and other items starting with &#39;_&#39;.
+
+        &gt;&gt;&gt; from hdict import hdict
+        &gt;&gt;&gt; for k, v in hdict(x=1, y=2).items():
+        ...     print(k, v)
+        x 1
+        y 2
+        &#34;&#34;&#34;
+        return self.frozen.items(evaluate)
+
+    def __hash__(self):  # pragma: no cover
+        raise Exception(f&#34;hdict is not hashable. Please use hdict.frozen instead.&#34;)
+
+    def save(self, storage: dict):
+        &#34;&#34;&#34;
+        Store an entire hdict
+
+        &gt;&gt;&gt; from hdict import hdict, apply
+        &gt;&gt;&gt; storage = {}
+        &gt;&gt;&gt; d = hdict(x=3, y=7, z=hdict(z=9)) &gt;&gt; apply(lambda x, y: x/y).w
+        &gt;&gt;&gt; d.show(colored=False)
+        {
+            x: 3,
+            y: 7,
+            z: {
+                z: 9,
+                _id: izn67XbX0tQNF6E5qkwniN2jxZg5MT6f7z5AJzPM,
+                _ids: {
+                    z: GuwIQCrendfKXZr5jGfrUwoP-8TWMhmLHYrja2yj
+                }
+            },
+            w: λ(x y),
+            _id: Jf8QtLAszezNdiqblJCXMuoXocCWZ90QwrxY90Zu,
+            _ids: {
+                x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+                y: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf,
+                z: izn67XbX0tQNF6E5qkwniN2jxZg5MT6f7z5AJzPM,
+                w: NjWbIhEnN3s8E-w61pptxBuiYmqQ2D3QNX2ZAEB1
+            }
+        }
+        &gt;&gt;&gt; d.save(storage)
+        &gt;&gt;&gt; storage
+        {&#39;izn67XbX0tQNF6E5qkwniN2jxZg5MT6f7z5AJzPM&#39;: {&#39;z&#39;: &#39;GuwIQCrendfKXZr5jGfrUwoP-8TWMhmLHYrja2yj&#39;}, &#39;GuwIQCrendfKXZr5jGfrUwoP-8TWMhmLHYrja2yj&#39;: Stored(content=9), &#39;Jf8QtLAszezNdiqblJCXMuoXocCWZ90QwrxY90Zu&#39;: {&#39;x&#39;: &#39;KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr&#39;, &#39;y&#39;: &#39;eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf&#39;, &#39;z&#39;: &#39;izn67XbX0tQNF6E5qkwniN2jxZg5MT6f7z5AJzPM&#39;, &#39;w&#39;: &#39;NjWbIhEnN3s8E-w61pptxBuiYmqQ2D3QNX2ZAEB1&#39;}, &#39;KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr&#39;: Stored(content=3), &#39;eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf&#39;: Stored(content=7), &#39;NjWbIhEnN3s8E-w61pptxBuiYmqQ2D3QNX2ZAEB1&#39;: Stored(content=0.42857142857142855)}
+        &gt;&gt;&gt; e = hdict.load(d.id, storage)
+        &gt;&gt;&gt; e.show(colored=False)
+        {
+            x: ↑↓ cached at `dict`·,
+            y: ↑↓ cached at `dict`·,
+            z: ↑↓ cached at `dict`·,
+            w: ↑↓ cached at `dict`·,
+            _id: Jf8QtLAszezNdiqblJCXMuoXocCWZ90QwrxY90Zu,
+            _ids: {
+                x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+                y: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf,
+                z: izn67XbX0tQNF6E5qkwniN2jxZg5MT6f7z5AJzPM,
+                w: NjWbIhEnN3s8E-w61pptxBuiYmqQ2D3QNX2ZAEB1
+            }
+        }
+        &gt;&gt;&gt; d.w
+        0.42857142857142855
+        &gt;&gt;&gt; e.w
+        0.42857142857142855
+        &gt;&gt;&gt; e.evaluate()
+        &gt;&gt;&gt; e.show(colored=False)
+        {
+            x: 3,
+            y: 7,
+            z: {
+                z: 9
+            },
+            w: 0.42857142857142855,
+            _id: Jf8QtLAszezNdiqblJCXMuoXocCWZ90QwrxY90Zu,
+            _ids: {
+                x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+                y: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf,
+                z: izn67XbX0tQNF6E5qkwniN2jxZg5MT6f7z5AJzPM,
+                w: NjWbIhEnN3s8E-w61pptxBuiYmqQ2D3QNX2ZAEB1
+            }
+        }
+        &#34;&#34;&#34;
+        self.frozen.save(storage)
+
+    @staticmethod
+    def fetch(id: str, storage: dict, lazy=True) -&gt; Union[&#34;hdict_&#34;, None]:
+        r&#34;&#34;&#34;
+        Fetch a single entry
+
+        When cache is a list, traverse it from the end (right item to the left item).
+
+        &gt;&gt;&gt; from hdict import hdict, cache
+        &gt;&gt;&gt; from testfixtures import TempDirectory
+        &gt;&gt;&gt; arff = &#34;@RELATION mini\n@ATTRIBUTE attr1    REAL\n@ATTRIBUTE attr2  REAL\n@ATTRIBUTE class  {0,1}\n@DATA\n5.1,3.5,0\n3.1,4.5,1&#34;
+        &gt;&gt;&gt; with TempDirectory() as tmp:  # doctest:+ELLIPSIS
+        ...    tmp.write(&#34;mini.arff&#34;, arff.encode())
+        ...    d = hdict.fromfile(tmp.path + &#34;/mini.arff&#34;, fields=[&#34;df&#34;])
+        ...    d2 = hdict.fromfile(tmp.path + &#34;/mini.arff&#34;, fields=[&#34;df&#34;], named=True)
+        &#39;/tmp/.../mini.arff&#39;
+        &gt;&gt;&gt; d.show(colored=False)
+        {
+            df: &#34;‹{&#39;attr1&#39;: {0: 5.1, 1: 3.1}, &#39;attr2&#39;: {0: 3.5, 1: 4.5}, &#39;class&#39;: {0: &#39;0&#39;, 1: &#39;1&#39;}}›&#34;,
+            _id: O2THAlKL59kfBLqwUnSWV-fsDc6k4Vy6S5j4shDX,
+            _ids: {
+                df: bZAgZfAACR6i.xoS8WalaBhmjJx9iffBTaGFa0iu
+            }
+        }
+        &gt;&gt;&gt; d2.show(colored=False)
+        {
+            df: &#34;‹{&#39;attr1&#39;: {0: 5.1, 1: 3.1}, &#39;attr2&#39;: {0: 3.5, 1: 4.5}, &#39;class&#39;: {0: &#39;0&#39;, 1: &#39;1&#39;}}›&#34;,
+            name: &#34; mini&#34;,
+            _id: LSSNMnmfseV8LDODs6vA-6kSCW9czlZ-Cg-XxlGN,
+            _ids: {
+                df: bZAgZfAACR6i.xoS8WalaBhmjJx9iffBTaGFa0iu,
+                name: 5nzeWHgeVef.PD8CnIrPcjwGqaYoRCXK0iwH0cKm
+            }
+        }
+        &gt;&gt;&gt; storage = {}
+        &gt;&gt;&gt; d.save(storage)
+        &gt;&gt;&gt; d = hdict.fetch(d.id, storage)
+        &gt;&gt;&gt; d.show(colored=False)
+        {
+            df: ↑↓ cached at `dict`·,
+            _id: O2THAlKL59kfBLqwUnSWV-fsDc6k4Vy6S5j4shDX,
+            _ids: {
+                df: bZAgZfAACR6i.xoS8WalaBhmjJx9iffBTaGFa0iu
+            }
+        }
+        &gt;&gt;&gt; d.df
+           attr1  attr2 class
+        0    5.1    3.5     0
+        1    3.1    4.5     1
+
+        # &gt;&gt;&gt; #d.df.show(colored=False)
+        # &gt;&gt;&gt; d = hdict.fetch(d.id, storage, lazy=False)
+        # &gt;&gt;&gt; d.show(colored=False)
+        # {
+        #     df: {
+        #         index: &#34;‹{0: 0, 1: 1}›&#34;,
+        #         &#34;attr1@REAL&#34;: &#34;‹{0: 5.1, 1: 3.1}›&#34;,
+        #         &#34;attr2@REAL&#34;: &#34;‹{0: 3.5, 1: 4.5}›&#34;,
+        #         &#34;class@{0,1}&#34;: &#34;‹{0: &#39;0&#39;, 1: &#39;1&#39;}›&#34;,
+        #         _id: cHrG-npBDd2VEB8Foeg.7jQNZtdkTM1uhouHgW.J,
+        #         _ids: {
+        #             index: DQa5yWRkGo-9FLqmaST8pbElYdUEgqF8xPvip6-3,
+        #             &#34;attr1@REAL&#34;: wsy0JDrZO04O0RVwr64jpawX62WmCKtddYdvZlwm,
+        #             &#34;attr2@REAL&#34;: LvEgUazJoB1-.A3kABbskN-.iauWmWLTTo1iC51n,
+        #             &#34;class@{0,1}&#34;: b.kJy3SrU-JQ1oeh1d.uWLO7Pqh-eW6zwK78nTY4
+        #         }
+        #     },
+        #     df_: λ({    i···),
+        #     _id: CWkreYbSmrL0DPN9OtoU4Za1dg8.Jjl.fXD6yblb,
+        #     _ids: {
+        #         df: cHrG-npBDd2VEB8Foeg.7jQNZtdkTM1uhouHgW.J,
+        #         df_: cHrG-npBDd2VEB8Foeg.7jQNZtdkTM1uhouHgW.J
+        #     }
+        # }
+        # &gt;&gt;&gt; #del d[&#34;df_&#34;]
+        # &gt;&gt;&gt; d.show(colored=False)
+        # {
+        #     df: {
+        #         index: &#34;‹{0: 0, 1: 1}›&#34;,
+        #         &#34;attr1@REAL&#34;: &#34;‹{0: 5.1, 1: 3.1}›&#34;,
+        #         &#34;attr2@REAL&#34;: &#34;‹{0: 3.5, 1: 4.5}›&#34;,
+        #         &#34;class@{0,1}&#34;: &#34;‹{0: &#39;0&#39;, 1: &#39;1&#39;}›&#34;,
+        #         _id: cHrG-npBDd2VEB8Foeg.7jQNZtdkTM1uhouHgW.J,
+        #         _ids: {
+        #             index: DQa5yWRkGo-9FLqmaST8pbElYdUEgqF8xPvip6-3,
+        #             &#34;attr1@REAL&#34;: wsy0JDrZO04O0RVwr64jpawX62WmCKtddYdvZlwm,
+        #             &#34;attr2@REAL&#34;: LvEgUazJoB1-.A3kABbskN-.iauWmWLTTo1iC51n,
+        #             &#34;class@{0,1}&#34;: b.kJy3SrU-JQ1oeh1d.uWLO7Pqh-eW6zwK78nTY4
+        #         }
+        #     },
+        #     _id: CWkreYbSmrL0DPN9OtoU4Za1dg8.Jjl.fXD6yblb,
+        #     _ids: {
+        #         df: cHrG-npBDd2VEB8Foeg.7jQNZtdkTM1uhouHgW.J
+        #     }
+        # }
+        # &gt;&gt;&gt; d.save(storage)
+        # &gt;&gt;&gt; d = hdict.fetch(d.id, storage, lazy=False)
+        # &gt;&gt;&gt; d.show(colored=False)
+        # {
+        #     df: {
+        #         index: &#34;‹{0: 0, 1: 1}›&#34;,
+        #         &#34;attr1@REAL&#34;: &#34;‹{0: 5.1, 1: 3.1}›&#34;,
+        #         &#34;attr2@REAL&#34;: &#34;‹{0: 3.5, 1: 4.5}›&#34;,
+        #         &#34;class@{0,1}&#34;: &#34;‹{0: &#39;0&#39;, 1: &#39;1&#39;}›&#34;,
+        #         _id: cHrG-npBDd2VEB8Foeg.7jQNZtdkTM1uhouHgW.J,
+        #         _ids: {
+        #             index: DQa5yWRkGo-9FLqmaST8pbElYdUEgqF8xPvip6-3,
+        #             &#34;attr1@REAL&#34;: wsy0JDrZO04O0RVwr64jpawX62WmCKtddYdvZlwm,
+        #             &#34;attr2@REAL&#34;: LvEgUazJoB1-.A3kABbskN-.iauWmWLTTo1iC51n,
+        #             &#34;class@{0,1}&#34;: b.kJy3SrU-JQ1oeh1d.uWLO7Pqh-eW6zwK78nTY4
+        #         }
+        #     },
+        #     _id: CWkreYbSmrL0DPN9OtoU4Za1dg8.Jjl.fXD6yblb,
+        #     _ids: {
+        #         df: cHrG-npBDd2VEB8Foeg.7jQNZtdkTM1uhouHgW.J
+        #     }
+        # }
+        # &gt;&gt;&gt; str(d)
+        # &#39;{df: {index: &#34;‹{0: 0, 1: 1}›&#34;, attr1@REAL: &#34;‹{0: 5.1, 1: 3.1}›&#34;, attr2@REAL: &#34;‹{0: 3.5, 1: 4.5}›&#34;, class@{0,1}: &#34;‹{0: \&#39;0\&#39;, 1: \&#39;1\&#39;}›&#34;}}&#39;
+        &#34;&#34;&#34;
+        return frozenhdict.fetch(id, storage, lazy, ishdict=False)
+
+    @staticmethod
+    def load(id, storage: dict):
+        &#34;&#34;&#34;
+        Fetch an entire hdict
+
+        &gt;&gt;&gt; from hdict import _
+        &gt;&gt;&gt; from hdict.persistence.stored import Stored
+        &gt;&gt;&gt; fid = &#34;1234567890123456789012345678901234567890&#34;
+        &gt;&gt;&gt; did = &#34;0000567890123456789012345678901234567890&#34;
+        &gt;&gt;&gt; storage = {did: {&#34;x&#34;: fid}, fid: Stored(5)}
+        &gt;&gt;&gt; d = (+_).load(did, storage)
+        &gt;&gt;&gt; d.show(colored=False)
+        {
+            x: ↑↓ cached at `dict`·,
+            _id: kYzgpPdRgQSYSEpp1qt4EHQLQJXuyb2WDQS-iNPh,
+            _ids: {
+                x: 1234567890123456789012345678901234567890
+            }
+        }
+        &gt;&gt;&gt; d.evaluate()
+        &gt;&gt;&gt; d.show(colored=False)
+        {
+            x: 5,
+            _id: kYzgpPdRgQSYSEpp1qt4EHQLQJXuyb2WDQS-iNPh,
+            _ids: {
+                x: 1234567890123456789012345678901234567890
+            }
+        }
+        &#34;&#34;&#34;
+        return frozenhdict.load(id, storage).unfrozen
+
+    @staticmethod
+    def fromfile(name, fields=None, format=&#34;df&#34;, named=None, hide_types=True):
+        r&#34;&#34;&#34;
+        Input format is defined by file extension: .arff, .csv
+
+        &gt;&gt;&gt; from hdict import hdict
+        &gt;&gt;&gt; from testfixtures import TempDirectory
+        &gt;&gt;&gt; arff = &#34;@RELATION mini\n@ATTRIBUTE attr1    REAL\n@ATTRIBUTE attr2  REAL\n@ATTRIBUTE class  {0,1}\n@DATA\n5.1,3.5,0\n3.1,4.5,1&#34;
+        &gt;&gt;&gt; with TempDirectory() as tmp:  # doctest:+ELLIPSIS
+        ...    tmp.write(&#34;mini.arff&#34;, arff.encode())
+        ...    d = hdict.fromfile(tmp.path + &#34;/mini.arff&#34;)
+        &#39;/tmp/.../mini.arff&#39;
+        &gt;&gt;&gt; d.show(colored=False)
+        {
+            df: &#34;‹{&#39;attr1&#39;: {0: 5.1, 1: 3.1}, &#39;attr2&#39;: {0: 3.5, 1: 4.5}, &#39;class&#39;: {0: &#39;0&#39;, 1: &#39;1&#39;}}›&#34;,
+            _id: O2THAlKL59kfBLqwUnSWV-fsDc6k4Vy6S5j4shDX,
+            _ids: {
+                df: bZAgZfAACR6i.xoS8WalaBhmjJx9iffBTaGFa0iu
+            }
+        }
+        &gt;&gt;&gt; csv = &#34;attr1,attr2,class\n5.1,3.5,0\n3.1,4.5,1&#34;
+        &gt;&gt;&gt; with TempDirectory() as tmp:  # doctest:+ELLIPSIS
+        ...    tmp.write(&#34;mini.csv&#34;, csv.encode())
+        ...    d = hdict.fromfile(tmp.path + &#34;/mini.csv&#34;)
+        &#39;/tmp/.../mini.csv&#39;
+        &gt;&gt;&gt; d.show(colored=False)
+        {
+            df: &#34;‹{&#39;attr1&#39;: {0: 5.1, 1: 3.1}, &#39;attr2&#39;: {0: 3.5, 1: 4.5}, &#39;class&#39;: {0: 0, 1: 1}}›&#34;,
+            _id: LleZtGx7DXBMGoTEOjpuYEiuGmokrt8.bBcSnHke,
+            _ids: {
+                df: HNZ8xA5tfY1zPmJXQofXUSPw59LFAWQtd23r6q.M
+            }
+        }
+        &#34;&#34;&#34;
+        return frozenhdict.fromfile(name, fields, format, named, hide_types).unfrozen
+
+    @staticmethod
+    def fromtext(text: str, fields=None, format=&#34;df&#34;, named=None):
+        r&#34;&#34;&#34;
+        Input format is defined by file extension: .arff, .csv
+
+        &gt;&gt;&gt; from hdict import hdict
+        &gt;&gt;&gt; arff = &#34;@RELATION mini\n@ATTRIBUTE attr1    REAL\n@ATTRIBUTE attr2  REAL\n@ATTRIBUTE class  {0,1}\n@DATA\n5.1,3.5,0\n3.1,4.5,1&#34;
+        &gt;&gt;&gt; d = hdict.fromtext(arff)
+        &gt;&gt;&gt; d.show(colored=False)
+        {
+            df: &#34;‹{&#39;attr1@REAL&#39;: {0: 5.1, 1: 3.1}, &#39;attr2@REAL&#39;: {0: 3.5, 1: 4.5}, &#39;class@{0,1}&#39;: {0: &#39;0&#39;, 1: &#39;1&#39;}}›&#34;,
+            _id: b99cvfGPKi1TnuH7WzlWLCKFiDkjIft4PE7DE8yI,
+            _ids: {
+                df: 7qPwVfi.LOYYqm2mmih51GZNRp.8WB9zQJucnTcf
+            }
+        }
+        &gt;&gt;&gt; csv = &#34;attr1,attr2,class\n5.1,3.5,0\n3.1,4.5,1&#34;
+        &gt;&gt;&gt; d = hdict.fromtext(csv)
+        &gt;&gt;&gt; d.show(colored=False)
+        {
+            df: &#34;‹{&#39;attr1&#39;: {0: 5.1, 1: 3.1}, &#39;attr2&#39;: {0: 3.5, 1: 4.5}, &#39;class&#39;: {0: 0, 1: 1}}›&#34;,
+            _id: LleZtGx7DXBMGoTEOjpuYEiuGmokrt8.bBcSnHke,
+            _ids: {
+                df: HNZ8xA5tfY1zPmJXQofXUSPw59LFAWQtd23r6q.M
+            }
+        }
+        &#34;&#34;&#34;
+        return frozenhdict.fromtext(text, fields, format, named).unfrozen
+
+    @property
+    def asdf(self):
+        &#34;&#34;&#34;
+        Represent hdict as a DataFrame if possible
+
+        &gt;&gt;&gt; from hdict import hdict
+        &gt;&gt;&gt; d = hdict({&#34;x&#34;: [1,2,3], &#34;y&#34;: [5,6,7], &#34;index&#34;: [&#34;a&#34;, &#34;b&#34;, &#34;c&#34;]})
+        &gt;&gt;&gt; d.asdf
+           x  y
+        a  1  5
+        b  2  6
+        c  3  7
+        &#34;&#34;&#34;
+        return self.frozen.asdf
+
+    @property
+    def hoshes(self):
+        &#34;&#34;&#34;
+        &gt;&gt;&gt; from hdict import frozenhdict
+        &gt;&gt;&gt; [h.id for h in frozenhdict(x=3, y=2).hoshes.values()]
+        [&#39;KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr&#39;, &#39;k3PWYRxIEc0lEvD1f6rbnk.36RAD5AyfROy1aT29&#39;]
+        &#34;&#34;&#34;
+        return self.frozen.hoshes
+
+    def __bool__(self):
+        return bool(self.frozen.data)
+
+    def apply(self, appliable: apply | field, *applied_args, out=None, fhosh: Hosh = None, inplace=True, _sampleable=None, **applied_kwargs):
+        if out is None:
+            raise Exception(f&#34;Missing output field name `out`&#34;)
+        a = apply(appliable, *applied_args, fhosh=fhosh, _sampleable=_sampleable, **applied_kwargs)
+        ao = a(*out) if isinstance(out, tuple) else a(out)
+        frozen = self.frozen &gt;&gt; ao
+        if inplace:
+            self.frozen = frozen
+            self.raw = self.frozen.data
+        else:
+            return frozen.unfrozen
+
+    # def __reduce__(self):
+    # return self.frozen.__reduce__()</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="hdict.data.hdict_.hdict_"><code class="flex name class">
+<span>class <span class="ident">hdict_</span></span>
+<span>(</span><span>**kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>This class was created only due to slowness of IDE created by excessive doctests in the main file.</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; from hdict import _, apply
+&gt;&gt;&gt; e = hdict_() * dict() * hdict_()
+&gt;&gt;&gt; e.show(colored=False)
+⦑{
+    _id: 0000000000000000000000000000000000000000,
+    _ids: {}
+} » {} » {}⦒
+&gt;&gt;&gt; d = {&quot;x&quot;: 3, &quot;f&quot;: lambda x: x+1} &gt;&gt; e &gt;&gt; apply(_.f, _.x).x
+&gt;&gt;&gt; bool(d), bool(e.sample())
+(True, False)
+&gt;&gt;&gt; d.show(colored=False)  # doctest:+ELLIPSIS
+{
+    x: λ(3),
+    f: &quot;&lt;function &lt;lambda&gt; at 0x...&gt;&quot;,
+    _id: KxAogdPlPbTXATJzW7E8C.4j.82ZIDrVpTbVRxiZ,
+    _ids: {
+        x: KeU-dCTjUgnSYGRNrrMMr4i.hg64Dkkfb3c14eh3,
+        f: p-nM7oHlOFr6iHSF9ZISWXc9zqi017c3zcvcV8Dr
+    }
+}
+&gt;&gt;&gt; d.x
+4
+&gt;&gt;&gt; d.show(colored=False)  # doctest:+ELLIPSIS
+{
+    x: 4,
+    f: &quot;&lt;function &lt;lambda&gt; at 0x...&gt;&quot;,
+    _id: KxAogdPlPbTXATJzW7E8C.4j.82ZIDrVpTbVRxiZ,
+    _ids: {
+        x: KeU-dCTjUgnSYGRNrrMMr4i.hg64Dkkfb3c14eh3,
+        f: p-nM7oHlOFr6iHSF9ZISWXc9zqi017c3zcvcV8Dr
+    }
+}
+&gt;&gt;&gt; str({&quot;a&quot;: 2} * d)  # doctest:+ELLIPSIS
+'⦑{a: 2} » {x: 4, f: &quot;&lt;function &lt;lambda&gt; at 0x...&gt;&quot;}⦒'
+&gt;&gt;&gt; (d &gt;&gt; apply(lambda d: d.x, _).X).evaluated.show(colored=False)  # doctest:+ELLIPSIS
+{
+    x: 4,
+    f: &quot;&lt;function &lt;lambda&gt; at 0x...&gt;&quot;,
+    X: 4,
+    _id: KaIR9dqecR44MZVRrXLUzwqnIbCHhbOkQswgCuQl,
+    _ids: {
+        x: KeU-dCTjUgnSYGRNrrMMr4i.hg64Dkkfb3c14eh3,
+        f: p-nM7oHlOFr6iHSF9ZISWXc9zqi017c3zcvcV8Dr,
+        X: M411IcX.kF9pEdsWGIiS-XGn.R45qYTVQS0ewQs2
+    }
+}
+&gt;&gt;&gt; (d &gt;&gt; apply(lambda _: _.x).X).evaluated.show(colored=False)  # doctest:+ELLIPSIS
+{
+    x: 4,
+    f: &quot;&lt;function &lt;lambda&gt; at 0x...&gt;&quot;,
+    X: 4,
+    _id: c1ZgriP45q8xEmDTkRcHjYe2v1C7RLyyZK4NgQ0L,
+    _ids: {
+        x: KeU-dCTjUgnSYGRNrrMMr4i.hg64Dkkfb3c14eh3,
+        f: p-nM7oHlOFr6iHSF9ZISWXc9zqi017c3zcvcV8Dr,
+        X: nVVYNVw8RyQ-7Kv0CxAUeLjRIzZwZwE7-8BKaaFr
+    }
+}
+&gt;&gt;&gt; (d &gt;&gt; apply(lambda _: _[&quot;x&quot;] * 3).s).evaluated.show(colored=False)  # doctest:+ELLIPSIS
+{
+    x: 4,
+    f: &quot;&lt;function &lt;lambda&gt; at 0x...&gt;&quot;,
+    s: 12,
+    _id: iht2boR5MlpURpv7HldOcsWeXaV.4LF80tBnMQ49,
+    _ids: {
+        x: KeU-dCTjUgnSYGRNrrMMr4i.hg64Dkkfb3c14eh3,
+        f: p-nM7oHlOFr6iHSF9ZISWXc9zqi017c3zcvcV8Dr,
+        s: Dhu.akwH18RjAvlq9DktCNMfVu5zH.segcKI6AZ0
+    }
+}
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class hdict_(dict[str, VT]):
+    &#34;&#34;&#34;
+    This class was created only due to slowness of IDE created by excessive doctests in the main file.
+
+    &gt;&gt;&gt; from hdict import _, apply
+    &gt;&gt;&gt; e = hdict_() * dict() * hdict_()
+    &gt;&gt;&gt; e.show(colored=False)
+    ⦑{
+        _id: 0000000000000000000000000000000000000000,
+        _ids: {}
+    } » {} » {}⦒
+    &gt;&gt;&gt; d = {&#34;x&#34;: 3, &#34;f&#34;: lambda x: x+1} &gt;&gt; e &gt;&gt; apply(_.f, _.x).x
+    &gt;&gt;&gt; bool(d), bool(e.sample())
+    (True, False)
+    &gt;&gt;&gt; d.show(colored=False)  # doctest:+ELLIPSIS
+    {
+        x: λ(3),
+        f: &#34;&lt;function &lt;lambda&gt; at 0x...&gt;&#34;,
+        _id: KxAogdPlPbTXATJzW7E8C.4j.82ZIDrVpTbVRxiZ,
+        _ids: {
+            x: KeU-dCTjUgnSYGRNrrMMr4i.hg64Dkkfb3c14eh3,
+            f: p-nM7oHlOFr6iHSF9ZISWXc9zqi017c3zcvcV8Dr
+        }
+    }
+    &gt;&gt;&gt; d.x
+    4
+    &gt;&gt;&gt; d.show(colored=False)  # doctest:+ELLIPSIS
+    {
+        x: 4,
+        f: &#34;&lt;function &lt;lambda&gt; at 0x...&gt;&#34;,
+        _id: KxAogdPlPbTXATJzW7E8C.4j.82ZIDrVpTbVRxiZ,
+        _ids: {
+            x: KeU-dCTjUgnSYGRNrrMMr4i.hg64Dkkfb3c14eh3,
+            f: p-nM7oHlOFr6iHSF9ZISWXc9zqi017c3zcvcV8Dr
+        }
+    }
+    &gt;&gt;&gt; str({&#34;a&#34;: 2} * d)  # doctest:+ELLIPSIS
+    &#39;⦑{a: 2} » {x: 4, f: &#34;&lt;function &lt;lambda&gt; at 0x...&gt;&#34;}⦒&#39;
+    &gt;&gt;&gt; (d &gt;&gt; apply(lambda d: d.x, _).X).evaluated.show(colored=False)  # doctest:+ELLIPSIS
+    {
+        x: 4,
+        f: &#34;&lt;function &lt;lambda&gt; at 0x...&gt;&#34;,
+        X: 4,
+        _id: KaIR9dqecR44MZVRrXLUzwqnIbCHhbOkQswgCuQl,
+        _ids: {
+            x: KeU-dCTjUgnSYGRNrrMMr4i.hg64Dkkfb3c14eh3,
+            f: p-nM7oHlOFr6iHSF9ZISWXc9zqi017c3zcvcV8Dr,
+            X: M411IcX.kF9pEdsWGIiS-XGn.R45qYTVQS0ewQs2
+        }
+    }
+    &gt;&gt;&gt; (d &gt;&gt; apply(lambda _: _.x).X).evaluated.show(colored=False)  # doctest:+ELLIPSIS
+    {
+        x: 4,
+        f: &#34;&lt;function &lt;lambda&gt; at 0x...&gt;&#34;,
+        X: 4,
+        _id: c1ZgriP45q8xEmDTkRcHjYe2v1C7RLyyZK4NgQ0L,
+        _ids: {
+            x: KeU-dCTjUgnSYGRNrrMMr4i.hg64Dkkfb3c14eh3,
+            f: p-nM7oHlOFr6iHSF9ZISWXc9zqi017c3zcvcV8Dr,
+            X: nVVYNVw8RyQ-7Kv0CxAUeLjRIzZwZwE7-8BKaaFr
+        }
+    }
+    &gt;&gt;&gt; (d &gt;&gt; apply(lambda _: _[&#34;x&#34;] * 3).s).evaluated.show(colored=False)  # doctest:+ELLIPSIS
+    {
+        x: 4,
+        f: &#34;&lt;function &lt;lambda&gt; at 0x...&gt;&#34;,
+        s: 12,
+        _id: iht2boR5MlpURpv7HldOcsWeXaV.4LF80tBnMQ49,
+        _ids: {
+            x: KeU-dCTjUgnSYGRNrrMMr4i.hg64Dkkfb3c14eh3,
+            f: p-nM7oHlOFr6iHSF9ZISWXc9zqi017c3zcvcV8Dr,
+            s: Dhu.akwH18RjAvlq9DktCNMfVu5zH.segcKI6AZ0
+        }
+    }
+    &#34;&#34;&#34;
+
+    # noinspection PyMissingConstructor
+    def __init__(self, /, _dictionary: dict = None, _frozen: frozenhdict = None, **kwargs):
+        # Build hdict from frozen or fresh data. Never both.
+        self.frozen = _frozen or frozenhdict(_dictionary, **kwargs)
+        self.raw = self.frozen.data
+
+    def __setitem__(self, key: str | tuple, value):
+        if isinstance(key, tuple):
+            key = tuple((x.start, x.stop) if isinstance(x, slice) else x for x in key)
+        self.frozen = self.frozen &gt;&gt; {key: value}
+        self.raw = self.frozen.data
+
+    def __delitem__(self, key):
+        data = self.frozen.data.copy()
+        del data[key]
+        self.frozen = frozenhdict(data)
+        self.raw = self.frozen.data
+
+    def __getitem__(self, item):
+        return self.frozen[item]
+
+    def __getattr__(self, item):
+        if item in self.frozen:
+            return self.frozen[item]
+        return self.__getattribute__(item)  # pragma: no cover
+
+    def __rmul__(self, other):
+        return other * self.frozen
+
+    def __mul__(self, other):
+        return self.frozen * other
+
+    def __rrshift__(self, other):
+        return (other &gt;&gt; self.frozen).unfrozen
+
+    def __rshift__(self, other):
+        return (self.frozen &gt;&gt; other).unfrozen
+
+    @property
+    def evaluated(self):
+        return self.frozen.evaluated
+
+    def evaluate(self):
+        &#34;&#34;&#34;
+        &gt;&gt;&gt; from hdict import apply, hdict
+        &gt;&gt;&gt; d = hdict(x=apply(apply(lambda: 2)))
+        &gt;&gt;&gt; d.show(colored=False)
+        {
+            x: λ(),
+            _id: YwRX7paX43aafhz-Jndo9HYnvyMSOtPEbRDjgQ3r,
+            _ids: {
+                x: J746LLRT3gd5glC2ZiaHBgHegmewpiOMC4Sq4bp9
+            }
+        }
+        &gt;&gt;&gt; d.evaluate()
+        &gt;&gt;&gt; d.show(colored=False)
+        {
+            x: 2,
+            _id: YwRX7paX43aafhz-Jndo9HYnvyMSOtPEbRDjgQ3r,
+            _ids: {
+                x: J746LLRT3gd5glC2ZiaHBgHegmewpiOMC4Sq4bp9
+            }
+        }
+        &gt;&gt;&gt; d.evaluated.show(colored=False)
+        {
+            x: 2,
+            _id: YwRX7paX43aafhz-Jndo9HYnvyMSOtPEbRDjgQ3r,
+            _ids: {
+                x: J746LLRT3gd5glC2ZiaHBgHegmewpiOMC4Sq4bp9
+            }
+        }
+        &#34;&#34;&#34;
+        self.frozen.evaluate()
+
+    @property
+    def hosh(self):
+        return self.frozen.hosh
+
+    @property
+    def id(self):
+        &#34;&#34;&#34;
+        &gt;&gt;&gt; from hdict import hdict
+        &gt;&gt;&gt; hdict(x=3, y=5).id == hdict(dict(x=3, y=5)).id
+        True
+        &#34;&#34;&#34;
+        return self.hosh.id
+
+    @property
+    def ids(self):
+        &#34;&#34;&#34;
+        &gt;&gt;&gt; from hdict import hdict
+        &gt;&gt;&gt; hdict(x=3, y=5).ids
+        {&#39;x&#39;: &#39;KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr&#39;, &#39;y&#39;: &#39;ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2&#39;}
+        &#34;&#34;&#34;
+        return self.frozen.ids
+
+    @staticmethod
+    def fromdict(dictionary, ids):
+        &#34;&#34;&#34;Build an idict from values and pre-defined ids
+
+        &gt;&gt;&gt; from hosh import Hosh
+        &gt;&gt;&gt; from hdict import hdict
+        &gt;&gt;&gt; e = hdict.fromdict({&#34;x&#34;: 3, &#34;y&#34;: 5, &#34;z&#34;: 7}, ids={&#34;x&#34;: Hosh(b&#34;x&#34;), &#34;y&#34;: Hosh(b&#34;y&#34;).id})
+        &gt;&gt;&gt; e.show(colored=False)
+        {
+            x: 3,
+            y: 5,
+            z: 7,
+            _id: uf--zyyiojm5Tl.vFKALuyGhZRO0e0eH9irosr0i,
+            _ids: {
+                x: ue7X2I7fd9j0mLl1GjgJ2btdX1QFnb1UAQNUbFGh,
+                y: 5yg5fDxFPxhEqzhoHgXpKyl5f078iBhd.pR0G2X0,
+                z: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf
+            }
+        }
+        &#34;&#34;&#34;
+        from hdict.data.frozenhdict import frozenhdict
+
+        return frozenhdict.fromdict(dictionary, ids).unfrozen
+
+    @property
+    def asdict(self):
+        &#34;&#34;&#34;
+        Convert to &#39;dict&#39;, including ids.
+
+        This evaluates all fields.
+        HINT: Use &#39;dict(d)&#39; to convert &#39;hdict&#39; to &#39;dict&#39; excluding ids.
+
+        &gt;&gt;&gt; from hdict import hdict
+        &gt;&gt;&gt; hdict(x=3, y=5).asdict
+        {&#39;x&#39;: 3, &#39;y&#39;: 5, &#39;_id&#39;: &#39;r5A2Mh6vRRO5rxi5nfXv1myeguGSTmqHuHev38qM&#39;, &#39;_ids&#39;: {&#39;x&#39;: &#39;KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr&#39;, &#39;y&#39;: &#39;ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2&#39;}}
+        &#34;&#34;&#34;
+        return self.frozen.asdict
+
+    @property
+    def asdicts(self):
+        &#34;&#34;&#34;
+        &gt;&gt;&gt; from hdict import hdict
+        &gt;&gt;&gt; hdict(x=3, y=5).asdict
+        {&#39;x&#39;: 3, &#39;y&#39;: 5, &#39;_id&#39;: &#39;r5A2Mh6vRRO5rxi5nfXv1myeguGSTmqHuHev38qM&#39;, &#39;_ids&#39;: {&#39;x&#39;: &#39;KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr&#39;, &#39;y&#39;: &#39;ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2&#39;}}
+        &#34;&#34;&#34;
+        return self.frozen.asdicts
+
+    @property
+    def asdicts_noid(self):
+        return self.frozen.asdicts_noid
+
+    def astext(self, colored=True, key_quotes=False):
+        r&#34;&#34;&#34;
+        &gt;&gt;&gt; from hdict import hdict
+        &gt;&gt;&gt; repr(hdict(x=3, y=5)) == hdict(x=3, y=5).astext()
+        True
+        &gt;&gt;&gt; print(repr(hdict(x=3, y=5)))
+        {
+            x: 3,
+            y: 5,
+            _id: [38;5;225m[1m[48;5;0mr[0m[38;5;225m[1m[48;5;0m5[0m[38;5;15m[1m[48;5;0mA[0m[38;5;225m[1m[48;5;0m2[0m[38;5;225m[1m[48;5;0mM[0m[38;5;195m[1m[48;5;0mh[0m[38;5;225m[1m[48;5;0m6[0m[38;5;219m[1m[48;5;0mv[0m[38;5;183m[1m[48;5;0mR[0m[38;5;251m[1m[48;5;0mR[0m[38;5;177m[1m[48;5;0mO[0m[38;5;147m[1m[48;5;0m5[0m[38;5;183m[1m[48;5;0mr[0m[38;5;189m[1m[48;5;0mx[0m[38;5;15m[1m[48;5;0mi[0m[38;5;225m[1m[48;5;0m5[0m[38;5;225m[1m[48;5;0mn[0m[38;5;225m[1m[48;5;0mf[0m[38;5;15m[1m[48;5;0mX[0m[38;5;225m[1m[48;5;0mv[0m[38;5;225m[1m[48;5;0m1[0m[38;5;195m[1m[48;5;0mm[0m[38;5;225m[1m[48;5;0my[0m[38;5;219m[1m[48;5;0me[0m[38;5;183m[1m[48;5;0mg[0m[38;5;251m[1m[48;5;0mu[0m[38;5;177m[1m[48;5;0mG[0m[38;5;147m[1m[48;5;0mS[0m[38;5;183m[1m[48;5;0mT[0m[38;5;189m[1m[48;5;0mm[0m[38;5;15m[1m[48;5;0mq[0m[38;5;225m[1m[48;5;0mH[0m[38;5;225m[1m[48;5;0mu[0m[38;5;225m[1m[48;5;0mH[0m[38;5;15m[1m[48;5;0me[0m[38;5;225m[1m[48;5;0mv[0m[38;5;225m[1m[48;5;0m3[0m[38;5;195m[1m[48;5;0m8[0m[38;5;225m[1m[48;5;0mq[0m[38;5;219m[1m[48;5;0mM[0m,
+            _ids: {
+                x: [38;5;239m[1m[48;5;0mK[0m[38;5;239m[1m[48;5;0mG[0m[38;5;60m[1m[48;5;0mW[0m[38;5;241m[1m[48;5;0mj[0m[38;5;97m[1m[48;5;0mj[0m[38;5;65m[1m[48;5;0m0[0m[38;5;133m[1m[48;5;0mi[0m[38;5;65m[1m[48;5;0my[0m[38;5;97m[1m[48;5;0mL[0m[38;5;66m[1m[48;5;0mA[0m[38;5;132m[1m[48;5;0mn[0m[38;5;61m[1m[48;5;0m1[0m[38;5;66m[1m[48;5;0mR[0m[38;5;95m[1m[48;5;0mG[0m[38;5;95m[1m[48;5;0m6[0m[38;5;239m[1m[48;5;0mR[0m[38;5;239m[1m[48;5;0mT[0m[38;5;239m[1m[48;5;0mG[0m[38;5;60m[1m[48;5;0mt[0m[38;5;241m[1m[48;5;0ms[0m[38;5;97m[1m[48;5;0mG[0m[38;5;65m[1m[48;5;0mE[0m[38;5;133m[1m[48;5;0m3[0m[38;5;65m[1m[48;5;0mo[0m[38;5;97m[1m[48;5;0mm[0m[38;5;66m[1m[48;5;0mZ[0m[38;5;132m[1m[48;5;0mr[0m[38;5;61m[1m[48;5;0ma[0m[38;5;66m[1m[48;5;0mJ[0m[38;5;95m[1m[48;5;0mM[0m[38;5;95m[1m[48;5;0m6[0m[38;5;239m[1m[48;5;0mx[0m[38;5;239m[1m[48;5;0mO[0m[38;5;239m[1m[48;5;0m.[0m[38;5;60m[1m[48;5;0mk[0m[38;5;241m[1m[48;5;0mv[0m[38;5;97m[1m[48;5;0mG[0m[38;5;65m[1m[48;5;0m5[0m[38;5;133m[1m[48;5;0mp[0m[38;5;65m[1m[48;5;0mr[0m,
+                y: [38;5;227m[1m[48;5;0me[0m[38;5;221m[1m[48;5;0mc[0m[38;5;209m[1m[48;5;0mv[0m[38;5;149m[1m[48;5;0mg[0m[38;5;221m[1m[48;5;0mo[0m[38;5;215m[1m[48;5;0m-[0m[38;5;185m[1m[48;5;0mC[0m[38;5;221m[1m[48;5;0mB[0m[38;5;216m[1m[48;5;0mP[0m[38;5;192m[1m[48;5;0mi[0m[38;5;227m[1m[48;5;0m7[0m[38;5;222m[1m[48;5;0mw[0m[38;5;191m[1m[48;5;0mR[0m[38;5;215m[1m[48;5;0mW[0m[38;5;180m[1m[48;5;0mI[0m[38;5;192m[1m[48;5;0mx[0m[38;5;227m[1m[48;5;0mN[0m[38;5;221m[1m[48;5;0mz[0m[38;5;209m[1m[48;5;0mu[0m[38;5;149m[1m[48;5;0mo[0m[38;5;221m[1m[48;5;0m1[0m[38;5;215m[1m[48;5;0mH[0m[38;5;185m[1m[48;5;0mg[0m[38;5;221m[1m[48;5;0mH[0m[38;5;216m[1m[48;5;0mQ[0m[38;5;192m[1m[48;5;0mC[0m[38;5;227m[1m[48;5;0mb[0m[38;5;222m[1m[48;5;0md[0m[38;5;191m[1m[48;5;0mv[0m[38;5;215m[1m[48;5;0mR[0m[38;5;180m[1m[48;5;0m0[0m[38;5;192m[1m[48;5;0m5[0m[38;5;227m[1m[48;5;0m8[0m[38;5;221m[1m[48;5;0mx[0m[38;5;209m[1m[48;5;0mi[0m[38;5;149m[1m[48;5;0m6[0m[38;5;221m[1m[48;5;0mz[0m[38;5;215m[1m[48;5;0mm[0m[38;5;185m[1m[48;5;0mr[0m[38;5;221m[1m[48;5;0m2[0m
+            }
+        }
+        &#34;&#34;&#34;
+        return self.frozen.astext(colored, key_quotes)
+
+    def show(self, colored=True, key_quotes=False):
+        r&#34;&#34;&#34;
+        Textual representation of an idict object
+
+        &gt;&gt;&gt; from hdict import hdict
+        &gt;&gt;&gt; d = hdict(x=1,y=2)
+        &gt;&gt;&gt; d.show(colored=False)
+        {
+            x: 1,
+            y: 2,
+            _id: 41wHsGFMSo0vbD2n6zAXogYG9YE3FwzIRSqjWc8N,
+            _ids: {
+                x: DYu5bfVvb6FOhBCWNsss4wsEWHZYTbKnsVgoWFvl,
+                y: k3PWYRxIEc0lEvD1f6rbnk.36RAD5AyfROy1aT29
+            }
+        }
+        &#34;&#34;&#34;
+        return self.frozen.show(colored, key_quotes)
+
+    def __iter__(self):
+        return iter(self.frozen)
+
+    def __contains__(self, item):
+        return item in self.frozen
+
+    def __repr__(self):
+        return repr(self.frozen)
+
+    def __str__(self):
+        return str(self.frozen)
+
+    def __eq__(self, other):
+        return self.frozen == other
+
+    def __ne__(self, other):
+        return self.frozen != other
+
+    def keys(self):
+        &#34;&#34;&#34;Generator of field names, i.e., keys which don&#39;t start with &#39;_&#39;&#34;&#34;&#34;
+        return self.frozen.keys()
+
+    def values(self, evaluate=True):
+        &#34;&#34;&#34;Generator of field values (keys that don&#39;t start with &#39;_&#39;)&#34;&#34;&#34;
+        return self.frozen.values(evaluate)
+
+    def items(self, evaluate=True):
+        &#34;&#34;&#34;Generator over field-value pairs
+
+        Exclude ids and other items starting with &#39;_&#39;.
+
+        &gt;&gt;&gt; from hdict import hdict
+        &gt;&gt;&gt; for k, v in hdict(x=1, y=2).items():
+        ...     print(k, v)
+        x 1
+        y 2
+        &#34;&#34;&#34;
+        return self.frozen.items(evaluate)
+
+    def __hash__(self):  # pragma: no cover
+        raise Exception(f&#34;hdict is not hashable. Please use hdict.frozen instead.&#34;)
+
+    def save(self, storage: dict):
+        &#34;&#34;&#34;
+        Store an entire hdict
+
+        &gt;&gt;&gt; from hdict import hdict, apply
+        &gt;&gt;&gt; storage = {}
+        &gt;&gt;&gt; d = hdict(x=3, y=7, z=hdict(z=9)) &gt;&gt; apply(lambda x, y: x/y).w
+        &gt;&gt;&gt; d.show(colored=False)
+        {
+            x: 3,
+            y: 7,
+            z: {
+                z: 9,
+                _id: izn67XbX0tQNF6E5qkwniN2jxZg5MT6f7z5AJzPM,
+                _ids: {
+                    z: GuwIQCrendfKXZr5jGfrUwoP-8TWMhmLHYrja2yj
+                }
+            },
+            w: λ(x y),
+            _id: Jf8QtLAszezNdiqblJCXMuoXocCWZ90QwrxY90Zu,
+            _ids: {
+                x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+                y: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf,
+                z: izn67XbX0tQNF6E5qkwniN2jxZg5MT6f7z5AJzPM,
+                w: NjWbIhEnN3s8E-w61pptxBuiYmqQ2D3QNX2ZAEB1
+            }
+        }
+        &gt;&gt;&gt; d.save(storage)
+        &gt;&gt;&gt; storage
+        {&#39;izn67XbX0tQNF6E5qkwniN2jxZg5MT6f7z5AJzPM&#39;: {&#39;z&#39;: &#39;GuwIQCrendfKXZr5jGfrUwoP-8TWMhmLHYrja2yj&#39;}, &#39;GuwIQCrendfKXZr5jGfrUwoP-8TWMhmLHYrja2yj&#39;: Stored(content=9), &#39;Jf8QtLAszezNdiqblJCXMuoXocCWZ90QwrxY90Zu&#39;: {&#39;x&#39;: &#39;KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr&#39;, &#39;y&#39;: &#39;eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf&#39;, &#39;z&#39;: &#39;izn67XbX0tQNF6E5qkwniN2jxZg5MT6f7z5AJzPM&#39;, &#39;w&#39;: &#39;NjWbIhEnN3s8E-w61pptxBuiYmqQ2D3QNX2ZAEB1&#39;}, &#39;KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr&#39;: Stored(content=3), &#39;eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf&#39;: Stored(content=7), &#39;NjWbIhEnN3s8E-w61pptxBuiYmqQ2D3QNX2ZAEB1&#39;: Stored(content=0.42857142857142855)}
+        &gt;&gt;&gt; e = hdict.load(d.id, storage)
+        &gt;&gt;&gt; e.show(colored=False)
+        {
+            x: ↑↓ cached at `dict`·,
+            y: ↑↓ cached at `dict`·,
+            z: ↑↓ cached at `dict`·,
+            w: ↑↓ cached at `dict`·,
+            _id: Jf8QtLAszezNdiqblJCXMuoXocCWZ90QwrxY90Zu,
+            _ids: {
+                x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+                y: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf,
+                z: izn67XbX0tQNF6E5qkwniN2jxZg5MT6f7z5AJzPM,
+                w: NjWbIhEnN3s8E-w61pptxBuiYmqQ2D3QNX2ZAEB1
+            }
+        }
+        &gt;&gt;&gt; d.w
+        0.42857142857142855
+        &gt;&gt;&gt; e.w
+        0.42857142857142855
+        &gt;&gt;&gt; e.evaluate()
+        &gt;&gt;&gt; e.show(colored=False)
+        {
+            x: 3,
+            y: 7,
+            z: {
+                z: 9
+            },
+            w: 0.42857142857142855,
+            _id: Jf8QtLAszezNdiqblJCXMuoXocCWZ90QwrxY90Zu,
+            _ids: {
+                x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+                y: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf,
+                z: izn67XbX0tQNF6E5qkwniN2jxZg5MT6f7z5AJzPM,
+                w: NjWbIhEnN3s8E-w61pptxBuiYmqQ2D3QNX2ZAEB1
+            }
+        }
+        &#34;&#34;&#34;
+        self.frozen.save(storage)
+
+    @staticmethod
+    def fetch(id: str, storage: dict, lazy=True) -&gt; Union[&#34;hdict_&#34;, None]:
+        r&#34;&#34;&#34;
+        Fetch a single entry
+
+        When cache is a list, traverse it from the end (right item to the left item).
+
+        &gt;&gt;&gt; from hdict import hdict, cache
+        &gt;&gt;&gt; from testfixtures import TempDirectory
+        &gt;&gt;&gt; arff = &#34;@RELATION mini\n@ATTRIBUTE attr1    REAL\n@ATTRIBUTE attr2  REAL\n@ATTRIBUTE class  {0,1}\n@DATA\n5.1,3.5,0\n3.1,4.5,1&#34;
+        &gt;&gt;&gt; with TempDirectory() as tmp:  # doctest:+ELLIPSIS
+        ...    tmp.write(&#34;mini.arff&#34;, arff.encode())
+        ...    d = hdict.fromfile(tmp.path + &#34;/mini.arff&#34;, fields=[&#34;df&#34;])
+        ...    d2 = hdict.fromfile(tmp.path + &#34;/mini.arff&#34;, fields=[&#34;df&#34;], named=True)
+        &#39;/tmp/.../mini.arff&#39;
+        &gt;&gt;&gt; d.show(colored=False)
+        {
+            df: &#34;‹{&#39;attr1&#39;: {0: 5.1, 1: 3.1}, &#39;attr2&#39;: {0: 3.5, 1: 4.5}, &#39;class&#39;: {0: &#39;0&#39;, 1: &#39;1&#39;}}›&#34;,
+            _id: O2THAlKL59kfBLqwUnSWV-fsDc6k4Vy6S5j4shDX,
+            _ids: {
+                df: bZAgZfAACR6i.xoS8WalaBhmjJx9iffBTaGFa0iu
+            }
+        }
+        &gt;&gt;&gt; d2.show(colored=False)
+        {
+            df: &#34;‹{&#39;attr1&#39;: {0: 5.1, 1: 3.1}, &#39;attr2&#39;: {0: 3.5, 1: 4.5}, &#39;class&#39;: {0: &#39;0&#39;, 1: &#39;1&#39;}}›&#34;,
+            name: &#34; mini&#34;,
+            _id: LSSNMnmfseV8LDODs6vA-6kSCW9czlZ-Cg-XxlGN,
+            _ids: {
+                df: bZAgZfAACR6i.xoS8WalaBhmjJx9iffBTaGFa0iu,
+                name: 5nzeWHgeVef.PD8CnIrPcjwGqaYoRCXK0iwH0cKm
+            }
+        }
+        &gt;&gt;&gt; storage = {}
+        &gt;&gt;&gt; d.save(storage)
+        &gt;&gt;&gt; d = hdict.fetch(d.id, storage)
+        &gt;&gt;&gt; d.show(colored=False)
+        {
+            df: ↑↓ cached at `dict`·,
+            _id: O2THAlKL59kfBLqwUnSWV-fsDc6k4Vy6S5j4shDX,
+            _ids: {
+                df: bZAgZfAACR6i.xoS8WalaBhmjJx9iffBTaGFa0iu
+            }
+        }
+        &gt;&gt;&gt; d.df
+           attr1  attr2 class
+        0    5.1    3.5     0
+        1    3.1    4.5     1
+
+        # &gt;&gt;&gt; #d.df.show(colored=False)
+        # &gt;&gt;&gt; d = hdict.fetch(d.id, storage, lazy=False)
+        # &gt;&gt;&gt; d.show(colored=False)
+        # {
+        #     df: {
+        #         index: &#34;‹{0: 0, 1: 1}›&#34;,
+        #         &#34;attr1@REAL&#34;: &#34;‹{0: 5.1, 1: 3.1}›&#34;,
+        #         &#34;attr2@REAL&#34;: &#34;‹{0: 3.5, 1: 4.5}›&#34;,
+        #         &#34;class@{0,1}&#34;: &#34;‹{0: &#39;0&#39;, 1: &#39;1&#39;}›&#34;,
+        #         _id: cHrG-npBDd2VEB8Foeg.7jQNZtdkTM1uhouHgW.J,
+        #         _ids: {
+        #             index: DQa5yWRkGo-9FLqmaST8pbElYdUEgqF8xPvip6-3,
+        #             &#34;attr1@REAL&#34;: wsy0JDrZO04O0RVwr64jpawX62WmCKtddYdvZlwm,
+        #             &#34;attr2@REAL&#34;: LvEgUazJoB1-.A3kABbskN-.iauWmWLTTo1iC51n,
+        #             &#34;class@{0,1}&#34;: b.kJy3SrU-JQ1oeh1d.uWLO7Pqh-eW6zwK78nTY4
+        #         }
+        #     },
+        #     df_: λ({    i···),
+        #     _id: CWkreYbSmrL0DPN9OtoU4Za1dg8.Jjl.fXD6yblb,
+        #     _ids: {
+        #         df: cHrG-npBDd2VEB8Foeg.7jQNZtdkTM1uhouHgW.J,
+        #         df_: cHrG-npBDd2VEB8Foeg.7jQNZtdkTM1uhouHgW.J
+        #     }
+        # }
+        # &gt;&gt;&gt; #del d[&#34;df_&#34;]
+        # &gt;&gt;&gt; d.show(colored=False)
+        # {
+        #     df: {
+        #         index: &#34;‹{0: 0, 1: 1}›&#34;,
+        #         &#34;attr1@REAL&#34;: &#34;‹{0: 5.1, 1: 3.1}›&#34;,
+        #         &#34;attr2@REAL&#34;: &#34;‹{0: 3.5, 1: 4.5}›&#34;,
+        #         &#34;class@{0,1}&#34;: &#34;‹{0: &#39;0&#39;, 1: &#39;1&#39;}›&#34;,
+        #         _id: cHrG-npBDd2VEB8Foeg.7jQNZtdkTM1uhouHgW.J,
+        #         _ids: {
+        #             index: DQa5yWRkGo-9FLqmaST8pbElYdUEgqF8xPvip6-3,
+        #             &#34;attr1@REAL&#34;: wsy0JDrZO04O0RVwr64jpawX62WmCKtddYdvZlwm,
+        #             &#34;attr2@REAL&#34;: LvEgUazJoB1-.A3kABbskN-.iauWmWLTTo1iC51n,
+        #             &#34;class@{0,1}&#34;: b.kJy3SrU-JQ1oeh1d.uWLO7Pqh-eW6zwK78nTY4
+        #         }
+        #     },
+        #     _id: CWkreYbSmrL0DPN9OtoU4Za1dg8.Jjl.fXD6yblb,
+        #     _ids: {
+        #         df: cHrG-npBDd2VEB8Foeg.7jQNZtdkTM1uhouHgW.J
+        #     }
+        # }
+        # &gt;&gt;&gt; d.save(storage)
+        # &gt;&gt;&gt; d = hdict.fetch(d.id, storage, lazy=False)
+        # &gt;&gt;&gt; d.show(colored=False)
+        # {
+        #     df: {
+        #         index: &#34;‹{0: 0, 1: 1}›&#34;,
+        #         &#34;attr1@REAL&#34;: &#34;‹{0: 5.1, 1: 3.1}›&#34;,
+        #         &#34;attr2@REAL&#34;: &#34;‹{0: 3.5, 1: 4.5}›&#34;,
+        #         &#34;class@{0,1}&#34;: &#34;‹{0: &#39;0&#39;, 1: &#39;1&#39;}›&#34;,
+        #         _id: cHrG-npBDd2VEB8Foeg.7jQNZtdkTM1uhouHgW.J,
+        #         _ids: {
+        #             index: DQa5yWRkGo-9FLqmaST8pbElYdUEgqF8xPvip6-3,
+        #             &#34;attr1@REAL&#34;: wsy0JDrZO04O0RVwr64jpawX62WmCKtddYdvZlwm,
+        #             &#34;attr2@REAL&#34;: LvEgUazJoB1-.A3kABbskN-.iauWmWLTTo1iC51n,
+        #             &#34;class@{0,1}&#34;: b.kJy3SrU-JQ1oeh1d.uWLO7Pqh-eW6zwK78nTY4
+        #         }
+        #     },
+        #     _id: CWkreYbSmrL0DPN9OtoU4Za1dg8.Jjl.fXD6yblb,
+        #     _ids: {
+        #         df: cHrG-npBDd2VEB8Foeg.7jQNZtdkTM1uhouHgW.J
+        #     }
+        # }
+        # &gt;&gt;&gt; str(d)
+        # &#39;{df: {index: &#34;‹{0: 0, 1: 1}›&#34;, attr1@REAL: &#34;‹{0: 5.1, 1: 3.1}›&#34;, attr2@REAL: &#34;‹{0: 3.5, 1: 4.5}›&#34;, class@{0,1}: &#34;‹{0: \&#39;0\&#39;, 1: \&#39;1\&#39;}›&#34;}}&#39;
+        &#34;&#34;&#34;
+        return frozenhdict.fetch(id, storage, lazy, ishdict=False)
+
+    @staticmethod
+    def load(id, storage: dict):
+        &#34;&#34;&#34;
+        Fetch an entire hdict
+
+        &gt;&gt;&gt; from hdict import _
+        &gt;&gt;&gt; from hdict.persistence.stored import Stored
+        &gt;&gt;&gt; fid = &#34;1234567890123456789012345678901234567890&#34;
+        &gt;&gt;&gt; did = &#34;0000567890123456789012345678901234567890&#34;
+        &gt;&gt;&gt; storage = {did: {&#34;x&#34;: fid}, fid: Stored(5)}
+        &gt;&gt;&gt; d = (+_).load(did, storage)
+        &gt;&gt;&gt; d.show(colored=False)
+        {
+            x: ↑↓ cached at `dict`·,
+            _id: kYzgpPdRgQSYSEpp1qt4EHQLQJXuyb2WDQS-iNPh,
+            _ids: {
+                x: 1234567890123456789012345678901234567890
+            }
+        }
+        &gt;&gt;&gt; d.evaluate()
+        &gt;&gt;&gt; d.show(colored=False)
+        {
+            x: 5,
+            _id: kYzgpPdRgQSYSEpp1qt4EHQLQJXuyb2WDQS-iNPh,
+            _ids: {
+                x: 1234567890123456789012345678901234567890
+            }
+        }
+        &#34;&#34;&#34;
+        return frozenhdict.load(id, storage).unfrozen
+
+    @staticmethod
+    def fromfile(name, fields=None, format=&#34;df&#34;, named=None, hide_types=True):
+        r&#34;&#34;&#34;
+        Input format is defined by file extension: .arff, .csv
+
+        &gt;&gt;&gt; from hdict import hdict
+        &gt;&gt;&gt; from testfixtures import TempDirectory
+        &gt;&gt;&gt; arff = &#34;@RELATION mini\n@ATTRIBUTE attr1    REAL\n@ATTRIBUTE attr2  REAL\n@ATTRIBUTE class  {0,1}\n@DATA\n5.1,3.5,0\n3.1,4.5,1&#34;
+        &gt;&gt;&gt; with TempDirectory() as tmp:  # doctest:+ELLIPSIS
+        ...    tmp.write(&#34;mini.arff&#34;, arff.encode())
+        ...    d = hdict.fromfile(tmp.path + &#34;/mini.arff&#34;)
+        &#39;/tmp/.../mini.arff&#39;
+        &gt;&gt;&gt; d.show(colored=False)
+        {
+            df: &#34;‹{&#39;attr1&#39;: {0: 5.1, 1: 3.1}, &#39;attr2&#39;: {0: 3.5, 1: 4.5}, &#39;class&#39;: {0: &#39;0&#39;, 1: &#39;1&#39;}}›&#34;,
+            _id: O2THAlKL59kfBLqwUnSWV-fsDc6k4Vy6S5j4shDX,
+            _ids: {
+                df: bZAgZfAACR6i.xoS8WalaBhmjJx9iffBTaGFa0iu
+            }
+        }
+        &gt;&gt;&gt; csv = &#34;attr1,attr2,class\n5.1,3.5,0\n3.1,4.5,1&#34;
+        &gt;&gt;&gt; with TempDirectory() as tmp:  # doctest:+ELLIPSIS
+        ...    tmp.write(&#34;mini.csv&#34;, csv.encode())
+        ...    d = hdict.fromfile(tmp.path + &#34;/mini.csv&#34;)
+        &#39;/tmp/.../mini.csv&#39;
+        &gt;&gt;&gt; d.show(colored=False)
+        {
+            df: &#34;‹{&#39;attr1&#39;: {0: 5.1, 1: 3.1}, &#39;attr2&#39;: {0: 3.5, 1: 4.5}, &#39;class&#39;: {0: 0, 1: 1}}›&#34;,
+            _id: LleZtGx7DXBMGoTEOjpuYEiuGmokrt8.bBcSnHke,
+            _ids: {
+                df: HNZ8xA5tfY1zPmJXQofXUSPw59LFAWQtd23r6q.M
+            }
+        }
+        &#34;&#34;&#34;
+        return frozenhdict.fromfile(name, fields, format, named, hide_types).unfrozen
+
+    @staticmethod
+    def fromtext(text: str, fields=None, format=&#34;df&#34;, named=None):
+        r&#34;&#34;&#34;
+        Input format is defined by file extension: .arff, .csv
+
+        &gt;&gt;&gt; from hdict import hdict
+        &gt;&gt;&gt; arff = &#34;@RELATION mini\n@ATTRIBUTE attr1    REAL\n@ATTRIBUTE attr2  REAL\n@ATTRIBUTE class  {0,1}\n@DATA\n5.1,3.5,0\n3.1,4.5,1&#34;
+        &gt;&gt;&gt; d = hdict.fromtext(arff)
+        &gt;&gt;&gt; d.show(colored=False)
+        {
+            df: &#34;‹{&#39;attr1@REAL&#39;: {0: 5.1, 1: 3.1}, &#39;attr2@REAL&#39;: {0: 3.5, 1: 4.5}, &#39;class@{0,1}&#39;: {0: &#39;0&#39;, 1: &#39;1&#39;}}›&#34;,
+            _id: b99cvfGPKi1TnuH7WzlWLCKFiDkjIft4PE7DE8yI,
+            _ids: {
+                df: 7qPwVfi.LOYYqm2mmih51GZNRp.8WB9zQJucnTcf
+            }
+        }
+        &gt;&gt;&gt; csv = &#34;attr1,attr2,class\n5.1,3.5,0\n3.1,4.5,1&#34;
+        &gt;&gt;&gt; d = hdict.fromtext(csv)
+        &gt;&gt;&gt; d.show(colored=False)
+        {
+            df: &#34;‹{&#39;attr1&#39;: {0: 5.1, 1: 3.1}, &#39;attr2&#39;: {0: 3.5, 1: 4.5}, &#39;class&#39;: {0: 0, 1: 1}}›&#34;,
+            _id: LleZtGx7DXBMGoTEOjpuYEiuGmokrt8.bBcSnHke,
+            _ids: {
+                df: HNZ8xA5tfY1zPmJXQofXUSPw59LFAWQtd23r6q.M
+            }
+        }
+        &#34;&#34;&#34;
+        return frozenhdict.fromtext(text, fields, format, named).unfrozen
+
+    @property
+    def asdf(self):
+        &#34;&#34;&#34;
+        Represent hdict as a DataFrame if possible
+
+        &gt;&gt;&gt; from hdict import hdict
+        &gt;&gt;&gt; d = hdict({&#34;x&#34;: [1,2,3], &#34;y&#34;: [5,6,7], &#34;index&#34;: [&#34;a&#34;, &#34;b&#34;, &#34;c&#34;]})
+        &gt;&gt;&gt; d.asdf
+           x  y
+        a  1  5
+        b  2  6
+        c  3  7
+        &#34;&#34;&#34;
+        return self.frozen.asdf
+
+    @property
+    def hoshes(self):
+        &#34;&#34;&#34;
+        &gt;&gt;&gt; from hdict import frozenhdict
+        &gt;&gt;&gt; [h.id for h in frozenhdict(x=3, y=2).hoshes.values()]
+        [&#39;KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr&#39;, &#39;k3PWYRxIEc0lEvD1f6rbnk.36RAD5AyfROy1aT29&#39;]
+        &#34;&#34;&#34;
+        return self.frozen.hoshes
+
+    def __bool__(self):
+        return bool(self.frozen.data)
+
+    def apply(self, appliable: apply | field, *applied_args, out=None, fhosh: Hosh = None, inplace=True, _sampleable=None, **applied_kwargs):
+        if out is None:
+            raise Exception(f&#34;Missing output field name `out`&#34;)
+        a = apply(appliable, *applied_args, fhosh=fhosh, _sampleable=_sampleable, **applied_kwargs)
+        ao = a(*out) if isinstance(out, tuple) else a(out)
+        frozen = self.frozen &gt;&gt; ao
+        if inplace:
+            self.frozen = frozen
+            self.raw = self.frozen.data
+        else:
+            return frozen.unfrozen
+
+    # def __reduce__(self):
+    # return self.frozen.__reduce__()</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>builtins.dict</li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="hdict.hdict" href="../index.html#hdict.hdict">hdict</a></li>
+</ul>
+<h3>Static methods</h3>
+<dl>
+<dt id="hdict.data.hdict_.hdict_.fetch"><code class="name flex">
+<span>def <span class="ident">fetch</span></span>(<span>id: str, storage: dict, lazy=True) ‑> Optional[<a title="hdict.data.hdict_.hdict_" href="#hdict.data.hdict_.hdict_">hdict_</a>]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Fetch a single entry</p>
+<p>When cache is a list, traverse it from the end (right item to the left item).</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; from hdict import hdict, cache
+&gt;&gt;&gt; from testfixtures import TempDirectory
+&gt;&gt;&gt; arff = &quot;@RELATION mini\n@ATTRIBUTE attr1    REAL\n@ATTRIBUTE attr2  REAL\n@ATTRIBUTE class  {0,1}\n@DATA\n5.1,3.5,0\n3.1,4.5,1&quot;
+&gt;&gt;&gt; with TempDirectory() as tmp:  # doctest:+ELLIPSIS
+...    tmp.write(&quot;mini.arff&quot;, arff.encode())
+...    d = hdict.fromfile(tmp.path + &quot;/mini.arff&quot;, fields=[&quot;df&quot;])
+...    d2 = hdict.fromfile(tmp.path + &quot;/mini.arff&quot;, fields=[&quot;df&quot;], named=True)
+'/tmp/.../mini.arff'
+&gt;&gt;&gt; d.show(colored=False)
+{
+    df: &quot;‹{'attr1': {0: 5.1, 1: 3.1}, 'attr2': {0: 3.5, 1: 4.5}, 'class': {0: '0', 1: '1'}}›&quot;,
+    _id: O2THAlKL59kfBLqwUnSWV-fsDc6k4Vy6S5j4shDX,
+    _ids: {
+        df: bZAgZfAACR6i.xoS8WalaBhmjJx9iffBTaGFa0iu
+    }
+}
+&gt;&gt;&gt; d2.show(colored=False)
+{
+    df: &quot;‹{'attr1': {0: 5.1, 1: 3.1}, 'attr2': {0: 3.5, 1: 4.5}, 'class': {0: '0', 1: '1'}}›&quot;,
+    name: &quot; mini&quot;,
+    _id: LSSNMnmfseV8LDODs6vA-6kSCW9czlZ-Cg-XxlGN,
+    _ids: {
+        df: bZAgZfAACR6i.xoS8WalaBhmjJx9iffBTaGFa0iu,
+        name: 5nzeWHgeVef.PD8CnIrPcjwGqaYoRCXK0iwH0cKm
+    }
+}
+&gt;&gt;&gt; storage = {}
+&gt;&gt;&gt; d.save(storage)
+&gt;&gt;&gt; d = hdict.fetch(d.id, storage)
+&gt;&gt;&gt; d.show(colored=False)
+{
+    df: ↑↓ cached at &lt;code&gt;dict&lt;/code&gt;·,
+    _id: O2THAlKL59kfBLqwUnSWV-fsDc6k4Vy6S5j4shDX,
+    _ids: {
+        df: bZAgZfAACR6i.xoS8WalaBhmjJx9iffBTaGFa0iu
+    }
+}
+&gt;&gt;&gt; d.df
+   attr1  attr2 class
+0    5.1    3.5     0
+1    3.1    4.5     1
+</code></pre>
+<h1 id="ddfshowcoloredfalse">&gt;&gt;&gt; #d.df.show(colored=False)</h1>
+<h1 id="d-hdictfetchdid-storage-lazyfalse">&gt;&gt;&gt; d = hdict.fetch(d.id, storage, lazy=False)</h1>
+<h1 id="dshowcoloredfalse">&gt;&gt;&gt; d.show(colored=False)</h1>
+<h1 id="_1">{</h1>
+<h1 id="df">df: {</h1>
+<h1 id="index-0-0-1-1">index: "‹{0: 0, 1: 1}›",</h1>
+<h1 id="attr1real-0-51-1-31">"attr1@REAL": "‹{0: 5.1, 1: 3.1}›",</h1>
+<h1 id="attr2real-0-35-1-45">"attr2@REAL": "‹{0: 3.5, 1: 4.5}›",</h1>
+<h1 id="class01-0-0-1-1">"class@{0,1}": "‹{0: '0', 1: '1'}›",</h1>
+<h1 id="_id-chrg-npbdd2veb8foeg7jqnztdktm1uhouhgwj">_id: cHrG-npBDd2VEB8Foeg.7jQNZtdkTM1uhouHgW.J,</h1>
+<h1 id="_ids">_ids: {</h1>
+<h1 id="index-dqa5ywrkgo-9flqmast8pbelyduegqf8xpvip6-3">index: DQa5yWRkGo-9FLqmaST8pbElYdUEgqF8xPvip6-3,</h1>
+<h1 id="attr1real-wsy0jdrzo04o0rvwr64jpawx62wmcktddydvzlwm">"attr1@REAL": wsy0JDrZO04O0RVwr64jpawX62WmCKtddYdvZlwm,</h1>
+<h1 id="attr2real-lveguazjob1-a3kabbskn-iauwmwltto1ic51n">"attr2@REAL": LvEgUazJoB1-.A3kABbskN-.iauWmWLTTo1iC51n,</h1>
+<h1 id="class01-bkjy3sru-jq1oeh1duwlo7pqh-ew6zwk78nty4">"class@{0,1}": b.kJy3SrU-JQ1oeh1d.uWLO7Pqh-eW6zwK78nTY4</h1>
+<h1 id="_2">}</h1>
+<h1 id="_3">},</h1>
+<h1 id="df_-i">df_: λ({
+i···),</h1>
+<h1 id="_id-cwkreybsmrl0dpn9otou4za1dg8jjlfxd6yblb">_id: CWkreYbSmrL0DPN9OtoU4Za1dg8.Jjl.fXD6yblb,</h1>
+<h1 id="_ids_1">_ids: {</h1>
+<h1 id="df-chrg-npbdd2veb8foeg7jqnztdktm1uhouhgwj">df: cHrG-npBDd2VEB8Foeg.7jQNZtdkTM1uhouHgW.J,</h1>
+<h1 id="df_-chrg-npbdd2veb8foeg7jqnztdktm1uhouhgwj">df_: cHrG-npBDd2VEB8Foeg.7jQNZtdkTM1uhouHgW.J</h1>
+<h1 id="_4">}</h1>
+<h1 id="_5">}</h1>
+<h1 id="del-ddf_">&gt;&gt;&gt; #del d["df_"]</h1>
+<h1 id="dshowcoloredfalse_1">&gt;&gt;&gt; d.show(colored=False)</h1>
+<h1 id="_6">{</h1>
+<h1 id="df_1">df: {</h1>
+<h1 id="index-0-0-1-1_1">index: "‹{0: 0, 1: 1}›",</h1>
+<h1 id="attr1real-0-51-1-31_1">"attr1@REAL": "‹{0: 5.1, 1: 3.1}›",</h1>
+<h1 id="attr2real-0-35-1-45_1">"attr2@REAL": "‹{0: 3.5, 1: 4.5}›",</h1>
+<h1 id="class01-0-0-1-1_1">"class@{0,1}": "‹{0: '0', 1: '1'}›",</h1>
+<h1 id="_id-chrg-npbdd2veb8foeg7jqnztdktm1uhouhgwj_1">_id: cHrG-npBDd2VEB8Foeg.7jQNZtdkTM1uhouHgW.J,</h1>
+<h1 id="_ids_2">_ids: {</h1>
+<h1 id="index-dqa5ywrkgo-9flqmast8pbelyduegqf8xpvip6-3_1">index: DQa5yWRkGo-9FLqmaST8pbElYdUEgqF8xPvip6-3,</h1>
+<h1 id="attr1real-wsy0jdrzo04o0rvwr64jpawx62wmcktddydvzlwm_1">"attr1@REAL": wsy0JDrZO04O0RVwr64jpawX62WmCKtddYdvZlwm,</h1>
+<h1 id="attr2real-lveguazjob1-a3kabbskn-iauwmwltto1ic51n_1">"attr2@REAL": LvEgUazJoB1-.A3kABbskN-.iauWmWLTTo1iC51n,</h1>
+<h1 id="class01-bkjy3sru-jq1oeh1duwlo7pqh-ew6zwk78nty4_1">"class@{0,1}": b.kJy3SrU-JQ1oeh1d.uWLO7Pqh-eW6zwK78nTY4</h1>
+<h1 id="_7">}</h1>
+<h1 id="_8">},</h1>
+<h1 id="_id-cwkreybsmrl0dpn9otou4za1dg8jjlfxd6yblb_1">_id: CWkreYbSmrL0DPN9OtoU4Za1dg8.Jjl.fXD6yblb,</h1>
+<h1 id="_ids_3">_ids: {</h1>
+<h1 id="df-chrg-npbdd2veb8foeg7jqnztdktm1uhouhgwj_1">df: cHrG-npBDd2VEB8Foeg.7jQNZtdkTM1uhouHgW.J</h1>
+<h1 id="_9">}</h1>
+<h1 id="_10">}</h1>
+<h1 id="dsavestorage">&gt;&gt;&gt; d.save(storage)</h1>
+<h1 id="d-hdictfetchdid-storage-lazyfalse_1">&gt;&gt;&gt; d = hdict.fetch(d.id, storage, lazy=False)</h1>
+<h1 id="dshowcoloredfalse_2">&gt;&gt;&gt; d.show(colored=False)</h1>
+<h1 id="_11">{</h1>
+<h1 id="df_2">df: {</h1>
+<h1 id="index-0-0-1-1_2">index: "‹{0: 0, 1: 1}›",</h1>
+<h1 id="attr1real-0-51-1-31_2">"attr1@REAL": "‹{0: 5.1, 1: 3.1}›",</h1>
+<h1 id="attr2real-0-35-1-45_2">"attr2@REAL": "‹{0: 3.5, 1: 4.5}›",</h1>
+<h1 id="class01-0-0-1-1_2">"class@{0,1}": "‹{0: '0', 1: '1'}›",</h1>
+<h1 id="_id-chrg-npbdd2veb8foeg7jqnztdktm1uhouhgwj_2">_id: cHrG-npBDd2VEB8Foeg.7jQNZtdkTM1uhouHgW.J,</h1>
+<h1 id="_ids_4">_ids: {</h1>
+<h1 id="index-dqa5ywrkgo-9flqmast8pbelyduegqf8xpvip6-3_2">index: DQa5yWRkGo-9FLqmaST8pbElYdUEgqF8xPvip6-3,</h1>
+<h1 id="attr1real-wsy0jdrzo04o0rvwr64jpawx62wmcktddydvzlwm_2">"attr1@REAL": wsy0JDrZO04O0RVwr64jpawX62WmCKtddYdvZlwm,</h1>
+<h1 id="attr2real-lveguazjob1-a3kabbskn-iauwmwltto1ic51n_2">"attr2@REAL": LvEgUazJoB1-.A3kABbskN-.iauWmWLTTo1iC51n,</h1>
+<h1 id="class01-bkjy3sru-jq1oeh1duwlo7pqh-ew6zwk78nty4_2">"class@{0,1}": b.kJy3SrU-JQ1oeh1d.uWLO7Pqh-eW6zwK78nTY4</h1>
+<h1 id="_12">}</h1>
+<h1 id="_13">},</h1>
+<h1 id="_id-cwkreybsmrl0dpn9otou4za1dg8jjlfxd6yblb_2">_id: CWkreYbSmrL0DPN9OtoU4Za1dg8.Jjl.fXD6yblb,</h1>
+<h1 id="_ids_5">_ids: {</h1>
+<h1 id="df-chrg-npbdd2veb8foeg7jqnztdktm1uhouhgwj_2">df: cHrG-npBDd2VEB8Foeg.7jQNZtdkTM1uhouHgW.J</h1>
+<h1 id="_14">}</h1>
+<h1 id="_15">}</h1>
+<h1 id="strd">&gt;&gt;&gt; str(d)</h1>
+<h1 id="df-index-0-0-1-1-attr1real-0-51-1-31-attr2real-0-35-1-45-class01-0-0-1-1">'{df: {index: "‹{0: 0, 1: 1}›", attr1@REAL: "‹{0: 5.1, 1: 3.1}›", attr2@REAL: "‹{0: 3.5, 1: 4.5}›", class@{0,1}: "‹{0: '0', 1: '1'}›"}}'</h1></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def fetch(id: str, storage: dict, lazy=True) -&gt; Union[&#34;hdict_&#34;, None]:
+    r&#34;&#34;&#34;
+    Fetch a single entry
+
+    When cache is a list, traverse it from the end (right item to the left item).
+
+    &gt;&gt;&gt; from hdict import hdict, cache
+    &gt;&gt;&gt; from testfixtures import TempDirectory
+    &gt;&gt;&gt; arff = &#34;@RELATION mini\n@ATTRIBUTE attr1    REAL\n@ATTRIBUTE attr2  REAL\n@ATTRIBUTE class  {0,1}\n@DATA\n5.1,3.5,0\n3.1,4.5,1&#34;
+    &gt;&gt;&gt; with TempDirectory() as tmp:  # doctest:+ELLIPSIS
+    ...    tmp.write(&#34;mini.arff&#34;, arff.encode())
+    ...    d = hdict.fromfile(tmp.path + &#34;/mini.arff&#34;, fields=[&#34;df&#34;])
+    ...    d2 = hdict.fromfile(tmp.path + &#34;/mini.arff&#34;, fields=[&#34;df&#34;], named=True)
+    &#39;/tmp/.../mini.arff&#39;
+    &gt;&gt;&gt; d.show(colored=False)
+    {
+        df: &#34;‹{&#39;attr1&#39;: {0: 5.1, 1: 3.1}, &#39;attr2&#39;: {0: 3.5, 1: 4.5}, &#39;class&#39;: {0: &#39;0&#39;, 1: &#39;1&#39;}}›&#34;,
+        _id: O2THAlKL59kfBLqwUnSWV-fsDc6k4Vy6S5j4shDX,
+        _ids: {
+            df: bZAgZfAACR6i.xoS8WalaBhmjJx9iffBTaGFa0iu
+        }
+    }
+    &gt;&gt;&gt; d2.show(colored=False)
+    {
+        df: &#34;‹{&#39;attr1&#39;: {0: 5.1, 1: 3.1}, &#39;attr2&#39;: {0: 3.5, 1: 4.5}, &#39;class&#39;: {0: &#39;0&#39;, 1: &#39;1&#39;}}›&#34;,
+        name: &#34; mini&#34;,
+        _id: LSSNMnmfseV8LDODs6vA-6kSCW9czlZ-Cg-XxlGN,
+        _ids: {
+            df: bZAgZfAACR6i.xoS8WalaBhmjJx9iffBTaGFa0iu,
+            name: 5nzeWHgeVef.PD8CnIrPcjwGqaYoRCXK0iwH0cKm
+        }
+    }
+    &gt;&gt;&gt; storage = {}
+    &gt;&gt;&gt; d.save(storage)
+    &gt;&gt;&gt; d = hdict.fetch(d.id, storage)
+    &gt;&gt;&gt; d.show(colored=False)
+    {
+        df: ↑↓ cached at `dict`·,
+        _id: O2THAlKL59kfBLqwUnSWV-fsDc6k4Vy6S5j4shDX,
+        _ids: {
+            df: bZAgZfAACR6i.xoS8WalaBhmjJx9iffBTaGFa0iu
+        }
+    }
+    &gt;&gt;&gt; d.df
+       attr1  attr2 class
+    0    5.1    3.5     0
+    1    3.1    4.5     1
+
+    # &gt;&gt;&gt; #d.df.show(colored=False)
+    # &gt;&gt;&gt; d = hdict.fetch(d.id, storage, lazy=False)
+    # &gt;&gt;&gt; d.show(colored=False)
+    # {
+    #     df: {
+    #         index: &#34;‹{0: 0, 1: 1}›&#34;,
+    #         &#34;attr1@REAL&#34;: &#34;‹{0: 5.1, 1: 3.1}›&#34;,
+    #         &#34;attr2@REAL&#34;: &#34;‹{0: 3.5, 1: 4.5}›&#34;,
+    #         &#34;class@{0,1}&#34;: &#34;‹{0: &#39;0&#39;, 1: &#39;1&#39;}›&#34;,
+    #         _id: cHrG-npBDd2VEB8Foeg.7jQNZtdkTM1uhouHgW.J,
+    #         _ids: {
+    #             index: DQa5yWRkGo-9FLqmaST8pbElYdUEgqF8xPvip6-3,
+    #             &#34;attr1@REAL&#34;: wsy0JDrZO04O0RVwr64jpawX62WmCKtddYdvZlwm,
+    #             &#34;attr2@REAL&#34;: LvEgUazJoB1-.A3kABbskN-.iauWmWLTTo1iC51n,
+    #             &#34;class@{0,1}&#34;: b.kJy3SrU-JQ1oeh1d.uWLO7Pqh-eW6zwK78nTY4
+    #         }
+    #     },
+    #     df_: λ({    i···),
+    #     _id: CWkreYbSmrL0DPN9OtoU4Za1dg8.Jjl.fXD6yblb,
+    #     _ids: {
+    #         df: cHrG-npBDd2VEB8Foeg.7jQNZtdkTM1uhouHgW.J,
+    #         df_: cHrG-npBDd2VEB8Foeg.7jQNZtdkTM1uhouHgW.J
+    #     }
+    # }
+    # &gt;&gt;&gt; #del d[&#34;df_&#34;]
+    # &gt;&gt;&gt; d.show(colored=False)
+    # {
+    #     df: {
+    #         index: &#34;‹{0: 0, 1: 1}›&#34;,
+    #         &#34;attr1@REAL&#34;: &#34;‹{0: 5.1, 1: 3.1}›&#34;,
+    #         &#34;attr2@REAL&#34;: &#34;‹{0: 3.5, 1: 4.5}›&#34;,
+    #         &#34;class@{0,1}&#34;: &#34;‹{0: &#39;0&#39;, 1: &#39;1&#39;}›&#34;,
+    #         _id: cHrG-npBDd2VEB8Foeg.7jQNZtdkTM1uhouHgW.J,
+    #         _ids: {
+    #             index: DQa5yWRkGo-9FLqmaST8pbElYdUEgqF8xPvip6-3,
+    #             &#34;attr1@REAL&#34;: wsy0JDrZO04O0RVwr64jpawX62WmCKtddYdvZlwm,
+    #             &#34;attr2@REAL&#34;: LvEgUazJoB1-.A3kABbskN-.iauWmWLTTo1iC51n,
+    #             &#34;class@{0,1}&#34;: b.kJy3SrU-JQ1oeh1d.uWLO7Pqh-eW6zwK78nTY4
+    #         }
+    #     },
+    #     _id: CWkreYbSmrL0DPN9OtoU4Za1dg8.Jjl.fXD6yblb,
+    #     _ids: {
+    #         df: cHrG-npBDd2VEB8Foeg.7jQNZtdkTM1uhouHgW.J
+    #     }
+    # }
+    # &gt;&gt;&gt; d.save(storage)
+    # &gt;&gt;&gt; d = hdict.fetch(d.id, storage, lazy=False)
+    # &gt;&gt;&gt; d.show(colored=False)
+    # {
+    #     df: {
+    #         index: &#34;‹{0: 0, 1: 1}›&#34;,
+    #         &#34;attr1@REAL&#34;: &#34;‹{0: 5.1, 1: 3.1}›&#34;,
+    #         &#34;attr2@REAL&#34;: &#34;‹{0: 3.5, 1: 4.5}›&#34;,
+    #         &#34;class@{0,1}&#34;: &#34;‹{0: &#39;0&#39;, 1: &#39;1&#39;}›&#34;,
+    #         _id: cHrG-npBDd2VEB8Foeg.7jQNZtdkTM1uhouHgW.J,
+    #         _ids: {
+    #             index: DQa5yWRkGo-9FLqmaST8pbElYdUEgqF8xPvip6-3,
+    #             &#34;attr1@REAL&#34;: wsy0JDrZO04O0RVwr64jpawX62WmCKtddYdvZlwm,
+    #             &#34;attr2@REAL&#34;: LvEgUazJoB1-.A3kABbskN-.iauWmWLTTo1iC51n,
+    #             &#34;class@{0,1}&#34;: b.kJy3SrU-JQ1oeh1d.uWLO7Pqh-eW6zwK78nTY4
+    #         }
+    #     },
+    #     _id: CWkreYbSmrL0DPN9OtoU4Za1dg8.Jjl.fXD6yblb,
+    #     _ids: {
+    #         df: cHrG-npBDd2VEB8Foeg.7jQNZtdkTM1uhouHgW.J
+    #     }
+    # }
+    # &gt;&gt;&gt; str(d)
+    # &#39;{df: {index: &#34;‹{0: 0, 1: 1}›&#34;, attr1@REAL: &#34;‹{0: 5.1, 1: 3.1}›&#34;, attr2@REAL: &#34;‹{0: 3.5, 1: 4.5}›&#34;, class@{0,1}: &#34;‹{0: \&#39;0\&#39;, 1: \&#39;1\&#39;}›&#34;}}&#39;
+    &#34;&#34;&#34;
+    return frozenhdict.fetch(id, storage, lazy, ishdict=False)</code></pre>
+</details>
+</dd>
+<dt id="hdict.data.hdict_.hdict_.fromdict"><code class="name flex">
+<span>def <span class="ident">fromdict</span></span>(<span>dictionary, ids)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Build an idict from values and pre-defined ids</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; from hosh import Hosh
+&gt;&gt;&gt; from hdict import hdict
+&gt;&gt;&gt; e = hdict.fromdict({&quot;x&quot;: 3, &quot;y&quot;: 5, &quot;z&quot;: 7}, ids={&quot;x&quot;: Hosh(b&quot;x&quot;), &quot;y&quot;: Hosh(b&quot;y&quot;).id})
+&gt;&gt;&gt; e.show(colored=False)
+{
+    x: 3,
+    y: 5,
+    z: 7,
+    _id: uf--zyyiojm5Tl.vFKALuyGhZRO0e0eH9irosr0i,
+    _ids: {
+        x: ue7X2I7fd9j0mLl1GjgJ2btdX1QFnb1UAQNUbFGh,
+        y: 5yg5fDxFPxhEqzhoHgXpKyl5f078iBhd.pR0G2X0,
+        z: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf
+    }
+}
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def fromdict(dictionary, ids):
+    &#34;&#34;&#34;Build an idict from values and pre-defined ids
+
+    &gt;&gt;&gt; from hosh import Hosh
+    &gt;&gt;&gt; from hdict import hdict
+    &gt;&gt;&gt; e = hdict.fromdict({&#34;x&#34;: 3, &#34;y&#34;: 5, &#34;z&#34;: 7}, ids={&#34;x&#34;: Hosh(b&#34;x&#34;), &#34;y&#34;: Hosh(b&#34;y&#34;).id})
+    &gt;&gt;&gt; e.show(colored=False)
+    {
+        x: 3,
+        y: 5,
+        z: 7,
+        _id: uf--zyyiojm5Tl.vFKALuyGhZRO0e0eH9irosr0i,
+        _ids: {
+            x: ue7X2I7fd9j0mLl1GjgJ2btdX1QFnb1UAQNUbFGh,
+            y: 5yg5fDxFPxhEqzhoHgXpKyl5f078iBhd.pR0G2X0,
+            z: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf
+        }
+    }
+    &#34;&#34;&#34;
+    from hdict.data.frozenhdict import frozenhdict
+
+    return frozenhdict.fromdict(dictionary, ids).unfrozen</code></pre>
+</details>
+</dd>
+<dt id="hdict.data.hdict_.hdict_.fromfile"><code class="name flex">
+<span>def <span class="ident">fromfile</span></span>(<span>name, fields=None, format='df', named=None, hide_types=True)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Input format is defined by file extension: .arff, .csv</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; from hdict import hdict
+&gt;&gt;&gt; from testfixtures import TempDirectory
+&gt;&gt;&gt; arff = &quot;@RELATION mini\n@ATTRIBUTE attr1    REAL\n@ATTRIBUTE attr2  REAL\n@ATTRIBUTE class  {0,1}\n@DATA\n5.1,3.5,0\n3.1,4.5,1&quot;
+&gt;&gt;&gt; with TempDirectory() as tmp:  # doctest:+ELLIPSIS
+...    tmp.write(&quot;mini.arff&quot;, arff.encode())
+...    d = hdict.fromfile(tmp.path + &quot;/mini.arff&quot;)
+'/tmp/.../mini.arff'
+&gt;&gt;&gt; d.show(colored=False)
+{
+    df: &quot;‹{'attr1': {0: 5.1, 1: 3.1}, 'attr2': {0: 3.5, 1: 4.5}, 'class': {0: '0', 1: '1'}}›&quot;,
+    _id: O2THAlKL59kfBLqwUnSWV-fsDc6k4Vy6S5j4shDX,
+    _ids: {
+        df: bZAgZfAACR6i.xoS8WalaBhmjJx9iffBTaGFa0iu
+    }
+}
+&gt;&gt;&gt; csv = &quot;attr1,attr2,class\n5.1,3.5,0\n3.1,4.5,1&quot;
+&gt;&gt;&gt; with TempDirectory() as tmp:  # doctest:+ELLIPSIS
+...    tmp.write(&quot;mini.csv&quot;, csv.encode())
+...    d = hdict.fromfile(tmp.path + &quot;/mini.csv&quot;)
+'/tmp/.../mini.csv'
+&gt;&gt;&gt; d.show(colored=False)
+{
+    df: &quot;‹{'attr1': {0: 5.1, 1: 3.1}, 'attr2': {0: 3.5, 1: 4.5}, 'class': {0: 0, 1: 1}}›&quot;,
+    _id: LleZtGx7DXBMGoTEOjpuYEiuGmokrt8.bBcSnHke,
+    _ids: {
+        df: HNZ8xA5tfY1zPmJXQofXUSPw59LFAWQtd23r6q.M
+    }
+}
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def fromfile(name, fields=None, format=&#34;df&#34;, named=None, hide_types=True):
+    r&#34;&#34;&#34;
+    Input format is defined by file extension: .arff, .csv
+
+    &gt;&gt;&gt; from hdict import hdict
+    &gt;&gt;&gt; from testfixtures import TempDirectory
+    &gt;&gt;&gt; arff = &#34;@RELATION mini\n@ATTRIBUTE attr1    REAL\n@ATTRIBUTE attr2  REAL\n@ATTRIBUTE class  {0,1}\n@DATA\n5.1,3.5,0\n3.1,4.5,1&#34;
+    &gt;&gt;&gt; with TempDirectory() as tmp:  # doctest:+ELLIPSIS
+    ...    tmp.write(&#34;mini.arff&#34;, arff.encode())
+    ...    d = hdict.fromfile(tmp.path + &#34;/mini.arff&#34;)
+    &#39;/tmp/.../mini.arff&#39;
+    &gt;&gt;&gt; d.show(colored=False)
+    {
+        df: &#34;‹{&#39;attr1&#39;: {0: 5.1, 1: 3.1}, &#39;attr2&#39;: {0: 3.5, 1: 4.5}, &#39;class&#39;: {0: &#39;0&#39;, 1: &#39;1&#39;}}›&#34;,
+        _id: O2THAlKL59kfBLqwUnSWV-fsDc6k4Vy6S5j4shDX,
+        _ids: {
+            df: bZAgZfAACR6i.xoS8WalaBhmjJx9iffBTaGFa0iu
+        }
+    }
+    &gt;&gt;&gt; csv = &#34;attr1,attr2,class\n5.1,3.5,0\n3.1,4.5,1&#34;
+    &gt;&gt;&gt; with TempDirectory() as tmp:  # doctest:+ELLIPSIS
+    ...    tmp.write(&#34;mini.csv&#34;, csv.encode())
+    ...    d = hdict.fromfile(tmp.path + &#34;/mini.csv&#34;)
+    &#39;/tmp/.../mini.csv&#39;
+    &gt;&gt;&gt; d.show(colored=False)
+    {
+        df: &#34;‹{&#39;attr1&#39;: {0: 5.1, 1: 3.1}, &#39;attr2&#39;: {0: 3.5, 1: 4.5}, &#39;class&#39;: {0: 0, 1: 1}}›&#34;,
+        _id: LleZtGx7DXBMGoTEOjpuYEiuGmokrt8.bBcSnHke,
+        _ids: {
+            df: HNZ8xA5tfY1zPmJXQofXUSPw59LFAWQtd23r6q.M
+        }
+    }
+    &#34;&#34;&#34;
+    return frozenhdict.fromfile(name, fields, format, named, hide_types).unfrozen</code></pre>
+</details>
+</dd>
+<dt id="hdict.data.hdict_.hdict_.fromtext"><code class="name flex">
+<span>def <span class="ident">fromtext</span></span>(<span>text: str, fields=None, format='df', named=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Input format is defined by file extension: .arff, .csv</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; from hdict import hdict
+&gt;&gt;&gt; arff = &quot;@RELATION mini\n@ATTRIBUTE attr1    REAL\n@ATTRIBUTE attr2  REAL\n@ATTRIBUTE class  {0,1}\n@DATA\n5.1,3.5,0\n3.1,4.5,1&quot;
+&gt;&gt;&gt; d = hdict.fromtext(arff)
+&gt;&gt;&gt; d.show(colored=False)
+{
+    df: &quot;‹{'attr1@REAL': {0: 5.1, 1: 3.1}, 'attr2@REAL': {0: 3.5, 1: 4.5}, 'class@{0,1}': {0: '0', 1: '1'}}›&quot;,
+    _id: b99cvfGPKi1TnuH7WzlWLCKFiDkjIft4PE7DE8yI,
+    _ids: {
+        df: 7qPwVfi.LOYYqm2mmih51GZNRp.8WB9zQJucnTcf
+    }
+}
+&gt;&gt;&gt; csv = &quot;attr1,attr2,class\n5.1,3.5,0\n3.1,4.5,1&quot;
+&gt;&gt;&gt; d = hdict.fromtext(csv)
+&gt;&gt;&gt; d.show(colored=False)
+{
+    df: &quot;‹{'attr1': {0: 5.1, 1: 3.1}, 'attr2': {0: 3.5, 1: 4.5}, 'class': {0: 0, 1: 1}}›&quot;,
+    _id: LleZtGx7DXBMGoTEOjpuYEiuGmokrt8.bBcSnHke,
+    _ids: {
+        df: HNZ8xA5tfY1zPmJXQofXUSPw59LFAWQtd23r6q.M
+    }
+}
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def fromtext(text: str, fields=None, format=&#34;df&#34;, named=None):
+    r&#34;&#34;&#34;
+    Input format is defined by file extension: .arff, .csv
+
+    &gt;&gt;&gt; from hdict import hdict
+    &gt;&gt;&gt; arff = &#34;@RELATION mini\n@ATTRIBUTE attr1    REAL\n@ATTRIBUTE attr2  REAL\n@ATTRIBUTE class  {0,1}\n@DATA\n5.1,3.5,0\n3.1,4.5,1&#34;
+    &gt;&gt;&gt; d = hdict.fromtext(arff)
+    &gt;&gt;&gt; d.show(colored=False)
+    {
+        df: &#34;‹{&#39;attr1@REAL&#39;: {0: 5.1, 1: 3.1}, &#39;attr2@REAL&#39;: {0: 3.5, 1: 4.5}, &#39;class@{0,1}&#39;: {0: &#39;0&#39;, 1: &#39;1&#39;}}›&#34;,
+        _id: b99cvfGPKi1TnuH7WzlWLCKFiDkjIft4PE7DE8yI,
+        _ids: {
+            df: 7qPwVfi.LOYYqm2mmih51GZNRp.8WB9zQJucnTcf
+        }
+    }
+    &gt;&gt;&gt; csv = &#34;attr1,attr2,class\n5.1,3.5,0\n3.1,4.5,1&#34;
+    &gt;&gt;&gt; d = hdict.fromtext(csv)
+    &gt;&gt;&gt; d.show(colored=False)
+    {
+        df: &#34;‹{&#39;attr1&#39;: {0: 5.1, 1: 3.1}, &#39;attr2&#39;: {0: 3.5, 1: 4.5}, &#39;class&#39;: {0: 0, 1: 1}}›&#34;,
+        _id: LleZtGx7DXBMGoTEOjpuYEiuGmokrt8.bBcSnHke,
+        _ids: {
+            df: HNZ8xA5tfY1zPmJXQofXUSPw59LFAWQtd23r6q.M
+        }
+    }
+    &#34;&#34;&#34;
+    return frozenhdict.fromtext(text, fields, format, named).unfrozen</code></pre>
+</details>
+</dd>
+<dt id="hdict.data.hdict_.hdict_.load"><code class="name flex">
+<span>def <span class="ident">load</span></span>(<span>id, storage: dict)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Fetch an entire hdict</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; from hdict import _
+&gt;&gt;&gt; from hdict.persistence.stored import Stored
+&gt;&gt;&gt; fid = &quot;1234567890123456789012345678901234567890&quot;
+&gt;&gt;&gt; did = &quot;0000567890123456789012345678901234567890&quot;
+&gt;&gt;&gt; storage = {did: {&quot;x&quot;: fid}, fid: Stored(5)}
+&gt;&gt;&gt; d = (+_).load(did, storage)
+&gt;&gt;&gt; d.show(colored=False)
+{
+    x: ↑↓ cached at &lt;code&gt;dict&lt;/code&gt;·,
+    _id: kYzgpPdRgQSYSEpp1qt4EHQLQJXuyb2WDQS-iNPh,
+    _ids: {
+        x: 1234567890123456789012345678901234567890
+    }
+}
+&gt;&gt;&gt; d.evaluate()
+&gt;&gt;&gt; d.show(colored=False)
+{
+    x: 5,
+    _id: kYzgpPdRgQSYSEpp1qt4EHQLQJXuyb2WDQS-iNPh,
+    _ids: {
+        x: 1234567890123456789012345678901234567890
+    }
+}
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def load(id, storage: dict):
+    &#34;&#34;&#34;
+    Fetch an entire hdict
+
+    &gt;&gt;&gt; from hdict import _
+    &gt;&gt;&gt; from hdict.persistence.stored import Stored
+    &gt;&gt;&gt; fid = &#34;1234567890123456789012345678901234567890&#34;
+    &gt;&gt;&gt; did = &#34;0000567890123456789012345678901234567890&#34;
+    &gt;&gt;&gt; storage = {did: {&#34;x&#34;: fid}, fid: Stored(5)}
+    &gt;&gt;&gt; d = (+_).load(did, storage)
+    &gt;&gt;&gt; d.show(colored=False)
+    {
+        x: ↑↓ cached at `dict`·,
+        _id: kYzgpPdRgQSYSEpp1qt4EHQLQJXuyb2WDQS-iNPh,
+        _ids: {
+            x: 1234567890123456789012345678901234567890
+        }
+    }
+    &gt;&gt;&gt; d.evaluate()
+    &gt;&gt;&gt; d.show(colored=False)
+    {
+        x: 5,
+        _id: kYzgpPdRgQSYSEpp1qt4EHQLQJXuyb2WDQS-iNPh,
+        _ids: {
+            x: 1234567890123456789012345678901234567890
+        }
+    }
+    &#34;&#34;&#34;
+    return frozenhdict.load(id, storage).unfrozen</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Instance variables</h3>
+<dl>
+<dt id="hdict.data.hdict_.hdict_.asdf"><code class="name">var <span class="ident">asdf</span></code></dt>
+<dd>
+<div class="desc"><p>Represent hdict as a DataFrame if possible</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; from hdict import hdict
+&gt;&gt;&gt; d = hdict({&quot;x&quot;: [1,2,3], &quot;y&quot;: [5,6,7], &quot;index&quot;: [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;]})
+&gt;&gt;&gt; d.asdf
+   x  y
+a  1  5
+b  2  6
+c  3  7
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def asdf(self):
+    &#34;&#34;&#34;
+    Represent hdict as a DataFrame if possible
+
+    &gt;&gt;&gt; from hdict import hdict
+    &gt;&gt;&gt; d = hdict({&#34;x&#34;: [1,2,3], &#34;y&#34;: [5,6,7], &#34;index&#34;: [&#34;a&#34;, &#34;b&#34;, &#34;c&#34;]})
+    &gt;&gt;&gt; d.asdf
+       x  y
+    a  1  5
+    b  2  6
+    c  3  7
+    &#34;&#34;&#34;
+    return self.frozen.asdf</code></pre>
+</details>
+</dd>
+<dt id="hdict.data.hdict_.hdict_.asdict"><code class="name">var <span class="ident">asdict</span></code></dt>
+<dd>
+<div class="desc"><p>Convert to 'dict', including ids.</p>
+<p>This evaluates all fields.
+HINT: Use 'dict(d)' to convert 'hdict' to 'dict' excluding ids.</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; from hdict import hdict
+&gt;&gt;&gt; hdict(x=3, y=5).asdict
+{'x': 3, 'y': 5, '_id': 'r5A2Mh6vRRO5rxi5nfXv1myeguGSTmqHuHev38qM', '_ids': {'x': 'KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr', 'y': 'ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2'}}
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def asdict(self):
+    &#34;&#34;&#34;
+    Convert to &#39;dict&#39;, including ids.
+
+    This evaluates all fields.
+    HINT: Use &#39;dict(d)&#39; to convert &#39;hdict&#39; to &#39;dict&#39; excluding ids.
+
+    &gt;&gt;&gt; from hdict import hdict
+    &gt;&gt;&gt; hdict(x=3, y=5).asdict
+    {&#39;x&#39;: 3, &#39;y&#39;: 5, &#39;_id&#39;: &#39;r5A2Mh6vRRO5rxi5nfXv1myeguGSTmqHuHev38qM&#39;, &#39;_ids&#39;: {&#39;x&#39;: &#39;KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr&#39;, &#39;y&#39;: &#39;ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2&#39;}}
+    &#34;&#34;&#34;
+    return self.frozen.asdict</code></pre>
+</details>
+</dd>
+<dt id="hdict.data.hdict_.hdict_.asdicts"><code class="name">var <span class="ident">asdicts</span></code></dt>
+<dd>
+<div class="desc"><pre><code class="language-python-repl">&gt;&gt;&gt; from hdict import hdict
+&gt;&gt;&gt; hdict(x=3, y=5).asdict
+{'x': 3, 'y': 5, '_id': 'r5A2Mh6vRRO5rxi5nfXv1myeguGSTmqHuHev38qM', '_ids': {'x': 'KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr', 'y': 'ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2'}}
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def asdicts(self):
+    &#34;&#34;&#34;
+    &gt;&gt;&gt; from hdict import hdict
+    &gt;&gt;&gt; hdict(x=3, y=5).asdict
+    {&#39;x&#39;: 3, &#39;y&#39;: 5, &#39;_id&#39;: &#39;r5A2Mh6vRRO5rxi5nfXv1myeguGSTmqHuHev38qM&#39;, &#39;_ids&#39;: {&#39;x&#39;: &#39;KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr&#39;, &#39;y&#39;: &#39;ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2&#39;}}
+    &#34;&#34;&#34;
+    return self.frozen.asdicts</code></pre>
+</details>
+</dd>
+<dt id="hdict.data.hdict_.hdict_.asdicts_noid"><code class="name">var <span class="ident">asdicts_noid</span></code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def asdicts_noid(self):
+    return self.frozen.asdicts_noid</code></pre>
+</details>
+</dd>
+<dt id="hdict.data.hdict_.hdict_.evaluated"><code class="name">var <span class="ident">evaluated</span></code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def evaluated(self):
+    return self.frozen.evaluated</code></pre>
+</details>
+</dd>
+<dt id="hdict.data.hdict_.hdict_.hosh"><code class="name">var <span class="ident">hosh</span></code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def hosh(self):
+    return self.frozen.hosh</code></pre>
+</details>
+</dd>
+<dt id="hdict.data.hdict_.hdict_.hoshes"><code class="name">var <span class="ident">hoshes</span></code></dt>
+<dd>
+<div class="desc"><pre><code class="language-python-repl">&gt;&gt;&gt; from hdict import frozenhdict
+&gt;&gt;&gt; [h.id for h in frozenhdict(x=3, y=2).hoshes.values()]
+['KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr', 'k3PWYRxIEc0lEvD1f6rbnk.36RAD5AyfROy1aT29']
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def hoshes(self):
+    &#34;&#34;&#34;
+    &gt;&gt;&gt; from hdict import frozenhdict
+    &gt;&gt;&gt; [h.id for h in frozenhdict(x=3, y=2).hoshes.values()]
+    [&#39;KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr&#39;, &#39;k3PWYRxIEc0lEvD1f6rbnk.36RAD5AyfROy1aT29&#39;]
+    &#34;&#34;&#34;
+    return self.frozen.hoshes</code></pre>
+</details>
+</dd>
+<dt id="hdict.data.hdict_.hdict_.id"><code class="name">var <span class="ident">id</span></code></dt>
+<dd>
+<div class="desc"><pre><code class="language-python-repl">&gt;&gt;&gt; from hdict import hdict
+&gt;&gt;&gt; hdict(x=3, y=5).id == hdict(dict(x=3, y=5)).id
+True
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def id(self):
+    &#34;&#34;&#34;
+    &gt;&gt;&gt; from hdict import hdict
+    &gt;&gt;&gt; hdict(x=3, y=5).id == hdict(dict(x=3, y=5)).id
+    True
+    &#34;&#34;&#34;
+    return self.hosh.id</code></pre>
+</details>
+</dd>
+<dt id="hdict.data.hdict_.hdict_.ids"><code class="name">var <span class="ident">ids</span></code></dt>
+<dd>
+<div class="desc"><pre><code class="language-python-repl">&gt;&gt;&gt; from hdict import hdict
+&gt;&gt;&gt; hdict(x=3, y=5).ids
+{'x': 'KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr', 'y': 'ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2'}
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def ids(self):
+    &#34;&#34;&#34;
+    &gt;&gt;&gt; from hdict import hdict
+    &gt;&gt;&gt; hdict(x=3, y=5).ids
+    {&#39;x&#39;: &#39;KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr&#39;, &#39;y&#39;: &#39;ecvgo-CBPi7wRWIxNzuo1HgHQCbdvR058xi6zmr2&#39;}
+    &#34;&#34;&#34;
+    return self.frozen.ids</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="hdict.data.hdict_.hdict_.apply"><code class="name flex">
+<span>def <span class="ident">apply</span></span>(<span>self, appliable: <a title="hdict.content.argument.apply.apply" href="../content/argument/apply.html#hdict.content.argument.apply.apply">apply</a> | <a title="hdict.content.argument.field.field" href="../content/argument/field.html#hdict.content.argument.field.field">field</a>, *applied_args, out=None, fhosh: hosh.hosh_.Hosh = None, inplace=True, **applied_kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def apply(self, appliable: apply | field, *applied_args, out=None, fhosh: Hosh = None, inplace=True, _sampleable=None, **applied_kwargs):
+    if out is None:
+        raise Exception(f&#34;Missing output field name `out`&#34;)
+    a = apply(appliable, *applied_args, fhosh=fhosh, _sampleable=_sampleable, **applied_kwargs)
+    ao = a(*out) if isinstance(out, tuple) else a(out)
+    frozen = self.frozen &gt;&gt; ao
+    if inplace:
+        self.frozen = frozen
+        self.raw = self.frozen.data
+    else:
+        return frozen.unfrozen</code></pre>
+</details>
+</dd>
+<dt id="hdict.data.hdict_.hdict_.astext"><code class="name flex">
+<span>def <span class="ident">astext</span></span>(<span>self, colored=True, key_quotes=False)</span>
+</code></dt>
+<dd>
+<div class="desc"><pre><code class="language-python-repl">&gt;&gt;&gt; from hdict import hdict
+&gt;&gt;&gt; repr(hdict(x=3, y=5)) == hdict(x=3, y=5).astext()
+True
+&gt;&gt;&gt; print(repr(hdict(x=3, y=5)))
+{
+    x: 3,
+    y: 5,
+    _id: [38;5;225m[1m[48;5;0mr[0m[38;5;225m[1m[48;5;0m5[0m[38;5;15m[1m[48;5;0mA[0m[38;5;225m[1m[48;5;0m2[0m[38;5;225m[1m[48;5;0mM[0m[38;5;195m[1m[48;5;0mh[0m[38;5;225m[1m[48;5;0m6[0m[38;5;219m[1m[48;5;0mv[0m[38;5;183m[1m[48;5;0mR[0m[38;5;251m[1m[48;5;0mR[0m[38;5;177m[1m[48;5;0mO[0m[38;5;147m[1m[48;5;0m5[0m[38;5;183m[1m[48;5;0mr[0m[38;5;189m[1m[48;5;0mx[0m[38;5;15m[1m[48;5;0mi[0m[38;5;225m[1m[48;5;0m5[0m[38;5;225m[1m[48;5;0mn[0m[38;5;225m[1m[48;5;0mf[0m[38;5;15m[1m[48;5;0mX[0m[38;5;225m[1m[48;5;0mv[0m[38;5;225m[1m[48;5;0m1[0m[38;5;195m[1m[48;5;0mm[0m[38;5;225m[1m[48;5;0my[0m[38;5;219m[1m[48;5;0me[0m[38;5;183m[1m[48;5;0mg[0m[38;5;251m[1m[48;5;0mu[0m[38;5;177m[1m[48;5;0mG[0m[38;5;147m[1m[48;5;0mS[0m[38;5;183m[1m[48;5;0mT[0m[38;5;189m[1m[48;5;0mm[0m[38;5;15m[1m[48;5;0mq[0m[38;5;225m[1m[48;5;0mH[0m[38;5;225m[1m[48;5;0mu[0m[38;5;225m[1m[48;5;0mH[0m[38;5;15m[1m[48;5;0me[0m[38;5;225m[1m[48;5;0mv[0m[38;5;225m[1m[48;5;0m3[0m[38;5;195m[1m[48;5;0m8[0m[38;5;225m[1m[48;5;0mq[0m[38;5;219m[1m[48;5;0mM[0m,
+    _ids: {
+        x: [38;5;239m[1m[48;5;0mK[0m[38;5;239m[1m[48;5;0mG[0m[38;5;60m[1m[48;5;0mW[0m[38;5;241m[1m[48;5;0mj[0m[38;5;97m[1m[48;5;0mj[0m[38;5;65m[1m[48;5;0m0[0m[38;5;133m[1m[48;5;0mi[0m[38;5;65m[1m[48;5;0my[0m[38;5;97m[1m[48;5;0mL[0m[38;5;66m[1m[48;5;0mA[0m[38;5;132m[1m[48;5;0mn[0m[38;5;61m[1m[48;5;0m1[0m[38;5;66m[1m[48;5;0mR[0m[38;5;95m[1m[48;5;0mG[0m[38;5;95m[1m[48;5;0m6[0m[38;5;239m[1m[48;5;0mR[0m[38;5;239m[1m[48;5;0mT[0m[38;5;239m[1m[48;5;0mG[0m[38;5;60m[1m[48;5;0mt[0m[38;5;241m[1m[48;5;0ms[0m[38;5;97m[1m[48;5;0mG[0m[38;5;65m[1m[48;5;0mE[0m[38;5;133m[1m[48;5;0m3[0m[38;5;65m[1m[48;5;0mo[0m[38;5;97m[1m[48;5;0mm[0m[38;5;66m[1m[48;5;0mZ[0m[38;5;132m[1m[48;5;0mr[0m[38;5;61m[1m[48;5;0ma[0m[38;5;66m[1m[48;5;0mJ[0m[38;5;95m[1m[48;5;0mM[0m[38;5;95m[1m[48;5;0m6[0m[38;5;239m[1m[48;5;0mx[0m[38;5;239m[1m[48;5;0mO[0m[38;5;239m[1m[48;5;0m.[0m[38;5;60m[1m[48;5;0mk[0m[38;5;241m[1m[48;5;0mv[0m[38;5;97m[1m[48;5;0mG[0m[38;5;65m[1m[48;5;0m5[0m[38;5;133m[1m[48;5;0mp[0m[38;5;65m[1m[48;5;0mr[0m,
+        y: [38;5;227m[1m[48;5;0me[0m[38;5;221m[1m[48;5;0mc[0m[38;5;209m[1m[48;5;0mv[0m[38;5;149m[1m[48;5;0mg[0m[38;5;221m[1m[48;5;0mo[0m[38;5;215m[1m[48;5;0m-[0m[38;5;185m[1m[48;5;0mC[0m[38;5;221m[1m[48;5;0mB[0m[38;5;216m[1m[48;5;0mP[0m[38;5;192m[1m[48;5;0mi[0m[38;5;227m[1m[48;5;0m7[0m[38;5;222m[1m[48;5;0mw[0m[38;5;191m[1m[48;5;0mR[0m[38;5;215m[1m[48;5;0mW[0m[38;5;180m[1m[48;5;0mI[0m[38;5;192m[1m[48;5;0mx[0m[38;5;227m[1m[48;5;0mN[0m[38;5;221m[1m[48;5;0mz[0m[38;5;209m[1m[48;5;0mu[0m[38;5;149m[1m[48;5;0mo[0m[38;5;221m[1m[48;5;0m1[0m[38;5;215m[1m[48;5;0mH[0m[38;5;185m[1m[48;5;0mg[0m[38;5;221m[1m[48;5;0mH[0m[38;5;216m[1m[48;5;0mQ[0m[38;5;192m[1m[48;5;0mC[0m[38;5;227m[1m[48;5;0mb[0m[38;5;222m[1m[48;5;0md[0m[38;5;191m[1m[48;5;0mv[0m[38;5;215m[1m[48;5;0mR[0m[38;5;180m[1m[48;5;0m0[0m[38;5;192m[1m[48;5;0m5[0m[38;5;227m[1m[48;5;0m8[0m[38;5;221m[1m[48;5;0mx[0m[38;5;209m[1m[48;5;0mi[0m[38;5;149m[1m[48;5;0m6[0m[38;5;221m[1m[48;5;0mz[0m[38;5;215m[1m[48;5;0mm[0m[38;5;185m[1m[48;5;0mr[0m[38;5;221m[1m[48;5;0m2[0m
+    }
+}
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def astext(self, colored=True, key_quotes=False):
+    r&#34;&#34;&#34;
+    &gt;&gt;&gt; from hdict import hdict
+    &gt;&gt;&gt; repr(hdict(x=3, y=5)) == hdict(x=3, y=5).astext()
+    True
+    &gt;&gt;&gt; print(repr(hdict(x=3, y=5)))
+    {
+        x: 3,
+        y: 5,
+        _id: [38;5;225m[1m[48;5;0mr[0m[38;5;225m[1m[48;5;0m5[0m[38;5;15m[1m[48;5;0mA[0m[38;5;225m[1m[48;5;0m2[0m[38;5;225m[1m[48;5;0mM[0m[38;5;195m[1m[48;5;0mh[0m[38;5;225m[1m[48;5;0m6[0m[38;5;219m[1m[48;5;0mv[0m[38;5;183m[1m[48;5;0mR[0m[38;5;251m[1m[48;5;0mR[0m[38;5;177m[1m[48;5;0mO[0m[38;5;147m[1m[48;5;0m5[0m[38;5;183m[1m[48;5;0mr[0m[38;5;189m[1m[48;5;0mx[0m[38;5;15m[1m[48;5;0mi[0m[38;5;225m[1m[48;5;0m5[0m[38;5;225m[1m[48;5;0mn[0m[38;5;225m[1m[48;5;0mf[0m[38;5;15m[1m[48;5;0mX[0m[38;5;225m[1m[48;5;0mv[0m[38;5;225m[1m[48;5;0m1[0m[38;5;195m[1m[48;5;0mm[0m[38;5;225m[1m[48;5;0my[0m[38;5;219m[1m[48;5;0me[0m[38;5;183m[1m[48;5;0mg[0m[38;5;251m[1m[48;5;0mu[0m[38;5;177m[1m[48;5;0mG[0m[38;5;147m[1m[48;5;0mS[0m[38;5;183m[1m[48;5;0mT[0m[38;5;189m[1m[48;5;0mm[0m[38;5;15m[1m[48;5;0mq[0m[38;5;225m[1m[48;5;0mH[0m[38;5;225m[1m[48;5;0mu[0m[38;5;225m[1m[48;5;0mH[0m[38;5;15m[1m[48;5;0me[0m[38;5;225m[1m[48;5;0mv[0m[38;5;225m[1m[48;5;0m3[0m[38;5;195m[1m[48;5;0m8[0m[38;5;225m[1m[48;5;0mq[0m[38;5;219m[1m[48;5;0mM[0m,
+        _ids: {
+            x: [38;5;239m[1m[48;5;0mK[0m[38;5;239m[1m[48;5;0mG[0m[38;5;60m[1m[48;5;0mW[0m[38;5;241m[1m[48;5;0mj[0m[38;5;97m[1m[48;5;0mj[0m[38;5;65m[1m[48;5;0m0[0m[38;5;133m[1m[48;5;0mi[0m[38;5;65m[1m[48;5;0my[0m[38;5;97m[1m[48;5;0mL[0m[38;5;66m[1m[48;5;0mA[0m[38;5;132m[1m[48;5;0mn[0m[38;5;61m[1m[48;5;0m1[0m[38;5;66m[1m[48;5;0mR[0m[38;5;95m[1m[48;5;0mG[0m[38;5;95m[1m[48;5;0m6[0m[38;5;239m[1m[48;5;0mR[0m[38;5;239m[1m[48;5;0mT[0m[38;5;239m[1m[48;5;0mG[0m[38;5;60m[1m[48;5;0mt[0m[38;5;241m[1m[48;5;0ms[0m[38;5;97m[1m[48;5;0mG[0m[38;5;65m[1m[48;5;0mE[0m[38;5;133m[1m[48;5;0m3[0m[38;5;65m[1m[48;5;0mo[0m[38;5;97m[1m[48;5;0mm[0m[38;5;66m[1m[48;5;0mZ[0m[38;5;132m[1m[48;5;0mr[0m[38;5;61m[1m[48;5;0ma[0m[38;5;66m[1m[48;5;0mJ[0m[38;5;95m[1m[48;5;0mM[0m[38;5;95m[1m[48;5;0m6[0m[38;5;239m[1m[48;5;0mx[0m[38;5;239m[1m[48;5;0mO[0m[38;5;239m[1m[48;5;0m.[0m[38;5;60m[1m[48;5;0mk[0m[38;5;241m[1m[48;5;0mv[0m[38;5;97m[1m[48;5;0mG[0m[38;5;65m[1m[48;5;0m5[0m[38;5;133m[1m[48;5;0mp[0m[38;5;65m[1m[48;5;0mr[0m,
+            y: [38;5;227m[1m[48;5;0me[0m[38;5;221m[1m[48;5;0mc[0m[38;5;209m[1m[48;5;0mv[0m[38;5;149m[1m[48;5;0mg[0m[38;5;221m[1m[48;5;0mo[0m[38;5;215m[1m[48;5;0m-[0m[38;5;185m[1m[48;5;0mC[0m[38;5;221m[1m[48;5;0mB[0m[38;5;216m[1m[48;5;0mP[0m[38;5;192m[1m[48;5;0mi[0m[38;5;227m[1m[48;5;0m7[0m[38;5;222m[1m[48;5;0mw[0m[38;5;191m[1m[48;5;0mR[0m[38;5;215m[1m[48;5;0mW[0m[38;5;180m[1m[48;5;0mI[0m[38;5;192m[1m[48;5;0mx[0m[38;5;227m[1m[48;5;0mN[0m[38;5;221m[1m[48;5;0mz[0m[38;5;209m[1m[48;5;0mu[0m[38;5;149m[1m[48;5;0mo[0m[38;5;221m[1m[48;5;0m1[0m[38;5;215m[1m[48;5;0mH[0m[38;5;185m[1m[48;5;0mg[0m[38;5;221m[1m[48;5;0mH[0m[38;5;216m[1m[48;5;0mQ[0m[38;5;192m[1m[48;5;0mC[0m[38;5;227m[1m[48;5;0mb[0m[38;5;222m[1m[48;5;0md[0m[38;5;191m[1m[48;5;0mv[0m[38;5;215m[1m[48;5;0mR[0m[38;5;180m[1m[48;5;0m0[0m[38;5;192m[1m[48;5;0m5[0m[38;5;227m[1m[48;5;0m8[0m[38;5;221m[1m[48;5;0mx[0m[38;5;209m[1m[48;5;0mi[0m[38;5;149m[1m[48;5;0m6[0m[38;5;221m[1m[48;5;0mz[0m[38;5;215m[1m[48;5;0mm[0m[38;5;185m[1m[48;5;0mr[0m[38;5;221m[1m[48;5;0m2[0m
+        }
+    }
+    &#34;&#34;&#34;
+    return self.frozen.astext(colored, key_quotes)</code></pre>
+</details>
+</dd>
+<dt id="hdict.data.hdict_.hdict_.evaluate"><code class="name flex">
+<span>def <span class="ident">evaluate</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><pre><code class="language-python-repl">&gt;&gt;&gt; from hdict import apply, hdict
+&gt;&gt;&gt; d = hdict(x=apply(apply(lambda: 2)))
+&gt;&gt;&gt; d.show(colored=False)
+{
+    x: λ(),
+    _id: YwRX7paX43aafhz-Jndo9HYnvyMSOtPEbRDjgQ3r,
+    _ids: {
+        x: J746LLRT3gd5glC2ZiaHBgHegmewpiOMC4Sq4bp9
+    }
+}
+&gt;&gt;&gt; d.evaluate()
+&gt;&gt;&gt; d.show(colored=False)
+{
+    x: 2,
+    _id: YwRX7paX43aafhz-Jndo9HYnvyMSOtPEbRDjgQ3r,
+    _ids: {
+        x: J746LLRT3gd5glC2ZiaHBgHegmewpiOMC4Sq4bp9
+    }
+}
+&gt;&gt;&gt; d.evaluated.show(colored=False)
+{
+    x: 2,
+    _id: YwRX7paX43aafhz-Jndo9HYnvyMSOtPEbRDjgQ3r,
+    _ids: {
+        x: J746LLRT3gd5glC2ZiaHBgHegmewpiOMC4Sq4bp9
+    }
+}
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def evaluate(self):
+    &#34;&#34;&#34;
+    &gt;&gt;&gt; from hdict import apply, hdict
+    &gt;&gt;&gt; d = hdict(x=apply(apply(lambda: 2)))
+    &gt;&gt;&gt; d.show(colored=False)
+    {
+        x: λ(),
+        _id: YwRX7paX43aafhz-Jndo9HYnvyMSOtPEbRDjgQ3r,
+        _ids: {
+            x: J746LLRT3gd5glC2ZiaHBgHegmewpiOMC4Sq4bp9
+        }
+    }
+    &gt;&gt;&gt; d.evaluate()
+    &gt;&gt;&gt; d.show(colored=False)
+    {
+        x: 2,
+        _id: YwRX7paX43aafhz-Jndo9HYnvyMSOtPEbRDjgQ3r,
+        _ids: {
+            x: J746LLRT3gd5glC2ZiaHBgHegmewpiOMC4Sq4bp9
+        }
+    }
+    &gt;&gt;&gt; d.evaluated.show(colored=False)
+    {
+        x: 2,
+        _id: YwRX7paX43aafhz-Jndo9HYnvyMSOtPEbRDjgQ3r,
+        _ids: {
+            x: J746LLRT3gd5glC2ZiaHBgHegmewpiOMC4Sq4bp9
+        }
+    }
+    &#34;&#34;&#34;
+    self.frozen.evaluate()</code></pre>
+</details>
+</dd>
+<dt id="hdict.data.hdict_.hdict_.items"><code class="name flex">
+<span>def <span class="ident">items</span></span>(<span>self, evaluate=True)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Generator over field-value pairs</p>
+<p>Exclude ids and other items starting with '_'.</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; from hdict import hdict
+&gt;&gt;&gt; for k, v in hdict(x=1, y=2).items():
+...     print(k, v)
+x 1
+y 2
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def items(self, evaluate=True):
+    &#34;&#34;&#34;Generator over field-value pairs
+
+    Exclude ids and other items starting with &#39;_&#39;.
+
+    &gt;&gt;&gt; from hdict import hdict
+    &gt;&gt;&gt; for k, v in hdict(x=1, y=2).items():
+    ...     print(k, v)
+    x 1
+    y 2
+    &#34;&#34;&#34;
+    return self.frozen.items(evaluate)</code></pre>
+</details>
+</dd>
+<dt id="hdict.data.hdict_.hdict_.keys"><code class="name flex">
+<span>def <span class="ident">keys</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Generator of field names, i.e., keys which don't start with '_'</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def keys(self):
+    &#34;&#34;&#34;Generator of field names, i.e., keys which don&#39;t start with &#39;_&#39;&#34;&#34;&#34;
+    return self.frozen.keys()</code></pre>
+</details>
+</dd>
+<dt id="hdict.data.hdict_.hdict_.save"><code class="name flex">
+<span>def <span class="ident">save</span></span>(<span>self, storage: dict)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Store an entire hdict</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; from hdict import hdict, apply
+&gt;&gt;&gt; storage = {}
+&gt;&gt;&gt; d = hdict(x=3, y=7, z=hdict(z=9)) &gt;&gt; apply(lambda x, y: x/y).w
+&gt;&gt;&gt; d.show(colored=False)
+{
+    x: 3,
+    y: 7,
+    z: {
+        z: 9,
+        _id: izn67XbX0tQNF6E5qkwniN2jxZg5MT6f7z5AJzPM,
+        _ids: {
+            z: GuwIQCrendfKXZr5jGfrUwoP-8TWMhmLHYrja2yj
+        }
+    },
+    w: λ(x y),
+    _id: Jf8QtLAszezNdiqblJCXMuoXocCWZ90QwrxY90Zu,
+    _ids: {
+        x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+        y: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf,
+        z: izn67XbX0tQNF6E5qkwniN2jxZg5MT6f7z5AJzPM,
+        w: NjWbIhEnN3s8E-w61pptxBuiYmqQ2D3QNX2ZAEB1
+    }
+}
+&gt;&gt;&gt; d.save(storage)
+&gt;&gt;&gt; storage
+{'izn67XbX0tQNF6E5qkwniN2jxZg5MT6f7z5AJzPM': {'z': 'GuwIQCrendfKXZr5jGfrUwoP-8TWMhmLHYrja2yj'}, 'GuwIQCrendfKXZr5jGfrUwoP-8TWMhmLHYrja2yj': Stored(content=9), 'Jf8QtLAszezNdiqblJCXMuoXocCWZ90QwrxY90Zu': {'x': 'KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr', 'y': 'eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf', 'z': 'izn67XbX0tQNF6E5qkwniN2jxZg5MT6f7z5AJzPM', 'w': 'NjWbIhEnN3s8E-w61pptxBuiYmqQ2D3QNX2ZAEB1'}, 'KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr': Stored(content=3), 'eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf': Stored(content=7), 'NjWbIhEnN3s8E-w61pptxBuiYmqQ2D3QNX2ZAEB1': Stored(content=0.42857142857142855)}
+&gt;&gt;&gt; e = hdict.load(d.id, storage)
+&gt;&gt;&gt; e.show(colored=False)
+{
+    x: ↑↓ cached at &lt;code&gt;dict&lt;/code&gt;·,
+    y: ↑↓ cached at &lt;code&gt;dict&lt;/code&gt;·,
+    z: ↑↓ cached at &lt;code&gt;dict&lt;/code&gt;·,
+    w: ↑↓ cached at &lt;code&gt;dict&lt;/code&gt;·,
+    _id: Jf8QtLAszezNdiqblJCXMuoXocCWZ90QwrxY90Zu,
+    _ids: {
+        x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+        y: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf,
+        z: izn67XbX0tQNF6E5qkwniN2jxZg5MT6f7z5AJzPM,
+        w: NjWbIhEnN3s8E-w61pptxBuiYmqQ2D3QNX2ZAEB1
+    }
+}
+&gt;&gt;&gt; d.w
+0.42857142857142855
+&gt;&gt;&gt; e.w
+0.42857142857142855
+&gt;&gt;&gt; e.evaluate()
+&gt;&gt;&gt; e.show(colored=False)
+{
+    x: 3,
+    y: 7,
+    z: {
+        z: 9
+    },
+    w: 0.42857142857142855,
+    _id: Jf8QtLAszezNdiqblJCXMuoXocCWZ90QwrxY90Zu,
+    _ids: {
+        x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+        y: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf,
+        z: izn67XbX0tQNF6E5qkwniN2jxZg5MT6f7z5AJzPM,
+        w: NjWbIhEnN3s8E-w61pptxBuiYmqQ2D3QNX2ZAEB1
+    }
+}
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def save(self, storage: dict):
+    &#34;&#34;&#34;
+    Store an entire hdict
+
+    &gt;&gt;&gt; from hdict import hdict, apply
+    &gt;&gt;&gt; storage = {}
+    &gt;&gt;&gt; d = hdict(x=3, y=7, z=hdict(z=9)) &gt;&gt; apply(lambda x, y: x/y).w
+    &gt;&gt;&gt; d.show(colored=False)
+    {
+        x: 3,
+        y: 7,
+        z: {
+            z: 9,
+            _id: izn67XbX0tQNF6E5qkwniN2jxZg5MT6f7z5AJzPM,
+            _ids: {
+                z: GuwIQCrendfKXZr5jGfrUwoP-8TWMhmLHYrja2yj
+            }
+        },
+        w: λ(x y),
+        _id: Jf8QtLAszezNdiqblJCXMuoXocCWZ90QwrxY90Zu,
+        _ids: {
+            x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+            y: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf,
+            z: izn67XbX0tQNF6E5qkwniN2jxZg5MT6f7z5AJzPM,
+            w: NjWbIhEnN3s8E-w61pptxBuiYmqQ2D3QNX2ZAEB1
+        }
+    }
+    &gt;&gt;&gt; d.save(storage)
+    &gt;&gt;&gt; storage
+    {&#39;izn67XbX0tQNF6E5qkwniN2jxZg5MT6f7z5AJzPM&#39;: {&#39;z&#39;: &#39;GuwIQCrendfKXZr5jGfrUwoP-8TWMhmLHYrja2yj&#39;}, &#39;GuwIQCrendfKXZr5jGfrUwoP-8TWMhmLHYrja2yj&#39;: Stored(content=9), &#39;Jf8QtLAszezNdiqblJCXMuoXocCWZ90QwrxY90Zu&#39;: {&#39;x&#39;: &#39;KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr&#39;, &#39;y&#39;: &#39;eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf&#39;, &#39;z&#39;: &#39;izn67XbX0tQNF6E5qkwniN2jxZg5MT6f7z5AJzPM&#39;, &#39;w&#39;: &#39;NjWbIhEnN3s8E-w61pptxBuiYmqQ2D3QNX2ZAEB1&#39;}, &#39;KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr&#39;: Stored(content=3), &#39;eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf&#39;: Stored(content=7), &#39;NjWbIhEnN3s8E-w61pptxBuiYmqQ2D3QNX2ZAEB1&#39;: Stored(content=0.42857142857142855)}
+    &gt;&gt;&gt; e = hdict.load(d.id, storage)
+    &gt;&gt;&gt; e.show(colored=False)
+    {
+        x: ↑↓ cached at `dict`·,
+        y: ↑↓ cached at `dict`·,
+        z: ↑↓ cached at `dict`·,
+        w: ↑↓ cached at `dict`·,
+        _id: Jf8QtLAszezNdiqblJCXMuoXocCWZ90QwrxY90Zu,
+        _ids: {
+            x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+            y: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf,
+            z: izn67XbX0tQNF6E5qkwniN2jxZg5MT6f7z5AJzPM,
+            w: NjWbIhEnN3s8E-w61pptxBuiYmqQ2D3QNX2ZAEB1
+        }
+    }
+    &gt;&gt;&gt; d.w
+    0.42857142857142855
+    &gt;&gt;&gt; e.w
+    0.42857142857142855
+    &gt;&gt;&gt; e.evaluate()
+    &gt;&gt;&gt; e.show(colored=False)
+    {
+        x: 3,
+        y: 7,
+        z: {
+            z: 9
+        },
+        w: 0.42857142857142855,
+        _id: Jf8QtLAszezNdiqblJCXMuoXocCWZ90QwrxY90Zu,
+        _ids: {
+            x: KGWjj0iyLAn1RG6RTGtsGE3omZraJM6xO.kvG5pr,
+            y: eJCW9jGsdZTD6-AD9opKwjPIOWZ4R.T0CG2kdyzf,
+            z: izn67XbX0tQNF6E5qkwniN2jxZg5MT6f7z5AJzPM,
+            w: NjWbIhEnN3s8E-w61pptxBuiYmqQ2D3QNX2ZAEB1
+        }
+    }
+    &#34;&#34;&#34;
+    self.frozen.save(storage)</code></pre>
+</details>
+</dd>
+<dt id="hdict.data.hdict_.hdict_.show"><code class="name flex">
+<span>def <span class="ident">show</span></span>(<span>self, colored=True, key_quotes=False)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Textual representation of an idict object</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; from hdict import hdict
+&gt;&gt;&gt; d = hdict(x=1,y=2)
+&gt;&gt;&gt; d.show(colored=False)
+{
+    x: 1,
+    y: 2,
+    _id: 41wHsGFMSo0vbD2n6zAXogYG9YE3FwzIRSqjWc8N,
+    _ids: {
+        x: DYu5bfVvb6FOhBCWNsss4wsEWHZYTbKnsVgoWFvl,
+        y: k3PWYRxIEc0lEvD1f6rbnk.36RAD5AyfROy1aT29
+    }
+}
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def show(self, colored=True, key_quotes=False):
+    r&#34;&#34;&#34;
+    Textual representation of an idict object
+
+    &gt;&gt;&gt; from hdict import hdict
+    &gt;&gt;&gt; d = hdict(x=1,y=2)
+    &gt;&gt;&gt; d.show(colored=False)
+    {
+        x: 1,
+        y: 2,
+        _id: 41wHsGFMSo0vbD2n6zAXogYG9YE3FwzIRSqjWc8N,
+        _ids: {
+            x: DYu5bfVvb6FOhBCWNsss4wsEWHZYTbKnsVgoWFvl,
+            y: k3PWYRxIEc0lEvD1f6rbnk.36RAD5AyfROy1aT29
+        }
+    }
+    &#34;&#34;&#34;
+    return self.frozen.show(colored, key_quotes)</code></pre>
+</details>
+</dd>
+<dt id="hdict.data.hdict_.hdict_.values"><code class="name flex">
+<span>def <span class="ident">values</span></span>(<span>self, evaluate=True)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Generator of field values (keys that don't start with '_')</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def values(self, evaluate=True):
+    &#34;&#34;&#34;Generator of field values (keys that don&#39;t start with &#39;_&#39;)&#34;&#34;&#34;
+    return self.frozen.values(evaluate)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="hdict.data" href="index.html">hdict.data</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="hdict.data.hdict_.hdict_" href="#hdict.data.hdict_.hdict_">hdict_</a></code></h4>
+<ul class="two-column">
+<li><code><a title="hdict.data.hdict_.hdict_.apply" href="#hdict.data.hdict_.hdict_.apply">apply</a></code></li>
+<li><code><a title="hdict.data.hdict_.hdict_.asdf" href="#hdict.data.hdict_.hdict_.asdf">asdf</a></code></li>
+<li><code><a title="hdict.data.hdict_.hdict_.asdict" href="#hdict.data.hdict_.hdict_.asdict">asdict</a></code></li>
+<li><code><a title="hdict.data.hdict_.hdict_.asdicts" href="#hdict.data.hdict_.hdict_.asdicts">asdicts</a></code></li>
+<li><code><a title="hdict.data.hdict_.hdict_.asdicts_noid" href="#hdict.data.hdict_.hdict_.asdicts_noid">asdicts_noid</a></code></li>
+<li><code><a title="hdict.data.hdict_.hdict_.astext" href="#hdict.data.hdict_.hdict_.astext">astext</a></code></li>
+<li><code><a title="hdict.data.hdict_.hdict_.evaluate" href="#hdict.data.hdict_.hdict_.evaluate">evaluate</a></code></li>
+<li><code><a title="hdict.data.hdict_.hdict_.evaluated" href="#hdict.data.hdict_.hdict_.evaluated">evaluated</a></code></li>
+<li><code><a title="hdict.data.hdict_.hdict_.fetch" href="#hdict.data.hdict_.hdict_.fetch">fetch</a></code></li>
+<li><code><a title="hdict.data.hdict_.hdict_.fromdict" href="#hdict.data.hdict_.hdict_.fromdict">fromdict</a></code></li>
+<li><code><a title="hdict.data.hdict_.hdict_.fromfile" href="#hdict.data.hdict_.hdict_.fromfile">fromfile</a></code></li>
+<li><code><a title="hdict.data.hdict_.hdict_.fromtext" href="#hdict.data.hdict_.hdict_.fromtext">fromtext</a></code></li>
+<li><code><a title="hdict.data.hdict_.hdict_.hosh" href="#hdict.data.hdict_.hdict_.hosh">hosh</a></code></li>
+<li><code><a title="hdict.data.hdict_.hdict_.hoshes" href="#hdict.data.hdict_.hdict_.hoshes">hoshes</a></code></li>
+<li><code><a title="hdict.data.hdict_.hdict_.id" href="#hdict.data.hdict_.hdict_.id">id</a></code></li>
+<li><code><a title="hdict.data.hdict_.hdict_.ids" href="#hdict.data.hdict_.hdict_.ids">ids</a></code></li>
+<li><code><a title="hdict.data.hdict_.hdict_.items" href="#hdict.data.hdict_.hdict_.items">items</a></code></li>
+<li><code><a title="hdict.data.hdict_.hdict_.keys" href="#hdict.data.hdict_.hdict_.keys">keys</a></code></li>
+<li><code><a title="hdict.data.hdict_.hdict_.load" href="#hdict.data.hdict_.hdict_.load">load</a></code></li>
+<li><code><a title="hdict.data.hdict_.hdict_.save" href="#hdict.data.hdict_.hdict_.save">save</a></code></li>
+<li><code><a title="hdict.data.hdict_.hdict_.show" href="#hdict.data.hdict_.hdict_.show">show</a></code></li>
+<li><code><a title="hdict.data.hdict_.hdict_.values" href="#hdict.data.hdict_.hdict_.values">values</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>

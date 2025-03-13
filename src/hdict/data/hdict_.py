@@ -30,6 +30,7 @@ from hdict.data.frozenhdict import frozenhdict
 
 VT = TypeVar("VT")
 
+# todo : detect if argument passed to apply() has a memory address (nondeterminism) and alert user; or try to erase it?
 
 # todo: : finish all '*' combinations and check all '>>' to see when to generate hdict and when to generate Expr.
 
@@ -426,18 +427,18 @@ class hdict_(dict[str, VT]):
         >>> d.show(colored=False)
         {
             df: "‹{'attr1': {0: 5.1, 1: 3.1}, 'attr2': {0: 3.5, 1: 4.5}, 'class': {0: '0', 1: '1'}}›",
-            _id: YaEOJ7a7aOUux8qb1lY3mucUo6AU4vVv15JhAnn2,
+            _id: O2THAlKL59kfBLqwUnSWV-fsDc6k4Vy6S5j4shDX,
             _ids: {
-                df: Sxa-cdrwGU60j--6mK9FvWc7IaYdeYB-2yzSi62B
+                df: bZAgZfAACR6i.xoS8WalaBhmjJx9iffBTaGFa0iu
             }
         }
         >>> d2.show(colored=False)
         {
             df: "‹{'attr1': {0: 5.1, 1: 3.1}, 'attr2': {0: 3.5, 1: 4.5}, 'class': {0: '0', 1: '1'}}›",
             name: " mini",
-            _id: NuQ3MtEDc-RqAgxUtgEJdg1wnQngv2koODT8GrqU,
+            _id: LSSNMnmfseV8LDODs6vA-6kSCW9czlZ-Cg-XxlGN,
             _ids: {
-                df: Sxa-cdrwGU60j--6mK9FvWc7IaYdeYB-2yzSi62B,
+                df: bZAgZfAACR6i.xoS8WalaBhmjJx9iffBTaGFa0iu,
                 name: 5nzeWHgeVef.PD8CnIrPcjwGqaYoRCXK0iwH0cKm
             }
         }
@@ -447,9 +448,9 @@ class hdict_(dict[str, VT]):
         >>> d.show(colored=False)
         {
             df: ↑↓ cached at `dict`·,
-            _id: YaEOJ7a7aOUux8qb1lY3mucUo6AU4vVv15JhAnn2,
+            _id: O2THAlKL59kfBLqwUnSWV-fsDc6k4Vy6S5j4shDX,
             _ids: {
-                df: Sxa-cdrwGU60j--6mK9FvWc7IaYdeYB-2yzSi62B
+                df: bZAgZfAACR6i.xoS8WalaBhmjJx9iffBTaGFa0iu
             }
         }
         >>> d.df
@@ -575,9 +576,9 @@ class hdict_(dict[str, VT]):
         >>> d.show(colored=False)
         {
             df: "‹{'attr1': {0: 5.1, 1: 3.1}, 'attr2': {0: 3.5, 1: 4.5}, 'class': {0: '0', 1: '1'}}›",
-            _id: YaEOJ7a7aOUux8qb1lY3mucUo6AU4vVv15JhAnn2,
+            _id: O2THAlKL59kfBLqwUnSWV-fsDc6k4Vy6S5j4shDX,
             _ids: {
-                df: Sxa-cdrwGU60j--6mK9FvWc7IaYdeYB-2yzSi62B
+                df: bZAgZfAACR6i.xoS8WalaBhmjJx9iffBTaGFa0iu
             }
         }
         >>> csv = "attr1,attr2,class\n5.1,3.5,0\n3.1,4.5,1"
@@ -588,9 +589,9 @@ class hdict_(dict[str, VT]):
         >>> d.show(colored=False)
         {
             df: "‹{'attr1': {0: 5.1, 1: 3.1}, 'attr2': {0: 3.5, 1: 4.5}, 'class': {0: 0, 1: 1}}›",
-            _id: NPf36ZQWhyTj8yV3hVNjlKN3qJTNIxjgDJAkMWJY,
+            _id: LleZtGx7DXBMGoTEOjpuYEiuGmokrt8.bBcSnHke,
             _ids: {
-                df: ytTKB-58EG6oWjgbY2-a-xyZJhBWUT.KESXVuFov
+                df: HNZ8xA5tfY1zPmJXQofXUSPw59LFAWQtd23r6q.M
             }
         }
         """
@@ -607,9 +608,9 @@ class hdict_(dict[str, VT]):
         >>> d.show(colored=False)
         {
             df: "‹{'attr1@REAL': {0: 5.1, 1: 3.1}, 'attr2@REAL': {0: 3.5, 1: 4.5}, 'class@{0,1}': {0: '0', 1: '1'}}›",
-            _id: zkG1Kyr0K0matB3G0-BvKmIi2e.dHhA4zA6X6DwO,
+            _id: b99cvfGPKi1TnuH7WzlWLCKFiDkjIft4PE7DE8yI,
             _ids: {
-                df: FPE1eyMzyycW6Ue9SqyxaiakR3H3VDgzAFtwRlbl
+                df: 7qPwVfi.LOYYqm2mmih51GZNRp.8WB9zQJucnTcf
             }
         }
         >>> csv = "attr1,attr2,class\n5.1,3.5,0\n3.1,4.5,1"
@@ -617,9 +618,9 @@ class hdict_(dict[str, VT]):
         >>> d.show(colored=False)
         {
             df: "‹{'attr1': {0: 5.1, 1: 3.1}, 'attr2': {0: 3.5, 1: 4.5}, 'class': {0: 0, 1: 1}}›",
-            _id: NPf36ZQWhyTj8yV3hVNjlKN3qJTNIxjgDJAkMWJY,
+            _id: LleZtGx7DXBMGoTEOjpuYEiuGmokrt8.bBcSnHke,
             _ids: {
-                df: ytTKB-58EG6oWjgbY2-a-xyZJhBWUT.KESXVuFov
+                df: HNZ8xA5tfY1zPmJXQofXUSPw59LFAWQtd23r6q.M
             }
         }
         """
