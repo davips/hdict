@@ -33,7 +33,8 @@ from hdict.text.customjson import CustomJSONEncoder, stringfy
 
 VT = TypeVar("VT")
 
-
+# TODO: get tuples:
+#  X, y = d["X", "y"]
 class frozenhdict(UserDict, dict[str, VT]):
     """
     Immutable hdict.

@@ -61,7 +61,8 @@ from hdict.text.customjson import CustomJSONEncoder, stringfy
 
 VT = TypeVar(&#34;VT&#34;)
 
-
+# TODO: get tuples:
+#  X, y = d[&#34;X&#34;, &#34;y&#34;]
 class frozenhdict(UserDict, dict[str, VT]):
     &#34;&#34;&#34;
     Immutable hdict.
