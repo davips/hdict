@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "hdict"
-version = "2.250313.1"
+version = "2.250313.2"
 description = "A versatile dictionary based on a novel paradigm useful for computing, caching, experiments, distributed data, among others."
 authors = ["davips <dpsabc@gmail.com>"]
 license = "GPLv3"
@@ -22,6 +22,7 @@ lz4 = { version = "^4.3.2", optional = true }
 scikit-learn = { version = "^1.2.2", optional = true }
 liac-arff = { version = "^2.5.0", optional = true }
 hosh = "^3.230705.5"
+blake3 = "^1.0.4"
 
 [tool.poetry.extras]    #[tool.poetry.group.extras.dependencies]
 full = ["pandas", "shelchemy", "safeserializer", "lz4", "scikit-learn", "liac-arff", "testfixtures"]

@@ -3563,4 +3563,4 @@ full = ["liac-arff", "lz4", "pandas", "safeserializer", "scikit-learn", "shelche
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.10"
-content-hash = "c2ba08739ac0402627c4053e65673901cc0d7e4838c718a6c79eff319900b762"
+content-hash = "bfb1992847a86a7ecac25747275f6db77a9a38b63503deb4c7b05921e978ec04"

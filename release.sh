@@ -32,7 +32,7 @@ read -p "press enter"
 #################################################################################
 echo ">>>>>>   install project package for IDE class hierarchy <<<<<<<<" 
 echo "          (to remove duplicates from IDE class hierarchy)"
-source /home/davi/.cache/pypoetry/virtualenvs/hdict-ZUd5y1Rg-py3.10/bin/activate
+$(poetry env activate)
 pip install .
 #################################################################################
 #################################################################################
@@ -97,4 +97,6 @@ echo "------------------- pushed ----------------------"
 echo; echo
 
 echo "------------------- publish ----------------------"
-poetry publish --build
+poetry build
+poetry run twine upload dist/*
+
